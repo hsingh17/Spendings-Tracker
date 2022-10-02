@@ -1,6 +1,7 @@
 package com.spendingstracker.app.model;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(schema = "APP", name = "SPENDINGS")
@@ -12,16 +13,22 @@ public class Spending {
     @Column(name = "USER_ID")
     private Integer userId;
 
-    @Column(name = "DATE")
-    private String date;
-
     @Column(name = "CATEGORY")
     private String category;
 
     @Column(name = "AMOUNT")
-    private Float amount;
+    private Double amount;
+
+    @Column(name = "DATE")
+    private Date date;
 
     public Spending() {
+    }
+
+    public Spending(Integer userId, String category, Double amount) {
+        this.userId = userId;
+        this.category = category;
+        this.amount = amount;
     }
 
     public Integer getId() {
@@ -40,14 +47,6 @@ public class Spending {
         this.userId = userId;
     }
 
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
     public String getCategory() {
         return category;
     }
@@ -56,11 +55,19 @@ public class Spending {
         this.category = category;
     }
 
-    public Float getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(Float amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }
