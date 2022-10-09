@@ -11,5 +11,6 @@ import java.util.List;
 public interface SpendingRepository extends CrudRepository<Spending, Integer> {
     List<Spending> findByUserIdOrderByDateAsc(Integer userId);
     List<Spending> findByUserIdAndDateGreaterThanEqualOrderByDateAsc(Integer userId, Date startDate);
+    List<Spending> findByUserIdAndDateLessThanEqualOrderByDateAsc(Integer userId, Date endDate);
     List<Spending> findByUserIdAndDateBetweenOrderByDateAsc(Integer userId, Date startDate, Date endDate);
 }

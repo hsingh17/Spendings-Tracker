@@ -20,15 +20,22 @@ public class Spending {
     private Double amount;
 
     @Column(name = "DATE")
-    private Date date;
+    private Date date = new Date();
 
     public Spending() {
     }
 
     public Spending(Integer userId, String category, Double amount) {
         this.userId = userId;
-        this.category = category;
+        this.category = category.toUpperCase();
         this.amount = amount;
+    }
+
+    public Spending(Integer userId, String category, Double amount, Date date) {
+        this.userId = userId;
+        this.category = category.toUpperCase();
+        this.amount = amount;
+        this.date = date;
     }
 
     public Integer getId() {
@@ -52,7 +59,7 @@ public class Spending {
     }
 
     public void setCategory(String category) {
-        this.category = category;
+        this.category = category.toUpperCase();
     }
 
     public Double getAmount() {

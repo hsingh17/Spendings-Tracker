@@ -1,6 +1,7 @@
+version: "3.8"
 services:
   spendings-db:
-    image: mysql
+    image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: password
     volumes:
