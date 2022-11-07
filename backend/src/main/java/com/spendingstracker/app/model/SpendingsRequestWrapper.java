@@ -1,10 +1,11 @@
 package com.spendingstracker.app.model;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class SpendingsRequestWrapper {
     private List<String> categories;
-    private List<Double> amounts;
+    private List<BigDecimal> amounts;
 
     public SpendingsRequestWrapper() {
     }
@@ -17,11 +18,11 @@ public class SpendingsRequestWrapper {
         this.categories = categories;
     }
 
-    public List<Double> getAmounts() {
+    public List<BigDecimal> getAmounts() {
         return amounts;
     }
 
-    public void setAmounts(List<Double> amounts) {
+    public void setAmounts(List<BigDecimal> amounts) {
         this.amounts = amounts;
     }
 

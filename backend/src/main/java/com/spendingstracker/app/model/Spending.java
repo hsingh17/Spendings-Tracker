@@ -1,6 +1,7 @@
 package com.spendingstracker.app.model;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -17,7 +18,7 @@ public class Spending {
     private String category;
 
     @Column(name = "AMOUNT")
-    private Double amount;
+    private BigDecimal amount;
 
     @Column(name = "DATE")
     private Date date = new Date();
@@ -25,13 +26,13 @@ public class Spending {
     public Spending() {
     }
 
-    public Spending(Integer userId, String category, Double amount) {
+    public Spending(Integer userId, String category, BigDecimal amount) {
         this.userId = userId;
         this.category = category.toUpperCase();
         this.amount = amount;
     }
 
-    public Spending(Integer userId, String category, Double amount, Date date) {
+    public Spending(Integer userId, String category, BigDecimal amount, Date date) {
         this.userId = userId;
         this.category = category.toUpperCase();
         this.amount = amount;
@@ -62,11 +63,11 @@ public class Spending {
         this.category = category.toUpperCase();
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

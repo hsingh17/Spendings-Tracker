@@ -29,7 +29,7 @@ public class ApiRestController {
     @PostMapping("/spending/create-spending/{user-id}")
     public ResponseEntity<String> createSpending(@PathVariable("user-id") Integer userId,
                                                  @RequestBody SpendingsRequestWrapper spendingsRequestWrapper) throws Exception {
-        spendingService.createSpending(userId, spendingsRequestWrapper, false);
+        spendingService.createSpending(userId, spendingsRequestWrapper);
         return new ResponseEntity<>("Spending Created", HttpStatus.CREATED);
     }
 

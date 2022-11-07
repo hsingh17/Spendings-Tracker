@@ -1,12 +1,10 @@
 package com.spendingstracker.app.model;
 
-import org.hibernate.annotations.GeneratorType;
-
 import javax.persistence.*;
 
 @Entity
 @Table( schema = "APP", name = "USERS")
-public class User {
+public class UserModel {
     @Id
     @GeneratedValue
     @Column(name = "ID")
@@ -18,7 +16,7 @@ public class User {
     @Column(name = "PASSWORD")
     private String password;
 
-    public User() {
+    public UserModel() {
     }
 
     public Integer getId() {

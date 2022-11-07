@@ -7,6 +7,7 @@ import com.spendingstracker.app.repository.SpendingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -26,23 +27,17 @@ public class SpendingService {
         } else { // Given both a startDate and endDate
             spendings = spendingRepository.findByUserIdAndDateBetweenOrderByDateAsc(userId, startDate, endDate);
         }
-        double totalSpent = spendings.stream().mapToDouble(Spending::getAmount).sum();
+        BigDecimal totalSpent = new BigDecimal(0);
+        for (Spending spending : spendings) {
+            totalSpent = totalSpent.add(spending.getAmount());
+        }
         endDate = endDate == null ? new Date() : endDate; // Reassign endDate if null
-        return new SpendingsResponseWrapper(spendings, startDate, endDate, totalSpent);
+        return new SpendingsResponseWrapper(spendings, startDate, endDate, totalSpent, spendings.size());
     }
 
-    public void createSpending(Integer userId, SpendingsRequestWrapper spendingsRequestWrapper, boolean inputValidated) throws Exception {
-        if (!inputValidated) {
-            validateSpendingsRequestWrapper(spendingsRequestWrapper); // Validate the input
-        }
-
-        List<String> categories = spendingsRequestWrapper.getCategories();
-        List<Double> amounts = spendingsRequestWrapper.getAmounts();
-        int numberOfSpendings = categories.size();
-        // Create and save a new Spending object to the DB for each spending sent by the Request
-        for (int i = 0; i < numberOfSpendings; i++) {
-            spendingRepository.save(new Spending(userId, categories.get(i), amounts.get(i)));
-        }
+    public void createSpending(Integer userId, SpendingsRequestWrapper spendingsRequestWrapper) throws Exception {
+        validateSpendingsRequestWrapper(spendingsRequestWrapper); // Validate the input
+        saveSpendings(userId, spendingsRequestWrapper, null);
     }
 
     public void updateSpending(Integer userId, Date date, SpendingsRequestWrapper spendingsRequestWrapper) throws Exception {
@@ -54,18 +49,27 @@ public class SpendingService {
         // Delete rows for this user that occur on that date
         spendingRepository.deleteAll(spendingsToDelete);
 
-        // Insert the new spendings for that day
+        // Update the spendings by inserting them in again with that specific date
+        saveSpendings(userId, spendingsRequestWrapper, date);
+    }
+
+    private void saveSpendings(Integer userId, SpendingsRequestWrapper spendingsRequestWrapper, Date date) {
+        // Insert the new spendings
         List<String> categories = spendingsRequestWrapper.getCategories();
-        List<Double> amounts = spendingsRequestWrapper.getAmounts();
+        List<BigDecimal> amounts = spendingsRequestWrapper.getAmounts();
         int numberOfSpendings = amounts.size();
         for (int i = 0; i < numberOfSpendings; i++) {
-            spendingRepository.save(new Spending(userId, categories.get(i), amounts.get(i), date));
+            if (date == null) {
+                spendingRepository.save(new Spending(userId, categories.get(i), amounts.get(i)));
+            } else {
+                spendingRepository.save(new Spending(userId, categories.get(i), amounts.get(i), date));
+            }
         }
     }
 
     private void validateSpendingsRequestWrapper(SpendingsRequestWrapper spendingsRequestWrapper) throws Exception {
         List<String> categories = spendingsRequestWrapper.getCategories();
-        List<Double> amounts = spendingsRequestWrapper.getAmounts();
+        List<BigDecimal> amounts = spendingsRequestWrapper.getAmounts();
 
         boolean isCategoriesNull = categories == null;
         boolean isAmountsNull = amounts == null;
