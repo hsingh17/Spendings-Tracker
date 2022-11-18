@@ -1,5 +1,6 @@
 package com.spendingstracker.app.config;
 
+import com.spendingstracker.app.filter.JwtFilter;
 import com.spendingstracker.app.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -17,16 +19,18 @@ public class SecurityConfig {
     @Autowired
     UserDetailsServiceImpl userDetailsService;
 
+    @Autowired
+    JwtFilter jwtFilter;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable(); // Disable CSRF since we will use JWT to validate requests
-//        httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // Stateless policy since JWT is stateless
-        httpSecurity
-                .authorizeRequests().antMatchers("/login").permitAll() // Anyone can go to login route
-                .and()
-                .authorizeRequests().anyRequest().authenticated(); // All other routes require user to be authenticated
-        httpSecurity.formLogin(); // Default form login
+        httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // Stateless policy since JWT is stateless
+        httpSecurity.authorizeRequests()
+                .antMatchers("/login").permitAll() // Anyone can go to login route
+                .anyRequest().authenticated(); // All other routes require user to be authenticated
         httpSecurity.authenticationProvider(authenticationProvider()); // Set the DaoAuthenticationProvider
+        httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 
