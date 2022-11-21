@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table( schema = "APP", name = "USERS")
-public class UserModel {
+public class UserDao {
     @Id
     @GeneratedValue
     @Column(name = "ID")
@@ -16,7 +16,7 @@ public class UserModel {
     @Column(name = "PASSWORD")
     private String password;
 
-    public UserModel() {
+    public UserDao() {
     }
 
     public Integer getId() {

@@ -1,5 +1,6 @@
 package com.spendingstracker.app.util;
 
+import com.spendingstracker.app.model.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -37,8 +38,9 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(CustomUserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", userDetails.getUserId()); // Add userId to the claims
         return createToken(claims, userDetails.getUsername());
     }
 
