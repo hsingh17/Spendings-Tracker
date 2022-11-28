@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -24,7 +27,7 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/login")
-    public ResponseEntity<String> postLogin(@RequestBody LoginRequestBody loginRequestBody) {
+    public ResponseEntity<CustomUserDetails> postLogin(@RequestBody LoginRequestBody loginRequestBody, HttpServletResponse response) {
         try {
             // Attempt authentication with the sent login and password
             Authentication auth = authenticationManager.authenticate(
@@ -32,11 +35,19 @@ public class AuthController {
             );
 
             // User has valid credentials in at this point, need to create and return a JWT for the user
-            String token = jwtUtil.generateToken((CustomUserDetails) auth.getPrincipal());
-            return ResponseEntity.ok(token);
+            CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+            String token = jwtUtil.generateToken(userDetails);
+
+            // Add jwt token in an HTTP only cookie
+            Cookie cookie = new Cookie("token", token);
+            cookie.setHttpOnly(true);
+            cookie.setPath("/api/");
+            response.addCookie(cookie);
+
+            return ResponseEntity.ok(userDetails);
         } catch (Exception e) {
             // Bad login credentials
-            return new ResponseEntity<>("Invalid username or password!", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
     }
 }
