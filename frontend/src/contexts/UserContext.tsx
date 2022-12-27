@@ -7,7 +7,16 @@ type UserContextType = {
 };
 
 const UserContext = createContext<UserContextType>({
-  user: { userId: null, username: null },
+  user: { 
+    userId: null, 
+    username: null, 
+    password: null, 
+    authorities: null, 
+    accountNonExpired: null, 
+    accountNonLocked: null, 
+    credentialsNonExpired: null, 
+    enabled: null 
+  },
   setUser: () => {}
 });
 

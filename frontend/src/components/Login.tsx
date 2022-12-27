@@ -1,6 +1,12 @@
-import { FormEvent } from "react";
+import { FormEvent, useContext } from "react";
+import UserContext from "../contexts/UserContext";
+import { User } from "../utils/types";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const { setUser } = useContext(UserContext);
+  const navigate = useNavigate();
+
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
     // Custom inline type
@@ -14,7 +20,7 @@ const Login = () => {
       password: target.password.value
     };
 
-    const baseUrl: string = (import.meta.env.DEV ? import.meta.env.VITE_SERVER_BASE_URL : ""); 
+    const baseUrl: string = (import.meta.env.DEV ? import.meta.env.VITE_SERVER_BASE_URL : "");  //  TODO: for PROD
     const fullUrl: string = baseUrl + "/auth/login";
     const response = await fetch(fullUrl, {
       method: "POST",
@@ -25,8 +31,9 @@ const Login = () => {
     });
 
     if (response.ok) {
-      const responseBody = await response.json();
-      console.log(responseBody);
+      const user: User = await response.json() as User;
+      setUser(user);
+      navigate("/dashboard");
     } else {
       // TODO: Error handling
       console.log("LOGIN FAILED");
@@ -48,8 +55,7 @@ const Login = () => {
         <input type="submit" value="Login" />
       </form>
     </>
-
-  )
+  );
 };
 
 export default Login;
