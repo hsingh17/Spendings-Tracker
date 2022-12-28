@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { Spending, SpendingsResponse } from "../utils/types";
+import { Constants } from "../utils/constants";
 
 const Spendings = () => {
   const [ responseObj, setResponseObj ] = useState<SpendingsResponse | null>(null);
 
   useEffect(() => {
     const getSpendings = async () => {
-      const baseUrl: string = (import.meta.env.DEV ? import.meta.env.VITE_SERVER_BASE_URL : "");  //  TODO: for PROD
-      const fullUrl: string = baseUrl + "/api/spending/get-spending";
-      const response = await fetch(fullUrl, {
+      const apiUrl: string = Constants.BASE_URL + "/api/spending/get-spending";
+      const response = await fetch(apiUrl, {
         method: "GET",
         "credentials": "include"
       });
