@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
-import { Spending, SpendingsResponse } from "../utils/types";
+import { Spending, SpendingsApiResponse } from "../utils/types";
 import { Constants } from "../utils/constants";
 
-const Spendings = () => {
-  const [ responseObj, setResponseObj ] = useState<SpendingsResponse | null>(null);
+const ViewSpendings = () => {
+  const [ responseObj, setResponseObj ] = useState<SpendingsApiResponse | null>(null);
 
   useEffect(() => {
     const getSpendings = async () => {
       const apiUrl: string = Constants.BASE_URL + "/api/spending/get-spending";
       const response = await fetch(apiUrl, {
         method: "GET",
-        "credentials": "include"
+        credentials: "include"
       });
-      const body: SpendingsResponse = await response.json() as SpendingsResponse;
+      const body: SpendingsApiResponse = await response.json() as SpendingsApiResponse;
       setResponseObj(body);
     };
 
@@ -34,4 +34,4 @@ const Spendings = () => {
   );
 }
 
-export default Spendings;
+export default ViewSpendings;

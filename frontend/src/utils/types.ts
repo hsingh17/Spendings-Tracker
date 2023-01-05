@@ -16,13 +16,17 @@ export type Spending = {
   amount: number;
   category: string;
   date: string;
-}
+};
 
-
-export type SpendingsResponse = {
+export type SpendingsApiResponse = {
   spendings: Array<Spending>;
   startDate: string;
   endDate: string;
   totalSpent: number;
   totalSpendings: number;
-}
+};
+
+export type SpendingFormRow = {
+  category: Nullable<string>,
+  amount: Nullable<string>
+};

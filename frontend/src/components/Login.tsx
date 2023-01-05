@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Constants } from "../utils/constants";
 
 const Login = () => {
+  // TODO: check if user is already potentially logged in (JWT Token is in storage)
   const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -12,11 +13,11 @@ const Login = () => {
     e.preventDefault();
     // Custom inline type
     const target = e.target as typeof e.target & {
-      username: { value : string };
-      password: { value : string };
+      username: { value: string };
+      password: { value: string };
     };
     
-    const postBody = {
+    const requestBody = {
       username: target.username.value,
       password: target.password.value
     };
@@ -25,9 +26,9 @@ const Login = () => {
     const response = await fetch(apiUrl, {
       method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify(postBody),
+      body: JSON.stringify(requestBody),
       credentials: "include"
     });
 

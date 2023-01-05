@@ -4,7 +4,8 @@ import UserContext from "./contexts/UserContext";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
-import Spendings from "./components/Spendings";
+import ViewSpendings from "./components/ViewSpendings";
+import AddSpendings from "./components/AddSpendings";
 import { User } from "./utils/types"
 
 const App = () => {
@@ -25,7 +26,8 @@ const App = () => {
         <Route path="/" element={ <Home /> } />
         <Route path="/login" element={ <Login /> } />
         <Route path="/dashboard" element={ <Dashboard />} />
-        <Route path="/spendings" element={ <Spendings />} />
+        <Route path="/view-spendings" element={ <ViewSpendings />} />
+        <Route path="/add-spendings" element={ <AddSpendings />} />
       </Routes>      
     </UserContext.Provider>
   )
