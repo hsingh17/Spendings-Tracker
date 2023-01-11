@@ -13,8 +13,8 @@ const Login = () => {
     e.preventDefault();
     // Custom inline type
     const target = e.target as typeof e.target & {
-      username: { value: string };
-      password: { value: string };
+      username: { value: String };
+      password: { value: String };
     };
     
     const requestBody = {

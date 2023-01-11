@@ -1,8 +1,8 @@
 package com.spendingstracker.app.controller;
 
 import com.spendingstracker.app.model.CustomUserDetails;
-import com.spendingstracker.app.model.SpendingsRequestWrapper;
-import com.spendingstracker.app.model.SpendingsResponseWrapper;
+import com.spendingstracker.app.model.SpendingsRequest;
+import com.spendingstracker.app.model.SpendingsResponse;
 import com.spendingstracker.app.service.SpendingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,22 +22,22 @@ public class ApiRestController {
     private final String datePattern = "yyyy-MM-dd";
 
     @GetMapping("/spending/get-spending")
-    public ResponseEntity<SpendingsResponseWrapper> getSpendings(@RequestParam(name = "start-date", required = false) @DateTimeFormat(pattern = datePattern) Date startDate,
-                                                                 @RequestParam(name = "end-date", required = false) @DateTimeFormat(pattern = datePattern) Date endDate)
+    public ResponseEntity<SpendingsResponse> getSpendings(@RequestParam(name = "start-date", required = false) @DateTimeFormat(pattern = datePattern) Date startDate,
+                                                          @RequestParam(name = "end-date", required = false) @DateTimeFormat(pattern = datePattern) Date endDate)
     throws Exception {
         return new ResponseEntity<>(spendingService.getSpendings(getUserId(), startDate, endDate), HttpStatus.OK);
     }
 
     @PostMapping("/spending/create-spending")
-    public ResponseEntity<String> createSpending(@RequestBody SpendingsRequestWrapper spendingsRequestWrapper) throws Exception {
-        spendingService.createSpending(getUserId(), spendingsRequestWrapper);
+    public ResponseEntity<String> createSpending(@RequestBody SpendingsRequest spendingsRequest) throws Exception {
+        spendingService.createSpending(getUserId(), spendingsRequest);
         return new ResponseEntity<>("Spending Created", HttpStatus.CREATED);
     }
 
     @PostMapping("/spending/update-spending/{date}")
     public ResponseEntity<String> updateSpending(@PathVariable("date") @DateTimeFormat(pattern = datePattern) Date date,
-                                                 @RequestBody SpendingsRequestWrapper spendingsRequestWrapper) throws Exception {
-        spendingService.updateSpending(getUserId(), date, spendingsRequestWrapper);
+                                                 @RequestBody SpendingsRequest spendingsRequest) throws Exception {
+        spendingService.updateSpending(getUserId(), date, spendingsRequest);
         return new ResponseEntity<>("Spending updated", HttpStatus.OK);
     }
 

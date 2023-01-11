@@ -16,7 +16,7 @@ const AddSpendings = () => {
     let amounts = new Array<Number>();
 
     spendings.forEach(spending => {
-      let category: string = spending.category || ""; // TODO: figure out another way for this after input hasbeen cleansed and verified
+      let category: String = spending.category || ""; // TODO: figure out another way for this after input hasbeen cleansed and verified
       categories.push(category.toLocaleUpperCase());
       amounts.push(Number(spending.amount));
     });
@@ -26,7 +26,7 @@ const AddSpendings = () => {
       amounts: amounts
     };
 
-    const apiUrl = Constants.BASE_URL + "/api/spending/create-spending";
+    const apiUrl: string = Constants.BASE_URL + "/api/spending/create-spending";
     const response = await fetch(apiUrl, {
       method: "POST",
       headers: {
@@ -46,8 +46,8 @@ const AddSpendings = () => {
   const handleChange = (e:React.ChangeEvent, idx: number) => {
     // Custom inline type
     const target = e.target as typeof e.target & {
-      name: string
-      value: string
+      name: String,
+      value: String
     };
 
     let newSpendings = [...spendings];
@@ -83,7 +83,7 @@ const AddSpendings = () => {
       <h1>Add Spendings for the current date</h1>
       <form onSubmit={ (e:React.FormEvent) => { handleSubmit(e) } }>
         {
-          spendings.map((spending, idx) => {
+          spendings.map((spending: SpendingFormRow, idx: number) => {
             return (
               <div key={ idx } >
                 <label>Category:</label>
@@ -110,6 +110,6 @@ const AddSpendings = () => {
       </form>
     </>
   );
-}
+};
 
 export default AddSpendings;

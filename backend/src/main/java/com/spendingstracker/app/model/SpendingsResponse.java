@@ -3,16 +3,16 @@ package com.spendingstracker.app.model;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
-public class SpendingsResponseWrapper {
-    private List<Spending> spendings;
+public class SpendingsResponse {
+    private Map<Date, List<Spending>> spendings;
     private Date startDate;
     private Date endDate;
     private BigDecimal totalSpent;
-
     private int totalSpendings;
 
-    public SpendingsResponseWrapper(List<Spending> spendings, Date startDate, Date endDate, BigDecimal totalSpent, int totalSpendings) {
+    public SpendingsResponse(Map<Date, List<Spending>> spendings, Date startDate, Date endDate, BigDecimal totalSpent, int totalSpendings) {
         this.spendings = spendings;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -20,11 +20,11 @@ public class SpendingsResponseWrapper {
         this.totalSpendings = totalSpendings;
     }
 
-    public List<Spending> getSpendings() {
+    public Map<Date, List<Spending>> getSpendings() {
         return spendings;
     }
 
-    public void setSpendings(List<Spending> spendings) {
+    public void setSpendings(Map<Date, List<Spending>> spendings) {
         this.spendings = spendings;
     }
 

@@ -1,10 +1,14 @@
 type Nullable<T> = T | null;
 
+type SpendingMap = {
+  [date: string]: Array<Spending>
+}
+
 export type User = {
   userId: Nullable<number>;
   password: null;
-  username: Nullable<string>;
-  authorities: Nullable<Array<string>>;
+  username: Nullable<String>;
+  authorities: Nullable<Array<String>>;
   accountNonExpired: Nullable<boolean>;
   accountNonLocked: Nullable<boolean>;
   credentialsNonExpired: Nullable<boolean>;
@@ -14,14 +18,14 @@ export type User = {
 export type Spending = {
   id: number;
   amount: number;
-  category: string;
-  date: string;
+  category: String;
+  date: String;
 };
 
 export type SpendingsApiResponse = {
-  spendings: Array<Spending>;
-  startDate: string;
-  endDate: string;
+  spendings: SpendingMap
+  startDate: String;
+  endDate: String;
   totalSpent: number;
   totalSpendings: number;
 };

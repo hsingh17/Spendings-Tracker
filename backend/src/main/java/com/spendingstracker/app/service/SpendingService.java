@@ -1,62 +1,78 @@
 package com.spendingstracker.app.service;
 
 import com.spendingstracker.app.model.Spending;
-import com.spendingstracker.app.model.SpendingsRequestWrapper;
-import com.spendingstracker.app.model.SpendingsResponseWrapper;
+import com.spendingstracker.app.model.SpendingsRequest;
+import com.spendingstracker.app.model.SpendingsResponse;
 import com.spendingstracker.app.repository.SpendingRepository;
+import com.spendingstracker.app.util.CustomMapComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class SpendingService {
     @Autowired
     SpendingRepository spendingRepository;
 
-    public SpendingsResponseWrapper getSpendings(Integer userId, Date startDate, Date endDate) {
-        List<Spending> spendings;
+    public SpendingsResponse getSpendings(Integer userId, Date startDate, Date endDate) {
+        List<Spending> spendingList;
         if (startDate == null && endDate == null) { // Get all spendings for this user
-            spendings = spendingRepository.findByUserIdOrderByDateAsc(userId);
+            spendingList = spendingRepository.findByUserIdOrderByDateAsc(userId);
         } else if (endDate == null) {   // If endDate is null, just go from startDate to present
-            spendings = spendingRepository.findByUserIdAndDateGreaterThanEqualOrderByDateAsc(userId, startDate);
+            spendingList = spendingRepository.findByUserIdAndDateGreaterThanEqualOrderByDateAsc(userId, startDate);
         } else if (startDate == null) {
-            spendings = spendingRepository.findByUserIdAndDateLessThanEqualOrderByDateAsc(userId, endDate);
+            spendingList = spendingRepository.findByUserIdAndDateLessThanEqualOrderByDateAsc(userId, endDate);
         } else { // Given both a startDate and endDate
-            spendings = spendingRepository.findByUserIdAndDateBetweenOrderByDateAsc(userId, startDate, endDate);
+            spendingList = spendingRepository.findByUserIdAndDateBetweenOrderByDateAsc(userId, startDate, endDate);
         }
+
+        // Find the total amount spent of this query and create Map of Date to List<Spending>
         BigDecimal totalSpent = new BigDecimal(0);
-        for (Spending spending : spendings) {
-            totalSpent = totalSpent.add(spending.getAmount());
+        Map<Date, List<Spending>> spendings = new TreeMap<>(new CustomMapComparator());
+        for (Spending spending : spendingList) {
+            totalSpent = totalSpent.add(spending.getAmount()); // Increment total
+
+            Date spendingDate = spending.getDate();
+            spendings.computeIfAbsent(spendingDate, k -> new ArrayList<>());
+            spendings.get(spendingDate).add(spending);
         }
+
         endDate = endDate == null ? new Date() : endDate; // Reassign endDate if null
-        return new SpendingsResponseWrapper(spendings, startDate, endDate, totalSpent, spendings.size());
+        return new SpendingsResponse(spendings, startDate, endDate, totalSpent, spendingList.size());
     }
 
-    public void createSpending(Integer userId, SpendingsRequestWrapper spendingsRequestWrapper) throws Exception {
-        validateSpendingsRequestWrapper(spendingsRequestWrapper); // Validate the input
-        saveSpendings(userId, spendingsRequestWrapper, null);
+    public void createSpending(Integer userId, SpendingsRequest spendingsRequest) throws Exception {
+        validateSpendingsRequestWrapper(spendingsRequest); // Validate the input
+        saveSpendings(userId, spendingsRequest, null);
     }
 
-    public void updateSpending(Integer userId, Date date, SpendingsRequestWrapper spendingsRequestWrapper) throws Exception {
-        validateSpendingsRequestWrapper(spendingsRequestWrapper); // Validate the input
+    public void updateSpending(Integer userId, Date date, SpendingsRequest spendingsRequest) throws Exception {
+        validateSpendingsRequestWrapper(spendingsRequest); // Validate the input
+        deleteSpendings(userId, date, date); // Delete the old spendings
+        saveSpendings(userId, spendingsRequest, date); // Update the spendings by inserting them in again with that specific date
+    }
 
+    private void deleteSpendings(Integer userId, Date startDate, Date endDate) {
         // Get the spendings associated with this date
-        List<Spending> spendingsToDelete = getSpendings(userId, date, date).getSpendings();
+        Map<Date, List<Spending>> spendings = getSpendings(userId, startDate, endDate).getSpendings();
+
+        // Convert the map into list of its values
+        List<List<Spending>> spendingList = new ArrayList<>(spendings.values());
+
+        // Flatten the list of lists
+        List<Spending> flattenedList = spendingList.stream().flatMap(List::stream).collect(Collectors.toList());
 
         // Delete rows for this user that occur on that date
-        spendingRepository.deleteAll(spendingsToDelete);
-
-        // Update the spendings by inserting them in again with that specific date
-        saveSpendings(userId, spendingsRequestWrapper, date);
+        spendingRepository.deleteAll(flattenedList);
     }
 
-    private void saveSpendings(Integer userId, SpendingsRequestWrapper spendingsRequestWrapper, Date date) {
+    private void saveSpendings(Integer userId, SpendingsRequest spendingsRequest, Date date) {
         // Insert the new spendings
-        List<String> categories = spendingsRequestWrapper.getCategories();
-        List<BigDecimal> amounts = spendingsRequestWrapper.getAmounts();
+        List<String> categories = spendingsRequest.getCategories();
+        List<BigDecimal> amounts = spendingsRequest.getAmounts();
         int numberOfSpendings = amounts.size();
         for (int i = 0; i < numberOfSpendings; i++) {
             if (date == null) {
@@ -67,9 +83,9 @@ public class SpendingService {
         }
     }
 
-    private void validateSpendingsRequestWrapper(SpendingsRequestWrapper spendingsRequestWrapper) throws Exception {
-        List<String> categories = spendingsRequestWrapper.getCategories();
-        List<BigDecimal> amounts = spendingsRequestWrapper.getAmounts();
+    private void validateSpendingsRequestWrapper(SpendingsRequest spendingsRequest) throws Exception {
+        List<String> categories = spendingsRequest.getCategories();
+        List<BigDecimal> amounts = spendingsRequest.getAmounts();
 
         boolean isCategoriesNull = categories == null;
         boolean isAmountsNull = amounts == null;

@@ -1,11 +1,12 @@
 import { Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import UserContext from "./contexts/UserContext";
-import Home from "./components/Home";
-import Login from "./components/Login";
-import Dashboard from "./components/Dashboard";
-import ViewSpendings from "./components/ViewSpendings";
-import AddSpendings from "./components/AddSpendings";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import ViewSpendings from "./pages/ViewSpendings";
+import AddSpendings from "./pages/AddSpendings";
+import EditSpending from "./pages/EditSpending";
 import { User } from "./utils/types"
 
 const App = () => {
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="/dashboard" element={ <Dashboard />} />
         <Route path="/view-spendings" element={ <ViewSpendings />} />
         <Route path="/add-spendings" element={ <AddSpendings />} />
+        <Route path="/edit-spending/" element={ <EditSpending />} />
       </Routes>      
     </UserContext.Provider>
   )
