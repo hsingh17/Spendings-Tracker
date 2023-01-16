@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Spending, SpendingsApiResponse } from "../utils/types";
 import { Constants } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
+import SpendingsList from "../components/SpendingsList";
 
 const ViewSpendings = () => {
   const [ response, setResponse ] = useState<SpendingsApiResponse>();
@@ -21,29 +22,30 @@ const ViewSpendings = () => {
 
       const body: SpendingsApiResponse = await response.json() as SpendingsApiResponse;
       setResponse(body);
-      console.log(body)
     };
 
     getSpendings();
   }, []);
 
-  // TODO: Make this a component 
   return (
     <>
       <h1>Here are your spendings: </h1>
       {
-        Object.keys(response?.spendings || {}).map((spendingDate: String, idx: number) => {
+        response ?
+        
+        Object.keys(response.spendings).map((spendingDate: String, idx: number) => {
+          const spendingsArray: Array<Spending> = response?.spendings[spendingDate as string];
           return (
             <div key={ idx }>
-              <h1>{ spendingDate }</h1>
-              {
-                response?.spendings[spendingDate as string].map((spending: Spending) => {
-                  return <p key={ spending.id }>{`Category: ${spending.category}. Amount: ${spending.amount}`}</p>
-                })
-              }
+              <h2>{ spendingDate }</h2>
+              <SpendingsList spendingsArray={ spendingsArray }/>
             </div>
           );
         })
+        
+        :
+        
+        <h1>Loading...</h1>
       }
     </>
   );

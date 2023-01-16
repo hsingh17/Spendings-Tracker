@@ -34,3 +34,12 @@ export type SpendingFormRow = {
   category: Nullable<string>,
   amount: Nullable<string>
 };
+
+
+export type SpendingsListProps = {
+  spendingsArray: Array<Spending>;
+}
+
+export type SpendingComponentProps = {
+  spending: Spending
+}

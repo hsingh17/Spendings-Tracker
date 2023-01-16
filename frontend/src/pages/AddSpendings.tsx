@@ -46,8 +46,8 @@ const AddSpendings = () => {
   const handleChange = (e:React.ChangeEvent, idx: number) => {
     // Custom inline type
     const target = e.target as typeof e.target & {
-      name: String,
-      value: String
+      name: string,
+      value: string
     };
 
     let newSpendings = [...spendings];

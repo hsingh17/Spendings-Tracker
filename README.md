@@ -20,6 +20,6 @@ This repository holds the code for my spendings tracker app built with Java and 
 - Need max cap on both amount and category
 - When adding or editing a spending and someone puts duplicate categories, collect them to be together (likely to be done on the backend)
 - after input has been added for the day, it should go to edit mode (NOT ADD)
-- remove timestamp part in date
+- remove timestamp part in date ✅
 - add tailwind
-- add ability to create an account
+- add ability to create an account 
