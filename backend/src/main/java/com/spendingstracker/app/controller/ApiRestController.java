@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -20,6 +21,13 @@ public class ApiRestController {
     @Autowired
     private SpendingService spendingService;
     private final String datePattern = "yyyy-MM-dd";
+
+    @GetMapping("/me")
+    public ResponseEntity<UserDetails> getMe() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+        return ResponseEntity.ok(userDetails);
+    }
 
     @GetMapping("/spending/get-spending")
     public ResponseEntity<SpendingsResponse> getSpendings(@RequestParam(name = "start-date", required = false) @DateTimeFormat(pattern = datePattern) Date startDate,

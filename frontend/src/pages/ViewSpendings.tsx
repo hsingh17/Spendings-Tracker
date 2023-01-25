@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
-import { Spending, SpendingsApiResponse } from "../utils/types";
+import { useContext, useEffect, useState } from "react";
+import { Spending, SpendingsApiResponse, User } from "../utils/types";
 import { Constants } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
 import SpendingsList from "../components/SpendingsList";
+import UserContext from "../contexts/UserContext";
+import isLoggedIn from "../utils/user-logged-in-helper";
 
 const ViewSpendings = () => {
+  const { user, setUser } = useContext(UserContext);
   const [ response, setResponse ] = useState<SpendingsApiResponse>();
   const navigate = useNavigate();
 
@@ -14,6 +17,8 @@ const ViewSpendings = () => {
 
   useEffect(() => {
     const getSpendings = async () => {
+      isLoggedIn(user, setUser, navigate, null, "/login");
+
       const apiUrl: string = Constants.BASE_URL + "/api/spending/get-spending";
       const response = await fetch(apiUrl, {
         method: "GET",

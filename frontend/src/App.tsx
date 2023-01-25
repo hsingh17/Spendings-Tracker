@@ -10,16 +10,7 @@ import EditSpending from "./pages/EditSpending";
 import { User } from "./utils/types"
 
 const App = () => {
-  const [user, setUser] = useState<User>({
-    userId: null, 
-    username: null, 
-    password: null, 
-    authorities: null, 
-    accountNonExpired: null, 
-    accountNonLocked: null, 
-    credentialsNonExpired: null, 
-    enabled: null 
-  });
+  const [user, setUser] = useState<User | null>(null);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>

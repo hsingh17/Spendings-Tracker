@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import UserContext from "../contexts/UserContext";
 import { Constants } from "../utils/constants";
 import { SpendingFormRow } from "../utils/types";
+import isLoggedIn from "../utils/user-logged-in-helper";
 
 const AddSpendings = () => {
+  const { user, setUser } = useContext(UserContext);
+  const navigate = useNavigate();
   const [spendings, setSpendings] = useState<Array<SpendingFormRow>>([{
     category: null,
     amount: null
@@ -77,6 +82,11 @@ const AddSpendings = () => {
       category: null,
     }]);
   }
+
+
+  useEffect(() => {
+    isLoggedIn(user, setUser, navigate, null, "/login");
+  }, []);
 
   return (
     <>

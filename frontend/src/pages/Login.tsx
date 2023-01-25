@@ -1,12 +1,13 @@
-import { FormEvent, useContext } from "react";
+import { FormEvent, useContext, useEffect } from "react";
 import UserContext from "../contexts/UserContext";
 import { User } from "../utils/types";
 import { useNavigate } from "react-router-dom";
 import { Constants } from "../utils/constants";
+import isLoggedIn from "../utils/user-logged-in-helper";
 
 const Login = () => {
   // TODO: check if user is already potentially logged in (JWT Token is in storage)
-  const { setUser } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleLogin = async (e: FormEvent) => {
@@ -41,6 +42,10 @@ const Login = () => {
       console.log("LOGIN FAILED");
     }
   };
+
+  useEffect(() => {
+    isLoggedIn(user, setUser, navigate, "/dashboard", null);
+  }, [])
 
   return (
     <>
