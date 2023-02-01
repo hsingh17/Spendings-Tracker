@@ -20,7 +20,7 @@ import java.util.Date;
 public class ApiRestController {
     @Autowired
     private SpendingService spendingService;
-    private final String datePattern = "yyyy-MM-dd";
+    private final String datePattern = "MM-dd-yyyy";
 
     @GetMapping("/me")
     public ResponseEntity<UserDetails> getMe() {

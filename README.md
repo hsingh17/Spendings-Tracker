@@ -7,8 +7,8 @@ This repository holds the code for my spendings tracker app built with Java and 
 - Filtering by date on frontend (start and end dates might be a calendar dropdown)
 - Adding new spendings for the day on frontend ✅
 - Rework API to return Map<Date, List<Spending>> ✅
-- Edit old spendings
-- Charts on dashboard
+- Edit old spendings ✅
+- Charts on dashboard with d3.js
     - Panel that displays all time spendings (has multiple dropdowns to filter between all time, past month, etc.)
     - Line graph of spendings amounts in past N months
     - Bar chart of top N spending categories and their amounts

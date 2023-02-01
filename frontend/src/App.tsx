@@ -5,9 +5,9 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import ViewSpendings from "./pages/ViewSpendings";
-import AddSpendings from "./pages/AddSpendings";
-import EditSpending from "./pages/EditSpending";
 import { User } from "./utils/types"
+import AddSpendings from "./pages/AddSpendings";
+import EditSpendings from "./pages/EditSpendings";
 
 const App = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -17,10 +17,10 @@ const App = () => {
       <Routes>
         <Route path="/" element={ <Home /> } />
         <Route path="/login" element={ <Login /> } />
-        <Route path="/dashboard" element={ <Dashboard />} />
-        <Route path="/view-spendings" element={ <ViewSpendings />} />
-        <Route path="/add-spendings" element={ <AddSpendings />} />
-        <Route path="/edit-spending/" element={ <EditSpending />} />
+        <Route path="/dashboard" element={ <Dashboard /> } />
+        <Route path="/view-spendings" element={ <ViewSpendings /> } />
+        <Route path="/add-spendings" element={ < AddSpendings /> } />
+        <Route path="/edit-spendings/:spendingDate" element={ <EditSpendings /> } />
       </Routes>      
     </UserContext.Provider>
   )

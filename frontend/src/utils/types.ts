@@ -37,9 +37,19 @@ export type SpendingFormRow = {
 
 
 export type SpendingsListProps = {
+  spendingDate: String,
   spendingsArray: Array<Spending>;
 }
 
 export type SpendingComponentProps = {
   spending: Spending
+}
+
+export type AddEditSpendingProps = {
+  isAdd: boolean,
+  spendingDate: Nullable<String>
+}
+
+export type EditSpendingsParams = {
+  spendingDate: string
 }

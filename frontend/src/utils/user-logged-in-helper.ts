@@ -14,11 +14,9 @@ const isLoggedIn  = async (user: User | null, setUser: (user: User) => void, nav
         credentials: "include"
     });
 
-    if (response.ok) { // User is already logged in so set in the UserContext
+    if (response.ok && navigateIfLoggedIn !== null) { // User is already logged in so set in the UserContext
         setUser(await response.json() as User);
-        if (navigateIfLoggedIn !== null) { // Redirect if successful and not null
-            navigate(navigateIfLoggedIn);
-        }
+        navigate(navigateIfLoggedIn);
         return;
     }
 

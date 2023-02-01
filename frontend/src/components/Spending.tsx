@@ -5,7 +5,6 @@ const SpendingComponent: FC<SpendingComponentProps> = ({ spending }) => {
   return (
     <span>
       <p>{`Category: ${spending.category}. Amount: ${spending.amount}`}</p>
-      <button>Edit</button>
     </span>
   )
 };

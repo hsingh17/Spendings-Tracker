@@ -11,10 +11,6 @@ const ViewSpendings = () => {
   const [ response, setResponse ] = useState<SpendingsApiResponse>();
   const navigate = useNavigate();
 
-  const handleEdit = (date: String, idx: number) => {
-    navigate("/edit-spending");
-  };
-
   useEffect(() => {
     const getSpendings = async () => {
       isLoggedIn(user, setUser, navigate, null, "/login");
@@ -40,12 +36,7 @@ const ViewSpendings = () => {
         
         Object.keys(response.spendings).map((spendingDate: String, idx: number) => {
           const spendingsArray: Array<Spending> = response?.spendings[spendingDate as string];
-          return (
-            <div key={ idx }>
-              <h2>{ spendingDate }</h2>
-              <SpendingsList spendingsArray={ spendingsArray }/>
-            </div>
-          );
+          return <SpendingsList key={ idx } spendingDate={ spendingDate } spendingsArray={ spendingsArray }/>
         })
         
         :
