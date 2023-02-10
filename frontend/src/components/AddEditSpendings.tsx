@@ -42,10 +42,11 @@ const AddEditSpendings: FC<AddEditSpendingProps> = ({ isAdd, spendingDate }) => 
       credentials: "include"
     });
 
-    console.log(await response.text());
-    // TODO
     if (response.ok) {
+      navigate(-1); // Go back to previous page
     } else {
+      // TODO: Maybe prompt user with a pop-up that something bad happened
+      alert("Uh oh. We were unable to process that request. Please try again!")
     }
   }
 

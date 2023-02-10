@@ -46,6 +46,7 @@ public class AuthController {
                     .secure(true) // If SameSite is "None", then secure must be true (it's fine if localhost uses http though as it is an exception)
                     .sameSite("None") // None because eventually backend and frontend will be on different domains so we need to allow for cross-site cookies
                     .build();
+
             response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
             return ResponseEntity.ok(userDetails);
