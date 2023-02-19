@@ -1,7 +1,7 @@
 package com.spendingstracker.app.controller;
 
 import com.spendingstracker.app.model.CustomUserDetails;
-import com.spendingstracker.app.model.SpendingsRequest;
+import com.spendingstracker.app.model.Spending;
 import com.spendingstracker.app.model.SpendingsResponse;
 import com.spendingstracker.app.service.SpendingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -37,16 +38,15 @@ public class ApiRestController {
     }
 
     @PostMapping("/spending/create-spending")
-    public ResponseEntity<String> createSpending(@RequestBody SpendingsRequest spendingsRequest) throws Exception {
-        spendingService.createSpending(getUserId(), spendingsRequest);
-        return new ResponseEntity<>("Spending Created", HttpStatus.CREATED);
+    public ResponseEntity<String> createSpending(@RequestBody List<Spending> spendings) throws Exception {
+        spendingService.createSpending(spendings);
+        return new ResponseEntity<>("Spendings Created", HttpStatus.CREATED);
     }
 
-    @PostMapping("/spending/update-spending/{date}")
-    public ResponseEntity<String> updateSpending(@PathVariable("date") @DateTimeFormat(pattern = datePattern) Date date,
-                                                 @RequestBody SpendingsRequest spendingsRequest) throws Exception {
-        spendingService.updateSpending(getUserId(), date, spendingsRequest);
-        return new ResponseEntity<>("Spending updated", HttpStatus.OK);
+    @PostMapping("/spending/update-spending")
+    public ResponseEntity<String> updateSpending(@RequestBody List<Spending> spendings) throws Exception {
+        spendingService.updateSpending(spendings);
+        return new ResponseEntity<>("Spendings updated", HttpStatus.OK);
     }
 
     private Integer getUserId() {

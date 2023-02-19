@@ -1,5 +1,8 @@
 package com.spendingstracker.app.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -8,43 +11,36 @@ import java.util.Date;
 @Table(schema = "APP", name = "SPENDINGS")
 public class Spending {
     @Id
-    @GeneratedValue
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "SPENDING_ID")
+    private Integer spendingId;
 
     @Column(name = "USER_ID")
     private Integer userId;
 
-    @Column(name = "CATEGORY")
+    @Column(name = "SPENDING_CATEGORY")
     private String category;
 
-    @Column(name = "AMOUNT")
+    @Column(name = "SPENDING_AMOUNT")
     private BigDecimal amount;
 
-    @Column(name = "DATE")
+    @Column(name = "SPENDING_DATE")
     private Date date = new Date();
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID", insertable = false, updatable = false)
+    @JsonIgnore // We don't want to show the User object in reponse
+    private User user;
 
     public Spending() {
     }
 
-    public Spending(Integer userId, String category, BigDecimal amount) {
-        this.userId = userId;
-        this.category = category.toUpperCase();
-        this.amount = amount;
+    public Integer getSpendingId() {
+        return spendingId;
     }
 
-    public Spending(Integer userId, String category, BigDecimal amount, Date date) {
-        this.userId = userId;
-        this.category = category.toUpperCase();
-        this.amount = amount;
-        this.date = date;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
+    public void setSpendingId(Integer spendingId) {
+        this.spendingId = spendingId;
     }
 
     public Integer getUserId() {
@@ -60,7 +56,7 @@ public class Spending {
     }
 
     public void setCategory(String category) {
-        this.category = category.toUpperCase();
+        this.category = category;
     }
 
     public BigDecimal getAmount() {
@@ -77,5 +73,13 @@ public class Spending {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
