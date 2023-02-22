@@ -21,4 +21,9 @@ public class Constants {
         }
     }
 
+    // ####################################################################
+    // Defaults
+    // ###################################################################
+    public static final int DEFAULT_LIMIT = 1000;
+    public static final int DEFAULT_PAGE = 0;
 }

@@ -6,18 +6,46 @@ import java.util.List;
 import java.util.Map;
 
 public class SpendingsResponse {
+    private long count;
+    private String next;
+    private String previous;
     private Map<Date, List<Spending>> spendings;
     private Date startDate;
     private Date endDate;
     private BigDecimal totalSpent;
-    private int totalSpendings;
 
-    public SpendingsResponse(Map<Date, List<Spending>> spendings, Date startDate, Date endDate, BigDecimal totalSpent, int totalSpendings) {
+    public SpendingsResponse(Map<Date, List<Spending>> spendings, Date startDate, Date endDate, BigDecimal totalSpent, long count, String next, String previous) {
         this.spendings = spendings;
         this.startDate = startDate;
         this.endDate = endDate;
         this.totalSpent = totalSpent;
-        this.totalSpendings = totalSpendings;
+        this.count = count;
+        this.next = next;
+        this.previous = previous;
+    }
+
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
+    }
+
+    public String getNext() {
+        return next;
+    }
+
+    public void setNext(String next) {
+        this.next = next;
+    }
+
+    public String getPrevious() {
+        return previous;
+    }
+
+    public void setPrevious(String previous) {
+        this.previous = previous;
     }
 
     public Map<Date, List<Spending>> getSpendings() {
@@ -50,13 +78,5 @@ public class SpendingsResponse {
 
     public void setTotalSpent(BigDecimal totalSpent) {
         this.totalSpent = totalSpent;
-    }
-
-    public int getTotalSpendings() {
-        return totalSpendings;
-    }
-
-    public void setTotalSpendings(int totalSpendings) {
-        this.totalSpendings = totalSpendings;
     }
 }

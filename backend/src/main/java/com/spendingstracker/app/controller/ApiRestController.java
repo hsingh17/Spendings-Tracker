@@ -13,8 +13,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -31,10 +33,14 @@ public class ApiRestController {
     }
 
     @GetMapping("/spending/get-spending")
-    public ResponseEntity<SpendingsResponse> getSpendings(@RequestParam(name = "start-date", required = false) @DateTimeFormat(pattern = datePattern) Date startDate,
-                                                          @RequestParam(name = "end-date", required = false) @DateTimeFormat(pattern = datePattern) Date endDate)
+    public ResponseEntity<SpendingsResponse> getSpendings(
+            @RequestParam(name = "start-date", required = false) @DateTimeFormat(pattern = datePattern) Optional<Date> startDate,
+            @RequestParam(name = "end-date", required = false) @DateTimeFormat(pattern = datePattern) Optional<Date> endDate,
+            @RequestParam(name = "page") Optional<Integer> page,
+            @RequestParam(name = "limit") Optional<Integer> limit,
+            HttpServletRequest request)
     throws Exception {
-        return new ResponseEntity<>(spendingService.getSpendings(getUserId(), startDate, endDate), HttpStatus.OK);
+        return new ResponseEntity<>(spendingService.getSpendings(getUserId(), request.getRequestURL() + "?" +request.getQueryString(), startDate, endDate, page, limit), HttpStatus.OK);
     }
 
     @PostMapping("/spending/create-spending")

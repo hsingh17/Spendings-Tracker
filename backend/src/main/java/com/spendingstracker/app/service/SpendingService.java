@@ -6,6 +6,8 @@ import com.spendingstracker.app.model.SpendingsResponse;
 import com.spendingstracker.app.repository.SpendingRepository;
 import com.spendingstracker.app.util.CustomMapComparator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,15 +18,25 @@ public class SpendingService {
     @Autowired
     private SpendingRepository spendingRepository;
 
-    public SpendingsResponse getSpendings(Integer userId, Date startDate, Date endDate) {
-        startDate = (startDate == null) ? Constants.LOW_DATE : startDate; // If start date is null, default to LOW_DATE
-        endDate = (endDate == null) ? Constants.HIGH_DATE : endDate; // If end date is null, default to HIGH_DATE
+    public SpendingsResponse getSpendings(
+            Integer userId,
+            String currentUri,
+            Optional<Date> startDateOpt,
+            Optional<Date> endDateOpt,
+            Optional<Integer> pageOpt,
+            Optional<Integer> limitOpt) {
+        Date startDate = startDateOpt.orElse(Constants.LOW_DATE);
+        Date endDate = endDateOpt.orElse(Constants.HIGH_DATE);
+        Integer page = pageOpt.orElse(Constants.DEFAULT_PAGE);
+        Integer limit = limitOpt.orElse(Constants.DEFAULT_LIMIT);
 
-        List<Spending> spendingList = spendingRepository.findSpendingsBetweenDate(userId, startDate, endDate);
+        Page<Spending> spendingPage = spendingRepository.findSpendingsBetweenDate(
+                userId, startDate, endDate, PageRequest.of(page, limit));
+
         BigDecimal totalSpent = new BigDecimal(0);
         Map<Date, List<Spending>> spendings = new TreeMap<>(new CustomMapComparator());
 
-        for (Spending spending : spendingList) {
+        for (Spending spending : spendingPage) {
             totalSpent = totalSpent.add(spending.getAmount()); // Increment total
 
             Date spendingDate = spending.getDate();
@@ -32,7 +44,10 @@ public class SpendingService {
             spendings.get(spendingDate).add(spending);
         }
 
-        return new SpendingsResponse(spendings, startDate, endDate, totalSpent, spendingList.size());
+        String nextPageUri = (page >= spendingPage.getTotalPages()-1) ? null : formApiUri(currentUri, true, page);
+        String prevPageUri = (page == Constants.DEFAULT_PAGE) ? null : formApiUri(currentUri, false, page);
+
+        return new SpendingsResponse(spendings, startDate, endDate, totalSpent, spendingPage.getTotalElements(), nextPageUri, prevPageUri);
     }
 
     public void createSpending(List<Spending> spendings) throws Exception {
@@ -41,5 +56,15 @@ public class SpendingService {
 
     public void updateSpending(List<Spending> spendings) throws Exception {
         spendingRepository.saveAll(spendings);
+    }
+
+    private String formApiUri(String currentUri, boolean next, int curPage) {
+        // TODO: Error handling
+        StringBuilder sb = new StringBuilder(currentUri);
+        int start = sb.indexOf("page");
+        int end = sb.indexOf("&", start);
+        int newPage = next ? curPage+1 : curPage-1;
+
+        return sb.substring(0, start) + "page=" + newPage + (end == -1 ? "" : sb.substring(end, sb.length()));
     }
 }
