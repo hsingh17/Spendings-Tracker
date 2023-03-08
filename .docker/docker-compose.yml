@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  database:
+    container_name: MySQL-Database
+    build: ../database/
+    volumes:
+      - db-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+  frontend:
+    container_name: React-Frontend
+    build: ../frontend/
+    volumes:
+      - ../frontend/src:/frontend/src
+    ports:
+      - "5173:5173"
+    depends_on:
+      - "database"
+
+volumes:
+  db-data: {}
