@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.spendings-tracker</groupId>
-	<artifactId>app</artifactId>
+	<artifactId>Spring-Backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>app</name>
+	<name>Spring-Backend</name>
 	<description>Spring Boot Project for the backend of hsingh17&apos;s Spending Tracker app</description>
 	<properties>
 		<java.version>11</java.version>
@@ -71,6 +71,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>Spring-Backend</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

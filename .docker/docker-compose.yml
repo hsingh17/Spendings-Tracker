@@ -7,6 +7,17 @@ services:
       - db-data:/var/lib/mysql
     ports:
       - "3306:3306"
+  backend:
+    container_name: Spring-Backend
+    build: ../backend/
+    volumes:
+      - ../backend/src:/backend/src
+    environment:
+      -  MYSQL_HOST=database
+    ports:
+    - "8080:8080"
+    depends_on:
+      - "database"
   frontend:
     container_name: React-Frontend
     build: ../frontend/
@@ -15,7 +26,7 @@ services:
     ports:
       - "5173:5173"
     depends_on:
-      - "database"
+      - "backend"
 
 volumes:
   db-data: {}
