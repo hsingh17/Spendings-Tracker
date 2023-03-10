@@ -40,7 +40,7 @@ public class ApiRestController {
             @RequestParam(name = "limit") Optional<Integer> limit,
             HttpServletRequest request)
     throws Exception {
-        return new ResponseEntity<>(spendingService.getSpendings(getUserId(), request.getRequestURL() + "?" +request.getQueryString(), startDate, endDate, page, limit), HttpStatus.OK);
+        return new ResponseEntity<>(spendingService.getSpendings(getUserId(), request.getRequestURL() + "?" + request.getQueryString(), startDate, endDate, page, limit), HttpStatus.OK);
     }
 
     @PostMapping("/spending/create-spending")
