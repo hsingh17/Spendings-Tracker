@@ -1,4 +1,6 @@
-const formatDate = (date: string) => {
+import { Nullable } from "./types";
+
+const formatDate = (date: string) : Nullable<string> => {
     // TODO: Error handling (?)
 
     // Can't pass date string into the Date object since JS will convert to UTC
@@ -8,6 +10,9 @@ const formatDate = (date: string) => {
     const dateNum: number = parseInt(split[2]);
     
     const dateObj: Date = new Date(yearNum, monthIdx, dateNum);
+    if (isNaN(dateObj.getTime())) { // NaN check
+        return null;
+    }
 
     const monthRaw: number = dateObj.getMonth() + 1;
     const month: string = (monthRaw < 10) ? `0${monthRaw}` : `${monthRaw}`;

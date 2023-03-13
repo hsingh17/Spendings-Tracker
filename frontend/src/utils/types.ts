@@ -1,4 +1,4 @@
-type Nullable<T> = T | null;
+export type Nullable<T> = T | null;
 
 type SpendingMap = {
   [date: string]: Array<Spending>
@@ -16,17 +16,20 @@ export type User = {
 };
 
 export type Spending = {
-  id: number;
-  amount: number;
+  spendingId: number;
+  userId: number;
   category: String;
+  amount: number;
   date: String;
 };
 
 export type SpendingsApiResponse = {
+  count: number;
+  next: Nullable<String>;
+  previous: Nullable<String>;
   spendings: SpendingMap
   startDate: String;
   endDate: String;
-  totalSpent: number;
   totalSpendings: number;
 };
 
@@ -37,19 +40,25 @@ export type SpendingFormRow = {
 
 
 export type SpendingsListProps = {
-  spendingDate: String,
+  spendingDate: String;
   spendingsArray: Array<Spending>;
-}
+};
 
 export type SpendingComponentProps = {
-  spending: Spending
-}
+  spending: Spending;
+};
 
 export type AddEditSpendingProps = {
-  isAdd: boolean,
-  spendingDate: Nullable<String>
-}
+  isAdd: boolean;
+  spendingDate: Nullable<String>;
+};
 
 export type EditSpendingsParams = {
-  spendingDate: string
-}
+  spendingDate: string;
+};
+
+export type FetchResponseWrapper<T> = {
+  ok: boolean;
+  obj: Nullable<T>;
+  error: string;
+};

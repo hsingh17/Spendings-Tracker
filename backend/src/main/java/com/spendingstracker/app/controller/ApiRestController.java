@@ -39,20 +39,14 @@ public class ApiRestController {
             @RequestParam(name = "page") Optional<Integer> page,
             @RequestParam(name = "limit") Optional<Integer> limit,
             HttpServletRequest request)
-    throws Exception {
+    {
         return new ResponseEntity<>(spendingService.getSpendings(getUserId(), request.getRequestURL() + "?" + request.getQueryString(), startDate, endDate, page, limit), HttpStatus.OK);
     }
 
-    @PostMapping("/spending/create-spending")
-    public ResponseEntity<String> createSpending(@RequestBody List<Spending> spendings) throws Exception {
-        spendingService.createSpending(spendings);
-        return new ResponseEntity<>("Spendings Created", HttpStatus.CREATED);
-    }
-
-    @PostMapping("/spending/update-spending")
-    public ResponseEntity<String> updateSpending(@RequestBody List<Spending> spendings) throws Exception {
-        spendingService.updateSpending(spendings);
-        return new ResponseEntity<>("Spendings updated", HttpStatus.OK);
+    @PostMapping("/spending/save-spending")
+    public ResponseEntity<String> saveSpending(@RequestBody List<Spending> spendings) {
+        spendingService.saveSpending(spendings);
+        return new ResponseEntity<>("Spending(s) Saved", HttpStatus.CREATED);
     }
 
     private Integer getUserId() {

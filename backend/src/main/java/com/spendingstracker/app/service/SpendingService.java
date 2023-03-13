@@ -50,11 +50,7 @@ public class SpendingService {
         return new SpendingsResponse(spendings, startDate, endDate, totalSpent, spendingPage.getTotalElements(), nextPageUri, prevPageUri);
     }
 
-    public void createSpending(List<Spending> spendings) throws Exception {
-        spendingRepository.saveAll(spendings);
-    }
-
-    public void updateSpending(List<Spending> spendings) throws Exception {
+    public void saveSpending(List<Spending> spendings) {
         spendingRepository.saveAll(spendings);
     }
 
@@ -62,7 +58,7 @@ public class SpendingService {
         // TODO: Error handling
         StringBuilder sb = new StringBuilder(currentUri);
         int start = sb.indexOf("page");
-        int end = sb.indexOf("&", start);
+        int end = sb.indexOf("& ", start);
         int newPage = next ? curPage+1 : curPage-1;
 
         return sb.substring(0, start) + "page=" + newPage + (end == -1 ? "" : sb.substring(end, sb.length()));

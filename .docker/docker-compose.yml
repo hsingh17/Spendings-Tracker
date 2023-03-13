@@ -11,11 +11,12 @@ services:
     container_name: Spring-Backend
     build: ../backend/
     volumes:
-      - ../backend/src:/backend/src
+      - ../backend:/backend:rw
     environment:
-      -  MYSQL_HOST=database
+      - MYSQL_HOST=database
     ports:
-    - "8080:8080"
+      - "8080:8080"
+      - "5005:5005"
     depends_on:
       - "database"
   frontend:
