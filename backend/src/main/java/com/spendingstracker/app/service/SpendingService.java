@@ -56,11 +56,17 @@ public class SpendingService {
 
     private String formApiUri(String currentUri, boolean next, int curPage) {
         // TODO: Error handling
-        StringBuilder sb = new StringBuilder(currentUri);
-        int start = sb.indexOf("page");
-        int end = sb.indexOf("& ", start);
         int newPage = next ? curPage+1 : curPage-1;
+        StringBuilder sb = new StringBuilder(currentUri);
 
+        int start = sb.indexOf("page");
+        if (start == -1) { // "page" is not in the currentUri
+            boolean isOnlyParam = sb.indexOf("?") == -1;
+
+            return sb + (isOnlyParam ? "?" : "&") + "page=" + newPage;
+        }
+
+        int end = sb.indexOf("&", start);
         return sb.substring(0, start) + "page=" + newPage + (end == -1 ? "" : sb.substring(end, sb.length()));
     }
 }

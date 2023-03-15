@@ -4,6 +4,7 @@ import { User } from "../utils/types";
 import { useNavigate } from "react-router-dom";
 import { Constants } from "../utils/constants";
 import isLoggedIn from "../utils/user-logged-in-helper";
+import makeFetchRequestWrapper from "../utils/fetch-wrapper";
 
 const Login = () => {
   // TODO: check if user is already potentially logged in (JWT Token is in storage)
@@ -24,18 +25,10 @@ const Login = () => {
     };
 
     const apiUrl: string = Constants.BASE_URL + "/auth/login";
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(requestBody),
-      credentials: "include"
-    });
+    const response = await makeFetchRequestWrapper<User>(apiUrl, "POST", JSON.stringify(requestBody));
 
     if (response.ok) {
-      const user: User = await response.json() as User;
-      setUser(user);
+      setUser(response.obj as User);
       navigate("/dashboard");
     } else {
       // TODO: Error handling

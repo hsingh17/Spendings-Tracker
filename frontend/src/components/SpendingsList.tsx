@@ -18,7 +18,7 @@ const SpendingsList: FC<SpendingsListProps> = ({ spendingDate, spendingsArray })
       <button onClick={ () => {handleEdit()} }>Edit</button>
       {
         spendingsArray.map((spending: Spending) => {
-          return <SpendingComponent key={ spending.id } spending={ spending } />
+          return <SpendingComponent key={ spending.spendingId } spending={ spending } />
         })
       }
     </>
