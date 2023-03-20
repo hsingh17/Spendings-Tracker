@@ -2,12 +2,11 @@ package com.spendingstracker.app.service;
 
 import com.spendingstracker.app.constants.Constants;
 import com.spendingstracker.app.model.Spending;
+import com.spendingstracker.app.model.SpendingsForADay;
 import com.spendingstracker.app.model.SpendingsResponse;
 import com.spendingstracker.app.repository.SpendingRepository;
 import com.spendingstracker.app.util.CustomMapComparator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -30,24 +29,37 @@ public class SpendingService {
         Integer page = pageOpt.orElse(Constants.DEFAULT_PAGE);
         Integer limit = limitOpt.orElse(Constants.DEFAULT_LIMIT);
 
-        Page<Spending> spendingPage = spendingRepository.findSpendingsBetweenDate(
-                userId, startDate, endDate, PageRequest.of(page, limit));
+        List<Spending> spendingsList = spendingRepository.findSpendingsBetweenDate(userId, startDate, endDate);
 
+        // Group spendings by date via a Map
+        Map<Date, List<Spending>> spendingsDateMap = groupResultsByDate(spendingsList);
+
+        int N = spendingsDateMap.keySet().size();
+        int upper = Math.min((page + 1) * limit, N);
+
+        // Custom pagination
+        Map<Date, List<Spending>> paginatedSpendingsMap = paginateResults(spendingsDateMap, page, limit, upper);
+
+        // Create custom object which contains spendings grouped by date and some meta data
+        List<SpendingsForADay> spendingsForADayList = createSpendingsForADayList(paginatedSpendingsMap);
+
+        String nextPageUri = (upper == N) ? null : formApiUri(currentUri, true, page);
+        String prevPageUri = (page == Constants.DEFAULT_PAGE) ? null : formApiUri(currentUri, false, page);
         BigDecimal totalSpent = new BigDecimal(0);
-        Map<Date, List<Spending>> spendings = new TreeMap<>(new CustomMapComparator());
-
-        for (Spending spending : spendingPage) {
-            totalSpent = totalSpent.add(spending.getAmount()); // Increment total
-
-            Date spendingDate = spending.getDate();
-            spendings.computeIfAbsent(spendingDate, k -> new ArrayList<>()); // Add into the Map if this is the first time this date (key) is seen
-            spendings.get(spendingDate).add(spending);
+        for (SpendingsForADay spendingsForADay : spendingsForADayList) {
+            totalSpent = totalSpent.add(spendingsForADay.getTotal());
         }
 
-        String nextPageUri = (page >= spendingPage.getTotalPages()-1) ? null : formApiUri(currentUri, true, page);
-        String prevPageUri = (page == Constants.DEFAULT_PAGE) ? null : formApiUri(currentUri, false, page);
-
-        return new SpendingsResponse(spendings, startDate, endDate, totalSpent, spendingPage.getTotalElements(), nextPageUri, prevPageUri);
+        return new SpendingsResponse(
+                spendingsForADayList.size(),
+                spendingsDateMap.keySet().size(),
+                nextPageUri,
+                prevPageUri,
+                startDate,
+                endDate,
+                totalSpent,
+                spendingsForADayList
+        );
     }
 
     public void saveSpending(List<Spending> spendings) {
@@ -68,5 +80,42 @@ public class SpendingService {
 
         int end = sb.indexOf("&", start);
         return sb.substring(0, start) + "page=" + newPage + (end == -1 ? "" : sb.substring(end, sb.length()));
+    }
+
+    private Map<Date, List<Spending>> groupResultsByDate(List<Spending> spendings) {
+        Map<Date, List<Spending>> spendingsDateMap = new TreeMap<>(new CustomMapComparator());
+        for (Spending spending : spendings) {
+            Date spendingDate = spending.getDate();
+            spendingsDateMap.computeIfAbsent(spendingDate, k -> new ArrayList<>()); // Add into the Map if this is the first time this date (key) is seen
+            spendingsDateMap.get(spendingDate).add(spending);
+        }
+
+        return spendingsDateMap;
+    }
+
+    private Map<Date, List<Spending>> paginateResults(Map<Date, List<Spending>> spendingsDateMap, int page, int limit, int upper) {
+        List<Date> spendingsKeys = new ArrayList<>(spendingsDateMap.keySet());
+        List<Date> paginatedDates = spendingsKeys.subList(page * limit, upper);
+
+        Map<Date, List<Spending>> paginatedSpendingsMap  = new TreeMap<>(new CustomMapComparator());
+        for (Date date : paginatedDates) {
+            paginatedSpendingsMap.put(date, spendingsDateMap.get(date));
+        }
+
+        return paginatedSpendingsMap;
+    }
+
+    private List<SpendingsForADay> createSpendingsForADayList(Map<Date, List<Spending>> paginatedSpendingsMap) {
+        List<SpendingsForADay> spendingsForADayList = new ArrayList<>();
+        paginatedSpendingsMap.forEach(((date, spendings) -> {
+            BigDecimal totalForDay = new BigDecimal(0);
+            for (Spending spending : spendings) {
+                totalForDay = totalForDay.add(spending.getAmount());
+            }
+
+            spendingsForADayList.add(new SpendingsForADay(date, spendings.size(), totalForDay, spendings));
+        }));
+
+        return spendingsForADayList;
     }
 }

@@ -1,9 +1,5 @@
 export type Nullable<T> = T | null;
 
-type SpendingMap = {
-  [date: string]: Array<Spending>
-}
-
 export type User = {
   userId: Nullable<number>;
   password: null;
@@ -23,25 +19,35 @@ export type Spending = {
   date: String;
 };
 
+export type SpendingsForADay = {
+  date: String;
+  count: number;
+  total: number;
+  spendings: Array<Spending>;
+};
+
 export type SpendingsApiResponse = {
   count: number;
+  total: number;
   next: Nullable<String>;
   previous: Nullable<String>;
-  spendings: SpendingMap
   startDate: String;
   endDate: String;
-  totalSpendings: number;
+  totalSpent: number;
+  spendingsForADayList: Array<SpendingsForADay>;
 };
 
 export type SpendingFormRow = {
-  category: Nullable<string>,
-  amount: Nullable<string>
+  category: Nullable<string>;
+  amount: Nullable<string>;
 };
 
+export type SpendingsTableProps = {
+  spendingsForADayList: Array<SpendingsForADay>;
+};
 
-export type SpendingsListProps = {
-  spendingDate: String;
-  spendingsArray: Array<Spending>;
+export type SpendingsRowProps = {
+  spendingForADay: SpendingsForADay;
 };
 
 export type SpendingComponentProps = {

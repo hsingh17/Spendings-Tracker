@@ -2,7 +2,6 @@ package com.spendingstracker.app.constants;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 
 public class Constants {
@@ -27,4 +26,12 @@ public class Constants {
     // ####################################################################
     public static final int DEFAULT_LIMIT = 25;
     public static final int DEFAULT_PAGE = 0;
+
+
+    // ####################################################################
+    // GROUP_CONCAT Separators
+    // ####################################################################
+    public static final String SPENDINGS_OBJ_SEP = "%";
+    public static final String SPENDINGS_FIELD_SEP = "@";
+
 }

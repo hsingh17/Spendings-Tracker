@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Nullable, Spending, SpendingsApiResponse, User } from "../utils/types";
-import { Constants } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
-import SpendingsList from "../components/SpendingsList";
+import SpendingsContainer from "../components/SpendingsContainer";
 import UserContext from "../contexts/UserContext";
-import isLoggedIn from "../utils/user-logged-in-helper";
+import { Constants } from "../utils/constants";
 import formatDate from "../utils/dates-formatter";
 import makeFetchRequestWrapper from "../utils/fetch-wrapper";
+import { Nullable, SpendingsApiResponse } from "../utils/types";
+import isLoggedIn from "../utils/user-logged-in-helper";
 
 const ViewSpendings = () => {
   const { user, setUser } = useContext(UserContext);
@@ -21,7 +21,6 @@ const ViewSpendings = () => {
       return;
     }
 
-    console.log(response.obj);
     setResponse(response.obj as SpendingsApiResponse);
   }
 
@@ -57,7 +56,7 @@ const ViewSpendings = () => {
 
   const handleClickPageButtons = (dir: number) => {
     if (!response) {
-      console.error("Response is null!");
+      console.error("Response is null!"); // TODO
       return;
     }
 
@@ -69,7 +68,7 @@ const ViewSpendings = () => {
         fetchSpendings(response.next as string);
         break;
       default:
-        console.error("Where you going!");
+        console.error("Where you going!"); // TODO
     }
   }
 
@@ -113,18 +112,13 @@ const ViewSpendings = () => {
         <button type="submit">Search</button>
         <button type="reset">Reset filters</button>
       </form>
-
-      {
-        Object.keys(response.spendings).map((spendingDate: String, idx: number) => {
-          const spendingsArray: Array<Spending> = response?.spendings[spendingDate as string];
-          return <SpendingsList key={ idx } spendingDate={ spendingDate } spendingsArray={ spendingsArray }/>
-        })
-      }
+          
+      <SpendingsContainer spendingsForADayList={ response.spendingsForADayList } />
 
       <button onClick={ _ => handleClickPageButtons(-1) } disabled={ response.previous === null }>&lt;</button>
       <button onClick={ _ => handleClickPageButtons(1) } disabled={ response.next === null }> &gt;</button>
     </>
   );
-}
+};
 
 export default ViewSpendings;

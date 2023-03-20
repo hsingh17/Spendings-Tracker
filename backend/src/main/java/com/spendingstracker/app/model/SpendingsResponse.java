@@ -3,25 +3,26 @@ package com.spendingstracker.app.model;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public class SpendingsResponse {
     private long count;
+    private long total;
     private String next;
     private String previous;
-    private Map<Date, List<Spending>> spendings;
     private Date startDate;
     private Date endDate;
     private BigDecimal totalSpent;
+    private List<SpendingsForADay> spendingsForADayList;
 
-    public SpendingsResponse(Map<Date, List<Spending>> spendings, Date startDate, Date endDate, BigDecimal totalSpent, long count, String next, String previous) {
-        this.spendings = spendings;
+    public SpendingsResponse(long count, long total, String next, String previous, Date startDate, Date endDate, BigDecimal totalSpent, List<SpendingsForADay> spendingsForADayList) {
+        this.count = count;
+        this.total = total;
+        this.next = next;
+        this.previous = previous;
         this.startDate = startDate;
         this.endDate = endDate;
         this.totalSpent = totalSpent;
-        this.count = count;
-        this.next = next;
-        this.previous = previous;
+        this.spendingsForADayList = spendingsForADayList;
     }
 
     public long getCount() {
@@ -30,6 +31,14 @@ public class SpendingsResponse {
 
     public void setCount(long count) {
         this.count = count;
+    }
+
+    public long getTotal() {
+        return total;
+    }
+
+    public void setTotal(long total) {
+        this.total = total;
     }
 
     public String getNext() {
@@ -46,14 +55,6 @@ public class SpendingsResponse {
 
     public void setPrevious(String previous) {
         this.previous = previous;
-    }
-
-    public Map<Date, List<Spending>> getSpendings() {
-        return spendings;
-    }
-
-    public void setSpendings(Map<Date, List<Spending>> spendings) {
-        this.spendings = spendings;
     }
 
     public Date getStartDate() {
@@ -79,4 +80,13 @@ public class SpendingsResponse {
     public void setTotalSpent(BigDecimal totalSpent) {
         this.totalSpent = totalSpent;
     }
+
+    public List<SpendingsForADay> getSpendingsForADayList() {
+        return spendingsForADayList;
+    }
+
+    public void setSpendingsForADayList(List<SpendingsForADay> spendingsForADayList) {
+        this.spendingsForADayList = spendingsForADayList;
+    }
 }
+

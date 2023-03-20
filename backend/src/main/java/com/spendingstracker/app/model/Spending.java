@@ -1,7 +1,6 @@
 package com.spendingstracker.app.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
