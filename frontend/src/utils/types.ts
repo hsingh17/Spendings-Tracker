@@ -3,8 +3,8 @@ export type Nullable<T> = T | null;
 export type User = {
   userId: Nullable<number>;
   password: null;
-  username: Nullable<String>;
-  authorities: Nullable<Array<String>>;
+  username: Nullable<string>;
+  authorities: Nullable<Array<string>>;
   accountNonExpired: Nullable<boolean>;
   accountNonLocked: Nullable<boolean>;
   credentialsNonExpired: Nullable<boolean>;
@@ -12,15 +12,15 @@ export type User = {
 };
 
 export type Spending = {
-  spendingId: number;
-  userId: number;
-  category: String;
-  amount: number;
-  date: String;
+  spendingId: Nullable<number>;
+  userId: Nullable<number>;
+  category: Nullable<string>;
+  amount: Nullable<number>;
+  date: Nullable<string>;
 };
 
 export type SpendingsForADay = {
-  date: String;
+  date: string;
   count: number;
   total: number;
   spendings: Array<Spending>;
@@ -29,17 +29,20 @@ export type SpendingsForADay = {
 export type SpendingsApiResponse = {
   count: number;
   total: number;
-  next: Nullable<String>;
-  previous: Nullable<String>;
-  startDate: String;
-  endDate: String;
+  next: Nullable<string>;
+  previous: Nullable<string>;
+  startDate: string;
+  endDate: string;
   totalSpent: number;
   spendingsForADayList: Array<SpendingsForADay>;
 };
 
-export type SpendingFormRow = {
+export type SpendingsFormRow = {
+  spendingId: Nullable<number>;
+  userId: Nullable<number>;
   category: Nullable<string>;
   amount: Nullable<string>;
+  date: Nullable<string>;
 };
 
 export type SpendingsTableProps = {
@@ -47,7 +50,7 @@ export type SpendingsTableProps = {
 };
 
 export type SpendingsRowProps = {
-  spendingForADay: SpendingsForADay;
+  spendingsForADay: SpendingsForADay;
 };
 
 export type SpendingComponentProps = {
@@ -56,7 +59,7 @@ export type SpendingComponentProps = {
 
 export type AddEditSpendingProps = {
   isAdd: boolean;
-  spendingDate: Nullable<String>;
+  spendingDate: Nullable<string>;
 };
 
 export type EditSpendingsParams = {

@@ -13,7 +13,7 @@ const SpendingsContainer: FC<SpendingsTableProps> = ({ spendingsForADayList }) =
 
       {
         spendingsForADayList.map((spendingsForADay: SpendingsForADay, idx: number) => {
-          return <SpendingsRow key={ idx } spendingForADay={ spendingsForADay } />
+          return <SpendingsRow key={ idx } spendingsForADay={ spendingsForADay } />
         })
       }
     </div>

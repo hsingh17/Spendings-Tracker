@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import SpendingsContainer from "../components/SpendingsContainer";
 import UserContext from "../contexts/UserContext";
 import { Constants } from "../utils/constants";
-import formatDate from "../utils/dates-formatter";
+import DateFormatter from "../utils/dates-formatter";
+import formatDateUS from "../utils/dates-formatter";
 import makeFetchRequestWrapper from "../utils/fetch-wrapper";
 import { Nullable, SpendingsApiResponse } from "../utils/types";
 import isLoggedIn from "../utils/user-logged-in-helper";
@@ -33,8 +34,8 @@ const ViewSpendings = () => {
       pageLimitInput: { value: string }
     };
 
-    const startDate: Nullable<string> = formatDate(formObj.startDateInput.value);
-    const endDate: Nullable<string> = formatDate(formObj.endDateInput.value);
+    const startDate: Nullable<string> = DateFormatter.formatDateUS(formObj.startDateInput.value);
+    const endDate: Nullable<string> = DateFormatter.formatDateUS(formObj.endDateInput.value);
     const pageLimit: string = formObj.pageLimitInput.value;
 
     let apiUrl: URL = new URL(Constants.BASE_URL + Constants.GET_SPENDING_ROUTE);

@@ -10,17 +10,19 @@ const isLoggedIn  = async (user: User | null, setUser: (user: User) => void, nav
 
     const apiUrl: string = Constants.BASE_URL + "/api/me";
     const response = await makeFetchRequestWrapper<User>(apiUrl, "GET", "");
-
-    if (response.ok && navigateIfLoggedIn !== null) { // User is already logged in so set in the UserContext
-        setUser(response.obj as User);
-        navigate(navigateIfLoggedIn);
-        return;
-    }
-
-    // Otherwise redirect to fallback page if not logged in
+    
+    // Failure: redirect
     if (!response.ok && navigateIfNotLoggedIn !== null) { 
         navigate(navigateIfNotLoggedIn);
     }
+
+    if (response.ok) { // User is already logged in so set in the UserContext
+        setUser(response.obj as User);
+        if (navigateIfLoggedIn !== null) {
+            navigate(navigateIfLoggedIn)
+        }
+    }
+    
 }
 
 export default isLoggedIn;
