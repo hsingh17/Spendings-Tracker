@@ -20,15 +20,8 @@ const makePostRequest = async <T>(apiUrl: string, body: string) : Promise<FetchR
         },
         body: body
     });
-
-    if (!response.ok) { 
-        // TODO: Should be an error object
-        let errorMessage: string = await response.text();
-        return createErrorResponse(errorMessage);
-    }
-
-    let responseObj: T = await response.json() as T;
-    return createValidResponse(responseObj);
+    
+    return validateResponse(response);
 }
 
 const makeGetRequest = async <T>(apiUrl: string) : Promise<FetchResponseWrapper<T>> => {
@@ -37,12 +30,17 @@ const makeGetRequest = async <T>(apiUrl: string) : Promise<FetchResponseWrapper<
         credentials: "include",
     });
 
+    return validateResponse(response);
+}
+
+const validateResponse = async<T>(response: Response) : Promise<FetchResponseWrapper<T>> => {
     if (!response.ok) { 
         // TODO: Should be an error object
         let errorMessage: string = await response.text();
         return createErrorResponse(errorMessage);
     }
 
+    
     let responseObj: T = await response.json() as T;
     return createValidResponse(responseObj);
 }

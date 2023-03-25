@@ -11,43 +11,47 @@ const AddEditSpendings: FC<AddEditSpendingProps> = ({ isAdd, spendingDate }) => 
   const { user, setUser } = useContext(UserContext);
   const navigate = useNavigate();
   const [spendings, setSpendings] = useState<Nullable<Array<SpendingsFormRow>>>(null);
-  
+  const [ date, setDate ] = useState<Nullable<string>>(DateFormatter.formatDateUS(DateFormatter.formatDateISO(spendingDate)));
+
+  const getActivelyDisplayedSpendings = () : number => {
+    if (!spendings) {
+      return 0;
+    }
+
+    // A spending is actively shown if it has a non null userId
+    return spendings.filter((spending: SpendingsFormRow) => spending.userId !== null).length;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(spendings)
+    console.log(spendings);
+    if (!spendings) {
+      return;
+    }
+
     // TODO: Cleanse and verify input
-    
-    // let categories = new Array<String>();
-    // let amounts = new Array<Number>();
 
-    // spendings.forEach(spending => {
-    //   let category: String = spending.category || ""; // TODO: figure out another way for this after input hasbeen cleansed and verified
-    //   categories.push(category.toLocaleUpperCase());
-    //   amounts.push(Number(spending.amount));
-    // });
+    const spendingsBody: Array<Spending> = spendings.map((spending: SpendingsFormRow) => {
+      return {
+        spendingId: spending.spendingId,
+        userId: spending.userId,
+        category: spending.category!.toLocaleUpperCase(), // TODO: maybe better way than asserting non null here (maybe once verified input)
+        amount: parseFloat(spending.amount as string), // TODO: maybe better way than casting with as string (maybe once verified input)
+        date: spending.date
+      }
+    });
 
-    // const requestBody = {
-    //   categories: categories,
-    //   amounts: amounts
-    // };
+    console.log(spendingsBody);
+    const apiUrl: string = Constants.BASE_URL + "/api/spending/save-spending";
+    const response = await makeFetchRequestWrapper<string>(apiUrl, "POST", JSON.stringify(spendingsBody));
 
-    // const apiEndpoint: string = "/api/spending/" + (isAdd ? "create-spending" : `update-spending/${spendingDate}`);
-    // const apiUrl: string = Constants.BASE_URL + apiEndpoint;
-    // const response = await fetch(apiUrl, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json"
-    //   },
-    //   body: JSON.stringify(requestBody),
-    //   credentials: "include"
-    // });
-
-    // if (response.ok) {
-    //   navigate(-1); // Go back to previous page
-    // } else {
-    //   // TODO: Maybe prompt user with a pop-up that something bad happened
-    //   alert("Uh oh. We were unable to process that request. Please try again!")
-    // }
+    if (response.ok) {
+      // navigate(-1); // Go back to previous page
+      alert("success!");
+    } else {
+      // TODO: Maybe prompt user with a pop-up that something bad happened
+      alert("Uh oh. We were unable to process that request. Please try again!")
+    }
   }
 
   const handleChange = (e:React.ChangeEvent, idx: number) => {
@@ -95,18 +99,43 @@ const AddEditSpendings: FC<AddEditSpendingProps> = ({ isAdd, spendingDate }) => 
         userId: user?.userId as number, // TODO:  
         category: null,
         amount: null,
-        date: spendingDate // TODO: Check what a null spending date does in backend
+        date: date // TODO: Check what a null spending date does in backend
       }]);
       return;
     }
+
+    // +1 to account for the row we would be adding due to the call to handleAddNewRow
+    if (getActivelyDisplayedSpendings()+1 > Constants.MAX_SPENDINGS_FOR_A_DAY) {
+      alert("NO MORE SPENDINGS ALLOWED!!!");
+      return;
+    }
+
 
     setSpendings([...spendings, {
       spendingId: null,
       userId: user?.userId as number, // TODO:  
       category: null,
       amount: null,
-      date: spendings[0].date
+      date: date
     }]);
+  }
+  
+  const handleDateChange = (e: React.ChangeEvent) => {
+    const target = e.target as typeof e.target & {
+      value: string
+    };
+
+    const newDate: Nullable<string> = DateFormatter.formatDateUS(target.value);
+    setDate(newDate);
+
+    if (!spendings) {
+      return;
+    }
+
+    // Change the dates for the spendings
+    spendings.forEach((spending: SpendingsFormRow) => {
+      spending.date = newDate;
+    });
   }
 
   useEffect(() => {
@@ -149,9 +178,10 @@ const AddEditSpendings: FC<AddEditSpendingProps> = ({ isAdd, spendingDate }) => 
 
       <form onSubmit={ (e:React.FormEvent) => { handleSubmit(e) } }>
         <label htmlFor="spending-date">Date:</label>
-        <input type="date" id="spending-date" disabled={ !isAdd } defaultValue={ DateFormatter.formatDateISO(spendingDate) } />
+        <input type="date" id="spending-date" disabled={ !isAdd } defaultValue={ DateFormatter.formatDateISO(date) } onChange={ (e: React.ChangeEvent) => { handleDateChange(e) } }/>
+
         {
-          spendings ?
+          (spendings && getActivelyDisplayedSpendings() !== 0) ?
           spendings.map((spending: SpendingsFormRow, idx: number) => {
             if (!spending.userId) { // This spending was marked for deletion
               return;

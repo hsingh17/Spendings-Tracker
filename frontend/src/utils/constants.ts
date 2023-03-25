@@ -12,4 +12,5 @@ export namespace Constants {
   ];
 
   export const GET_SPENDING_ROUTE = "/api/spending/get-spending";
+  export const MAX_SPENDINGS_FOR_A_DAY = 15;
 };
