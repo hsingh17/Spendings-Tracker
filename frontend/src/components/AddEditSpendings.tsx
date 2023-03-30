@@ -4,7 +4,7 @@ import UserContext from "../contexts/UserContext";
 import { Constants } from "../utils/constants";
 import DateFormatter from "../utils/dates-formatter";
 import makeFetchRequestWrapper from "../utils/fetch-wrapper";
-import { AddEditSpendingProps, Nullable, Spending, SpendingsApiResponse, SpendingsFormRow } from "../utils/types";
+import { AddEditSpendingProps, Nullable, Spending, SpendingsApiResponse, SpendingSaveResponse, SpendingsFormRow } from "../utils/types";
 import isLoggedIn from "../utils/user-logged-in-helper";
 
 const AddEditSpendings: FC<AddEditSpendingProps> = ({ isAdd, spendingDate }) => {
@@ -43,10 +43,11 @@ const AddEditSpendings: FC<AddEditSpendingProps> = ({ isAdd, spendingDate }) => 
 
     console.log(spendingsBody);
     const apiUrl: string = Constants.BASE_URL + "/api/spending/save-spending";
-    const response = await makeFetchRequestWrapper<string>(apiUrl, "POST", JSON.stringify(spendingsBody));
+    const response = await makeFetchRequestWrapper<SpendingSaveResponse>(apiUrl, "POST", JSON.stringify(spendingsBody));
 
     if (response.ok) {
       // navigate(-1); // Go back to previous page
+      console.log(response.obj);
       alert("success!");
     } else {
       // TODO: Maybe prompt user with a pop-up that something bad happened

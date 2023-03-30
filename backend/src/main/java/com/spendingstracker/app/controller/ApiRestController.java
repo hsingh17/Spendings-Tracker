@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -44,9 +45,10 @@ public class ApiRestController {
     }
 
     @PostMapping("/spending/save-spending")
-    public ResponseEntity<String> saveSpending(@RequestBody List<Spending> spendings) {
+    public ResponseEntity<Map<String, String>> saveSpending(@RequestBody List<Spending> spendings) {
         spendingService.saveSpending(spendings);
-        return new ResponseEntity<>("Spending(s) Saved", HttpStatus.CREATED);
+        Map<String, String> body = Map.of("message", "Success!"); // TODO: Maybe a generic response object?
+        return new ResponseEntity<>(body, HttpStatus.CREATED);
     }
 
     private Integer getUserId() {

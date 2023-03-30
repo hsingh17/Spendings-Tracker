@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class SpendingService {
@@ -63,7 +64,19 @@ public class SpendingService {
     }
 
     public void saveSpending(List<Spending> spendings) {
-        spendingRepository.saveAll(spendings);
+        List<Integer> spendingsToDelete = new ArrayList<>();
+        List<Spending> spendingsToSave = new ArrayList<>();
+
+        for (Spending spending : spendings) {
+            if (spending.getUserId() == null) { // Marked for deletion
+                spendingsToDelete.add(spending.getSpendingId());
+            } else { // Insert/update spending
+                spendingsToSave.add(spending);
+            }
+        }
+
+        spendingRepository.saveAll(spendingsToSave);
+        spendingRepository.deleteAllById(spendingsToDelete);
     }
 
     private String formApiUri(String currentUri, boolean next, int curPage) {

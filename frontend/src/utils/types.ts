@@ -71,3 +71,7 @@ export type FetchResponseWrapper<T> = {
   obj: Nullable<T>;
   error: string;
 };
+
+export type SpendingSaveResponse = {
+  message: string;
+}
