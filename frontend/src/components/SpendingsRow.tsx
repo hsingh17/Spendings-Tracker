@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
+import DateFormatter from "../utils/dates-formatter";
 import { SpendingsRowProps } from "../utils/types";
 
 
@@ -12,7 +13,7 @@ const SpendingsRow: FC<SpendingsRowProps> = ({ spendingsForADay: spendingForADay
 
   return (
     <div>
-      <h2>{ spendingForADay.date }</h2>
+      <h2>{ DateFormatter.formatDateUS(spendingForADay.date) }</h2>
       <h2> { spendingForADay.total } </h2>
       <>
         <button onClick={ () => { handleEdit()} }>Edit</button>

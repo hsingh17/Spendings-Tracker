@@ -1,5 +1,6 @@
 package com.spendingstracker.app.controller;
 
+import com.spendingstracker.app.constants.Constants;
 import com.spendingstracker.app.model.CustomUserDetails;
 import com.spendingstracker.app.model.Spending;
 import com.spendingstracker.app.model.SpendingsResponse;
@@ -24,7 +25,6 @@ import java.util.Optional;
 public class ApiRestController {
     @Autowired
     private SpendingService spendingService;
-    private final String datePattern = "MM-dd-yyyy";
 
     @GetMapping("/me")
     public ResponseEntity<UserDetails> getMe() {
@@ -35,8 +35,8 @@ public class ApiRestController {
 
     @GetMapping("/spending/get-spending")
     public ResponseEntity<SpendingsResponse> getSpendings(
-            @RequestParam(name = "start-date", required = false) @DateTimeFormat(pattern = datePattern) Optional<Date> startDate,
-            @RequestParam(name = "end-date", required = false) @DateTimeFormat(pattern = datePattern) Optional<Date> endDate,
+            @RequestParam(name = "start-date", required = false) @DateTimeFormat(pattern = Constants.DATE_PATTERN) Optional<Date> startDate,
+            @RequestParam(name = "end-date", required = false) @DateTimeFormat(pattern = Constants.DATE_PATTERN) Optional<Date> endDate,
             @RequestParam(name = "page") Optional<Integer> page,
             @RequestParam(name = "limit") Optional<Integer> limit,
             HttpServletRequest request)

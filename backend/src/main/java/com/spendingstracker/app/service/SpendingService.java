@@ -5,18 +5,21 @@ import com.spendingstracker.app.model.Spending;
 import com.spendingstracker.app.model.SpendingsForADay;
 import com.spendingstracker.app.model.SpendingsResponse;
 import com.spendingstracker.app.repository.SpendingRepository;
+import com.spendingstracker.app.repository.UserRepository;
 import com.spendingstracker.app.util.CustomMapComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class SpendingService {
     @Autowired
     private SpendingRepository spendingRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public SpendingsResponse getSpendings(
             Integer userId,
@@ -75,8 +78,8 @@ public class SpendingService {
             }
         }
 
-        spendingRepository.saveAll(spendingsToSave);
-        spendingRepository.deleteAllById(spendingsToDelete);
+        spendingRepository.saveAll(spendingsToSave); // Update spendings that need to be updated
+        spendingRepository.deleteAllById(spendingsToDelete); // Delete the spendings that need to be deleted
     }
 
     private String formApiUri(String currentUri, boolean next, int curPage) {

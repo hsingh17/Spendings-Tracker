@@ -19,7 +19,7 @@ public class User {
     @Column(name = "PASSWORD")
     private String password;
 
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore // Need this otherwise we have cyclic dependency when generating the JSON response with jackson
     private List<Spending> spendings;
 

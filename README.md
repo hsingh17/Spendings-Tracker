@@ -3,7 +3,6 @@ This repository holds the code for my spendings tracker app built with Java and 
 
 
 ## TODO
-- only use ISO format for dates (YYYY-MM-DD) then in frontend just reformat it to MM-DD-YYYY
 - Allow for complete deletion of day of spending -> need route on backend /api/delete-spending-by-date/{date}
 - dont send password in user object
 - add tailwind css on view-spendings, add-spendings, edit-spendings

@@ -2,7 +2,6 @@ import React, { FC, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../contexts/UserContext";
 import { Constants } from "../utils/constants";
-import DateFormatter from "../utils/dates-formatter";
 import makeFetchRequestWrapper from "../utils/fetch-wrapper";
 import { AddEditSpendingProps, Nullable, Spending, SpendingsApiResponse, SpendingSaveResponse, SpendingsFormRow } from "../utils/types";
 import isLoggedIn from "../utils/user-logged-in-helper";
@@ -11,7 +10,7 @@ const AddEditSpendings: FC<AddEditSpendingProps> = ({ isAdd, spendingDate }) => 
   const { user, setUser } = useContext(UserContext);
   const navigate = useNavigate();
   const [spendings, setSpendings] = useState<Nullable<Array<SpendingsFormRow>>>(null);
-  const [ date, setDate ] = useState<Nullable<string>>(DateFormatter.formatDateUS(DateFormatter.formatDateISO(spendingDate)));
+  const [ date, setDate ] = useState<Nullable<string>>(spendingDate);
 
   const getActivelyDisplayedSpendings = () : number => {
     if (!spendings) {
@@ -24,7 +23,6 @@ const AddEditSpendings: FC<AddEditSpendingProps> = ({ isAdd, spendingDate }) => 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(spendings);
     if (!spendings) {
       return;
     }
@@ -41,13 +39,11 @@ const AddEditSpendings: FC<AddEditSpendingProps> = ({ isAdd, spendingDate }) => 
       }
     });
 
-    console.log(spendingsBody);
     const apiUrl: string = Constants.BASE_URL + "/api/spending/save-spending";
     const response = await makeFetchRequestWrapper<SpendingSaveResponse>(apiUrl, "POST", JSON.stringify(spendingsBody));
 
     if (response.ok) {
       // navigate(-1); // Go back to previous page
-      console.log(response.obj);
       alert("success!");
     } else {
       // TODO: Maybe prompt user with a pop-up that something bad happened
@@ -126,7 +122,7 @@ const AddEditSpendings: FC<AddEditSpendingProps> = ({ isAdd, spendingDate }) => 
       value: string
     };
 
-    const newDate: Nullable<string> = DateFormatter.formatDateUS(target.value);
+    const newDate:string = target.value;
     setDate(newDate);
 
     if (!spendings) {
@@ -179,7 +175,7 @@ const AddEditSpendings: FC<AddEditSpendingProps> = ({ isAdd, spendingDate }) => 
 
       <form onSubmit={ (e:React.FormEvent) => { handleSubmit(e) } }>
         <label htmlFor="spending-date">Date:</label>
-        <input type="date" id="spending-date" disabled={ !isAdd } defaultValue={ DateFormatter.formatDateISO(date) } onChange={ (e: React.ChangeEvent) => { handleDateChange(e) } }/>
+        <input type="date" id="spending-date" disabled={ !isAdd } defaultValue={ date || "" } onChange={ (e: React.ChangeEvent) => { handleDateChange(e) } }/>
 
         {
           (spendings && getActivelyDisplayedSpendings() !== 0) ?

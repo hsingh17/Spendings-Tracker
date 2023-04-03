@@ -1,10 +1,10 @@
 import { FormEvent, useContext, useEffect } from "react";
-import UserContext from "../contexts/UserContext";
-import { User } from "../utils/types";
 import { useNavigate } from "react-router-dom";
+import UserContext from "../contexts/UserContext";
 import { Constants } from "../utils/constants";
-import isLoggedIn from "../utils/user-logged-in-helper";
 import makeFetchRequestWrapper from "../utils/fetch-wrapper";
+import { User } from "../utils/types";
+import isLoggedIn from "../utils/user-logged-in-helper";
 
 const Login = () => {
   // TODO: check if user is already potentially logged in (JWT Token is in storage)

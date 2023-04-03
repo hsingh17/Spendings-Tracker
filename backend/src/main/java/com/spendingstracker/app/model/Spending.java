@@ -26,7 +26,7 @@ public class Spending {
     @Column(name = "SPENDING_DATE")
     private Date date = new Date();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID", insertable = false, updatable = false)
     @JsonIgnore // We don't want to show the User object in response
     private User user;
