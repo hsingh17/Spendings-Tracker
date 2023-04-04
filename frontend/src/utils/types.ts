@@ -2,7 +2,6 @@ export type Nullable<T> = T | null;
 
 export type User = {
   userId: Nullable<number>;
-  password: null;
   username: Nullable<string>;
   authorities: Nullable<Array<string>>;
   accountNonExpired: Nullable<boolean>;
@@ -72,6 +71,6 @@ export type FetchResponseWrapper<T> = {
   error: string;
 };
 
-export type SpendingSaveResponse = {
+export type GenericApiResponse = {
   message: string;
 }

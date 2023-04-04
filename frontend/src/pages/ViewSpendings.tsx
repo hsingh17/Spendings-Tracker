@@ -85,7 +85,6 @@ const ViewSpendings = () => {
     return <h1>Loading...</h1>
   }
   
-  console.log(response);
   return (
     <>
       <h1>Here are your spendings: </h1>

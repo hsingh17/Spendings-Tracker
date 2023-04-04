@@ -17,6 +17,7 @@ public class User {
     private String username;
 
     @Column(name = "PASSWORD")
+    @JsonIgnore // Don't want to send password (even if it's encrypted)
     private String password;
 
     @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

@@ -3,10 +3,8 @@ This repository holds the code for my spendings tracker app built with Java and 
 
 
 ## TODO
-- Allow for complete deletion of day of spending -> need route on backend /api/delete-spending-by-date/{date}
-- dont send password in user object
+- clean up code for frontend, backend, and data model (use custom hooks)
 - add tailwind css on view-spendings, add-spendings, edit-spendings
-- clean up code for frontend, backend, and data model once css is added
 - Charts on dashboard with d3.js
     - Line graph of spendings amounts in past N months
     - Bar chart of top N spending categories and their amounts

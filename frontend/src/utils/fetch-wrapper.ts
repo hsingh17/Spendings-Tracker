@@ -6,6 +6,8 @@ const makeFetchRequestWrapper = async <T>(apiUrl: string, method: string, body: 
             return makeGetRequest(apiUrl);
         case "POST":
             return makePostRequest(apiUrl, body);
+        case "DELETE":
+            return makeDeleteRequest(apiUrl, body);            
         default:
             return createErrorResponse("Response was null.");
     }
@@ -28,6 +30,19 @@ const makeGetRequest = async <T>(apiUrl: string) : Promise<FetchResponseWrapper<
     const response = await fetch(apiUrl, {
         method: "GET",
         credentials: "include",
+    });
+
+    return validateResponse(response);
+}
+
+const makeDeleteRequest = async <T>(apiUrl: string, body: string) : Promise<FetchResponseWrapper<T>> => {
+    const response = await fetch(apiUrl, {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: body
     });
 
     return validateResponse(response);

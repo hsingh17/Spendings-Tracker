@@ -82,6 +82,11 @@ public class SpendingService {
         spendingRepository.deleteAllById(spendingsToDelete); // Delete the spendings that need to be deleted
     }
 
+    public void deleteSpendingByDate(Integer userId, Date spendingDate) {
+        // TODO: Error handling
+        spendingRepository.deleteByDate(userId, spendingDate);
+    }
+
     private String formApiUri(String currentUri, boolean next, int curPage) {
         // TODO: Error handling
         int newPage = next ? curPage+1 : curPage-1;

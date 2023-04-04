@@ -11,6 +11,9 @@ export namespace Constants {
     "200"
   ];
 
+  export const ME_ROUTE: string = "/api/me";
   export const GET_SPENDING_ROUTE: string = "/api/spending/get-spending";
+  export const SAVE_SPENDING_ROUTE: string = "/api/spending/save-spending";
+  export const DELETE_SPENDING_ROUTE: string = "/api/spending/delete-spending";
   export const MAX_SPENDINGS_FOR_A_DAY: number = 15;
 };

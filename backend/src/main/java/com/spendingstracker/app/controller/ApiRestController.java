@@ -51,6 +51,14 @@ public class ApiRestController {
         return new ResponseEntity<>(body, HttpStatus.CREATED);
     }
 
+    @DeleteMapping("/spending/delete-spending/{spending-date}")
+    public ResponseEntity<Map<String, String>> deleteSpendingsByDate(
+            @PathVariable("spending-date") @DateTimeFormat(pattern = Constants.DATE_PATTERN) Date spendingDate) {
+        spendingService.deleteSpendingByDate(getUserId(), spendingDate);
+        Map<String, String> body = Map.of("message", "Success!"); // TODO: Maybe a generic response object?
+        return ResponseEntity.ok(body);
+    }
+
     private Integer getUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();

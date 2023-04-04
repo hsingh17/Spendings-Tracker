@@ -8,9 +8,9 @@ const isLoggedIn  = async (user: User | null, setUser: (user: User) => void, nav
         return;
     }
 
-    const apiUrl: string = Constants.BASE_URL + "/api/me";
+    const apiUrl: string = Constants.BASE_URL + Constants.ME_ROUTE;
     const response = await makeFetchRequestWrapper<User>(apiUrl, "GET", "");
-    
+
     // Failure: redirect
     if (!response.ok && navigateIfNotLoggedIn !== null) { 
         navigate(navigateIfNotLoggedIn);
@@ -21,8 +21,7 @@ const isLoggedIn  = async (user: User | null, setUser: (user: User) => void, nav
         if (navigateIfLoggedIn !== null) {
             navigate(navigateIfLoggedIn)
         }
-    }
-    
+    }    
 }
 
 export default isLoggedIn;
