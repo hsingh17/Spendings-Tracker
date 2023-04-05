@@ -2,7 +2,7 @@ import React, { FC, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../contexts/UserContext";
 import { Constants } from "../utils/constants";
-import makeFetchRequestWrapper from "../utils/fetch-wrapper";
+import fetchRequestWrapper from "../utils/fetch-wrapper";
 import { AddEditSpendingProps, Nullable, Spending, SpendingsApiResponse, GenericApiResponse, SpendingsFormRow } from "../utils/types";
 import isLoggedIn from "../utils/user-logged-in-helper";
 
@@ -39,8 +39,8 @@ const AddEditSpendings: FC<AddEditSpendingProps> = ({ isAdd, spendingDate }) => 
       }
     });
 
-    const apiUrl: string = Constants.BASE_URL + Constants.SAVE_SPENDING_ROUTE;
-    const response = await makeFetchRequestWrapper<GenericApiResponse>(apiUrl, "POST", JSON.stringify(spendingsBody));
+    const apiUrl: string = Constants.BASE_API_URL + Constants.SAVE_SPENDING_API_ROUTE;
+    const response = await fetchRequestWrapper<GenericApiResponse>(apiUrl, "POST", JSON.stringify(spendingsBody));
 
     if (response.ok) {
       // navigate(-1); // Go back to previous page
@@ -137,8 +137,8 @@ const AddEditSpendings: FC<AddEditSpendingProps> = ({ isAdd, spendingDate }) => 
 
   useEffect(() => {
     const getSpendings = async () => {
-      const apiUrl: string = Constants.BASE_URL + `/api/spending/get-spending?start-date=${spendingDate}&end-date=${spendingDate}`;
-      const response = await makeFetchRequestWrapper<SpendingsApiResponse>(apiUrl, "GET", "");  
+      const apiUrl: string = Constants.BASE_API_URL + `/api/spending/get-spending?start-date=${spendingDate}&end-date=${spendingDate}`;
+      const response = await fetchRequestWrapper<SpendingsApiResponse>(apiUrl, "GET", "");  
       if (!response.ok || !response.obj) {
         // TODO:
         console.error(response.error);

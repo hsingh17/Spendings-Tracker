@@ -3,26 +3,14 @@ import { useNavigate } from "react-router-dom";
 import SpendingsContainer from "../components/SpendingsContainer";
 import UserContext from "../contexts/UserContext";
 import { Constants } from "../utils/constants";
-import makeFetchRequestWrapper from "../utils/fetch-wrapper";
-import { SpendingsApiResponse } from "../utils/types";
+import { SpendingsApiResponse, User } from "../utils/types";
 import isLoggedIn from "../utils/user-logged-in-helper";
+import ViewSpendingsFilterForm from "../components/ViewSpendingsFilterForm";
+import useApi from "../hooks/useApi";
 
 const ViewSpendings = () => {
-  const { user, setUser } = useContext(UserContext);
-  const [ response, setResponse ] = useState<SpendingsApiResponse>();
-  const navigate = useNavigate();
+  const { loading, response } = useApi<SpendingsApiResponse>(Constants.BASE_API_URL + Constants.GET_SPENDING_API_ROUTE, "GET");
   
-  const fetchSpendings = async (apiUrl: string ) => {
-    const response = await makeFetchRequestWrapper<SpendingsApiResponse>(apiUrl, "GET", "");
-    if (!response.ok) {
-      // TODO:
-      console.error("Fetch failed!");
-      return;
-    }
-
-    setResponse(response.obj as SpendingsApiResponse);
-  }
-
   const handleFilterSearch = async (e: React.FormEvent) => {
     e.preventDefault();
   
@@ -36,7 +24,7 @@ const ViewSpendings = () => {
     const endDate: string = formObj.endDateInput.value;
     const pageLimit: string = formObj.pageLimitInput.value;
 
-    let apiUrl: URL = new URL(Constants.BASE_URL + Constants.GET_SPENDING_ROUTE);
+    let apiUrl: URL = new URL(Constants.BASE_API_URL + Constants.GET_SPENDING_API_ROUTE);
     
     if (startDate) {
       apiUrl.searchParams.append("start-date", startDate);
@@ -51,7 +39,7 @@ const ViewSpendings = () => {
     }
 
     fetchSpendings(apiUrl.toString());
-  };  
+  }
 
   const handleClickPageButtons = (dir: number) => {
     if (!response) {
@@ -66,51 +54,23 @@ const ViewSpendings = () => {
       case 1:
         fetchSpendings(response.next as string);
         break;
-      default:
-        console.error("Where you going!"); // TODO
     }
   }
 
-  useEffect(() => {
-    const initialPageLoadFetch = async () => {
-      isLoggedIn(user, setUser, navigate, null, "/login");
-      const apiUrl: string = Constants.BASE_URL + Constants.GET_SPENDING_ROUTE;
-      fetchSpendings(apiUrl);
-    };
+  // TODO: Below error handling is temporary
+  if (spendingsLoading) {
+    return <h1>Loading...</h1>;
+  }  
 
-    initialPageLoadFetch();
-  }, []);
-
-  if (!response) {
-    return <h1>Loading...</h1>
+  if (!spendingsResponse?.ok) {
+    return <h1>{spendingsResponse?.error}</h1>;
   }
-  
+
   return (
     <>
       <h1>Here are your spendings: </h1>
       
-      <form onSubmit={ (e: React.FormEvent) => { handleFilterSearch(e) }}>
-        <label htmlFor="start-date">Start Date:</label>
-        <input type="date" id="start-date" name="startDateInput" />
-        <br />
-
-        <label htmlFor="end-date">End Date:</label>
-        <input type="date" id="end-date" name="endDateInput" />
-        <br />
-        
-        <label htmlFor="page-limit">Limit page to show:</label>
-        <select name="pageLimitInput">
-          {
-            Constants.PAGE_LIMITS.map((limit: String, idx: number) => {
-              return <option key={ `${limit}-${idx}` }>{limit}</option>
-            })
-          }
-        </select>
-        <br />
-
-        <button type="submit">Search</button>
-        <button type="reset">Reset filters</button>
-      </form>
+      <ViewSpendingsFilterForm />
           
       <SpendingsContainer spendingsForADayList={ response.spendingsForADayList } />
 

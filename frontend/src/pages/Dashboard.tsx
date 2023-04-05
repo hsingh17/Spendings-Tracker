@@ -1,21 +1,16 @@
-import { useContext, useEffect } from "react";
-import UserContext from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
-import isLoggedIn from "../utils/user-logged-in-helper";
+import useUser from "../hooks/useUser";
+import { Constants } from "../utils/constants";
+import { Nullable, User } from "../utils/types";
 
 const Dashboard = () => {
-  const { user, setUser } = useContext(UserContext);
+  const user: Nullable<User> = useUser();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    isLoggedIn(user, setUser, navigate, null, "/login");
-  }, [])
-  
   return (
     <>
       <h1>Dashboard (TODO D3.js here)</h1>
-      <button onClick={() => {navigate("/view-spendings")}}>View spendings</button>
-      { user !== null ? `Hi ${user.username}` : "Loading..." }
+      <button onClick={ () => { navigate(Constants.VIEW_SPENDINGS_PAGE) } }>View spendings</button>
+      { user ? `Hi ${user.username}` : "Loading..." }
     </>
   );
 };

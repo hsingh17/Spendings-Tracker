@@ -73,4 +73,9 @@ export type FetchResponseWrapper<T> = {
 
 export type GenericApiResponse = {
   message: string;
-}
+};
+
+export type UseApiResponse<T> = {
+  loading: boolean;
+  response: Nullable<FetchResponseWrapper<T>>;
+};

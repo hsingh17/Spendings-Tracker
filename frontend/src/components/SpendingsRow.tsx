@@ -2,7 +2,7 @@ import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import DateFormatter from "../utils/dates-formatter";
 import { GenericApiResponse, SpendingsRowProps } from "../utils/types";
-import makeFetchRequestWrapper from "../utils/fetch-wrapper";
+import fetchRequestWrapper from "../utils/fetch-wrapper";
 import { Constants } from "../utils/constants";
 
 
@@ -14,8 +14,8 @@ const SpendingsRow: FC<SpendingsRowProps> = ({ spendingsForADay: spendingForADay
   };
 
   const handleDelete = async () => {
-    const apiUrl: string = Constants.BASE_URL + Constants.DELETE_SPENDING_ROUTE + "/" + spendingForADay.date;
-    const response = await makeFetchRequestWrapper<GenericApiResponse>(apiUrl, "DELETE", "");
+    const apiUrl: string = Constants.BASE_API_URL + Constants.DELETE_SPENDING_API_ROUTE + "/" + spendingForADay.date;
+    const response = await fetchRequestWrapper<GenericApiResponse>(apiUrl, "DELETE", "");
 
     if (response.ok) {
       alert("successfully deleted!");
