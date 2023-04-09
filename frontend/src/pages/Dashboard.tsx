@@ -6,6 +6,8 @@ import { Nullable, User } from "../utils/types";
 const Dashboard = () => {
   const user: Nullable<User> = useUser();
   const navigate = useNavigate();
+
+  console.log(user)
   return (
     <>
       <h1>Dashboard (TODO D3.js here)</h1>

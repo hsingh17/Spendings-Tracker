@@ -1,12 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 import SpendingsContainer from "../components/SpendingsContainer";
-import UserContext from "../contexts/UserContext";
-import { Constants } from "../utils/constants";
-import { SpendingsApiResponse, User } from "../utils/types";
-import isLoggedIn from "../utils/user-logged-in-helper";
 import ViewSpendingsFilterForm from "../components/ViewSpendingsFilterForm";
 import useApi from "../hooks/useApi";
+import { Constants } from "../utils/constants";
+import { SpendingsApiResponse } from "../utils/types";
 
 const ViewSpendings = () => {
   const { loading, response } = useApi<SpendingsApiResponse>(Constants.BASE_API_URL + Constants.GET_SPENDING_API_ROUTE, "GET");
@@ -58,12 +55,12 @@ const ViewSpendings = () => {
   }
 
   // TODO: Below error handling is temporary
-  if (spendingsLoading) {
+  if (loading) {
     return <h1>Loading...</h1>;
   }  
 
-  if (!spendingsResponse?.ok) {
-    return <h1>{spendingsResponse?.error}</h1>;
+  if (!response || !response?.ok || !response.obj) {
+    return <h1>{response?.error}</h1>;
   }
 
   return (
@@ -72,10 +69,10 @@ const ViewSpendings = () => {
       
       <ViewSpendingsFilterForm />
           
-      <SpendingsContainer spendingsForADayList={ response.spendingsForADayList } />
+      <SpendingsContainer spendingsForADayList={ response.obj?.spendingsForADayList } />
 
-      <button onClick={ _ => handleClickPageButtons(-1) } disabled={ response.previous === null }>&lt;</button>
-      <button onClick={ _ => handleClickPageButtons(1) } disabled={ response.next === null }> &gt;</button>
+      <button onClick={ _ => handleClickPageButtons(-1) } disabled={ response.obj?.previous === null }>&lt;</button>
+      <button onClick={ _ => handleClickPageButtons(1) } disabled={ response.obj?.next === null }> &gt;</button>
     </>
   );
 };

@@ -79,3 +79,22 @@ export type UseApiResponse<T> = {
   loading: boolean;
   response: Nullable<FetchResponseWrapper<T>>;
 };
+
+export type ProtectedRoutesProps = {
+  children: React.ReactNode;
+};
+
+export type LoginFormProps = {
+  parentSetFormData: (formData: Nullable<LoginFormFormData>) => void;
+};
+
+export type LoginFormFormData = {
+  username: string;
+  password: string;
+}
+
+export type LoginFormNavigateProps = {
+  parentSetFormData: (formData: Nullable<LoginFormFormData>) => void;
+  parentSetError: (error: Nullable<string>) => void;
+  formData: LoginFormFormData;
+}

@@ -1,4 +1,5 @@
 export namespace Constants {
+
   // #######################################################################################
   // #######################################################################################
   //                                      PAGES
@@ -12,6 +13,18 @@ export namespace Constants {
   export const ADD_SPENDINGS_PAGE: string = "/add-spendings";
   export const EDIT_SPENDINGS_PAGE: string = "/edit-spendings";
 
+  
+  // #######################################################################################
+  // #######################################################################################
+  //                                      HTTP METHODS
+  // #######################################################################################
+  // #######################################################################################
+  
+  export const GET: string = "GET";
+  export const POST: string = "POST";
+  export const DELETE: string = "DELETE";
+
+
   // #######################################################################################
   // #######################################################################################
   //                                      API URLS
@@ -19,6 +32,7 @@ export namespace Constants {
   // #######################################################################################
 
   export const BASE_API_URL: string = (import.meta.env.DEV ? import.meta.env.VITE_SERVER_BASE_URL_DEV : import.meta.env.VITE_SERVER_BASE_URL_PROD);
+  export const AUTH_LOGIN_ROUTE: string = "/auth/login";
   export const ME_API_ROUTE: string = "/api/me";
   export const GET_SPENDING_API_ROUTE: string = "/api/spending/get-spending";
   export const SAVE_SPENDING_API_ROUTE: string = "/api/spending/save-spending";

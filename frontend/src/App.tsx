@@ -9,6 +9,7 @@ import { User } from "./utils/types"
 import AddSpendings from "./pages/AddSpendings";
 import EditSpendings from "./pages/EditSpendings";
 import { Constants } from "./utils/constants";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -18,10 +19,30 @@ const App = () => {
       <Routes>
         <Route path={ Constants.HOME_PAGE } element={ <Home /> } />
         <Route path={ Constants.LOGIN_PAGE } element={ <Login /> } />
-        <Route path={ Constants.DASHBOARD_PAGE } element={ <Dashboard /> } />
-        <Route path={ Constants.VIEW_SPENDINGS_PAGE } element={ <ViewSpendings /> } />
-        <Route path={ Constants.ADD_SPENDINGS_PAGE } element={ < AddSpendings /> } />
-        <Route path={ `${Constants.EDIT_SPENDINGS_PAGE}/:spendingDate` } element={ <EditSpendings /> } />
+        <Route path={ Constants.DASHBOARD_PAGE } element={ 
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } 
+        />
+        <Route path={ Constants.VIEW_SPENDINGS_PAGE } element={ 
+            <ProtectedRoute>
+              <ViewSpendings />
+            </ProtectedRoute>
+          } 
+        />
+        <Route path={ Constants.ADD_SPENDINGS_PAGE } element={ 
+            <ProtectedRoute>
+              <AddSpendings />
+            </ProtectedRoute>
+          } 
+        />
+        <Route path={ `${Constants.EDIT_SPENDINGS_PAGE}/:spendingDate` } element={ 
+            <ProtectedRoute>
+              <EditSpendings />
+            </ProtectedRoute>
+          } 
+        />
       </Routes>      
     </UserContext.Provider>
   )
