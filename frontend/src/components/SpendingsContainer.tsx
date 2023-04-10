@@ -6,7 +6,7 @@ const SpendingsContainer: FC<SpendingsTableProps> = ({ spendingsForADayList }) =
   return (
     <div>
       <div>
-        <h2 className="text-3xl underline bg-violet-200">Date</h2>
+        <h2>Date</h2>
         <h2>Amount</h2>
         <h2>Buttons</h2>
       </div>

@@ -5,12 +5,9 @@ import { Constants } from "../utils/constants";
 import fetchRequestWrapper from "../utils/fetch-wrapper";
 import { AddEditSpendingProps, Nullable, Spending, SpendingsApiResponse, GenericApiResponse, SpendingsFormRow } from "../utils/types";
 import isLoggedIn from "../utils/user-logged-in-helper";
-
-const AddEditSpendings: FC<AddEditSpendingProps> = ({ isAdd, spendingDate }) => {
-  const { user, setUser } = useContext(UserContext);
-  const navigate = useNavigate();
-  const [spendings, setSpendings] = useState<Nullable<Array<SpendingsFormRow>>>(null);
-  const [ date, setDate ] = useState<Nullable<string>>(spendingDate);
+import useApi from "../hooks/useApi";
+import SpendingsForm from "./SpendingsForm";
+/*
 
   const getActivelyDisplayedSpendings = () : number => {
     if (!spendings) {
@@ -168,48 +165,38 @@ const AddEditSpendings: FC<AddEditSpendingProps> = ({ isAdd, spendingDate }) => 
     } 
 
   }, []);
+*/
+
+const AddEditSpendings: FC<AddEditSpendingProps> = ({ isAdd, spendingDate }) => {
+  const [ date, setDate ] = useState<Nullable<string>>(spendingDate);
+  const { loading, response } = useApi<SpendingsApiResponse>(Constants.BASE_API_URL + Constants.GET_SPENDING_API_ROUTE + `start-date=${spendingDate}&end-date=${spendingDate}`, "GET");
+  const [ spendings, setSpendings ] = useState<Nullable<Array<Spending>>>(null); // These are the spendings from the form the user submits
+
+  const parentSetSpendings = (spendings: Nullable<Array<Spending>>) => setSpendings(spendings);
+  const parentSetDate = (date: string) => setDate(date);
+  
+  // TODO: Below error handling is temporary
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }  
+
+  if (!response || !response?.ok || !response.obj) {
+    return <h1>{response?.error}</h1>;
+  }
 
   return (
     <>
       <h1>{ isAdd ? "Add Spendings for the current date" : "Update spending" }</h1>
-
-      <form onSubmit={ (e:React.FormEvent) => { handleSubmit(e) } }>
-        <label htmlFor="spending-date">Date:</label>
-        <input type="date" id="spending-date" disabled={ !isAdd } defaultValue={ date || "" } onChange={ (e: React.ChangeEvent) => { handleDateChange(e) } }/>
-
-        {
-          (spendings && getActivelyDisplayedSpendings() !== 0) ?
-          spendings.map((spending: SpendingsFormRow, idx: number) => {
-            if (!spending.userId) { // This spending was marked for deletion
-              return;
-            }
-
-            return (
-              <div key={ idx } >
-                <label>Category:</label>
-                <input 
-                  type="text" 
-                  name="category" 
-                  value={ spending.category || "" } 
-                  onChange={ (e:React.ChangeEvent) => { handleChange(e, idx) }} />
-                
-                <label>Amount:</label>
-                <input 
-                  type="number" 
-                  name="amount" 
-                  value={ spending.amount || "" } 
-                  onChange={ (e:React.ChangeEvent) => { handleChange(e, idx) }} />
-
-                <button onClick={ (e:React.MouseEvent ) => { handleDeleteRow(e, idx) }}>X</button>
-              </div>
-            )
-          }) :
-          <h2>NOTHING YET</h2> // TODO: Replace with something else
-        }
-
-        <button onClick={ (e:React.MouseEvent ) => { handleAddNewRow(e) }}>Add a new row</button>
-        <input type="submit" value={ isAdd ? "Create new spending" : "Update spending" }/>
-      </form>
+      {
+        !spendings 
+        ? <SpendingsForm 
+            parentSetSpendings={ parentSetSpendings } 
+            parentSetDate={ parentSetDate } 
+            isAdd={ isAdd } 
+            date={ date } 
+            initialSpendings={ response.obj.spendingsForADayList[0].spendings } />
+        : <h1>TODO</h1>
+      }
     </>
   );
 };

@@ -1,8 +1,8 @@
 export type Nullable<T> = T | null;
 
 export type User = {
-  userId: Nullable<number>;
-  username: Nullable<string>;
+  userId: number;
+  username: string;
   authorities: Nullable<Array<string>>;
   accountNonExpired: Nullable<boolean>;
   accountNonLocked: Nullable<boolean>;
@@ -34,6 +34,14 @@ export type SpendingsApiResponse = {
   endDate: string;
   totalSpent: number;
   spendingsForADayList: Array<SpendingsForADay>;
+};
+
+export type SpendingsFormProps = {
+  parentSetSpendings: (spendings: Nullable<Array<Spending>>) => void;
+  parentSetDate: (date: string) => void;
+  isAdd: boolean;
+  date: Nullable<string>;
+  initialSpendings: Nullable<Array<Spending>>;
 };
 
 export type SpendingsFormRow = {
@@ -91,10 +99,20 @@ export type LoginFormProps = {
 export type LoginFormFormData = {
   username: string;
   password: string;
-}
+};
 
 export type LoginFormNavigateProps = {
   parentSetFormData: (formData: Nullable<LoginFormFormData>) => void;
   parentSetError: (error: Nullable<string>) => void;
   formData: LoginFormFormData;
-}
+};
+
+export type ViewSpendingsFilterFormProps = {
+  parentSetApiUrl: (apiUrl: Nullable<string>) => void;
+};
+
+export type ViewSpendingsButtonProps = {
+  parentSetApiUrl: (apiUrl: Nullable<string>) => void;
+  buttonText: Nullable<string>;
+  buttonUrl: Nullable<string>;
+};
