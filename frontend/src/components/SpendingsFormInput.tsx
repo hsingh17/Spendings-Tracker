@@ -1,12 +1,15 @@
-const SpendingFormInput = () =>{ 
+import { FC } from "react";
+import { SpendingsFormInputProps } from "../utils/types";
+
+const SpendingFormInput: FC<SpendingsFormInputProps> = ({ labelText, value, parentHandleChange }) =>{ 
   return (
     <>
-      <label>Category:</label>
+      <label>{labelText}:</label>
       <input 
         type="text" 
-        name="category" 
-        value={ spending.category || "" } 
-        onChange={ (e:React.ChangeEvent) => { handleChange(e, idx) }} />
+        name={ labelText } 
+        value={ value || "" } 
+        onChange={ (e:React.ChangeEvent) => parentHandleChange(e, labelText) } />
     </>
   );
 };

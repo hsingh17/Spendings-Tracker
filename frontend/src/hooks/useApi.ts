@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { UseApiResponse } from "../utils/types";
+import { Nullable, UseApiResponse } from "../utils/types";
 import { FetchResponseWrapper } from "../utils/types";
 import fetchRequestWrapper from "../utils/fetch-utils";
 
 function useApi<T>(apiUrl: string, method: string, body:string = "") : UseApiResponse<T> {
   const [ loading, setLoading ] = useState<boolean>(true);
-  const [ response, setResponse ] = useState<FetchResponseWrapper<T> | null>(null);
+  const [ response, setResponse ] = useState<Nullable<FetchResponseWrapper<T>>>(null);
 
   useEffect(() => {
     const fetchData = async () => {

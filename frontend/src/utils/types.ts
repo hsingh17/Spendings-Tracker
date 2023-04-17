@@ -37,19 +37,25 @@ export type SpendingsApiResponse = {
 };
 
 export type SpendingsFormProps = {
-  parentSetSpendings: (spendings: Nullable<Array<Spending>>) => void;
+  parentHandleSubmit: (spendings: Nullable<Array<Spending>>) => void;
   parentSetDate: (date: string) => void;
   isAdd: boolean;
   date: Nullable<string>;
   initialSpendings: Nullable<Array<Spending>>;
 };
 
-export type SpendingsFormRow = {
-  spendingId: Nullable<number>;
-  userId: Nullable<number>;
-  category: Nullable<string>;
-  amount: Nullable<string>;
-  date: Nullable<string>;
+export type SpendingsFormRowProps = {
+  parentHandleDeleteRow: (idx: number) => void;
+  parentHandleChange: (idx: number, newSpending: Spending) => void;
+  idx: number;
+  spending: Spending;
+};
+
+export type SpendingsFormInputProps = {
+  parentHandleChange: (e: React.ChangeEvent, labelText: string) => void;
+  idx: number;
+  labelText: string;
+  value: Nullable<string | number>;
 };
 
 export type SpendingsTableProps = {
@@ -68,6 +74,12 @@ export type AddEditSpendingProps = {
   isAdd: boolean;
   spendingDate: Nullable<string>;
 };
+
+export type AddEditSpendingsNavigateProps = {
+  parentSetSpendings: (spendings: Nullable<Array<Spending>>) => void;
+  parentSetError: (error: Nullable<string>) => void;
+  spendings: Array<Spending>;
+}
 
 export type EditSpendingsParams = {
   spendingDate: string;

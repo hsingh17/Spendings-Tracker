@@ -1,10 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import useUser from "../hooks/useUser";
 import { Constants } from "../utils/constants";
 import { Nullable, User } from "../utils/types";
+import { useContext } from "react";
+import UserContext from "../contexts/UserContext";
 
 const Dashboard = () => {
-  const user: Nullable<User> = useUser();
+  const { user, setUser } = useContext(UserContext);
   const navigate = useNavigate();
 
   console.log(user)

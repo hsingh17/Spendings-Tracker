@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import SpendingsContainer from "../components/SpendingsContainer";
+import ViewSpendingsButton from "../components/ViewSpendingsButton";
 import ViewSpendingsFilterForm from "../components/ViewSpendingsFilterForm";
 import useApi from "../hooks/useApi";
 import { Constants } from "../utils/constants";
 import { Nullable, SpendingsApiResponse } from "../utils/types";
-import ViewSpendingsButton from "../components/ViewSpendingsButton";
 
 const ViewSpendings = () => {
   const [ apiUrl, setApiUrl ] = useState<string>(Constants.BASE_API_URL + Constants.GET_SPENDING_API_ROUTE); // By default, get everything
-  const { loading, response } = useApi<SpendingsApiResponse>(apiUrl, "GET");
+  const { loading, response } = useApi<SpendingsApiResponse>(apiUrl, Constants.GET);
 
   const parentSetApiUrl = (apiUrl: Nullable<string>) => {
     if (!apiUrl) {

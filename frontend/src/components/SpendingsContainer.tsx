@@ -4,19 +4,19 @@ import SpendingsRow from "./SpendingsRow";
 
 const SpendingsContainer: FC<SpendingsTableProps> = ({ spendingsForADayList }) => {
   return (
-    <div>
-      <div>
-        <h2>Date</h2>
-        <h2>Amount</h2>
-        <h2>Buttons</h2>
-      </div>
+    <table>
+      <tr>
+        <td>Date</td>
+        <td>Amount</td>
+        <td>Buttons</td>
+      </tr>
 
       {
         spendingsForADayList.map((spendingsForADay: SpendingsForADay, idx: number) => {
           return <SpendingsRow key={ idx } spendingsForADay={ spendingsForADay } />
         })
       }
-    </div>
+    </table>
   );
 };
 

@@ -12,7 +12,7 @@ import { Constants } from "./utils/constants";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const [ user, setUser ] = useState<User | null>(null);
   
   return (
     <UserContext.Provider value={{ user, setUser }}>
