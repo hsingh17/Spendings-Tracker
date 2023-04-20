@@ -58,7 +58,7 @@ const SpendingsForm: FC<SpendingsFormProps> = ({ parentHandleSubmit, parentSetDa
   };
 
   return (
-    <form onSubmit={ _ => { parentHandleSubmit(spendings) } }>
+    <form onSubmit={ _ => parentHandleSubmit(spendings) }>
       <label htmlFor="spending-date">Date:</label>
       <input type="date" id="spending-date" disabled={ !isAdd } defaultValue={ date || "" } onChange={ (e: React.ChangeEvent) => handleDateChange(e) }/>
 

@@ -9,7 +9,7 @@ const CURDATE = new Date().toISOString().split("T")[0];
 
 const AddEditSpendings: FC<AddEditSpendingProps> = ({ isAdd, spendingDate }) => {
   const [ date, setDate ] = useState<Nullable<string>>(spendingDate || CURDATE);
-  const { loading, response } = useApi<SpendingsApiResponse>(Constants.BASE_API_URL + Constants.GET_SPENDING_API_ROUTE + `?start-date=${date}&end-date=${date}`, Constants.GET);
+  const { loading, response } = useApi<SpendingsApiResponse>(Constants.BASE_API_URL + Constants.GET_SPENDINGS_API_ROUTE + `?start-date=${date}&end-date=${date}`, Constants.GET);
   const [ submittedSpendings, setSubmittedSpendings ] = useState<Nullable<Array<Spending>>>(null); // These are the spendings from the form the user submits
   const [ error, setError ] = useState<Nullable<string>>(null);
 

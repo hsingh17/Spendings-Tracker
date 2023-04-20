@@ -2,7 +2,7 @@ import { FC } from "react";
 import { SpendingsForADay, SpendingsTableProps } from "../utils/types";
 import SpendingsRow from "./SpendingsRow";
 
-const SpendingsContainer: FC<SpendingsTableProps> = ({ spendingsForADayList }) => {
+const SpendingsTable: FC<SpendingsTableProps> = ({ spendingsForADayList, toggleRefresh }) => {
   return (
     <table>
       <tr>
@@ -13,11 +13,11 @@ const SpendingsContainer: FC<SpendingsTableProps> = ({ spendingsForADayList }) =
 
       {
         spendingsForADayList.map((spendingsForADay: SpendingsForADay, idx: number) => {
-          return <SpendingsRow key={ idx } spendingsForADay={ spendingsForADay } />
+          return <SpendingsRow key={ idx } spendingsForADay={ spendingsForADay } toggleRefresh={ toggleRefresh }/>
         })
       }
     </table>
   );
 };
 
-export default SpendingsContainer;
+export default SpendingsTable;

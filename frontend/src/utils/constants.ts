@@ -35,6 +35,7 @@ export namespace Constants {
   export const AUTH_LOGIN_ROUTE: string = "/auth/login";
   export const ME_API_ROUTE: string = "/api/me";
   export const GET_SPENDING_API_ROUTE: string = "/api/spending/get-spending";
+  export const GET_SPENDINGS_API_ROUTE: string = "/api/spending/get-spendings";
   export const SAVE_SPENDING_API_ROUTE: string = "/api/spending/save-spending";
   export const DELETE_SPENDING_API_ROUTE: string = "/api/spending/delete-spending";  
 

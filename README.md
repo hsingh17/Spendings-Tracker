@@ -3,8 +3,19 @@ This repository holds the code for my spendings tracker app built with Java and 
 
 
 ## TODO
-- clean up code for frontend, backend, and data model (use custom hooks)
-- add tailwind css on view-spendings, add-spendings, edit-spendings
+- clean up backend code. throw on bad input to api. abstract code. make a generic api response:
+{
+    links: {
+        next: String,
+        prev: String
+    },
+    ok: true/false,
+    message: String,
+    data: Object
+}
+
+- add error handling to frontend code (each page will have a state of error, setError which it will pass to children and the useApi hook) and address any possible TODOs
+- add tailwind css
 - Charts on dashboard with d3.js
     - Line graph of spendings amounts in past N months
     - Bar chart of top N spending categories and their amounts

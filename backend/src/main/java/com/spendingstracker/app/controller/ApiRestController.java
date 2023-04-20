@@ -33,7 +33,12 @@ public class ApiRestController {
         return ResponseEntity.ok(userDetails);
     }
 
-    @GetMapping("/spending/get-spending")
+    @GetMapping("/spending/get-spending/{spending-date}")
+    public String getSpending(@PathVariable("spending-date") @DateTimeFormat(pattern = Constants.DATE_PATTERN) Date spendingDate) {
+        return "TODO";
+    }
+
+    @GetMapping("/spending/get-spendings")
     public ResponseEntity<SpendingsResponse> getSpendings(
             @RequestParam(name = "start-date", required = false) @DateTimeFormat(pattern = Constants.DATE_PATTERN) Optional<Date> startDate,
             @RequestParam(name = "end-date", required = false) @DateTimeFormat(pattern = Constants.DATE_PATTERN) Optional<Date> endDate,

@@ -59,11 +59,18 @@ export type SpendingsFormInputProps = {
 };
 
 export type SpendingsTableProps = {
+  toggleRefresh: () => void;
   spendingsForADayList: Array<SpendingsForADay>;
 };
 
 export type SpendingsRowProps = {
+  toggleRefresh: () => void;
   spendingsForADay: SpendingsForADay;
+};
+
+export type SpendingsRowDeleteProps = {
+  toggleRefresh: () => void;
+  spendingDate: string;
 };
 
 export type SpendingComponentProps = {

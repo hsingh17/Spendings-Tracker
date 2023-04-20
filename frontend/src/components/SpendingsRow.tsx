@@ -1,36 +1,27 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Constants } from "../utils/constants";
 import DateFormatter from "../utils/dates-formatter";
-import { GenericApiResponse, SpendingsRowProps } from "../utils/types";
+import { SpendingsRowProps } from "../utils/types";
+import SpendingsRowDelete from "./SpendingsRowDelete";
+import { Constants } from "../utils/constants";
 
 
-const SpendingsRow: FC<SpendingsRowProps> = ({ spendingsForADay }) => {
+const SpendingsRow: FC<SpendingsRowProps> = ({ spendingsForADay, toggleRefresh }) => {
   const navigate = useNavigate();
+  const [ performDelete, setPerformDelete ] = useState<boolean>(false);
 
-  const handleEdit = () => {
-    navigate(`/edit-spendings/${spendingsForADay.date}`);
-  };
-
-  const handleDelete = async () => {
-    const apiUrl: string = Constants.BASE_API_URL + Constants.DELETE_SPENDING_API_ROUTE + "/" + spendingsForADay.date;
-    const response = await fetchRequestWrapper<GenericApiResponse>(apiUrl, "DELETE", "");
-
-    if (response.ok) {
-      alert("successfully deleted!");
-    } else {
-      alert("could not delete!");
-    }
-  };
+  const handleEdit = () => navigate(`${Constants.EDIT_SPENDINGS_PAGE}/${spendingsForADay.date}`);
+  const handleDelete = (perform: boolean) => setPerformDelete(perform);
 
   return (
     <tr>
       <td>{ DateFormatter.formatDateUS(spendingsForADay.date) }</td>
       <td> { spendingsForADay.total } </td>
       <>
-        <button onClick={ () => { handleEdit() } }>Edit</button>
+        <button onClick={ () => handleEdit() }>Edit</button>
         <br/>
-        <button onClick={ () => { handleDelete() } }>Delete</button>
+        <button onClick={ () => handleDelete(true) }>Delete</button>
+        { performDelete && <SpendingsRowDelete spendingDate={ spendingsForADay.date } toggleRefresh={ toggleRefresh }/> }
         <button>v</button>
       </>
     </tr>

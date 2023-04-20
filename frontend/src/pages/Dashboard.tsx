@@ -1,14 +1,11 @@
-import { useNavigate } from "react-router-dom";
-import { Constants } from "../utils/constants";
-import { Nullable, User } from "../utils/types";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import UserContext from "../contexts/UserContext";
+import { Constants } from "../utils/constants";
 
 const Dashboard = () => {
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
-
-  console.log(user)
   return (
     <>
       <h1>Dashboard (TODO D3.js here)</h1>
