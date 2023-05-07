@@ -4,50 +4,46 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Entity
-@Table(schema = "APP", name = "SPENDINGS")
+@Table(schema = "APP", name = "SPENDING")
 public class Spending {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "SPENDING_ID")
-    private Integer spendingId;
+    private long spendingId;
 
-    @Column(name = "USER_ID")
-    private Integer userId;
+    @JoinColumn(name = "SPENDING_USER_AGGR_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private SpendingUserAggr spendingUserAggr;
 
-    @Column(name = "SPENDING_CATEGORY")
+    @Column(name = "CATEGORY")
     private String category;
 
-    @Column(name = "SPENDING_AMOUNT")
+    @Column(name = "AMOUNT")
     private BigDecimal amount;
 
-    @Column(name = "SPENDING_DATE")
-    private Date date = new Date();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID", insertable = false, updatable = false)
-    @JsonIgnore // We don't want to show the User object in response
-    private User user;
+    @Transient
+    private boolean delete = false;
 
     public Spending() {
     }
 
-    public Integer getSpendingId() {
+    public long getSpendingId() {
         return spendingId;
     }
 
-    public void setSpendingId(Integer spendingId) {
+    public void setSpendingId(long spendingId) {
         this.spendingId = spendingId;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public SpendingUserAggr getSpendingUserAggr() {
+        return spendingUserAggr;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setSpendingUserAggr(SpendingUserAggr spendingUserAggr) {
+        this.spendingUserAggr = spendingUserAggr;
     }
 
     public String getCategory() {
@@ -66,19 +62,11 @@ public class Spending {
         this.amount = amount;
     }
 
-    public Date getDate() {
-        return date;
+    public boolean isDelete() {
+        return delete;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    public void setDelete(boolean delete) {
+        this.delete = delete;
     }
 }

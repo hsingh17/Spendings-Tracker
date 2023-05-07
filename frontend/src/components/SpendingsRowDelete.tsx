@@ -4,7 +4,7 @@ import useApi from "../hooks/useApi";
 import { Constants } from "../utils/constants";
 
 const SpendingsRowDelete: FC<SpendingsRowDeleteProps> = ({ spendingDate, toggleRefresh }) => {
-  const { loading, response } = useApi<GenericApiResponse>(Constants.BASE_API_URL + Constants.DELETE_SPENDING_API_ROUTE + `/${spendingDate}`, Constants.DELETE);
+  const { loading, response } = useApi<GenericApiResponse>(Constants.BASE_API_URL + Constants.SPENDINGS_API_ROUTE + `/${spendingDate}`, Constants.DELETE);
   
   useEffect(() => {
     if (!loading && response && response.ok) {

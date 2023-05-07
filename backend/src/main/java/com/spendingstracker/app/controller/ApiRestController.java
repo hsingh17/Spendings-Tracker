@@ -3,9 +3,13 @@ package com.spendingstracker.app.controller;
 import com.spendingstracker.app.constants.Constants;
 import com.spendingstracker.app.model.CustomUserDetails;
 import com.spendingstracker.app.model.Spending;
-import com.spendingstracker.app.model.SpendingsResponse;
+import com.spendingstracker.app.model.SpendingUserAggr;
+import com.spendingstracker.app.response.ApiLinks;
+import com.spendingstracker.app.response.ApiMetadata;
+import com.spendingstracker.app.response.ApiResponse;
 import com.spendingstracker.app.service.SpendingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +21,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.Set;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/v1/api")
 public class ApiRestController {
     @Autowired
     private SpendingService spendingService;
@@ -33,38 +36,63 @@ public class ApiRestController {
         return ResponseEntity.ok(userDetails);
     }
 
-    @GetMapping("/spending/get-spending/{spending-date}")
-    public String getSpending(@PathVariable("spending-date") @DateTimeFormat(pattern = Constants.DATE_PATTERN) Date spendingDate) {
-        return "TODO";
-    }
-
-    @GetMapping("/spending/get-spendings")
-    public ResponseEntity<SpendingsResponse> getSpendings(
-            @RequestParam(name = "start-date", required = false) @DateTimeFormat(pattern = Constants.DATE_PATTERN) Optional<Date> startDate,
-            @RequestParam(name = "end-date", required = false) @DateTimeFormat(pattern = Constants.DATE_PATTERN) Optional<Date> endDate,
-            @RequestParam(name = "page") Optional<Integer> page,
-            @RequestParam(name = "limit") Optional<Integer> limit,
+    @GetMapping("/spendings")
+    public ResponseEntity<ApiResponse<List<SpendingUserAggr>>> getSpendings(
+            @RequestParam(name = "start-date", defaultValue = "1000-01-01") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date startDate,
+            @RequestParam(name = "end-date", defaultValue = "9999-12-31") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date endDate,
+            @RequestParam(name = "page", defaultValue = "0") Integer page,
+            @RequestParam(name = "limit", defaultValue = "25") Integer limit,
             HttpServletRequest request)
     {
-        return new ResponseEntity<>(spendingService.getSpendings(getUserId(), request.getRequestURL() + "?" + request.getQueryString(), startDate, endDate, page, limit), HttpStatus.OK);
+        Page<SpendingUserAggr> spendings = spendingService.getSpendings(getUserId(), startDate, endDate, page, limit);
+        ApiLinks apiLinks = new ApiLinks.ApiLinksBuilder(request.getRequestURI(), request.getQueryString(), page, spendings.getTotalPages()-1).build();
+
+        ApiMetadata apiMetadata = new ApiMetadata.ApiMetadataBuilder()
+                .setCurrentPage(page)
+                .setLinks(apiLinks)
+                .setTotalPages(spendings.getTotalPages())
+                .setPageSize(limit)
+                .setTotalCount(spendings.getTotalElements())
+                .build();
+
+        ApiResponse<List<SpendingUserAggr>> apiResponse = new ApiResponse.ApiResponseBuilder<List<SpendingUserAggr>>()
+                .setHttpStatus(HttpStatus.OK)
+                .setOk(true)
+                .setMetadata(apiMetadata)
+                .setData(spendings.getContent())
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 
-    @PostMapping("/spending/save-spending")
-    public ResponseEntity<Map<String, String>> saveSpending(@RequestBody List<Spending> spendings) {
-        spendingService.saveSpending(spendings);
-        Map<String, String> body = Map.of("message", "Success!"); // TODO: Maybe a generic response object?
-        return new ResponseEntity<>(body, HttpStatus.CREATED);
+    @PostMapping("/spendings/{spending-date}")
+    public ResponseEntity<ApiResponse> saveSpending(@RequestBody Set<Spending> spendings,
+                                                    @PathVariable("spending-date") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date spendingDate) {
+        spendingService.saveSpending(getUserId(), spendings, spendingDate);
+
+        ApiResponse apiResponse = new ApiResponse.ApiResponseBuilder()
+                .setHttpStatus(HttpStatus.OK)
+                .setMessage("Success")
+                .setOk(true)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 
-    @DeleteMapping("/spending/delete-spending/{spending-date}")
-    public ResponseEntity<Map<String, String>> deleteSpendingsByDate(
-            @PathVariable("spending-date") @DateTimeFormat(pattern = Constants.DATE_PATTERN) Date spendingDate) {
+
+    @DeleteMapping("/spendings/{spending-date}")
+    public ResponseEntity<ApiResponse> deleteSpendingsByDate(@PathVariable("spending-date") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date spendingDate) {
         spendingService.deleteSpendingByDate(getUserId(), spendingDate);
-        Map<String, String> body = Map.of("message", "Success!"); // TODO: Maybe a generic response object?
-        return ResponseEntity.ok(body);
+        ApiResponse apiResponse = new ApiResponse.ApiResponseBuilder()
+                .setHttpStatus(HttpStatus.OK)
+                .setMessage("Success")
+                .setOk(true)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 
-    private Integer getUserId() {
+    private Long getUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
         return userDetails.getUserId();

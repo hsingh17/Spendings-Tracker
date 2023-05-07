@@ -4,7 +4,7 @@ import useApi from "../hooks/useApi";
 import { Constants } from "../utils/constants";
 
 const AddEditSpendingsNavigate: FC<AddEditSpendingsNavigateProps> = ({ spendings, parentSetSpendings, parentSetError }) => {
-  const { loading, response } = useApi<GenericApiResponse>(Constants.BASE_API_URL + Constants.SAVE_SPENDING_API_ROUTE, Constants.POST, JSON.stringify(spendings));
+  const { loading, response } = useApi<GenericApiResponse>(Constants.BASE_API_URL + Constants.SPENDINGS_API_ROUTE, Constants.POST, JSON.stringify(spendings));
   useEffect(() => {
     if (!loading && (!response || !response.ok || !response.obj)) {
       parentSetSpendings(null);

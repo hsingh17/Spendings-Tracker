@@ -31,13 +31,11 @@ export namespace Constants {
   // #######################################################################################
   // #######################################################################################
 
+  export const API_VERSION = "v1";
   export const BASE_API_URL: string = (import.meta.env.DEV ? import.meta.env.VITE_SERVER_BASE_URL_DEV : import.meta.env.VITE_SERVER_BASE_URL_PROD);
-  export const AUTH_LOGIN_ROUTE: string = "/auth/login";
-  export const ME_API_ROUTE: string = "/api/me";
-  export const GET_SPENDING_API_ROUTE: string = "/api/spending/get-spending";
-  export const GET_SPENDINGS_API_ROUTE: string = "/api/spending/get-spendings";
-  export const SAVE_SPENDING_API_ROUTE: string = "/api/spending/save-spending";
-  export const DELETE_SPENDING_API_ROUTE: string = "/api/spending/delete-spending";  
+  export const AUTH_LOGIN_ROUTE: string = `${API_VERSION}/auth/login/`;
+  export const ME_API_ROUTE: string = `${API_VERSION}/api/me/`;
+  export const SPENDINGS_API_ROUTE: string = `${API_VERSION}/api/spendings/`;
 
   // #######################################################################################
   // #######################################################################################
@@ -54,7 +52,6 @@ export namespace Constants {
     "100",
     "200"
   ];
-
   
   // #######################################################################################
   // #######################################################################################

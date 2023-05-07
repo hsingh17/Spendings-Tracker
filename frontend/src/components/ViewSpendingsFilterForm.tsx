@@ -16,7 +16,7 @@ const ViewSpendingsFilterForm: FC<ViewSpendingsFilterFormProps> = ({ parentSetAp
 
     // TODO: Validate input (?) 
     const formInput: Record<string, string> = { "start-date": target["start-date"].value , "end-date": target["end-date"].value, "limit": target["limit"].value };
-    const apiUrl = new URL(Constants.BASE_API_URL + Constants.GET_SPENDINGS_API_ROUTE);
+    const apiUrl = new URL(Constants.BASE_API_URL + Constants.SPENDINGS_API_ROUTE);
 
     Object.entries(formInput).forEach((pair) => {
       if (!pair[1]) { // Null value (aka user did not put anything for this filter)
@@ -29,7 +29,7 @@ const ViewSpendingsFilterForm: FC<ViewSpendingsFilterFormProps> = ({ parentSetAp
   };
 
   const resetFilters = () => {
-    parentSetApiUrl(Constants.BASE_API_URL + Constants.GET_SPENDINGS_API_ROUTE);
+    parentSetApiUrl(Constants.BASE_API_URL + Constants.SPENDINGS_API_ROUTE);
   };
 
   return (

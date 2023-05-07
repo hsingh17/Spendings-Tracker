@@ -1,142 +1,78 @@
 package com.spendingstracker.app.service;
 
-import com.spendingstracker.app.constants.Constants;
 import com.spendingstracker.app.model.Spending;
-import com.spendingstracker.app.model.SpendingsForADay;
-import com.spendingstracker.app.model.SpendingsResponse;
+import com.spendingstracker.app.model.SpendingUserAggr;
+import com.spendingstracker.app.model.User;
 import com.spendingstracker.app.repository.SpendingRepository;
+import com.spendingstracker.app.repository.SpendingUserAggrRepository;
 import com.spendingstracker.app.repository.UserRepository;
-import com.spendingstracker.app.util.CustomMapComparator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.util.*;
+import java.util.Date;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class SpendingService {
+    @Autowired
+    private SpendingUserAggrRepository spendingUserAggrRepository;
+
     @Autowired
     private SpendingRepository spendingRepository;
 
     @Autowired
     private UserRepository userRepository;
 
-    public SpendingsResponse getSpendings(
-            Integer userId,
-            String currentUri,
-            Optional<Date> startDateOpt,
-            Optional<Date> endDateOpt,
-            Optional<Integer> pageOpt,
-            Optional<Integer> limitOpt) {
-        Date startDate = startDateOpt.orElse(Constants.LOW_DATE);
-        Date endDate = endDateOpt.orElse(Constants.HIGH_DATE);
-        Integer page = pageOpt.orElse(Constants.DEFAULT_PAGE);
-        Integer limit = limitOpt.orElse(Constants.DEFAULT_LIMIT);
+    public Page<SpendingUserAggr> getSpendings(Long userId, Date startDate, Date endDate, Integer page, Integer limit) {
+        return spendingUserAggrRepository.findSpendingsBetweenDate(userId, startDate, endDate, PageRequest.of(page, limit));
+    }
 
-        List<Spending> spendingsList = spendingRepository.findSpendingsBetweenDate(userId, startDate, endDate);
+    public void saveSpending(Long userId, Set<Spending> spendings, Date spendingDate) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        SpendingUserAggr spendingUserAggr = spendingUserAggrRepository
+                .findSpendingUserAggrByUserAndDate(user, spendingDate)
+                .orElse(null); // Check if this spending already exists for this user
 
-        // Group spendings by date via a Map
-        Map<Date, List<Spending>> spendingsDateMap = groupResultsByDate(spendingsList);
+        if (spendingUserAggr != null) { // Existing spending
+            updateExistingSpendings(spendings, spendingUserAggr);
+        } else { // New spending
+            saveNewSpending(user, spendings, spendingDate);
+        }
+    }
 
-        int N = spendingsDateMap.keySet().size();
-        int upper = Math.min((page + 1) * limit, N);
+    private void updateExistingSpendings(Set<Spending> spendings, SpendingUserAggr spendingUserAggr) {
+        Set<Spending> spendingsToKeep = spendings
+                .stream()
+                .filter(spending -> !spending.isDelete())
+                .collect(Collectors.toSet());
 
-        // Custom pagination
-        Map<Date, List<Spending>> paginatedSpendingsMap = paginateResults(spendingsDateMap, page, limit, upper);
+        spendingUserAggr.emptySpendings();
+        spendingUserAggr.addSpendings(spendingsToKeep);
+        spendingUserAggrRepository.save(spendingUserAggr);
+    }
 
-        // Create custom object which contains spendings grouped by date and some meta data
-        List<SpendingsForADay> spendingsForADayList = createSpendingsForADayList(paginatedSpendingsMap);
+    private void saveNewSpending(User user, Set<Spending> spendings, Date spendingDate) {
+        SpendingUserAggr spendingUserAggr = new SpendingUserAggr(user, spendingDate, spendings);
 
-        String nextPageUri = (upper == N) ? null : formApiUri(currentUri, true, page);
-        String prevPageUri = (page == Constants.DEFAULT_PAGE) ? null : formApiUri(currentUri, false, page);
-        BigDecimal totalSpent = new BigDecimal(0);
-        for (SpendingsForADay spendingsForADay : spendingsForADayList) {
-            totalSpent = totalSpent.add(spendingsForADay.getTotal());
+        user.addSpendingUserAggr(spendingUserAggr); // Add new spending date to the user
+        userRepository.save(user); // We save the user (won't create a new user) and all the new spendings will cascade
+    }
+
+    public void deleteSpendingByDate(Long userId, Date spendingDate) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        SpendingUserAggr spendingUserAggr = spendingUserAggrRepository
+                .findSpendingUserAggrByUserAndDate(user, spendingDate)
+                .orElse(null); // Check if this spending already exists for this user
+
+        if (spendingUserAggr == null) {
+            // TODO:
+            return;
         }
 
-        return new SpendingsResponse(
-                spendingsForADayList.size(),
-                spendingsDateMap.keySet().size(),
-                nextPageUri,
-                prevPageUri,
-                startDate,
-                endDate,
-                totalSpent,
-                spendingsForADayList
-        );
-    }
-
-    public void saveSpending(List<Spending> spendings) {
-        List<Integer> spendingsToDelete = new ArrayList<>();
-        List<Spending> spendingsToSave = new ArrayList<>();
-
-        for (Spending spending : spendings) {
-            if (spending.getUserId() == null) { // Marked for deletion
-                spendingsToDelete.add(spending.getSpendingId());
-            } else { // Insert/update spending
-                spendingsToSave.add(spending);
-            }
-        }
-
-        spendingRepository.saveAll(spendingsToSave); // Update spendings that need to be updated
-        spendingRepository.deleteAllById(spendingsToDelete); // Delete the spendings that need to be deleted
-    }
-
-    public void deleteSpendingByDate(Integer userId, Date spendingDate) {
-        // TODO: Error handling
-        spendingRepository.deleteByDate(userId, spendingDate);
-    }
-
-    private String formApiUri(String currentUri, boolean next, int curPage) {
-        // TODO: Error handling
-        int newPage = next ? curPage+1 : curPage-1;
-        StringBuilder sb = new StringBuilder(currentUri);
-
-        int start = sb.indexOf("page");
-        if (start == -1) { // "page" is not in the currentUri
-            boolean isOnlyParam = sb.indexOf("?") == -1;
-
-            return sb + (isOnlyParam ? "?" : "&") + "page=" + newPage;
-        }
-
-        int end = sb.indexOf("&", start);
-        return sb.substring(0, start) + "page=" + newPage + (end == -1 ? "" : sb.substring(end, sb.length()));
-    }
-
-    private Map<Date, List<Spending>> groupResultsByDate(List<Spending> spendings) {
-        Map<Date, List<Spending>> spendingsDateMap = new TreeMap<>(new CustomMapComparator());
-        for (Spending spending : spendings) {
-            Date spendingDate = spending.getDate();
-            spendingsDateMap.computeIfAbsent(spendingDate, k -> new ArrayList<>()); // Add into the Map if this is the first time this date (key) is seen
-            spendingsDateMap.get(spendingDate).add(spending);
-        }
-
-        return spendingsDateMap;
-    }
-
-    private Map<Date, List<Spending>> paginateResults(Map<Date, List<Spending>> spendingsDateMap, int page, int limit, int upper) {
-        List<Date> spendingsKeys = new ArrayList<>(spendingsDateMap.keySet());
-        List<Date> paginatedDates = spendingsKeys.subList(page * limit, upper);
-
-        Map<Date, List<Spending>> paginatedSpendingsMap  = new TreeMap<>(new CustomMapComparator());
-        for (Date date : paginatedDates) {
-            paginatedSpendingsMap.put(date, spendingsDateMap.get(date));
-        }
-
-        return paginatedSpendingsMap;
-    }
-
-    private List<SpendingsForADay> createSpendingsForADayList(Map<Date, List<Spending>> paginatedSpendingsMap) {
-        List<SpendingsForADay> spendingsForADayList = new ArrayList<>();
-        paginatedSpendingsMap.forEach(((date, spendings) -> {
-            BigDecimal totalForDay = new BigDecimal(0);
-            for (Spending spending : spendings) {
-                totalForDay = totalForDay.add(spending.getAmount());
-            }
-
-            spendingsForADayList.add(new SpendingsForADay(date, spendings.size(), totalForDay, spendings));
-        }));
-
-        return spendingsForADayList;
+        user.removeSpendingUserAggr(spendingUserAggr);
+        userRepository.save(user);
     }
 }

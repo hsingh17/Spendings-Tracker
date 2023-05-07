@@ -7,9 +7,9 @@ import java.util.Collection;
 
 
 public class CustomUserDetails extends User {
-    private int userId;
+    private long userId;
 
-    public CustomUserDetails(String username, String password, Collection<? extends GrantedAuthority> authorities, int userId) {
+    public CustomUserDetails(String username, String password, Collection<? extends GrantedAuthority> authorities, long userId) {
         super(username, password, authorities);
         this.userId = userId;
     }
@@ -19,11 +19,11 @@ public class CustomUserDetails extends User {
         this.userId = userId;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 

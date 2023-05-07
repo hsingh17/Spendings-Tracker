@@ -7,7 +7,7 @@ import { Constants } from "../utils/constants";
 import { Nullable, SpendingsApiResponse } from "../utils/types";
 
 const ViewSpendings = () => {
-  const [ apiUrl, setApiUrl ] = useState<string>(Constants.BASE_API_URL + Constants.GET_SPENDINGS_API_ROUTE); // By default, get everything
+  const [ apiUrl, setApiUrl ] = useState<string>(Constants.BASE_API_URL + Constants.SPENDINGS_API_ROUTE); // By default, get everything
   const { loading, response } = useApi<SpendingsApiResponse>(apiUrl, Constants.GET);
 
   const toggleRefresh = () => window.location.reload(); // TODO: Would rather refetch the API then do this
