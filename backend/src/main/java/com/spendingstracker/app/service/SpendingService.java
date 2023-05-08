@@ -9,6 +9,7 @@ import com.spendingstracker.app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -26,12 +27,12 @@ public class SpendingService {
     @Autowired
     private UserRepository userRepository;
 
-    public Page<SpendingUserAggr> getSpendings(Long userId, Date startDate, Date endDate, Integer page, Integer limit) {
+    public Page<SpendingUserAggr> getSpendings(long userId, Date startDate, Date endDate, int page, int limit) {
         return spendingUserAggrRepository.findSpendingsBetweenDate(userId, startDate, endDate, PageRequest.of(page, limit));
     }
 
-    public void saveSpending(Long userId, Set<Spending> spendings, Date spendingDate) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+    public void saveSpending(Long userId, Set<Spending> spendings, Date spendingDate) throws UsernameNotFoundException {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found!"));
         SpendingUserAggr spendingUserAggr = spendingUserAggrRepository
                 .findSpendingUserAggrByUserAndDate(user, spendingDate)
                 .orElse(null); // Check if this spending already exists for this user
@@ -61,15 +62,14 @@ public class SpendingService {
         userRepository.save(user); // We save the user (won't create a new user) and all the new spendings will cascade
     }
 
-    public void deleteSpendingByDate(Long userId, Date spendingDate) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+    public void deleteSpendingByDate(long userId, Date spendingDate) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found!"));
         SpendingUserAggr spendingUserAggr = spendingUserAggrRepository
                 .findSpendingUserAggrByUserAndDate(user, spendingDate)
                 .orElse(null); // Check if this spending already exists for this user
 
         if (spendingUserAggr == null) {
-            // TODO:
-            return;
+            throw new IllegalArgumentException("No spendings found for this date!");
         }
 
         user.removeSpendingUserAggr(spendingUserAggr);

@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,43 +31,32 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse> postLogin(@RequestBody LoginRequestBody loginRequestBody, HttpServletResponse response) {
-        try {
-            // Attempt authentication with the sent login and password
-            Authentication auth = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequestBody.getUsername(), loginRequestBody.getPassword())
-            );
+    public ResponseEntity<ApiResponse> postLogin(@RequestBody LoginRequestBody loginRequestBody, HttpServletResponse response) throws AuthenticationException {
+        // Attempt authentication with the sent login and password
+        Authentication auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequestBody.getUsername(), loginRequestBody.getPassword())
+        );
 
-            // User has valid credentials in at this point, need to create and return a JWT for the user
-            CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
-            String token = jwtUtil.generateToken(userDetails);
+        // User has valid credentials in at this point, need to create and return a JWT for the user
+        CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+        String token = jwtUtil.generateToken(userDetails);
 
-            // Add jwt token in an HTTP only cookie
-            ResponseCookie cookie = ResponseCookie.from("token", token)
-                    .httpOnly(true)
-                    .path("/v1/api/")
-                    .secure(true) // If SameSite is "None", then secure must be true (it's fine if localhost uses http though as it is an exception)
-                    .sameSite("None") // None because eventually backend and frontend will be on different domains so we need to allow for cross-site cookies
-                    .build();
+        // Add jwt token in an HTTP only cookie
+        ResponseCookie cookie = ResponseCookie.from("token", token)
+                .httpOnly(true)
+                .path("/v1/api/")
+                .secure(true) // If SameSite is "None", then secure must be true (it's fine if localhost uses http though as it is an exception)
+                .sameSite("None") // None because eventually backend and frontend will be on different domains so we need to allow for cross-site cookies
+                .build();
 
-            response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
-            ApiResponse<CustomUserDetails> apiResponse = new ApiResponse.ApiResponseBuilder<CustomUserDetails>()
-                    .setData(userDetails)
-                    .setOk(true)
-                    .setHttpStatus(HttpStatus.OK)
-                    .build();
+        ApiResponse<CustomUserDetails> apiResponse = new ApiResponse.ApiResponseBuilder<CustomUserDetails>()
+                .setData(userDetails)
+                .setOk(true)
+                .setHttpStatus(HttpStatus.OK)
+                .build();
 
-            return ResponseEntity.ok(apiResponse);
-        } catch (Exception e) {
-            // Bad login credentials
-            ApiResponse apiResponse = new ApiResponse.ApiResponseBuilder<CustomUserDetails>()
-                    .setMessage("Login Failed!")
-                    .setOk(false)
-                    .setHttpStatus(HttpStatus.UNAUTHORIZED)
-                    .build();
-
-            return new ResponseEntity<>(apiResponse, HttpStatus.UNAUTHORIZED);
-        }
+        return ResponseEntity.ok(apiResponse);
     }
 }

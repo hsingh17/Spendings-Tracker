@@ -62,10 +62,12 @@ public class User {
 
     public void addSpendingUserAggr(SpendingUserAggr spendingUserAggr) {
         spendingUserAggrs.add(spendingUserAggr);
+        spendingUserAggr.setUser(this);
     }
 
     public void removeSpendingUserAggr(SpendingUserAggr spendingUserAggr) {
         spendingUserAggrs.remove(spendingUserAggr);
+        spendingUserAggr.setUser(null);
     }
 
     public void updateSpendingUserAggr(SpendingUserAggr spendingUserAggr) {

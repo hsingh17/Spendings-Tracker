@@ -3,12 +3,7 @@ This repository holds the code for my spendings tracker app built with Java and 
 
 
 ## TODO
-- in backend:
-    - throw exceptions where approriate and have @ControllerAdvice take care of returning the response
-    - custom filtering on spendings by date (asc and desc)
-    - make jwt secret key load from file
-    - https
-    - postman automated tests (?)
+- start using new api responses on frontend
 - add error handling to frontend code (each page will have a state of error, setError which it will pass to children and the useApi hook) and address any possible TODOs
 - add tailwind css
 - Charts on dashboard with d3.js
