@@ -43,7 +43,15 @@ public class ApiRestController {
             @RequestParam(name = "page", defaultValue = "0") Integer page,
             @RequestParam(name = "limit", defaultValue = "25") Integer limit,
             HttpServletRequest request)
-    {
+    throws IllegalArgumentException {
+        if (page < 0) {
+            throw new IllegalArgumentException("Page number must be non-negative!");
+        }
+
+        if (limit <= 0) {
+            throw new IllegalArgumentException("Limit must be greater than zero!");
+        }
+
         Page<SpendingUserAggr> spendings = spendingService.getSpendings(getUserId(), startDate, endDate, page, limit);
         ApiLinks apiLinks = new ApiLinks.ApiLinksBuilder(request.getRequestURI(), request.getQueryString(), page, spendings.getTotalPages()-1).build();
 
@@ -79,9 +87,8 @@ public class ApiRestController {
         return ResponseEntity.ok(apiResponse);
     }
 
-
     @DeleteMapping("/spendings/{spending-date}")
-    public ResponseEntity<ApiResponse> deleteSpendingsByDate(@PathVariable("spending-date") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date spendingDate) {
+    public ResponseEntity<ApiResponse> deleteSpendingsByDate(@PathVariable("spending-date") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date spendingDate) throws Exception {
         spendingService.deleteSpendingByDate(getUserId(), spendingDate);
         ApiResponse apiResponse = new ApiResponse.ApiResponseBuilder()
                 .setHttpStatus(HttpStatus.OK)
@@ -92,7 +99,7 @@ public class ApiRestController {
         return ResponseEntity.ok(apiResponse);
     }
 
-    private Long getUserId() {
+    private long getUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
         return userDetails.getUserId();
