@@ -3,7 +3,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-**/src/main/java/resources/keys/
+/src/main/java/resources/keys/
 
 ### STS ###
 .apt_generated
