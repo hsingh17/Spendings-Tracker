@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,7 +29,22 @@ public class SpendingService {
     private UserRepository userRepository;
 
     public Page<SpendingUserAggr> getSpendings(long userId, Date startDate, Date endDate, int page, int limit) {
-        return spendingUserAggrRepository.findSpendingsBetweenDate(userId, startDate, endDate, PageRequest.of(page, limit));
+        Page<SpendingUserAggr> spendingUserAggrPage = spendingUserAggrRepository.findSpendingsBetweenDate(
+                userId,
+                startDate,
+                endDate,
+                PageRequest.of(page, limit)
+        );
+
+        spendingUserAggrPage.forEach(spendingUserAggr -> {
+            BigDecimal total = BigDecimal.ZERO;
+            for (Spending spending : spendingUserAggr.getSpendings()) {
+                total = total.add(spending.getAmount());
+            }
+            spendingUserAggr.setTotal(total);
+        });
+
+        return spendingUserAggrPage;
     }
 
     public void saveSpending(Long userId, Set<Spending> spendings, Date spendingDate) throws UsernameNotFoundException {

@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { SpendingsForADay, SpendingsTableProps } from "../utils/types";
+import { SpendingUserAggr, SpendingsTableProps } from "../utils/types";
 import SpendingsRow from "./SpendingsRow";
 
-const SpendingsTable: FC<SpendingsTableProps> = ({ spendingsForADayList, toggleRefresh }) => {
+const SpendingsTable: FC<SpendingsTableProps> = ({ spendingUserAggrList, toggleRefresh }) => {
   return (
     <table>
       <tr>
@@ -12,8 +12,8 @@ const SpendingsTable: FC<SpendingsTableProps> = ({ spendingsForADayList, toggleR
       </tr>
 
       {
-        spendingsForADayList.map((spendingsForADay: SpendingsForADay, idx: number) => {
-          return <SpendingsRow key={ idx } spendingsForADay={ spendingsForADay } toggleRefresh={ toggleRefresh }/>
+        spendingUserAggrList.map((spendingUserAggr: SpendingUserAggr, idx: number) => {
+          return <SpendingsRow key={ idx } spendingUserAggr={ spendingUserAggr } toggleRefresh={ toggleRefresh }/>
         })
       }
     </table>

@@ -3,6 +3,7 @@ package com.spendingstracker.app.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,6 +26,11 @@ public class SpendingUserAggr {
 
     @OneToMany(mappedBy = "spendingUserAggr", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<Spending> spendings = new HashSet<>();
+
+    @Transient
+    private BigDecimal total;
+
+
 
     public SpendingUserAggr() {}
 
@@ -61,6 +67,14 @@ public class SpendingUserAggr {
 
     public Set<Spending> getSpendings() {
         return spendings;
+    }
+
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
     }
 
     public void setSpendings(Set<Spending> spendings) {

@@ -5,7 +5,6 @@ import UserContext from "../contexts/UserContext";
 import { Constants } from "../utils/constants";
 
 const SpendingsForm: FC<SpendingsFormProps> = ({ parentHandleSubmit, parentSetDate, isAdd, date, initialSpendings }) => {
-  const { user } = useContext(UserContext);
   const [ spendings, setSpendings ] = useState<Nullable<Array<Spending>>>(initialSpendings);
 
   useEffect(() => {
@@ -22,24 +21,20 @@ const SpendingsForm: FC<SpendingsFormProps> = ({ parentHandleSubmit, parentSetDa
   const handleAddNewRow = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!user) { // TODO
-      return;
-    }
-
     let newSpendings: Array<Spending> = spendings ? [...spendings] : [];
-    if (newSpendings.filter((spending) => spending.userId).length >= Constants.MAX_SPENDINGS_FOR_A_DAY) { // No more spendings allowed for the day
+    if (newSpendings.filter((spending) => spending.delete).length >= Constants.MAX_SPENDINGS_FOR_A_DAY) { // No more spendings allowed for the day
       return;
     }
 
-    newSpendings.push({ spendingId: null, userId: user.userId, category: null, amount: null, date: date });
+    newSpendings.push({ spendingId: null, category: null, amount: null, delete: false });
     setSpendings(newSpendings);
   };
 
   const handleDeleteRow = (idx: number) => {
     let newSpendings: Array<Spending> = spendings ? [...spendings] : [];
     
-    if (newSpendings[idx].spendingId !== null) { // Need to "fake" delete this spending since this is in the database
-      newSpendings[idx].userId = null;
+    if (newSpendings[idx].spendingId !== null) { 
+      newSpendings[idx].delete = true;
     } else { // Completely new spending that can be safely removed
       newSpendings.splice(idx, 1);
     }

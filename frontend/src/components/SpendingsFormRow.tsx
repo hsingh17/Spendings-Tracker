@@ -18,7 +18,7 @@ const SpendingFormRow: FC<SpendingsFormRowProps> = ({ idx, spending, parentHandl
     parentHandleChange(idx, changedSpending);
   };
 
-  if (spending.userId === null) { // Spending marked for deletion
+  if (spending.delete) { // Spending marked for deletion
     return <></>;
   }
 

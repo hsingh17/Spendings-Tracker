@@ -8,9 +8,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(UsernameNotFoundException.class)

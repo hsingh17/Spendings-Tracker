@@ -31,7 +31,7 @@ export namespace Constants {
   // #######################################################################################
   // #######################################################################################
 
-  export const API_VERSION = "v1";
+  export const API_VERSION = "/v1";
   export const BASE_API_URL: string = (import.meta.env.DEV ? import.meta.env.VITE_SERVER_BASE_URL_DEV : import.meta.env.VITE_SERVER_BASE_URL_PROD);
   export const AUTH_LOGIN_ROUTE: string = `${API_VERSION}/auth/login/`;
   export const ME_API_ROUTE: string = `${API_VERSION}/api/me/`;

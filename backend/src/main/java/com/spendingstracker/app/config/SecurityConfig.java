@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 public class SecurityConfig {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
@@ -38,7 +38,7 @@ public class SecurityConfig {
         httpSecurity.csrf().disable(); // Disable CSRF since we will use JWT to validate requests
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // Stateless policy since JWT is stateless
         httpSecurity.authorizeRequests()
-                .antMatchers("/v1/auth/login").permitAll() // Anyone can go to login route
+                .antMatchers("/v1/auth/login/").permitAll() // Anyone can go to login route
                 .anyRequest().authenticated(); // All other routes require user to be authenticated
         httpSecurity.authenticationProvider(authenticationProvider()); // Set the DaoAuthenticationProvider
         httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

@@ -1,9 +1,10 @@
 import { FC } from "react";
 import { ViewSpendingsButtonProps } from "../utils/types";
+import { Constants } from "../utils/constants";
 
 const ViewSpendingsButton: FC<ViewSpendingsButtonProps> = ({ parentSetApiUrl, buttonText, buttonUrl }) => {
   return (
-    <button onClick={ _ => parentSetApiUrl(buttonUrl) } disabled={ buttonUrl === null }>{buttonText}</button>
+    <button onClick={ _ => parentSetApiUrl(Constants.BASE_API_URL + buttonUrl) } disabled={ buttonUrl === null }>{buttonText}</button>
   );
 };
 

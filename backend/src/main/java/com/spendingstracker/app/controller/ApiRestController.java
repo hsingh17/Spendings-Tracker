@@ -30,10 +30,15 @@ public class ApiRestController {
     private SpendingService spendingService;
 
     @GetMapping("/me")
-    public ResponseEntity<UserDetails> getMe() {
+    public ResponseEntity<ApiResponse<UserDetails>> getMe() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
-        return ResponseEntity.ok(userDetails);
+        ApiResponse<UserDetails> apiResponse = new ApiResponse.ApiResponseBuilder<UserDetails>()
+                .setHttpStatus(HttpStatus.OK)
+                .setData(userDetails)
+                .setOk(true)
+                .build();
+        return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping("/spendings")

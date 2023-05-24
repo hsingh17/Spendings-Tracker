@@ -10,13 +10,13 @@ const LoginFormNavigate: FC<LoginFormNavigateProps> = ({ parentSetFormData, pare
   const { loading, response } = useApi<User>(Constants.BASE_API_URL + Constants.AUTH_LOGIN_ROUTE, Constants.POST, JSON.stringify(formData));
 
   useEffect(() => {
-    if (!loading && (!response || !response.ok || !response.obj)) {
+    if (!loading && (!response || !response.ok || !response.data)) {
       parentSetFormData(null);
-      parentSetError(response?.error ? response.error : "Something really bad happened!"); // TODO
+      parentSetError(response?.message ? response.message : "Something really bad happened!"); // TODO
     }
 
-    if (!loading && response && response.ok && response.obj) {
-      setUser(response.obj);
+    if (!loading && response && response.ok && response.data) {
+      setUser(response.data);
     }
   }, [loading, response]);
 
@@ -24,7 +24,7 @@ const LoginFormNavigate: FC<LoginFormNavigateProps> = ({ parentSetFormData, pare
     return <h1>Logging you in...</h1>; // TODO: Something here like a loading animation of some kind 
   }
 
-  if (!response?.obj || !response.ok) {
+  if (!response?.data || !response.ok) {
     return <></>;
   }
 

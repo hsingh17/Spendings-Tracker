@@ -1,8 +1,6 @@
 import { FC } from "react";
 import { LoginFormProps } from "../utils/types";
 
-
-
 const LoginForm: FC<LoginFormProps> = ({ parentSetFormData }) => {
   const parseFormData = (e: React.FormEvent) => {
     e.preventDefault();

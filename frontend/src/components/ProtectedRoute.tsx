@@ -10,8 +10,8 @@ const ProtectedRoute: FC<ProtectedRoutesProps> = ({ children }) => {
   const { loading, response } = useApi<User>(Constants.BASE_API_URL + Constants.ME_API_ROUTE, Constants.GET);
   
   useEffect(() => {
-    if (!loading && response && response.ok && response.obj) {
-      setUser(response.obj);
+    if (!loading && response && response.ok && response.data) {
+      setUser(response.data);
     }
   }, [loading, response]);
 
@@ -20,7 +20,7 @@ const ProtectedRoute: FC<ProtectedRoutesProps> = ({ children }) => {
     return <h1>Loading...</h1>;
   }
 
-  if (!response?.ok || !response.obj) { // In case of error or bad response, we must route back to the Login Page
+  if (!response?.ok || !response.data) { // In case of error or bad response, we must route back to the Login Page
     return <Navigate to={ Constants.LOGIN_PAGE } replace={ true } />;
   }
   

@@ -10,30 +10,43 @@ export type User = {
   enabled: Nullable<boolean>;
 };
 
+export type ApiLinks =  {
+  first : Nullable<string>;
+  prev : Nullable<string>;
+  self : Nullable<string>;
+  next : Nullable<string>;
+  last : Nullable<string>;
+};
+
+export type ApiMetadata = {
+   currentPage: number;
+   pageSize: number;
+   totalCount: number;
+   totalPages: number;
+   links: ApiLinks;
+};
+
+export type ApiResponse<T> = {
+  metadata: Nullable<ApiMetadata>;
+  timestamp: string;
+  ok: boolean;
+  message: string;
+  httpStatus: string;
+  data: Nullable<T>;
+};
+
 export type Spending = {
-  spendingId: Nullable<number>;
-  userId: Nullable<number>;
-  category: Nullable<string>;
-  amount: Nullable<number>;
-  date: Nullable<string>;
+   spendingId: Nullable<number>;
+   category: Nullable<string>;
+   amount: Nullable<number>;
+   delete: Nullable<boolean>;
 };
 
-export type SpendingsForADay = {
+export type SpendingUserAggr = {
+  spendingUserAggrId: number;
   date: string;
-  count: number;
-  total: number;
   spendings: Array<Spending>;
-};
-
-export type SpendingsApiResponse = {
-  count: number;
   total: number;
-  next: Nullable<string>;
-  previous: Nullable<string>;
-  startDate: string;
-  endDate: string;
-  totalSpent: number;
-  spendingsForADayList: Array<SpendingsForADay>;
 };
 
 export type SpendingsFormProps = {
@@ -60,12 +73,12 @@ export type SpendingsFormInputProps = {
 
 export type SpendingsTableProps = {
   toggleRefresh: () => void;
-  spendingsForADayList: Array<SpendingsForADay>;
+  spendingUserAggrList: Array<SpendingUserAggr>;
 };
 
 export type SpendingsRowProps = {
   toggleRefresh: () => void;
-  spendingsForADay: SpendingsForADay;
+  spendingUserAggr: SpendingUserAggr;
 };
 
 export type SpendingsRowDeleteProps = {
@@ -92,19 +105,9 @@ export type EditSpendingsParams = {
   spendingDate: string;
 };
 
-export type FetchResponseWrapper<T> = {
-  ok: boolean;
-  obj: Nullable<T>;
-  error: string;
-};
-
-export type GenericApiResponse = {
-  message: string;
-};
-
 export type UseApiResponse<T> = {
   loading: boolean;
-  response: Nullable<FetchResponseWrapper<T>>;
+  response: Nullable<ApiResponse<T>>;
 };
 
 export type ProtectedRoutesProps = {
