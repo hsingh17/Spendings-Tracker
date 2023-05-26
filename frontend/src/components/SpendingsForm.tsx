@@ -1,7 +1,6 @@
-import React, { FC, useContext, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { Nullable, Spending, SpendingsFormProps } from "../utils/types";
 import SpendingFormRow from "./SpendingsFormRow";
-import UserContext from "../contexts/UserContext";
 import { Constants } from "../utils/constants";
 
 const SpendingsForm: FC<SpendingsFormProps> = ({ parentHandleSubmit, parentSetDate, isAdd, date, initialSpendings }) => {

@@ -8,7 +8,7 @@ import AddEditSpendingsNavigate from "./AddEditSpendingsNavigate";
 const CURDATE = new Date().toISOString().split("T")[0];
 
 const AddEditSpendings: FC<AddEditSpendingProps> = ({ isAdd, spendingDate }) => {
-  const [ date, setDate ] = useState<Nullable<string>>(spendingDate || CURDATE);
+  const [ date, setDate ] = useState<string>(spendingDate || CURDATE);
   const { loading, response } = useApi<Array<SpendingUserAggr>>(Constants.BASE_API_URL + Constants.SPENDINGS_API_ROUTE + `?start-date=${date}&end-date=${date}`, Constants.GET);
   const [ submittedSpendings, setSubmittedSpendings ] = useState<Nullable<Array<Spending>>>(null); // These are the spendings from the form the user submits
   const [ error, setError ] = useState<Nullable<string>>(null);
@@ -38,6 +38,7 @@ const AddEditSpendings: FC<AddEditSpendingProps> = ({ isAdd, spendingDate }) => 
             date={ date } 
             initialSpendings={ (response.data !== null && response.data[0].spendings.length !== 0) ? response.data[0].spendings : [] } />
         : <AddEditSpendingsNavigate 
+            spendingDate={ date }
             spendings={ submittedSpendings }
             parentSetSpendings={ parentHandleSubmit }
             parentSetError={ parentSetError }

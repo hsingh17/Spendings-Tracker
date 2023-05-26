@@ -4,24 +4,23 @@ import useApi from "../hooks/useApi";
 import { Constants } from "../utils/constants";
 import UserContext from "../contexts/UserContext";
 import { Navigate } from "react-router-dom";
+import LoadingSpinner from "../components/LoadingSpinner"
 
 const LoginFormNavigate: FC<LoginFormNavigateProps> = ({ parentSetFormData, parentSetError, formData }) => {
   const { setUser } = useContext(UserContext);
   const { loading, response } = useApi<User>(Constants.BASE_API_URL + Constants.AUTH_LOGIN_ROUTE, Constants.POST, JSON.stringify(formData));
 
   useEffect(() => {
-    if (!loading && (!response || !response.ok || !response.data)) {
+    if (!loading && response && response.ok && response.data) { // OK response
+      setUser(response.data);
+    } else { // Error
       parentSetFormData(null);
       parentSetError(response?.message ? response.message : "Something really bad happened!"); // TODO
-    }
-
-    if (!loading && response && response.ok && response.data) {
-      setUser(response.data);
     }
   }, [loading, response]);
 
   if (loading) {
-    return <h1>Logging you in...</h1>; // TODO: Something here like a loading animation of some kind 
+    return <LoadingSpinner />;
   }
 
   if (!response?.data || !response.ok) {

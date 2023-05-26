@@ -3,8 +3,8 @@ import { AddEditSpendingsNavigateProps} from "../utils/types";
 import useApi from "../hooks/useApi";
 import { Constants } from "../utils/constants";
 
-const AddEditSpendingsNavigate: FC<AddEditSpendingsNavigateProps> = ({ spendings, parentSetSpendings, parentSetError }) => {
-  const { loading, response } = useApi(Constants.BASE_API_URL + Constants.SPENDINGS_API_ROUTE, Constants.POST, JSON.stringify(spendings));
+const AddEditSpendingsNavigate: FC<AddEditSpendingsNavigateProps> = ({ spendingDate, spendings, parentSetSpendings, parentSetError }) => {
+  const { loading, response } = useApi(Constants.BASE_API_URL + Constants.SPENDINGS_API_ROUTE + spendingDate, Constants.POST, JSON.stringify(spendings));
   useEffect(() => {
     if (!loading && (!response || !response.ok || !response.data)) {
       parentSetSpendings(null);

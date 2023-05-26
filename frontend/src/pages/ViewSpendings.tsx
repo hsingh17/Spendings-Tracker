@@ -4,7 +4,7 @@ import ViewSpendingsButton from "../components/ViewSpendingsButton";
 import ViewSpendingsFilterForm from "../components/ViewSpendingsFilterForm";
 import useApi from "../hooks/useApi";
 import { Constants } from "../utils/constants";
-import { Nullable, ApiResponse, SpendingUserAggr } from "../utils/types";
+import { Nullable, SpendingUserAggr } from "../utils/types";
 
 const ViewSpendings = () => {
   const [ apiUrl, setApiUrl ] = useState<string>(Constants.BASE_API_URL + Constants.SPENDINGS_API_ROUTE); // By default, get everything
@@ -33,10 +33,10 @@ const ViewSpendings = () => {
       <h1>Here are your spendings: </h1>
       <ViewSpendingsFilterForm parentSetApiUrl={ parentSetApiUrl } />
       <SpendingsTable toggleRefresh={ toggleRefresh } spendingUserAggrList={ response.data } />
-      { (response.metadata !== null) ? <ViewSpendingsButton parentSetApiUrl={ parentSetApiUrl } buttonUrl={ response.metadata?.links.first } buttonText="first" /> : <></>}
-      { (response.metadata !== null) ? <ViewSpendingsButton parentSetApiUrl={ parentSetApiUrl } buttonUrl={ response.metadata?.links.prev } buttonText="<" /> : <></>}
-      { (response.metadata !== null) ? <ViewSpendingsButton parentSetApiUrl={ parentSetApiUrl } buttonUrl={ response.metadata?.links.next } buttonText=">" /> : <></>}
-      { (response.metadata !== null) ? <ViewSpendingsButton parentSetApiUrl={ parentSetApiUrl } buttonUrl={ response.metadata?.links.last } buttonText="last" /> : <></>}
+      { (response.metadata !== null && response.metadata.links.first !== null) ? <ViewSpendingsButton parentSetApiUrl={ parentSetApiUrl } buttonUrl={ response.metadata?.links.first } buttonText="first" /> : <></>}
+      { (response.metadata !== null && response.metadata.links.prev !== null) ? <ViewSpendingsButton parentSetApiUrl={ parentSetApiUrl } buttonUrl={ response.metadata?.links.prev } buttonText="<" /> : <></>}
+      { (response.metadata !== null && response.metadata.links.next  !== null) ? <ViewSpendingsButton parentSetApiUrl={ parentSetApiUrl } buttonUrl={ response.metadata?.links.next } buttonText=">" /> : <></>}
+      { (response.metadata !== null && response.metadata.links.last !== null) ? <ViewSpendingsButton parentSetApiUrl={ parentSetApiUrl } buttonUrl={ response.metadata?.links.last } buttonText="last" /> : <></>}
     </>
   );
 };

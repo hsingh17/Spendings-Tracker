@@ -4,6 +4,7 @@ import UserContext from "../contexts/UserContext";
 import useApi from "../hooks/useApi";
 import { Constants } from "../utils/constants";
 import { ProtectedRoutesProps, User } from "../utils/types";
+import LoadingSpinner from "./LoadingSpinner";
 
 const ProtectedRoute: FC<ProtectedRoutesProps> = ({ children }) => {
   const { setUser } = useContext(UserContext);
@@ -17,10 +18,10 @@ const ProtectedRoute: FC<ProtectedRoutesProps> = ({ children }) => {
 
   // TODO: Loading and error response
   if (loading) {
-    return <h1>Loading...</h1>;
+    return <LoadingSpinner />;
   }
 
-  if (!response?.ok || !response.data) { // In case of error or bad response, we must route back to the Login Page
+  if (!response || !response?.ok || !response.data) { // In case of error or bad response, we must route back to the Login Page
     return <Navigate to={ Constants.LOGIN_PAGE } replace={ true } />;
   }
   

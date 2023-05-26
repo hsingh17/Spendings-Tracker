@@ -96,6 +96,7 @@ export type AddEditSpendingProps = {
 };
 
 export type AddEditSpendingsNavigateProps = {
+  spendingDate: string;
   parentSetSpendings: (spendings: Nullable<Array<Spending>>) => void;
   parentSetError: (error: Nullable<string>) => void;
   spendings: Array<Spending>;
