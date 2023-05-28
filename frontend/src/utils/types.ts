@@ -31,7 +31,7 @@ export type ApiResponse<T> = {
   timestamp: string;
   ok: boolean;
   message: string;
-  httpStatus: string;
+  httpStatus: number;
   data: Nullable<T>;
 };
 

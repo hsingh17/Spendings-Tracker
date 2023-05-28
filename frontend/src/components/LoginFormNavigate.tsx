@@ -13,7 +13,7 @@ const LoginFormNavigate: FC<LoginFormNavigateProps> = ({ parentSetFormData, pare
   useEffect(() => {
     if (!loading && response && response.ok && response.data) { // OK response
       setUser(response.data);
-    } else { // Error
+    } else if (!loading) { // Error
       parentSetFormData(null);
       parentSetError(response?.message ? response.message : "Something really bad happened!"); // TODO
     }

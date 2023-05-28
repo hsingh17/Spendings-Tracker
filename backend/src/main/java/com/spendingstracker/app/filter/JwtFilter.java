@@ -1,7 +1,10 @@
 package com.spendingstracker.app.filter;
 
+import com.google.gson.Gson;
+import com.spendingstracker.app.response.ApiResponse;
 import com.spendingstracker.app.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,6 +29,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsService userDetailsService;
 
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -34,7 +38,7 @@ public class JwtFilter extends OncePerRequestFilter {
         // Get JWT from the HTTP only cookie
         Cookie[] cookies = request.getCookies();
         if (cookies == null) { // No cookies
-            filterChain.doFilter(request, response);
+            doFilterWrapper(request, response, filterChain);
             return;
         }
 
@@ -45,7 +49,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 .orElse(null);
 
         if (token == null) {
-            filterChain.doFilter(request, response);
+            doFilterWrapper(request, response, filterChain);
             return;
         }
 
@@ -53,7 +57,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String userName = jwtUtil.extractUsername(token);
         UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
         if (userName == null || !jwtUtil.validateToken(token, userDetails)) { // Invalid token
-            filterChain.doFilter(request, response);
+            doFilterWrapper(request, response, filterChain);
             return;
         }
 
@@ -61,6 +65,23 @@ public class JwtFilter extends OncePerRequestFilter {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
         usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken); // Set the context to use the UsernamePasswordAuthenticationToken
-        filterChain.doFilter(request, response);
+        doFilterWrapper(request, response, filterChain);
+    }
+
+    private void doFilterWrapper(HttpServletRequest request,
+                                 HttpServletResponse response,
+                                 FilterChain filterChain) throws IOException {
+        try {
+            filterChain.doFilter(request, response);
+        } catch (Exception e) {
+            ApiResponse internalErrResponse = new ApiResponse.ApiResponseBuilder()
+                    .setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .setOk(false)
+                    .setMessage(e.getMessage())
+                    .build();
+
+            response.setStatus(internalErrResponse.getHttpStatus().value());
+            response.getOutputStream().println(new Gson().toJson(internalErrResponse));
+        }
     }
 }

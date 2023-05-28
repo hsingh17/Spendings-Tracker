@@ -1,5 +1,6 @@
 package com.spendingstracker.app.config;
 
+import com.spendingstracker.app.filter.CustomAuthEntryPoint;
 import com.spendingstracker.app.filter.JwtFilter;
 import com.spendingstracker.app.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -42,7 +44,13 @@ public class SecurityConfig {
                 .anyRequest().authenticated(); // All other routes require user to be authenticated
         httpSecurity.authenticationProvider(authenticationProvider()); // Set the DaoAuthenticationProvider
         httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint());
         return httpSecurity.build();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new CustomAuthEntryPoint();
     }
 
     @Bean
