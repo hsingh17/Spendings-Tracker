@@ -1,3 +1,6 @@
+import React from "react";
+import { Constants } from "./constants";
+
 export type Nullable<T> = T | null;
 
 export type User = {
@@ -138,4 +141,10 @@ export type ViewSpendingsButtonProps = {
   parentSetApiUrl: (apiUrl: Nullable<string>) => void;
   buttonText: Nullable<string>;
   buttonUrl: Nullable<string>;
+};
+
+export type PopupProps = {
+  children: React.ReactNode;
+  type: Constants.POPUP_TYPES;
+  time: number;
 };

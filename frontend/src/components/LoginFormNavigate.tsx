@@ -23,10 +23,6 @@ const LoginFormNavigate: FC<LoginFormNavigateProps> = ({ parentSetFormData, pare
     return <LoadingSpinner />;
   }
 
-  if (!response?.data || !response.ok) {
-    return <></>;
-  }
-
   return <Navigate to={ Constants.DASHBOARD_PAGE } replace={ true }/>; // Successful login, reroute to the Dashboard
 };
 
