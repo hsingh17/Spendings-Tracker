@@ -110,8 +110,7 @@ export type EditSpendingsParams = {
 };
 
 export type UseApiResponse<T> = {
-  loading: boolean;
-  response: Nullable<ApiResponse<T>>;
+  response: ApiResponse<T>;
 };
 
 export type ProtectedRoutesProps = {
@@ -128,8 +127,6 @@ export type LoginFormFormData = {
 };
 
 export type LoginFormNavigateProps = {
-  parentSetFormData: (formData: Nullable<LoginFormFormData>) => void;
-  parentSetError: (error: Nullable<string>) => void;
   formData: LoginFormFormData;
 };
 
@@ -139,8 +136,8 @@ export type ViewSpendingsFilterFormProps = {
 
 export type ViewSpendingsButtonProps = {
   parentSetApiUrl: (apiUrl: Nullable<string>) => void;
-  buttonText: Nullable<string>;
-  buttonUrl: Nullable<string>;
+  buttonText: Nullable<string> | undefined;
+  buttonUrl: Nullable<string> | undefined;
 };
 
 export type PopupProps = {

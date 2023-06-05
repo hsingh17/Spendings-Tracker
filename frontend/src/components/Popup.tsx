@@ -1,7 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { PopupProps } from "../utils/types";
 import ReactDOM from "react-dom";
-import React from "react";
 
 const Popup: FC<PopupProps> = ({ children, type, time }) => {
   const popupDiv = document.getElementById("popup");

@@ -18,40 +18,38 @@ const App = () => {
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <Routes>
-        <Route path={ Constants.HOME_PAGE } element={ <Home /> } />
+        <Route path={Constants.HOME_PAGE} element={<Home/>}/>
 
-        <Route path={ Constants.LOGIN_PAGE } element={ <Login /> } />
+        <Route path={Constants.LOGIN_PAGE} element={<Login/>}/>
 
-        <Route path={ Constants.DASHBOARD_PAGE } element={ 
+        <Route path={Constants.DASHBOARD_PAGE} element={ 
             <ProtectedRoute>
-              <Dashboard />
+              <Dashboard/>
             </ProtectedRoute>
           } 
         />
 
-        <Route path={ Constants.VIEW_SPENDINGS_PAGE } element={ 
+        <Route path={Constants.VIEW_SPENDINGS_PAGE} element={ 
             <ProtectedRoute>
-              <ViewSpendings />
+              <ViewSpendings/>
             </ProtectedRoute>
           } 
         />
 
-        <Route path={ Constants.ADD_SPENDINGS_PAGE } element={ 
+        <Route path={Constants.ADD_SPENDINGS_PAGE} element={ 
             <ProtectedRoute>
-              <AddSpendings />
+              <AddSpendings/>
             </ProtectedRoute>
           } 
         />
 
-        <Route path={ `${Constants.EDIT_SPENDINGS_PAGE}/:spendingDate` } element={ 
+        <Route path={`${Constants.EDIT_SPENDINGS_PAGE}/:spendingDate`} element={ 
             <ProtectedRoute>
-              <EditSpendings />
+              <EditSpendings/>
             </ProtectedRoute>
           } 
         />
-
-        <Route path="*" element={ <NotFound /> } />
-
+        <Route path="*" element={<NotFound/>}/>
       </Routes>      
     </UserContext.Provider>
   )
