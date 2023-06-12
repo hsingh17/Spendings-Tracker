@@ -1,7 +1,6 @@
 import { FC, useContext, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import UserContext from "../contexts/UserContext";
-import useApi from "../hooks/useApi";
 import { Constants } from "../utils/constants";
 import { ProtectedRoutesProps, User } from "../utils/types";
 import LoadingSpinner from "./LoadingSpinner";

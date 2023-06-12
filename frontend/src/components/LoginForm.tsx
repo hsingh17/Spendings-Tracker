@@ -1,20 +1,24 @@
 import { FC } from "react";
-import { LoginFormProps } from "../utils/types";
+import useLogin from "../hooks/useLogin";
+import { UserFormData } from "../utils/types";
 
-const LoginForm: FC<LoginFormProps> = ({ parentSetFormData }) => {
+const LoginForm: FC = () => {
+  const {mutate: login} = useLogin();
+
   const parseFormData = (e: React.FormEvent) => {
     e.preventDefault();
     // TODO: Validate Form data
-  
     const target = e.target as typeof e.target & {
       username: { value: string };
       password: { value: string };
-    };  
-    
-    parentSetFormData({
+    };
+
+    const formData: UserFormData = {
       username: target.username.value,
-      password: target.password.value
-    });
+      password: target.password.value,
+    }
+
+    login(formData);  
   };
 
   return (

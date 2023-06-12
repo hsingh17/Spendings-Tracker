@@ -13,7 +13,7 @@ async function fetchRequestWrapper<T>(apiUrl: string, method: string, body: stri
   }
   
   async function makeRequest <T>(apiUrl: string, method: string, body: string) : Promise<ApiResponse<T>> {
-    let options: RequestInit = {
+    const options: RequestInit = {
         method: method,
         credentials: "include"
     };
@@ -25,9 +25,13 @@ async function fetchRequestWrapper<T>(apiUrl: string, method: string, body: stri
         };
     }
   
-    const response = await fetch(apiUrl, options);
-    
-    return response.json();
+    const promise = await fetch(apiUrl, options);
+    const response: ApiResponse<T> = await promise.json();
+    if (!response.ok) {
+        throw new Error(response.message);
+    }
+
+    return response;
   }
   
   export default fetchRequestWrapper;

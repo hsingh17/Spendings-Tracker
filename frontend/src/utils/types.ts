@@ -117,17 +117,9 @@ export type ProtectedRoutesProps = {
   children: React.ReactNode;
 };
 
-export type LoginFormProps = {
-  parentSetFormData: (formData: Nullable<LoginFormFormData>) => void;
-};
-
-export type LoginFormFormData = {
+export type UserFormData = {
   username: string;
   password: string;
-};
-
-export type LoginFormNavigateProps = {
-  formData: LoginFormFormData;
 };
 
 export type ViewSpendingsFilterFormProps = {

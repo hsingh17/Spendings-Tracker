@@ -1,6 +1,5 @@
 import { FC, useEffect } from "react";
 import { AddEditSpendingsNavigateProps} from "../utils/types";
-import useApi from "../hooks/useApi";
 import { Constants } from "../utils/constants";
 
 const AddEditSpendingsNavigate: FC<AddEditSpendingsNavigateProps> = ({ spendingDate, spendings, parentSetSpendings, parentSetError }) => {

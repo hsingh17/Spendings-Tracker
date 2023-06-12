@@ -2,7 +2,6 @@ import { Suspense, useState } from "react";
 import SpendingsTable from "../components/SpendingsTable";
 import ViewSpendingsButton from "../components/ViewSpendingsButton";
 import ViewSpendingsFilterForm from "../components/ViewSpendingsFilterForm";
-import useApi from "../hooks/useApi";
 import { Constants } from "../utils/constants";
 import { Nullable, SpendingUserAggr } from "../utils/types";
 import LoadingSpinner from "../components/LoadingSpinner";
