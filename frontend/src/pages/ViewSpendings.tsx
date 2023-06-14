@@ -2,27 +2,12 @@ import { Suspense, useState } from "react";
 import SpendingsTable from "../components/SpendingsTable";
 import ViewSpendingsButton from "../components/ViewSpendingsButton";
 import ViewSpendingsFilterForm from "../components/ViewSpendingsFilterForm";
-import { Constants } from "../utils/constants";
-import { Nullable, SpendingUserAggr } from "../utils/types";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { useSearchParams } from "react-router-dom";
 
 const ViewSpendings = () => {
-  const [ apiUrl, setApiUrl ] = useState<string>(Constants.BASE_API_URL + Constants.SPENDINGS_API_ROUTE); // By default, get everything
-  const { loading, response } = useApi<Array<SpendingUserAggr>>(apiUrl, Constants.GET);
+  const [searchParams, setSearchParams] = useSearchParams();
   
-  const toggleRefresh = () => window.location.reload(); // TODO: Would rather refetch the API then do this. Can put a reload button on the page
-
-  const parentSetApiUrl = (apiUrl: Nullable<string>) => {
-    if (!apiUrl) {
-      return;
-    }
-    setApiUrl(apiUrl);
-  };  
-
-  if (!response || !response?.ok || !response.data) {
-    return <h1>{response?.message}</h1>;
-  }
-
   return (
     <>
       <h1>Here are your spendings: </h1>

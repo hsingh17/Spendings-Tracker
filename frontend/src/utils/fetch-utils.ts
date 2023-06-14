@@ -1,7 +1,7 @@
 import { Constants } from "./constants";
 import { ApiResponse } from "./types";
 
-async function fetchRequestWrapper<T>(apiUrl: string, method: string, body: string) : Promise<ApiResponse<T>> {
+async function fetchRequestWrapper<T>(apiUrl: string, method: string, body: string = "") : Promise<ApiResponse<T>> {
     switch (method) {
         case Constants.GET:
         case Constants.POST:
