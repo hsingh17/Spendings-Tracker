@@ -1,7 +1,7 @@
 package com.spendingstracker.app.service;
 
-import com.spendingstracker.app.model.CustomUserDetails;
-import com.spendingstracker.app.model.User;
+import com.spendingstracker.app.entity.CustomUserDetails;
+import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,7 +1,7 @@
 package com.spendingstracker.app.util;
 
 import com.spendingstracker.app.config.SecretKeyConfig;
-import com.spendingstracker.app.model.CustomUserDetails;
+import com.spendingstracker.app.entity.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;

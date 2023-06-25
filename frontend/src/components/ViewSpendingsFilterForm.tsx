@@ -7,43 +7,26 @@ const ViewSpendingsFilterForm: FC<ViewSpendingsFilterFormProps> = ({ parentSetAp
 
   const processFilterForm = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const target = e.target as typeof e.target & {
       "start-date": { value: string };
       "end-date": { value: string };
       "limit": { value: string };
     }
-
-    // TODO: Validate input (?) 
-    const formInput: Record<string, string> = { "start-date": target["start-date"].value , "end-date": target["end-date"].value, "limit": target["limit"].value };
-    const apiUrl = new URL(Constants.BASE_API_URL + Constants.SPENDINGS_API_ROUTE);
-
-    Object.entries(formInput).forEach((pair) => {
-      if (!pair[1]) { // Null value (aka user did not put anything for this filter)
-        return;
-      }
-      apiUrl.searchParams.append(pair[0], pair[1]);
-    });
-
-    parentSetApiUrl(apiUrl.toString());
-  };
-
-  const resetFilters = () => {
-    parentSetApiUrl(Constants.BASE_API_URL + Constants.SPENDINGS_API_ROUTE);
   };
 
   return (
     <form onSubmit={ (e: React.FormEvent) => processFilterForm(e) } onReset={ _ => resetFilters() }>
-        <label htmlFor="start-date">Start Date:</label>
-        <input type="date" id="start-date" name="start-date" />
+        <label htmlFor={Constants.FORM_START_DATE_KEY}>Start Date:</label>
+        <input type="date" id={Constants.FORM_START_DATE_KEY} name={Constants.FORM_START_DATE_KEY} />
         <br />
 
-        <label htmlFor="end-date">End Date:</label>
-        <input type="date" id="end-date" name="end-date" />
+        <label htmlFor={Constants.FORM_END_DATE_KEY}>End Date:</label>
+        <input type="date" id={Constants.FORM_END_DATE_KEY} name={Constants.FORM_END_DATE_KEY} />
         <br />
         
-        <label htmlFor="limit">Limit page to show:</label>
-        <select name="limit">
+        <label htmlFor={Constants.FORM_LIMIT_KEY}>Limit page to show:</label>
+        <select name={Constants.FORM_LIMIT_KEY}>
           {
             Constants.PAGE_LIMITS.map((limit: String, idx: number) => {
               return <option key={ `${limit}-${idx}` }>{limit}</option>

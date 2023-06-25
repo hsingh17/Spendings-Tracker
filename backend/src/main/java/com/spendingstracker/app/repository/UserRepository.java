@@ -1,6 +1,6 @@
 package com.spendingstracker.app.repository;
 
-import com.spendingstracker.app.model.User;
+import com.spendingstracker.app.entity.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

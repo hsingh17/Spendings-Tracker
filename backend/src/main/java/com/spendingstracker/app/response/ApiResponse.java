@@ -79,33 +79,33 @@ public class ApiResponse<T> {
 
         public ApiResponseBuilder() {}
 
-        public ApiResponseBuilder setMetadata(ApiMetadata metadata) {
+        public ApiResponseBuilder<T> setMetadata(ApiMetadata metadata) {
             this.metadata = metadata;
             return this;
         }
 
-        public ApiResponseBuilder setOk(boolean ok) {
+        public ApiResponseBuilder<T> setOk(boolean ok) {
             this.ok = ok;
             return this;
         }
 
-        public ApiResponseBuilder setMessage(String message) {
+        public ApiResponseBuilder<T> setMessage(String message) {
             this.message = message;
             return this;
         }
 
-        public ApiResponseBuilder setHttpStatus(HttpStatus httpStatus) {
+        public ApiResponseBuilder<T> setHttpStatus(HttpStatus httpStatus) {
             this.httpStatus = httpStatus;
             return this;
         }
 
-        public ApiResponseBuilder setData(T data) {
+        public ApiResponseBuilder<T> setData(T data) {
             this.data = data;
             return this;
         }
 
-        public ApiResponse build() {
-            return new ApiResponse(this);
+        public ApiResponse<T> build() {
+            return new ApiResponse<>(this);
         }
     }
 }

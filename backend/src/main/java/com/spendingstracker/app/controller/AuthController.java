@@ -1,7 +1,7 @@
 package com.spendingstracker.app.controller;
 
-import com.spendingstracker.app.model.CustomUserDetails;
-import com.spendingstracker.app.model.LoginRequestBody;
+import com.spendingstracker.app.entity.CustomUserDetails;
+import com.spendingstracker.app.entity.LoginRequestBody;
 import com.spendingstracker.app.response.ApiResponse;
 import com.spendingstracker.app.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;

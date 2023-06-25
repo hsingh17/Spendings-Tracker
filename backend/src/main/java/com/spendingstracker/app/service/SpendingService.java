@@ -1,8 +1,9 @@
 package com.spendingstracker.app.service;
 
-import com.spendingstracker.app.model.Spending;
-import com.spendingstracker.app.model.SpendingUserAggr;
-import com.spendingstracker.app.model.User;
+import com.spendingstracker.app.entity.Spending;
+import com.spendingstracker.app.entity.SpendingUserAggr;
+import com.spendingstracker.app.entity.User;
+import com.spendingstracker.app.projection.SpendingsListProjection;
 import com.spendingstracker.app.repository.SpendingRepository;
 import com.spendingstracker.app.repository.SpendingUserAggrRepository;
 import com.spendingstracker.app.repository.UserRepository;
@@ -13,8 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,67 +28,46 @@ public class SpendingService {
     @Autowired
     private UserRepository userRepository;
 
-    public Page<SpendingUserAggr> getSpendings(long userId, Date startDate, Date endDate, int page, int limit) {
-        Page<SpendingUserAggr> spendingUserAggrPage = spendingUserAggrRepository.findSpendingsBetweenDate(
+    public Page<SpendingsListProjection> getSpendings(long userId, Date startDate, Date endDate, int page, int limit) {
+        return spendingUserAggrRepository.findSpendingsBetweenDate(
                 userId,
                 startDate,
                 endDate,
                 PageRequest.of(page, limit)
         );
-
-        spendingUserAggrPage.forEach(spendingUserAggr -> {
-            BigDecimal total = BigDecimal.ZERO;
-            for (Spending spending : spendingUserAggr.getSpendings()) {
-                total = total.add(spending.getAmount());
-            }
-            spendingUserAggr.setTotal(total);
-        });
-
-        return spendingUserAggrPage;
     }
 
-    public void saveSpending(Long userId, Set<Spending> spendings, Date spendingDate) throws UsernameNotFoundException {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+    public List<Spending> getSpendingDetails(long spendingUserAggrId) {
         SpendingUserAggr spendingUserAggr = spendingUserAggrRepository
-                .findSpendingUserAggrByUserAndDate(user, spendingDate)
-                .orElse(null); // Check if this spending already exists for this user
+                .findById(spendingUserAggrId)
+                .orElseThrow(() -> new IllegalArgumentException("Can't find spendingUserAggr for: " + spendingUserAggrId));
 
-        if (spendingUserAggr != null) { // Existing spending
-            updateExistingSpendings(spendings, spendingUserAggr);
-        } else { // New spending
-            saveNewSpending(user, spendings, spendingDate);
-        }
+        return new ArrayList<>(spendingUserAggr.getSpendings());
     }
 
-    private void updateExistingSpendings(Set<Spending> spendings, SpendingUserAggr spendingUserAggr) {
+    public void updateSpending(Set<Spending> spendings, long spendingUserAggrId) {
+        SpendingUserAggr spendingUserAggr = spendingUserAggrRepository
+                .findById(spendingUserAggrId)
+                .orElseThrow(() -> new IllegalArgumentException("Can't find spendingUserAggr for: " + spendingUserAggrId));
+
         Set<Spending> spendingsToKeep = spendings
                 .stream()
                 .filter(spending -> !spending.isDelete())
                 .collect(Collectors.toSet());
 
-        spendingUserAggr.emptySpendings();
-        spendingUserAggr.addSpendings(spendingsToKeep);
+        spendingUserAggr.emptySpendings(); // Remove all old spendings
+        spendingUserAggr.addSpendings(spendingsToKeep); // Readd the spendings to this date
         spendingUserAggrRepository.save(spendingUserAggr);
     }
 
-    private void saveNewSpending(User user, Set<Spending> spendings, Date spendingDate) {
+    public void createSpending(Set<Spending> spendings, Date spendingDate, long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found!"));
         SpendingUserAggr spendingUserAggr = new SpendingUserAggr(user, spendingDate, spendings);
-
         user.addSpendingUserAggr(spendingUserAggr); // Add new spending date to the user
         userRepository.save(user); // We save the user (won't create a new user) and all the new spendings will cascade
     }
 
-    public void deleteSpendingByDate(long userId, Date spendingDate) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found!"));
-        SpendingUserAggr spendingUserAggr = spendingUserAggrRepository
-                .findSpendingUserAggrByUserAndDate(user, spendingDate)
-                .orElse(null); // Check if this spending already exists for this user
-
-        if (spendingUserAggr == null) {
-            throw new IllegalArgumentException("No spendings found for this date!");
-        }
-
-        user.removeSpendingUserAggr(spendingUserAggr);
-        userRepository.save(user);
+    public void deleteSpending(long spendingUserAggrId) {
+        spendingUserAggrRepository.deleteById(spendingUserAggrId);
     }
 }

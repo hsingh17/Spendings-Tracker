@@ -1,9 +1,10 @@
 package com.spendingstracker.app.controller;
 
 import com.spendingstracker.app.constants.Constants;
-import com.spendingstracker.app.model.CustomUserDetails;
-import com.spendingstracker.app.model.Spending;
-import com.spendingstracker.app.model.SpendingUserAggr;
+import com.spendingstracker.app.entity.CustomUserDetails;
+import com.spendingstracker.app.entity.Spending;
+import com.spendingstracker.app.entity.SpendingUserAggr;
+import com.spendingstracker.app.projection.SpendingsListProjection;
 import com.spendingstracker.app.response.ApiLinks;
 import com.spendingstracker.app.response.ApiMetadata;
 import com.spendingstracker.app.response.ApiResponse;
@@ -42,7 +43,7 @@ public class ApiRestController {
     }
 
     @GetMapping("/spendings")
-    public ResponseEntity<ApiResponse<List<SpendingUserAggr>>> getSpendings(
+    public ResponseEntity<ApiResponse<List<SpendingsListProjection>>> getSpendings(
             @RequestParam(name = "start-date", defaultValue = "1000-01-01") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date startDate,
             @RequestParam(name = "end-date", defaultValue = "9999-12-31") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date endDate,
             @RequestParam(name = "page", defaultValue = "0") Integer page,
@@ -57,32 +58,46 @@ public class ApiRestController {
             throw new IllegalArgumentException("Limit must be greater than zero!");
         }
 
-        Page<SpendingUserAggr> spendings = spendingService.getSpendings(getUserId(), startDate, endDate, page, limit);
-        ApiLinks apiLinks = new ApiLinks.ApiLinksBuilder(request.getRequestURI(), request.getQueryString(), page, spendings.getTotalPages()-1).build();
+        Page<SpendingsListProjection> spendingsPage = spendingService.getSpendings(getUserId(), startDate, endDate, page, limit);
+        ApiLinks apiLinks = new ApiLinks.ApiLinksBuilder(request.getRequestURI(), request.getQueryString(), page, spendingsPage.getTotalPages()-1).build();
 
         ApiMetadata apiMetadata = new ApiMetadata.ApiMetadataBuilder()
                 .setCurrentPage(page)
                 .setLinks(apiLinks)
-                .setTotalPages(spendings.getTotalPages())
-                .setPageSize(limit)
-                .setTotalCount(spendings.getTotalElements())
+                .setTotalPages(spendingsPage.getTotalPages()-1) // 0-indexed
+                .setPageSize(spendingsPage.getSize()) // How many elements were returned in this page
+                .setTotalCount(spendingsPage.getTotalElements())
                 .build();
 
-        ApiResponse<List<SpendingUserAggr>> apiResponse = new ApiResponse.ApiResponseBuilder<List<SpendingUserAggr>>()
+        ApiResponse<List<SpendingsListProjection>> apiResponse = new ApiResponse.ApiResponseBuilder<List<SpendingsListProjection>>()
                 .setHttpStatus(HttpStatus.OK)
                 .setOk(true)
                 .setMetadata(apiMetadata)
-                .setData(spendings.getContent())
+                .setData(spendingsPage.getContent())
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @GetMapping("/spendings/{spending-user-aggr-id}")
+    public ResponseEntity<ApiResponse<List<Spending>>> getSpendingDetails(
+            @PathVariable("spending-user-aggr-id") long spendingUserAggrId) {
+        List<Spending> spendings = spendingService.getSpendingDetails(spendingUserAggrId);
+        ApiResponse<List<Spending>> apiResponse = new ApiResponse.ApiResponseBuilder<List<Spending>>()
+                .setHttpStatus(HttpStatus.OK)
+                .setOk(true)
+                .setData(spendings)
                 .build();
 
         return ResponseEntity.ok(apiResponse);
     }
 
     @PostMapping("/spendings/{spending-date}")
-    public ResponseEntity<ApiResponse> saveSpending(@RequestBody Set<Spending> spendings,
-                                                    @PathVariable("spending-date") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date spendingDate) {
-        spendingService.saveSpending(getUserId(), spendings, spendingDate);
+    public ResponseEntity<ApiResponse> createSpending(
+            @RequestBody Set<Spending> spendings,
+            @PathVariable("spending-date") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date spendingDate) {
 
+        spendingService.createSpending(spendings, spendingDate, getUserId());
         ApiResponse apiResponse = new ApiResponse.ApiResponseBuilder()
                 .setHttpStatus(HttpStatus.OK)
                 .setMessage("Success")
@@ -92,13 +107,29 @@ public class ApiRestController {
         return ResponseEntity.ok(apiResponse);
     }
 
-    @DeleteMapping("/spendings/{spending-date}")
-    public ResponseEntity<ApiResponse> deleteSpendingsByDate(@PathVariable("spending-date") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date spendingDate) throws Exception {
-        spendingService.deleteSpendingByDate(getUserId(), spendingDate);
-        ApiResponse apiResponse = new ApiResponse.ApiResponseBuilder()
+    @PutMapping("/spendings/{spending-user-aggr-id}")
+    public ResponseEntity<ApiResponse> updateSpending(
+            @RequestBody Set<Spending> spendings,
+            @PathVariable("spending-user-aggr-id") long spendingUserAggrId) {
+
+        spendingService.updateSpending(spendings, spendingUserAggrId);
+        ApiResponse<List<Spending>> apiResponse = new ApiResponse.ApiResponseBuilder<List<Spending>>()
                 .setHttpStatus(HttpStatus.OK)
-                .setMessage("Success")
                 .setOk(true)
+                .setMessage("Updated spending for id: " + spendingUserAggrId)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @DeleteMapping("/spendings/{spending-user-aggr-id}")
+    public ResponseEntity<ApiResponse> deleteSpending(
+            @PathVariable("spending-user-aggr-id") long spendingUserAggrId) {
+        spendingService.deleteSpending(spendingUserAggrId);
+        ApiResponse<List<Spending>> apiResponse = new ApiResponse.ApiResponseBuilder<List<Spending>>()
+                .setHttpStatus(HttpStatus.OK)
+                .setOk(true)
+                .setMessage("Delete spending for id: " + spendingUserAggrId)
                 .build();
 
         return ResponseEntity.ok(apiResponse);

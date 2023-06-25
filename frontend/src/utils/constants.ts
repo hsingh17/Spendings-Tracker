@@ -33,9 +33,9 @@ export namespace Constants {
 
   export const API_VERSION = "/v1";
   export const BASE_API_URL: string = (import.meta.env.DEV ? import.meta.env.VITE_SERVER_BASE_URL_DEV : import.meta.env.VITE_SERVER_BASE_URL_PROD);
-  export const AUTH_LOGIN_ROUTE: string = `${API_VERSION}/auth/login/`;
-  export const ME_API_ROUTE: string = `${API_VERSION}/api/me/`;
-  export const SPENDINGS_API_ROUTE: string = `${API_VERSION}/api/spendings/`;
+  export const AUTH_LOGIN_ROUTE: string = `${API_VERSION}/auth/login`;
+  export const ME_API_ROUTE: string = `${API_VERSION}/api/me`;
+  export const SPENDINGS_API_ROUTE: string = `${API_VERSION}/api/spendings`;
 
   // #######################################################################################
   // #######################################################################################
@@ -74,4 +74,13 @@ export namespace Constants {
   // #######################################################################################
   // ####################################################################################### 
   export const enum PROMISE_STATES { PENDING, FUFILLED, REJECTED };
+
+  // #######################################################################################
+  // #######################################################################################
+  //                                      FORM INPUTS
+  // #######################################################################################
+  // ####################################################################################### 
+  export const FORM_START_DATE_KEY: string = "start-date";
+  export const FORM_END_DATE_KEY: string = "end-date";
+  export const FORM_LIMIT_KEY: string = "limit";
 };

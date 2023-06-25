@@ -7,17 +7,17 @@ import { useSearchParams } from "react-router-dom";
 
 const ViewSpendings = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  
+    
   return (
     <>
       <h1>Here are your spendings: </h1>
-      <ViewSpendingsFilterForm parentSetApiUrl={ parentSetApiUrl } />
+      <ViewSpendingsFilterForm />
       <Suspense fallback={ <LoadingSpinner /> }>
-        <SpendingsTable toggleRefresh={ toggleRefresh } spendingUserAggrList={ response.data } />
-        <ViewSpendingsButton parentSetApiUrl={ parentSetApiUrl } buttonUrl={ response.metadata?.links.first } buttonText="first" />
-        <ViewSpendingsButton parentSetApiUrl={ parentSetApiUrl } buttonUrl={ response.metadata?.links.prev } buttonText="<" />
-        <ViewSpendingsButton parentSetApiUrl={ parentSetApiUrl } buttonUrl={ response.metadata?.links.next } buttonText=">" />
-        <ViewSpendingsButton parentSetApiUrl={ parentSetApiUrl } buttonUrl={ response.metadata?.links.last } buttonText="last" />
+        <SpendingsTable spendingUserAggrList={ } />
+        <ViewSpendingsButton buttonUrl={ } buttonText="first" />
+        <ViewSpendingsButton buttonUrl={ } buttonText="<" />
+        <ViewSpendingsButton buttonUrl={ } buttonText=">" />
+        <ViewSpendingsButton buttonUrl={ } buttonText="last" />
       </Suspense>
     </>
   );

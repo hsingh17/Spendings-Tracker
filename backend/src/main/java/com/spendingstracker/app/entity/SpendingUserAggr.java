@@ -1,4 +1,4 @@
-package com.spendingstracker.app.model;
+package com.spendingstracker.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -29,7 +29,6 @@ public class SpendingUserAggr {
 
     @Transient
     private BigDecimal total;
-
 
 
     public SpendingUserAggr() {}

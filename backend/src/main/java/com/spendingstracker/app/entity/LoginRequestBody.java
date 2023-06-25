@@ -1,4 +1,4 @@
-package com.spendingstracker.app.model;
+package com.spendingstracker.app.entity;
 
 public class LoginRequestBody {
     private String username;
