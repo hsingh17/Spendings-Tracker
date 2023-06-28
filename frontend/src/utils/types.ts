@@ -45,10 +45,9 @@ export type Spending = {
    delete: Nullable<boolean>;
 };
 
-export type SpendingUserAggr = {
+export type SpendingListRow = {
   spendingUserAggrId: number;
   date: string;
-  spendings: Array<Spending>;
   total: number;
 };
 
@@ -75,17 +74,17 @@ export type SpendingsFormInputProps = {
 };
 
 export type SpendingsTableProps = {
-  toggleRefresh: () => void;
-  spendingUserAggrList: Array<SpendingUserAggr>;
+  parentRefetch: () => void;
+  spendings: Nullable<Array<SpendingListRow>> | undefined;
 };
 
 export type SpendingsRowProps = {
-  toggleRefresh: () => void;
-  spendingUserAggr: SpendingUserAggr;
+  parentRefetch: () => void;
+  spending: SpendingListRow;
 };
 
 export type SpendingsRowDeleteProps = {
-  toggleRefresh: () => void;
+  parentRefetch: () => void;
   spendingDate: string;
 };
 
@@ -123,11 +122,11 @@ export type UserFormData = {
 };
 
 export type ViewSpendingsFilterFormProps = {
-  parentSetApiUrl: (apiUrl: Nullable<string>) => void;
+  parentSetSearchParams: (searchParams: URLSearchParams) => void;
 };
 
 export type ViewSpendingsButtonProps = {
-  parentSetApiUrl: (apiUrl: Nullable<string>) => void;
+  parentSetSearchParams: (searchParams: URLSearchParams) => void;
   buttonText: Nullable<string> | undefined;
   buttonUrl: Nullable<string> | undefined;
 };

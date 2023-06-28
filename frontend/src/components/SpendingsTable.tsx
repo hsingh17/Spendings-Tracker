@@ -1,8 +1,12 @@
 import { FC } from "react";
-import { SpendingUserAggr, SpendingsTableProps } from "../utils/types";
+import { SpendingListRow, SpendingsTableProps } from "../utils/types";
 import SpendingsRow from "./SpendingsRow";
 
-const SpendingsTable: FC<SpendingsTableProps> = ({ spendingUserAggrList, toggleRefresh }) => {
+const SpendingsTable: FC<SpendingsTableProps> = ({ spendings, parentRefetch }) => {
+  if (!spendings) {
+    return null;
+  }
+
   return (
     <table>
       <tr>
@@ -12,8 +16,8 @@ const SpendingsTable: FC<SpendingsTableProps> = ({ spendingUserAggrList, toggleR
       </tr>
 
       {
-        spendingUserAggrList.map((spendingUserAggr: SpendingUserAggr, idx: number) => {
-          return <SpendingsRow key={ idx } spendingUserAggr={ spendingUserAggr } toggleRefresh={ toggleRefresh }/>
+        spendings.map((spending: SpendingListRow, idx: number) => {
+          return <SpendingsRow key={ idx } spending={spending} parentRefetch={parentRefetch}/>
         })
       }
     </table>

@@ -23,6 +23,7 @@ export namespace Constants {
   export const GET: string = "GET";
   export const POST: string = "POST";
   export const DELETE: string = "DELETE";
+  export const PUT: string = "PUT";
 
 
   // #######################################################################################
@@ -75,12 +76,4 @@ export namespace Constants {
   // ####################################################################################### 
   export const enum PROMISE_STATES { PENDING, FUFILLED, REJECTED };
 
-  // #######################################################################################
-  // #######################################################################################
-  //                                      FORM INPUTS
-  // #######################################################################################
-  // ####################################################################################### 
-  export const FORM_START_DATE_KEY: string = "start-date";
-  export const FORM_END_DATE_KEY: string = "end-date";
-  export const FORM_LIMIT_KEY: string = "limit";
 };

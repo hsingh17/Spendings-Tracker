@@ -4,24 +4,23 @@ import DateFormatter from "../utils/dates-formatter";
 import { SpendingsRowProps } from "../utils/types";
 import SpendingsRowDelete from "./SpendingsRowDelete";
 import { Constants } from "../utils/constants";
+import useDeleteSpending from "../hooks/useDeleteSpending";
 
 
-const SpendingsRow: FC<SpendingsRowProps> = ({ spendingUserAggr, toggleRefresh }) => {
+const SpendingsRow: FC<SpendingsRowProps> = ({ spending, parentRefetch }) => {
   const navigate = useNavigate();
-  const [ performDelete, setPerformDelete ] = useState<boolean>(false);
+  const {mutate: deleteSpending} = useDeleteSpending(parentRefetch);
 
-  const handleEdit = () => navigate(`${Constants.EDIT_SPENDINGS_PAGE}/${spendingUserAggr.date}`);
-  const handleDelete = (perform: boolean) => setPerformDelete(perform);
+  const handleEdit = () => navigate(`${Constants.EDIT_SPENDINGS_PAGE}/${spending.spendingUserAggrId}`);
 
   return (
     <tr>
-      <td>{ DateFormatter.formatDateUS(spendingUserAggr.date) }</td>
-      <td> { spendingUserAggr.total } </td>
+      <td>{ DateFormatter.formatDateUS(spending.date) }</td>
+      <td> { spending.total } </td>
       <>
-        <button onClick={ () => handleEdit() }>Edit</button>
+        <button onClick={_ => handleEdit()}>Edit</button>
         <br/>
-        <button onClick={ () => handleDelete(true) }>Delete</button>
-        { performDelete && <SpendingsRowDelete spendingDate={ spendingUserAggr.date } toggleRefresh={ toggleRefresh }/> }
+        <button onClick={_ => deleteSpending(spending.spendingUserAggrId)}>Delete</button>
         <button>v</button>
       </>
     </tr>

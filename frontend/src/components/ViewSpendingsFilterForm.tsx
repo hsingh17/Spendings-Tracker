@@ -3,7 +3,7 @@ import { Constants } from "../utils/constants";
 import { ViewSpendingsFilterFormProps } from "../utils/types";
 
 
-const ViewSpendingsFilterForm: FC<ViewSpendingsFilterFormProps> = ({ parentSetApiUrl }) => {
+const ViewSpendingsFilterForm: FC<ViewSpendingsFilterFormProps> = ({ parentSetSearchParams }) => {
 
   const processFilterForm = (e: React.FormEvent) => {
     e.preventDefault();
@@ -13,20 +13,36 @@ const ViewSpendingsFilterForm: FC<ViewSpendingsFilterFormProps> = ({ parentSetAp
       "end-date": { value: string };
       "limit": { value: string };
     }
+    
+    const urlSearchParams: URLSearchParams = new URLSearchParams();
+
+    if (target["start-date"].value) {
+      urlSearchParams.append("start-date", target["start-date"].value);
+    }
+    
+    if (target["end-date"].value) {
+      urlSearchParams.append("end-date", target["end-date"].value);
+    }
+    
+    if (target["limit"].value) {
+      urlSearchParams.append("limit", target["limit"].value);
+    }
+
+    parentSetSearchParams(urlSearchParams);
   };
 
   return (
-    <form onSubmit={ (e: React.FormEvent) => processFilterForm(e) } onReset={ _ => resetFilters() }>
-        <label htmlFor={Constants.FORM_START_DATE_KEY}>Start Date:</label>
-        <input type="date" id={Constants.FORM_START_DATE_KEY} name={Constants.FORM_START_DATE_KEY} />
+    <form onSubmit={(e: React.FormEvent) => processFilterForm(e)} onReset={_ => parentSetSearchParams(new URLSearchParams())}>
+        <label htmlFor={"start-date"}>Start Date:</label>
+        <input type="date" id={"start-date"} name={"start-date"} />
         <br />
 
-        <label htmlFor={Constants.FORM_END_DATE_KEY}>End Date:</label>
-        <input type="date" id={Constants.FORM_END_DATE_KEY} name={Constants.FORM_END_DATE_KEY} />
+        <label htmlFor={"end-date"}>End Date:</label>
+        <input type="date" id={"end-date"} name={"end-date"} />
         <br />
         
-        <label htmlFor={Constants.FORM_LIMIT_KEY}>Limit page to show:</label>
-        <select name={Constants.FORM_LIMIT_KEY}>
+        <label htmlFor={"limit"}>Limit page to show:</label>
+        <select name={"limit"}>
           {
             Constants.PAGE_LIMITS.map((limit: String, idx: number) => {
               return <option key={ `${limit}-${idx}` }>{limit}</option>

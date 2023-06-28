@@ -27,7 +27,7 @@ const App = () => {
           <Route path={Constants.DASHBOARD_PAGE} element={<Dashboard/>}/>
           <Route path={Constants.VIEW_SPENDINGS_PAGE} element={<ViewSpendings/>}/>
           <Route path={Constants.ADD_SPENDINGS_PAGE} element={<AddSpendings/>}/>
-          <Route path={`${Constants.EDIT_SPENDINGS_PAGE}/:spendingDate`} element={<EditSpendings/>}/>
+          <Route path={`${Constants.EDIT_SPENDINGS_PAGE}/:spendingUserAggrId`} element={<EditSpendings/>}/>
           <Route path="*" element={<NotFound/>}/>
         </Routes>      
       </UserContext.Provider>

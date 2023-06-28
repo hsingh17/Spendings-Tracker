@@ -6,6 +6,7 @@ async function fetchRequestWrapper<T>(apiUrl: string, method: string, body: stri
         case Constants.GET:
         case Constants.POST:
         case Constants.DELETE:
+        case Constants.PUT:
             return makeRequest(apiUrl, method, body);            
         default:
             return { ok: false, httpStatus: 400, timestamp: new Date().toISOString(), message: "Incorrect HTTP Method passed!", metadata: null, data: null };
