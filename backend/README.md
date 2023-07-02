@@ -84,11 +84,11 @@
 
 ### Spendings Detail
 - HTTP Method: `GET`
-- Endpoint: `/v1/api/spendings/{spending-user-aggr-id}`
+- Endpoint: `/v1/api/spendings/{spending-date}`
 - Path Variables:
-    - `spending-user-aggr-id`
+    - `spending-date`
 - Purpose:
-    - Displays the details of a specific spending.
+    - Displays the details of a specific spending for a user on a certain date.
 - Response structure of `data`:
 ````
 [
@@ -110,9 +110,9 @@
 
 ### Update spending
 - HTTP Method: `PUT`
-- Endpoint: `/v1/api/spendings/{spending-user-aggr-id}`
+- Endpoint: `/v1/api/spendings/{spending-date}`
 - Path Variables:
-    - `spending-user-aggr-id`
+    - `spending-date`
 - Post body:
 ````
 [

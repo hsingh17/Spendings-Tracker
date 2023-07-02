@@ -37,18 +37,21 @@ public class SpendingService {
         );
     }
 
-    public List<Spending> getSpendingDetails(long spendingUserAggrId) {
-        SpendingUserAggr spendingUserAggr = spendingUserAggrRepository
-                .findById(spendingUserAggrId)
-                .orElseThrow(() -> new IllegalArgumentException("Can't find spendingUserAggr for: " + spendingUserAggrId));
+    public List<Spending> getSpendingDetails(Date spendingDate, long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+        Optional<SpendingUserAggr> spendingUserAggrOpt = spendingUserAggrRepository
+                .findSpendingUserAggrByUserAndDate(user, spendingDate);
 
-        return new ArrayList<>(spendingUserAggr.getSpendings());
+        return spendingUserAggrOpt
+                .map(spendingUserAggr -> new ArrayList<>(spendingUserAggr.getSpendings()))
+                .orElse(null);
     }
 
-    public void updateSpending(Set<Spending> spendings, long spendingUserAggrId) {
+    public void updateSpending(Set<Spending> spendings, Date spendingDate, long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found!"));
         SpendingUserAggr spendingUserAggr = spendingUserAggrRepository
-                .findById(spendingUserAggrId)
-                .orElseThrow(() -> new IllegalArgumentException("Can't find spendingUserAggr for: " + spendingUserAggrId));
+                .findSpendingUserAggrByUserAndDate(user, spendingDate)
+                .orElseThrow(() -> new IllegalArgumentException("Can't find spendingUserAggr for date: " + spendingDate));
 
         Set<Spending> spendingsToKeep = spendings
                 .stream()

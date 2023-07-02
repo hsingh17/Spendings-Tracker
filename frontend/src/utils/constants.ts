@@ -9,9 +9,8 @@ export namespace Constants {
   export const HOME_PAGE: string = "/";
   export const LOGIN_PAGE: string = "/login";
   export const DASHBOARD_PAGE: string = "/dashboard";
-  export const VIEW_SPENDINGS_PAGE: string = "/view-spendings";
-  export const ADD_SPENDINGS_PAGE: string = "/add-spendings";
-  export const EDIT_SPENDINGS_PAGE: string = "/edit-spendings";
+  export const VIEW_SPENDINGS_PAGE: string = "/view";
+  export const SAVE_SPENDINGS_PAGE: string = "/save";
 
   
   // #######################################################################################

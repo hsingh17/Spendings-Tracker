@@ -39,10 +39,10 @@ export type ApiResponse<T> = {
 };
 
 export type Spending = {
-   spendingId: Nullable<number>;
-   category: Nullable<string>;
-   amount: Nullable<number>;
-   delete: Nullable<boolean>;
+  spendingId: Nullable<number>;
+  category: Nullable<string>;
+  amount: Nullable<number>;
+  delete: Nullable<boolean>;
 };
 
 export type SpendingListRow = {
@@ -51,11 +51,9 @@ export type SpendingListRow = {
   total: number;
 };
 
-export type SpendingsFormProps = {
-  parentHandleSubmit: (spendings: Nullable<Array<Spending>>) => void;
-  parentSetDate: (date: string) => void;
-  isAdd: boolean;
-  date: Nullable<string>;
+export type SaveSpendingsFormProps = {
+  parentHandleDateChange: (date: string) => void;
+  date: string;
   initialSpendings: Nullable<Array<Spending>>;
 };
 
@@ -83,38 +81,13 @@ export type SpendingsRowProps = {
   spending: SpendingListRow;
 };
 
-export type SpendingsRowDeleteProps = {
-  parentRefetch: () => void;
-  spendingDate: string;
-};
-
 export type SpendingComponentProps = {
   spending: Spending;
 };
 
-export type AddEditSpendingProps = {
-  isAdd: boolean;
-  spendingDate: Nullable<string>;
-};
-
-export type AddEditSpendingsNavigateProps = {
-  spendingDate: string;
-  parentSetSpendings: (spendings: Nullable<Array<Spending>>) => void;
-  parentSetError: (error: Nullable<string>) => void;
-  spendings: Array<Spending>;
+export type SaveSpendingProps = {
+  date: string;
 }
-
-export type EditSpendingsParams = {
-  spendingDate: string;
-};
-
-export type UseApiResponse<T> = {
-  response: ApiResponse<T>;
-};
-
-export type ProtectedRoutesProps = {
-  children: React.ReactNode;
-};
 
 export type UserFormData = {
   username: string;

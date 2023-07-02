@@ -79,10 +79,10 @@ public class ApiRestController {
         return ResponseEntity.ok(apiResponse);
     }
 
-    @GetMapping("/spendings/{spending-user-aggr-id}")
+    @GetMapping("/spendings/{spending-date}")
     public ResponseEntity<ApiResponse<List<Spending>>> getSpendingDetails(
-            @PathVariable("spending-user-aggr-id") long spendingUserAggrId) {
-        List<Spending> spendings = spendingService.getSpendingDetails(spendingUserAggrId);
+            @PathVariable("spending-date") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date spendingDate) {
+        List<Spending> spendings = spendingService.getSpendingDetails(spendingDate, getUserId());
         ApiResponse<List<Spending>> apiResponse = new ApiResponse.ApiResponseBuilder<List<Spending>>()
                 .setHttpStatus(HttpStatus.OK)
                 .setOk(true)
@@ -107,16 +107,16 @@ public class ApiRestController {
         return ResponseEntity.ok(apiResponse);
     }
 
-    @PutMapping("/spendings/{spending-user-aggr-id}")
+    @PutMapping("/spendings/{spending-date}")
     public ResponseEntity<ApiResponse> updateSpending(
             @RequestBody Set<Spending> spendings,
-            @PathVariable("spending-user-aggr-id") long spendingUserAggrId) {
+            @PathVariable("spending-date") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date spendingDate) {
 
-        spendingService.updateSpending(spendings, spendingUserAggrId);
+        spendingService.updateSpending(spendings, spendingDate, getUserId());
         ApiResponse<List<Spending>> apiResponse = new ApiResponse.ApiResponseBuilder<List<Spending>>()
                 .setHttpStatus(HttpStatus.OK)
                 .setOk(true)
-                .setMessage("Updated spending for id: " + spendingUserAggrId)
+                .setMessage("Updated spending for spending date: " + spendingDate)
                 .build();
 
         return ResponseEntity.ok(apiResponse);

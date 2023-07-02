@@ -11,7 +11,7 @@ const SpendingsRow: FC<SpendingsRowProps> = ({ spending, parentRefetch }) => {
   const navigate = useNavigate();
   const {mutate: deleteSpending} = useDeleteSpending(parentRefetch);
 
-  const handleEdit = () => navigate(`${Constants.EDIT_SPENDINGS_PAGE}/${spending.spendingUserAggrId}`);
+  const handleEdit = () => navigate(`${Constants.SAVE_SPENDINGS_PAGE}/${spending.date}`);
 
   return (
     <tr>
