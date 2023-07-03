@@ -1,10 +1,9 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import { useNavigate } from "react-router-dom";
+import useDeleteSpending from "../hooks/useDeleteSpending";
+import { Constants } from "../utils/constants";
 import DateFormatter from "../utils/dates-formatter";
 import { SpendingsRowProps } from "../utils/types";
-import SpendingsRowDelete from "./SpendingsRowDelete";
-import { Constants } from "../utils/constants";
-import useDeleteSpending from "../hooks/useDeleteSpending";
 
 
 const SpendingsRow: FC<SpendingsRowProps> = ({ spending, parentRefetch }) => {

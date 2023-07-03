@@ -1,9 +1,9 @@
+import { useSearchParams } from "react-router-dom";
 import SpendingsTable from "../components/SpendingsTable";
 import ViewSpendingsButton from "../components/ViewSpendingsButton";
 import ViewSpendingsFilterForm from "../components/ViewSpendingsFilterForm";
-import { useSearchParams } from "react-router-dom";
 import useListSpendings from "../hooks/useListSpendings";
-import { ApiLinks, Nullable } from "../utils/types";
+import { ApiLinks } from "../utils/types";
 
 const ViewSpendings = () => {
   const [searchParams, setSearchParams] = useSearchParams();

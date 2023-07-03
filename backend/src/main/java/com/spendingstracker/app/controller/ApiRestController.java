@@ -3,7 +3,6 @@ package com.spendingstracker.app.controller;
 import com.spendingstracker.app.constants.Constants;
 import com.spendingstracker.app.entity.CustomUserDetails;
 import com.spendingstracker.app.entity.Spending;
-import com.spendingstracker.app.entity.SpendingUserAggr;
 import com.spendingstracker.app.projection.SpendingsListProjection;
 import com.spendingstracker.app.response.ApiLinks;
 import com.spendingstracker.app.response.ApiMetadata;
