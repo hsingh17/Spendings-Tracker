@@ -42,7 +42,7 @@ BEGIN
     SET I = 0;
     
     INSERT_SPENDING_DATE_LOOP: LOOP
-        IF I = 10 THEN
+        IF I = 100 THEN
             LEAVE INSERT_SPENDING_DATE_LOOP;
         END IF;
 
@@ -50,7 +50,7 @@ BEGIN
 
         SET J = 0;
         INSERT_SPENDING_LOOP: LOOP
-            IF J = 10 THEN
+            IF J = 100 THEN
                 LEAVE INSERT_SPENDING_LOOP;
             END IF;
 

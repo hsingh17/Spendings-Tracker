@@ -134,6 +134,16 @@ public class ApiRestController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    @GetMapping("/spendings/chart/categorical")
+    public ResponseEntity<ApiResponse<>> getCategoricalChartData() {
+
+    }
+
+    @GetMapping("/spendings/chart/numerical")
+    public ResponseEntity<ApiResponse<>> getNumericalChartData() {
+
+    }
+
     private long getUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();

@@ -57,11 +57,11 @@
 ### List view
 - HTTP Method: `GET`
 - Endpoint: `/v1/api/spendings/`
-- Query Params:
-  - `start-date`
-  - `end-date`
-  - `page`
-  - `limit`
+- Query Params (* *Optional*):
+  - `start-date`*
+  - `end-date`*
+  - `page`*
+  - `limit`*
 - Purpose:
   - Displays all spendings in a list form.
   - The details of each spending under a certain day can be viewed with the Details endpoint
@@ -163,3 +163,50 @@
   - `spending-user-aggr-id`
 - Purpose:
   - Delete an entire spending day.
+
+### Categorical Chart Data
+- HTTP Method: `GET`
+- Endpoint: `/v1/api/spendings/chart/categorical`
+- Query Parameters (* *Optional*)
+  - `start-date`* 
+  - `end-date`*
+  - `group-by`
+- Purpose:
+  - Get spending data for a user in a format that simplifies plotting to a chart that displays categorical data (e.g: pie or bar charts)
+- Response structure of `data`:
+````
+[ 
+  {
+    category: String,
+    amount: BigDecimal
+  },
+  {
+    category: String,
+    amount: BigDecimal
+  },
+  ...
+]
+````
+
+### Numerical Chart Data
+- HTTP Method: `GET`
+- Endpoint: `/v1/api/spendings/chart/numerical`
+- Query Parameters (* *Optional*)
+  - `start-date`* 
+  - `end-date`*
+  - `group-by`
+- Purpose:
+  - Get spending data for a user in a format that simplifies plotting to a numerical chart (e.g: line plots)
+- Response structure of `data`:
+````
+[ 
+  {
+    date: Date,
+    amount: BigDecimal
+  },
+  {
+    date: Date,
+    amount: BigDecimal
+  },
+  ...
+]
