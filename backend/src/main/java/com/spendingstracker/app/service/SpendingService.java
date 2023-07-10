@@ -1,10 +1,10 @@
 package com.spendingstracker.app.service;
 
+import com.spendingstracker.app.constants.Constants;
 import com.spendingstracker.app.entity.Spending;
 import com.spendingstracker.app.entity.SpendingUserAggr;
 import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.projection.SpendingsListProjection;
-import com.spendingstracker.app.repository.SpendingRepository;
 import com.spendingstracker.app.repository.SpendingUserAggrRepository;
 import com.spendingstracker.app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,18 +22,28 @@ public class SpendingService {
     private SpendingUserAggrRepository spendingUserAggrRepository;
 
     @Autowired
-    private SpendingRepository spendingRepository;
-
-    @Autowired
     private UserRepository userRepository;
 
-    public Page<SpendingsListProjection> getSpendings(long userId, Date startDate, Date endDate, int page, int limit) {
-        return spendingUserAggrRepository.findSpendingsBetweenDate(
-                userId,
-                startDate,
-                endDate,
-                PageRequest.of(page, limit)
-        );
+    public Page<SpendingsListProjection> getSpendings(
+            long userId, Date startDate, Date endDate, int page, int limit, String groupBy, String type) {
+        PageRequest pageRequest = PageRequest.of(page, limit);
+
+        if (type.equals(Constants.REQUEST_TYPES.get(1))) { // Categorical
+            return spendingUserAggrRepository.findSpendingsCategorical(userId, startDate, endDate, pageRequest);
+        }
+
+        // Numerical
+        if (groupBy.equals(Constants.GROUP_BY.get(0))) { // Group by day
+            return spendingUserAggrRepository.findSpendingsNumericalGroupByDay(userId, startDate, endDate, pageRequest);
+        } else if (groupBy.equals(Constants.GROUP_BY.get(1))) { // Group by week
+            return spendingUserAggrRepository.findSpendingsNumericalGroupByWeek(userId, startDate, endDate, pageRequest);
+        } else if (groupBy.equals(Constants.GROUP_BY.get(2))) { // Group by month
+            return spendingUserAggrRepository.findSpendingsNumericalGroupByMonth(userId, startDate, endDate, pageRequest);
+        } else if (groupBy.equals(Constants.GROUP_BY.get(3))) { // Group by year
+            return spendingUserAggrRepository.findSpendingsNumericalGroupByYear(userId, startDate, endDate, pageRequest);
+        }
+
+        throw new RuntimeException("Could not get spendings!");
     }
 
     public List<Spending> getSpendingDetails(Date spendingDate, long userId) {

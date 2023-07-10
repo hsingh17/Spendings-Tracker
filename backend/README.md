@@ -58,29 +58,46 @@
 - HTTP Method: `GET`
 - Endpoint: `/v1/api/spendings/`
 - Query Params (* *Optional*):
-  - `start-date`*
-  - `end-date`*
-  - `page`*
-  - `limit`*
+  - `start-date`* (Default value: `1000-01-01`)
+  - `end-date`* (Default value: `9999-12-31`)
+  - `group-by`* (Default value: `D`)
+  - `type`* (Default value: `N`)
+  - `page`* (Default value: `0`)
+  - `limit`* (Default value: `25`)
 - Purpose:
   - Displays all spendings in a list form.
   - The details of each spending under a certain day can be viewed with the Details endpoint
 - Response structure of `data`:
-````
-[
-    {
-        spendingUserAggrId: long,
-        date: Date,
+  - If `type` is `N`:
+    ````
+    [
+        {
+            spendingUserAggrId: long,
+            date: Date,
+            total: BigDecimal
+        },
+        {
+            spendingUserAggrId: long,
+            date: Date,
+            total: BigDecimal
+        },
+        ...
+    ]
+    ````
+  - If `type` is `C`:
+    ````
+    [ 
+      {
+        category: String,
         total: BigDecimal
-    },
-    {
-        spendingUserAggrId: long,
-        date: Date,
+      },
+      {
+        category: String,
         total: BigDecimal
-    },
-    ...
-]
-````
+      },
+      ...
+    ]
+    ````
 
 ### Spendings Detail
 - HTTP Method: `GET`
@@ -163,50 +180,3 @@
   - `spending-user-aggr-id`
 - Purpose:
   - Delete an entire spending day.
-
-### Categorical Chart Data
-- HTTP Method: `GET`
-- Endpoint: `/v1/api/spendings/chart/categorical`
-- Query Parameters (* *Optional*)
-  - `start-date`* 
-  - `end-date`*
-  - `group-by`
-- Purpose:
-  - Get spending data for a user in a format that simplifies plotting to a chart that displays categorical data (e.g: pie or bar charts)
-- Response structure of `data`:
-````
-[ 
-  {
-    category: String,
-    amount: BigDecimal
-  },
-  {
-    category: String,
-    amount: BigDecimal
-  },
-  ...
-]
-````
-
-### Numerical Chart Data
-- HTTP Method: `GET`
-- Endpoint: `/v1/api/spendings/chart/numerical`
-- Query Parameters (* *Optional*)
-  - `start-date`* 
-  - `end-date`*
-  - `group-by`
-- Purpose:
-  - Get spending data for a user in a format that simplifies plotting to a numerical chart (e.g: line plots)
-- Response structure of `data`:
-````
-[ 
-  {
-    date: Date,
-    amount: BigDecimal
-  },
-  {
-    date: Date,
-    amount: BigDecimal
-  },
-  ...
-]

@@ -45,19 +45,15 @@ public class ApiRestController {
     public ResponseEntity<ApiResponse<List<SpendingsListProjection>>> getSpendings(
             @RequestParam(name = "start-date", defaultValue = "1000-01-01") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date startDate,
             @RequestParam(name = "end-date", defaultValue = "9999-12-31") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date endDate,
+            @RequestParam(name = "group-by", defaultValue = "D") String groupBy,
+            @RequestParam(name = "type", defaultValue = "N") String type,
             @RequestParam(name = "page", defaultValue = "0") Integer page,
             @RequestParam(name = "limit", defaultValue = "25") Integer limit,
             HttpServletRequest request)
     throws IllegalArgumentException {
-        if (page < 0) {
-            throw new IllegalArgumentException("Page number must be non-negative!");
-        }
+        validateListQueryParams(groupBy, type, page, limit);
 
-        if (limit <= 0) {
-            throw new IllegalArgumentException("Limit must be greater than zero!");
-        }
-
-        Page<SpendingsListProjection> spendingsPage = spendingService.getSpendings(getUserId(), startDate, endDate, page, limit);
+        Page<SpendingsListProjection> spendingsPage = spendingService.getSpendings(getUserId(), startDate, endDate, page, limit, groupBy, type);
         ApiLinks apiLinks = new ApiLinks.ApiLinksBuilder(request.getRequestURI(), request.getQueryString(), page, spendingsPage.getTotalPages()-1).build();
 
         ApiMetadata apiMetadata = new ApiMetadata.ApiMetadataBuilder()
@@ -134,19 +130,28 @@ public class ApiRestController {
         return ResponseEntity.ok(apiResponse);
     }
 
-    @GetMapping("/spendings/chart/categorical")
-    public ResponseEntity<ApiResponse<>> getCategoricalChartData() {
-
-    }
-
-    @GetMapping("/spendings/chart/numerical")
-    public ResponseEntity<ApiResponse<>> getNumericalChartData() {
-
-    }
-
     private long getUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
         return userDetails.getUserId();
+    }
+
+    private void validateListQueryParams(String groupBy, String type, int page, int limit) {
+        if (!Constants.GROUP_BY.contains(groupBy)) {
+            throw new IllegalArgumentException(groupBy + " is not a valid option! Must be on of: " + Constants.GROUP_BY);
+        }
+
+        if (!Constants.REQUEST_TYPES.contains(type)) {
+            throw new IllegalArgumentException(type + " is not a valid option! Must be on of: " + Constants.REQUEST_TYPES);
+        }
+
+        if (page < 0) {
+            throw new IllegalArgumentException("Page number must be non-negative!");
+        }
+
+        if (limit <= 0) {
+            throw new IllegalArgumentException("Limit must be greater than zero!");
+        }
+
     }
 }
