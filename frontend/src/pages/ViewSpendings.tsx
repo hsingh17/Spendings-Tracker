@@ -2,12 +2,12 @@ import { useSearchParams } from "react-router-dom";
 import SpendingsTable from "../components/SpendingsTable";
 import ViewSpendingsButton from "../components/ViewSpendingsButton";
 import ViewSpendingsFilterForm from "../components/ViewSpendingsFilterForm";
-import useListSpendings from "../hooks/useListSpendings";
+import useSpendings from "../hooks/useSpendings";
 import { ApiLinks } from "../utils/types";
 
 const ViewSpendings = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const {data: response, refetch} = useListSpendings(searchParams);
+  const {data: response, refetch} = useSpendings(searchParams);
   const links: ApiLinks | undefined = response?.metadata?.links;
 
   const setSearchParamsWrapper = (urlSearchParams: URLSearchParams) => setSearchParams(urlSearchParams); 

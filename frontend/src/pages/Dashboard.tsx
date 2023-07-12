@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Constants } from "../utils/constants";
 import useUser from "../hooks/useUser";
+import ChartsContainer from "../components/ChartsContainer";
 
 const Dashboard = () => {
   const {data: response} = useUser();
@@ -12,6 +13,7 @@ const Dashboard = () => {
       <h1>Dashboard (TODO D3.js here)</h1>
       <button onClick={() => navigate(Constants.VIEW_SPENDINGS_PAGE)}>View spendings</button>
       { user ? `Hi ${user.username}` : "Loading..." }
+      <ChartsContainer />
     </>
   );
 };
