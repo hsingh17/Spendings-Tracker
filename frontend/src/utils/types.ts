@@ -118,5 +118,12 @@ export type PopupProps = {
 export type BarChartProps = {
   width: number;
   height: number;
-  data: Nullable<Array<CategoricalSpendings>>
+  data: Nullable<Array<CategoricalSpendings>>;
+};
+
+export type LineChartProps = {
+  width: number;
+  height: number;
+  data: Nullable<Array<SpendingListRow>>;
+  groupBy: string;
 };

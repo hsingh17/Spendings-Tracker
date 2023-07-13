@@ -3,10 +3,7 @@ import { CategoricalSpendings } from "../utils/types";
 import BarChart from "./BarChart";
 
 const ThumbnailBarChart = () => {
-  const searchParams: URLSearchParams = new URLSearchParams([
-    ["type", "C"],
-    ["group-by", "D"]
-  ]);
+  const searchParams: URLSearchParams = new URLSearchParams([["type", "C"]]);
   const {data: response} = useSpendings<CategoricalSpendings>(searchParams);
 
   return (

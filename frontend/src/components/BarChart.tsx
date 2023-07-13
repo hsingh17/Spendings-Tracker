@@ -1,5 +1,6 @@
 import {
   Selection,
+  extent,
   max,
   min,
   scaleBand,
@@ -31,12 +32,8 @@ const BarChart: FC<BarChartProps> = ({ data, height, width }) => {
       .padding(0.1);
 
     // Y scale
-    const maxTotal: number | undefined = max<number>(data.map((d) => d.total));
-    const minTotal: number | undefined = min<number>(data.map((d) => d.total));
-    console.log(minTotal, maxTotal);
-    
     const yScale = scaleLinear()
-      .domain([minTotal ? minTotal : 0, maxTotal ? maxTotal : 0])
+      .domain(extent(data, (d) => d.total) as [number, number])
       .range([0, height]);
 
     // Create bars
