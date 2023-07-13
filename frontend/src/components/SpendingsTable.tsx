@@ -11,7 +11,7 @@ const SpendingsTable: FC<SpendingsTableProps> = ({ spendings, parentRefetch }) =
     <table>
       <tr>
         <td>Date</td>
-        <td>Amount</td>
+        <td>Total</td>
         <td>Buttons</td>
       </tr>
 

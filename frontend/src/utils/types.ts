@@ -1,7 +1,7 @@
 import React from "react";
 import { Constants } from "./constants";
 
-export type Nullable<T> = T | null;
+export type Nullable<T> = T | null | undefined;
 
 export type User = {
   userId: number;
@@ -45,6 +45,11 @@ export type Spending = {
   delete: Nullable<boolean>;
 };
 
+export type CategoricalSpendings = {
+  category: string;
+  total: number;
+};
+
 export type SpendingListRow = {
   spendingUserAggrId: number;
   date: string;
@@ -73,7 +78,7 @@ export type SpendingsFormInputProps = {
 
 export type SpendingsTableProps = {
   parentRefetch: () => void;
-  spendings: Nullable<Array<SpendingListRow>> | undefined;
+  spendings: Nullable<Array<SpendingListRow>>;
 };
 
 export type SpendingsRowProps = {
@@ -108,4 +113,10 @@ export type PopupProps = {
   children: React.ReactNode;
   type: Constants.POPUP_TYPES;
   time: number;
+};
+
+export type BarChartProps = {
+  width: number;
+  height: number;
+  data: Nullable<Array<CategoricalSpendings>>
 };

@@ -3,11 +3,11 @@ import SpendingsTable from "../components/SpendingsTable";
 import ViewSpendingsButton from "../components/ViewSpendingsButton";
 import ViewSpendingsFilterForm from "../components/ViewSpendingsFilterForm";
 import useSpendings from "../hooks/useSpendings";
-import { ApiLinks } from "../utils/types";
+import { ApiLinks, SpendingListRow } from "../utils/types";
 
 const ViewSpendings = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const {data: response, refetch} = useSpendings(searchParams);
+  const {data: response, refetch} = useSpendings<SpendingListRow>(searchParams);
   const links: ApiLinks | undefined = response?.metadata?.links;
 
   const setSearchParamsWrapper = (urlSearchParams: URLSearchParams) => setSearchParams(urlSearchParams); 
