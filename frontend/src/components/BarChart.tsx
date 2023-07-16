@@ -41,9 +41,9 @@ const BarChart: FC<BarChartProps> = ({ data, height, width }) => {
       .selectAll("rect")
       .data(data)
       .join(
-        (enter) => enter.append("rect"),
-        (update) => update.attr("class", "updated"),
-        (exit) => exit.remove()
+        enter => enter.append("rect"),
+        update => update.attr("class", "updated"),
+        exit => exit.remove()
       )
       .attr("x", d => xScale(d.category)!)
       .attr("width", xScale.bandwidth())

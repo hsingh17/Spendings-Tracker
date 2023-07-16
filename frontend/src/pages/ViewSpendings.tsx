@@ -14,15 +14,20 @@ const ViewSpendings = () => {
   const refetchWrapper = () => refetch();
 
   return (
-    <>
-      <h1>Here are your spendings: </h1>
+    <div className="container mx-auto">
+      <div className="overflow-hidden">
+        <h1>Spendings</h1>
+        <button className="float-right">Create new Spending</button>
+      </div>
+
       <ViewSpendingsFilterForm parentSetSearchParams={setSearchParamsWrapper}/>
       <SpendingsTable spendings={response?.data} parentRefetch={refetchWrapper}/>
       <ViewSpendingsButton parentSetSearchParams={setSearchParamsWrapper} buttonUrl={links?.first} buttonText="first" />
       <ViewSpendingsButton parentSetSearchParams={setSearchParamsWrapper} buttonUrl={links?.prev} buttonText="<" />
       <ViewSpendingsButton parentSetSearchParams={setSearchParamsWrapper} buttonUrl={links?.next} buttonText=">" />
       <ViewSpendingsButton parentSetSearchParams={setSearchParamsWrapper} buttonUrl={links?.last} buttonText="last" />
-    </>
+      <h2>{`Showing ${response?.metadata?.pageSize}`}</h2>
+    </div> 
   );
 };
 

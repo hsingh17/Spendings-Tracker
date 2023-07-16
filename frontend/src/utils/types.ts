@@ -115,15 +115,18 @@ export type PopupProps = {
   time: number;
 };
 
-export type BarChartProps = {
+export type GenericChartProps<T> = {
   width: number;
   height: number;
-  data: Nullable<Array<CategoricalSpendings>>;
-};
+  data: Nullable<Array<T>>;
+}
+export type BarChartProps = GenericChartProps<CategoricalSpendings>;
 
-export type LineChartProps = {
-  width: number;
-  height: number;
-  data: Nullable<Array<SpendingListRow>>;
+export type LineChartProps = GenericChartProps<SpendingListRow> & {
   groupBy: string;
 };
+
+export type PieChartProps = GenericChartProps<CategoricalSpendings> & {
+  innerRadius: number;
+  outerRadius: number;
+}

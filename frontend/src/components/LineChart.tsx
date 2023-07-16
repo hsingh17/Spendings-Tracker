@@ -44,9 +44,9 @@ const LineChart: FC<LineChartProps> = ({ data, height, width, groupBy }) => {
       .selectAll("path")
       .data([data]) // [data] not data since we want to bind a path element to ALL the data not each individual data point
       .join(
-        (enter) => enter.append("path"),
-        (update) => update.attr("class", "updated"),
-        (exit) => exit.remove()
+        enter => enter.append("path"),
+        update => update.attr("class", "updated"),
+        exit => exit.remove()
       )
       .attr("fill", "none")
       .attr("stroke", "black")
