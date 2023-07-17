@@ -1,9 +1,11 @@
 package com.spendingstracker.app.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Entity
 @Table(schema = "APP", name = "SPENDING")
@@ -22,6 +24,7 @@ public class Spending {
     private String category;
 
     @Column(name = "AMOUNT")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private BigDecimal amount;
 
     @Transient

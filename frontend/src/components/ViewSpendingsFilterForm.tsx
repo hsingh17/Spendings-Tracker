@@ -32,24 +32,19 @@ const ViewSpendingsFilterForm: FC<ViewSpendingsFilterFormProps> = ({ parentSetSe
   };
 
   return (
-    <form onSubmit={(e: React.FormEvent) => processFilterForm(e)} onReset={_ => parentSetSearchParams(new URLSearchParams())}>
-        <label htmlFor={"start-date"}>Start Date:</label>
+    <form 
+      className="flex"
+      onSubmit={(e: React.FormEvent) => processFilterForm(e)} onReset={_ => parentSetSearchParams(new URLSearchParams())}>
         <input type="date" id={"start-date"} name={"start-date"} />
-        <br />
-
-        <label htmlFor={"end-date"}>End Date:</label>
+        <p>to</p>
         <input type="date" id={"end-date"} name={"end-date"} />
-        <br />
-        
-        <label htmlFor={"limit"}>Limit page to show:</label>
-        <select name={"limit"}>
-          {
-            Constants.PAGE_LIMITS.map((limit: String, idx: number) => {
-              return <option key={ `${limit}-${idx}` }>{limit}</option>
-            })
-          }
+        <select id="limit" name="limit">
+        {
+          Constants.PAGE_LIMITS.map((limit) => {
+            return <option value={limit}>{limit}</option>
+          })
+        }
         </select>
-        <br />
 
         <button type="submit">Search</button>
         <button type="reset">Reset filters</button>

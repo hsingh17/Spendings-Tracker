@@ -12,12 +12,12 @@ const ViewSpendings = () => {
 
   const setSearchParamsWrapper = (urlSearchParams: URLSearchParams) => setSearchParams(urlSearchParams); 
   const refetchWrapper = () => refetch();
-
+  
   return (
-    <div className="container mx-auto">
-      <div className="overflow-hidden">
-        <h1>Spendings</h1>
-        <button className="float-right">Create new Spending</button>
+    <div className="container p-7">
+      <div className="flex">
+        <h1 className="text-xl text-oxford-blue font-bold">Spendings</h1>
+        <button className="text-white font-medium ml-auto bg-blue-yonder px-5 py-1.5">New Spending</button>
       </div>
 
       <ViewSpendingsFilterForm parentSetSearchParams={setSearchParamsWrapper}/>

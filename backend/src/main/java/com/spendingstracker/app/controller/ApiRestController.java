@@ -59,8 +59,8 @@ public class ApiRestController {
         ApiMetadata apiMetadata = new ApiMetadata.ApiMetadataBuilder()
                 .setCurrentPage(page)
                 .setLinks(apiLinks)
-                .setTotalPages(spendingsPage.getTotalPages()-1) // 0-indexed
-                .setPageSize(spendingsPage.getSize()) // How many elements were returned in this page
+                .setTotalPages(spendingsPage.getTotalPages())
+                .setPageSize(spendingsPage.getNumberOfElements()) // How many elements were returned in this page
                 .setTotalCount(spendingsPage.getTotalElements())
                 .build();
 

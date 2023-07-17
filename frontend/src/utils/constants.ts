@@ -47,6 +47,7 @@ export namespace Constants {
     "1", // TODO: Remove
     "2",
     "10",
+    "17",
     "25",
     "50",
     "100",

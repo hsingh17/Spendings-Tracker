@@ -8,11 +8,11 @@ const SpendingsTable: FC<SpendingsTableProps> = ({ spendings, parentRefetch }) =
   }
 
   return (
-    <table>
-      <tr>
-        <td>Date</td>
-        <td>Total</td>
-        <td>Buttons</td>
+    <table className="mt-5 overflow-x-auto table-auto w-full">
+      <tr className="bg-indigo text-white text-sm font-semibold uppercase">
+        <td className="px-2 py-1">Date</td>
+        <td className="px-2 py-1">Total</td>
+        <td className="px-2 py-1">Actions</td>
       </tr>
 
       {
