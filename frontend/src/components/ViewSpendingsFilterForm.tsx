@@ -40,8 +40,8 @@ const ViewSpendingsFilterForm: FC<ViewSpendingsFilterFormProps> = ({ parentSetSe
         <input type="date" id={"end-date"} name={"end-date"} />
         <select id="limit" name="limit">
         {
-          Constants.PAGE_LIMITS.map((limit) => {
-            return <option value={limit}>{limit}</option>
+          Constants.PAGE_LIMITS.map((limit, idx) => {
+            return <option key={idx} value={limit}>{limit}</option>
           })
         }
         </select>
