@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import { Constants } from "./constants";
 
 export type Nullable<T> = T | null | undefined;
@@ -103,9 +103,14 @@ export type ViewSpendingsFilterFormProps = {
   parentSetSearchParams: (searchParams: URLSearchParams) => void;
 };
 
-export type ViewSpendingsButtonProps = {
+export type TableButtonsContainerProps = {
   parentSetSearchParams: (searchParams: URLSearchParams) => void;
-  buttonText: Nullable<string> | undefined;
+  apiLinks: Nullable<ApiLinks> | undefined;
+};
+
+export type TableButtonProps = {
+  parentSetSearchParams: (searchParams: URLSearchParams) => void;
+  buttonIcon: ReactElement<any, any>;
   buttonUrl: Nullable<string> | undefined;
 };
 

@@ -41,7 +41,11 @@ const ViewSpendingsFilterForm: FC<ViewSpendingsFilterFormProps> = ({ parentSetSe
         <select id="limit" name="limit">
         {
           Constants.PAGE_LIMITS.map((limit, idx) => {
-            return <option key={idx} value={limit}>{limit}</option>
+            if (limit === "25") {
+              return <option key={idx} value={limit} selected>{limit}</option>
+            }
+            
+            return <option key={idx} value={limit}>{limit}</option>;
           })
         }
         </select>

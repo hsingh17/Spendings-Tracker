@@ -22,10 +22,12 @@ const SpendingsRow: FC<SpendingsRowProps> = ({ spending, parentRefetch }) => {
       </td>
       <td className="flex justify-center items-center mt-3">
         <button>
-          <EditIcon className="h-7 w-20"  stroke={"#40A3E6"} onClick={() => handleEdit()} />
+          <EditIcon className="h-7 w-fit mr-5"  stroke={"#40A3E6"} onClick={() => handleEdit()} />
         </button>
         <br />
-        <DeleteIcon className="h-7 w-20" stroke={"red"} onClick={_ => deleteSpending(spending.spendingUserAggrId)} />
+        <button>
+          <DeleteIcon className="h-7 w-fit" stroke={"red"} onClick={_ => deleteSpending(spending.spendingUserAggrId)} />
+        </button>
       </td>
     </tr>
   );
