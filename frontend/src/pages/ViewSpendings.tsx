@@ -1,18 +1,26 @@
 import { useSearchParams } from "react-router-dom";
 import SpendingsTable from "../components/SpendingsTable";
-import ViewSpendingsFilterForm from "../components/ViewSpendingsFilterForm";
+import TableFooterContainer from "../components/TableFooterContainer";
+import TableFilters from "../components/TableFilters";
 import useSpendings from "../hooks/useSpendings";
-import { ApiLinks, SpendingListRow } from "../utils/types";
-import TableButtonContainer from "../components/TableButtonContainer";
+import { ApiMetadata, Nullable, SpendingListRow } from "../utils/types";
 
 const ViewSpendings = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { data: response, refetch } =
     useSpendings<SpendingListRow>(searchParams);
-  const links: ApiLinks | undefined = response?.metadata?.links;
+  const metadata: Nullable<ApiMetadata> | undefined = response?.metadata;
 
-  const setSearchParamsWrapper = (urlSearchParams: URLSearchParams) =>
-    setSearchParams(urlSearchParams);
+  const setSearchParamsWrapper = (urlSearchParams: URLSearchParams) => {
+    urlSearchParams.forEach((value, key) => searchParams.set(key, value));
+    setSearchParams(searchParams);
+  }
+
+  const resetSearchParamsWrapper = () => {
+    searchParams.delete("start-date");
+    searchParams.delete("end-date");
+    setSearchParams(searchParams);
+  };
 
   const refetchWrapper = () => refetch();
 
@@ -28,16 +36,19 @@ const ViewSpendings = () => {
           </button>
         </div>
 
-        <ViewSpendingsFilterForm
+        <TableFilters
+          resetSearchParams={resetSearchParamsWrapper}
           parentSetSearchParams={setSearchParamsWrapper}
         />
+        
         <SpendingsTable
           spendings={response?.data}
           parentRefetch={refetchWrapper}
         />
       </div>
-      <TableButtonContainer
-        apiLinks={links}
+
+      <TableFooterContainer
+        apiMetaData={metadata}
         parentSetSearchParams={setSearchParamsWrapper}
       />
     </div>

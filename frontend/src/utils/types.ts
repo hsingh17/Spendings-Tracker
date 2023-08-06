@@ -101,17 +101,27 @@ export type UserFormData = {
 
 export type ViewSpendingsFilterFormProps = {
   parentSetSearchParams: (searchParams: URLSearchParams) => void;
+  resetSearchParams: () => void;
+};
+
+export type TableFooterContainerProps = {
+  parentSetSearchParams: (searchParams: URLSearchParams) => void;
+  apiMetaData: Nullable<ApiMetadata>;
 };
 
 export type TableButtonsContainerProps = {
   parentSetSearchParams: (searchParams: URLSearchParams) => void;
-  apiLinks: Nullable<ApiLinks> | undefined;
+  apiLinks: Nullable<ApiLinks>;
+};
+
+export type TablePageDropdownProps = {
+  parentSetSearchParams: (searchParams: URLSearchParams) => void;
 };
 
 export type TableButtonProps = {
   parentSetSearchParams: (searchParams: URLSearchParams) => void;
   buttonIcon: ReactElement<any, any>;
-  buttonUrl: Nullable<string> | undefined;
+  buttonUrl: Nullable<string>;
 };
 
 export type PopupProps = {
@@ -134,4 +144,4 @@ export type LineChartProps = GenericChartProps<SpendingListRow> & {
 export type PieChartProps = GenericChartProps<CategoricalSpendings> & {
   innerRadius: number;
   outerRadius: number;
-}
+};

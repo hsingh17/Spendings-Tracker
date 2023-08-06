@@ -12,7 +12,7 @@ const SpendingsTable: FC<SpendingsTableProps> = ({
 
   return (
     <div className="overflow-x-scroll">
-      <table className="mt-5 table-fixed w-[500px] md:w-full overflow-x-scroll">
+      <table className="mt-5 table-fixed w-[750px] md:w-full overflow-x-scroll">
         <thead>
           <tr className="bg-theme-brand text-theme-neutral text-xs font-bold uppercase">
             <td className="px-2 py-2 w-1/3 md:w-1/6 whitespace-nowrap">Date</td>
