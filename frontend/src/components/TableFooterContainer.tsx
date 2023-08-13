@@ -2,6 +2,7 @@ import { FC } from "react";
 import { ApiLinks, Nullable, TableFooterContainerProps } from "../utils/types";
 import TablePageDropdown from "./TablePageDropdown";
 import TableButtonsContainer from "./TableButtonsContainer";
+import TableFooterPageData from "./TableFooterPageData";
 
 const TableFooterContainer: FC<TableFooterContainerProps> = ({
   apiMetaData,
@@ -13,18 +14,7 @@ const TableFooterContainer: FC<TableFooterContainerProps> = ({
 
   return (
     <div className="flex mt-2 h-fit">
-      <div className="flex text-md font-semibold text-gray-400 flex-col md:flex-row">
-        <p>
-          {apiMetaData?.currentPage ? apiMetaData.currentPage + 1 : 1} of{" "}
-          {apiMetaData?.totalPages ? apiMetaData.totalPages : 1} {" pages"}
-          &nbsp;
-        </p>
-
-        <p>
-          ({apiMetaData?.totalPages ? apiMetaData.totalCount + 1 : 1} total
-          items)
-        </p>
-      </div>
+      <TableFooterPageData apiMetaData={apiMetaData} />
 
       <div className="flex w-fit ml-auto items-center">
         <TablePageDropdown parentSetSearchParams={parentSetSearchParams} />

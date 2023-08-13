@@ -99,9 +99,21 @@ export type UserFormData = {
   password: string;
 };
 
-export type ViewSpendingsFilterFormProps = {
+export type TableFilterProps = {
   parentSetSearchParams: (searchParams: URLSearchParams) => void;
-  resetSearchParams: () => void;
+  parentResetSearchParams: () => void;
+};
+
+export type TableFilterButtonProps = {
+  parentSetOpen: (e: Nullable<React.MouseEvent>, open: boolean) => void;
+  isOpen: boolean;
+};
+
+export type TableFilterFormProps = {
+  parentSetSearchParams: (searchParams: URLSearchParams) => void;
+  parentResetSearchParams: () => void;
+  parentSetOpen: (e: Nullable<React.MouseEvent>, open: boolean) => void;
+  isOpen: boolean;
 };
 
 export type TableFooterContainerProps = {
@@ -122,6 +134,10 @@ export type TableButtonProps = {
   parentSetSearchParams: (searchParams: URLSearchParams) => void;
   buttonIcon: ReactElement<any, any>;
   buttonUrl: Nullable<string>;
+};
+
+export type TableFooterPageDataProps = {
+  apiMetaData: Nullable<ApiMetadata>;
 };
 
 export type PopupProps = {

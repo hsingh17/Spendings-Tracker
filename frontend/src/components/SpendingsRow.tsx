@@ -17,16 +17,26 @@ const SpendingsRow: FC<SpendingsRowProps> = ({ spending, parentRefetch }) => {
   return (
     <tr className="border-b-2 leading-[3rem]">
       <td className="">{DateFormatter.formatDateUS(spending.date)}</td>
+      
       <td className="text-center">
         <p className="text-right block">{spending.total}</p>
       </td>
+
       <td className="flex justify-center items-center mt-3">
         <button>
-          <EditIcon className="h-7 w-fit mr-5"  stroke={"#40A3E6"} onClick={() => handleEdit()} />
+          <EditIcon
+            className="h-7 w-fit mr-5"
+            stroke={"#40A3E6"}
+            onClick={() => handleEdit()}
+          />
         </button>
         <br />
         <button>
-          <DeleteIcon className="h-7 w-fit" stroke={"red"} onClick={_ => deleteSpending(spending.spendingUserAggrId)} />
+          <DeleteIcon
+            className="h-7 w-fit"
+            stroke={"red"}
+            onClick={(_) => deleteSpending(spending.spendingUserAggrId)}
+          />
         </button>
       </td>
     </tr>

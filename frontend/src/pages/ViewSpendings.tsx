@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import SpendingsTable from "../components/SpendingsTable";
 import TableFooterContainer from "../components/TableFooterContainer";
-import TableFilters from "../components/TableFilters";
+import TableFilter from "../components/TableFilter";
 import useSpendings from "../hooks/useSpendings";
 import { ApiMetadata, Nullable, SpendingListRow } from "../utils/types";
 
@@ -36,8 +36,8 @@ const ViewSpendings = () => {
           </button>
         </div>
 
-        <TableFilters
-          resetSearchParams={resetSearchParamsWrapper}
+        <TableFilter
+          parentResetSearchParams={resetSearchParamsWrapper}
           parentSetSearchParams={setSearchParamsWrapper}
         />
         

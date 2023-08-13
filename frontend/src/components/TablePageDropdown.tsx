@@ -1,14 +1,21 @@
 import React, { FC } from "react";
 import { Constants } from "../utils/constants";
-import { TablePageDropdownProps } from "../utils/types";
+import { Nullable, TablePageDropdownProps } from "../utils/types";
 
 const TablePageDropdown: FC<TablePageDropdownProps> = ({
   parentSetSearchParams,
 }) => {
+
   const handleChange = (e: React.FormEvent) => {
     e.preventDefault();
     const target = e.target as typeof e.target & { value: string };
     parentSetSearchParams(new URLSearchParams(`limit=${target.value}`));
+  };
+
+  const getCurrentLimit = (): number => {
+    const params = new URLSearchParams(document.location.search);
+    const limitStr: Nullable<string> = params.get("limit");
+    return limitStr ? parseInt(limitStr) : 25;
   };
 
   return (
@@ -18,10 +25,10 @@ const TablePageDropdown: FC<TablePageDropdownProps> = ({
       </label>
 
       <select
+        className="ml-2 py-1 px-2 bg-white border-gray-300 border-2 rounded-lg hover:cursor-pointer"
         id="limit"
         name="limit"
-        defaultValue={25}
-        className="ml-2 py-1 px-2 bg-white border-gray-300 border-2 rounded-lg"
+        defaultValue={getCurrentLimit()}
         onChange={(e: React.ChangeEvent) => handleChange(e)}
       >
         {Constants.PAGE_LIMITS.map((limit, idx) => {

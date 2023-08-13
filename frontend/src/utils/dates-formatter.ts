@@ -24,7 +24,7 @@ const DateFormatter = {
         const dayRaw: number = dateObj.getDate();
         const day: string = (dayRaw < 10) ? `0${dayRaw}` : `${dayRaw}`;
     
-        return `${month}-${day}-${dateObj.getFullYear()}`;
+        return `${month}/${day}/${dateObj.getFullYear()}`;
     }
 }
 
