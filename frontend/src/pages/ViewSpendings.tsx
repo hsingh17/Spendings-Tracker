@@ -4,6 +4,7 @@ import TableFooterContainer from "../components/TableFooterContainer";
 import TableFilter from "../components/TableFilter";
 import useSpendings from "../hooks/useSpendings";
 import { ApiMetadata, Nullable, SpendingListRow } from "../utils/types";
+import TableTitle from "../components/TableTitle";
 
 const ViewSpendings = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -27,14 +28,7 @@ const ViewSpendings = () => {
   return (
     <div className="container p-5">
       <div className="border p-7 border-slate-950 rounded-lg shadow-md bg-white">
-        <div className="flex md:flex-row flex-col">
-          <h1 className="text-3xl md:text-2xl text-theme-brand font-bold">
-            Spendings
-          </h1>
-          <button className="text-theme-neutral font-semibold md:ml-auto bg-theme-cta md:px-5 py-2 md:py-1.5 mt-5 md:mt-0">
-            New Spending
-          </button>
-        </div>
+        <TableTitle />
 
         <TableFilter
           parentResetSearchParams={resetSearchParamsWrapper}

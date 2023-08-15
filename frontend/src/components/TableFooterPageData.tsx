@@ -11,7 +11,7 @@ const TableFooterPageData: FC<TableFooterPageDataProps> = ({ apiMetaData }) => {
         </p>
 
         <p>
-          ({apiMetaData?.totalPages ? apiMetaData.totalCount + 1 : 1} total
+          ({apiMetaData?.totalPages ? apiMetaData.totalCount : 0} total
           items)
         </p>
       </div>
