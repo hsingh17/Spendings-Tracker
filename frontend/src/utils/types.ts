@@ -81,9 +81,46 @@ export type SpendingsTableProps = {
   spendings: Nullable<Array<SpendingListRow>>;
 };
 
-export type SpendingsRowProps = {
+export enum SortType {
+  DATE,
+  TOTAL,
+};
+
+export enum SortOrder {
+  ASC = 1,
+  NONE = 0,
+  DESC = -1,
+};
+
+export type Sort = {
+  sortType: SortType;
+  sortOrder: SortOrder;
+};
+
+export type TableHeaderProps = {
+  parentHandleSort: (sortType: SortType) => void;
+  sort: Sort;
+};
+
+export type TableBodyProps = {
+  parentRefetch: () => void;
+  spendings: Array<SpendingListRow>;
+};
+
+export type SortIconProps = {
+  sortOrder: SortOrder;
+};
+
+export type TableRowProps = {
   parentRefetch: () => void;
   spending: SpendingListRow;
+};
+
+export type DeleteModalProps = {
+  show: boolean;
+  parentSetShow: (show: boolean) => void;
+  parentRefetch: () => void;
+  spendingId: number;
 };
 
 export type SpendingComponentProps = {

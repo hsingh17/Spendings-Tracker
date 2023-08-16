@@ -1,21 +1,14 @@
-import { FC, useEffect, useState } from "react";
-import { SpendingListRow, SpendingsTableProps } from "../utils/types";
-import SortIcon from "./SortIcon";
-import SpendingsRow from "./SpendingsRow";
-
-const enum SortType {
-  DATE,
-  TOTAL,
-}
-const enum SortOrder {
-  ASC = 1,
-  DESC = -1,
-}
-
-type Sort = {
-  sortOn: SortType;
-  sortOrder: SortOrder;
-};
+import { FC, useState } from "react";
+import {
+  SpendingListRow,
+  SpendingsTableProps,
+  Sort,
+  SortType,
+  SortOrder,
+} from "../utils/types";
+import TableRow from "./TableRow";
+import TableHeader from "./TableHeader";
+import TableBody from "./TableBody";
 
 const SpendingsTable: FC<SpendingsTableProps> = ({
   spendings,
@@ -29,84 +22,37 @@ const SpendingsTable: FC<SpendingsTableProps> = ({
     useState<Array<SpendingListRow>>(spendings);
 
   const [sort, setSort] = useState<Sort>({
-    sortOn: SortType.DATE,
+    sortType: SortType.DATE,
     sortOrder: SortOrder.DESC,
   });
 
-  const handleSort = (sort: Sort) => {
+  const handleSort = (sortType: SortType) => {
     let newSpendingsCopy: Array<SpendingListRow> = spendingsCopy;
+    const sortOrder: SortOrder = getSortOrder(sortType);
 
-    if (sort.sortOn === SortType.DATE) {
+    if (sortType === SortType.DATE) {
       newSpendingsCopy = spendingsCopy.sort(
         (a, b) =>
-          sort.sortOrder *
-          (new Date(a.date).getTime() - new Date(b.date).getTime())
+          sortOrder * (new Date(a.date).getTime() - new Date(b.date).getTime())
       );
-    } else if (sort.sortOn === SortType.TOTAL) {
+    } else if (sortType === SortType.TOTAL) {
       newSpendingsCopy = spendingsCopy.sort(
-        (a, b) => -sort.sortOrder * (a.total - b.total)
+        (a, b) => -sortOrder * (a.total - b.total)
       );
     }
 
-    setSort(sort);
+    setSort({ sortType: sortType, sortOrder: sortOrder });
     setSpendingCopy(newSpendingsCopy);
   };
 
   const getSortOrder = (sortOn: SortType) =>
-    sort.sortOn === sortOn ? sort.sortOrder * -1 : SortOrder.DESC;
+    sort.sortType === sortOn ? sort.sortOrder * -1 : SortOrder.DESC;
 
   return (
     <div className="overflow-x-scroll">
       <table className="mt-5 table-fixed w-[750px] md:w-full overflow-x-scroll">
-        <thead>
-          <tr className="bg-theme-brand text-theme-neutral text-xs font-bold uppercase w-full">
-            <td className="px-2 py-2 w-1/3 md:w-1/6 whitespace-nowrap hover:cursor-pointer">
-              <div
-                className="flex flex-row items-center"
-                onClick={() =>
-                  handleSort({
-                    sortOn: SortType.DATE,
-                    sortOrder: getSortOrder(SortType.DATE),
-                  })
-                }
-              >
-                Date
-                <SortIcon />
-              </div>
-            </td>
-            <td className="px-2 py-2 w-1/6  hover:cursor-pointer">
-              <div
-                className="flex flex-row items-center justify-end"
-                onClick={() =>
-                  handleSort({
-                    sortOn: SortType.TOTAL,
-                    sortOrder: getSortOrder(SortType.TOTAL),
-                  })
-                }
-              >
-                Total
-                <SortIcon />
-              </div>
-            </td>
-            <td className="px-2 py-2 text-center hover:cursor-pointer">
-              <div className="flex flex-row items-center justify-center">
-                Actions
-              </div>
-            </td>
-          </tr>
-        </thead>
-
-        <tbody>
-          {spendingsCopy.map((spending: SpendingListRow, idx: number) => {
-            return (
-              <SpendingsRow
-                key={idx}
-                spending={spending}
-                parentRefetch={parentRefetch}
-              />
-            );
-          })}
-        </tbody>
+        <TableHeader parentHandleSort={handleSort} sort={sort} />
+        <TableBody parentRefetch={parentRefetch} spendings={spendings} />
       </table>
     </div>
   );

@@ -1,23 +1,25 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useDeleteSpending from "../hooks/useDeleteSpending";
 import { Constants } from "../utils/constants";
 import DateFormatter from "../utils/dates-formatter";
-import { SpendingsRowProps } from "../utils/types";
+import { TableRowProps } from "../utils/types";
 import { ReactComponent as EditIcon } from "../assets/edit-icon.svg";
 import { ReactComponent as DeleteIcon } from "../assets/delete-icon.svg";
+import DeleteModal from "./DeleteModal";
 
-const SpendingsRow: FC<SpendingsRowProps> = ({ spending, parentRefetch }) => {
+const TableRow: FC<TableRowProps> = ({ spending, parentRefetch }) => {
   const navigate = useNavigate();
-  const { mutate: deleteSpending } = useDeleteSpending(parentRefetch);
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   const handleEdit = () =>
     navigate(`${Constants.SAVE_SPENDINGS_PAGE}/${spending.date}`);
 
+  const setShowModalWrapper = (show: boolean) => setShowModal(show);
+
   return (
     <tr className="border-b-2 leading-[3rem]">
       <td className="">{DateFormatter.formatDateUS(spending.date)}</td>
-      
+
       <td className="text-center">
         <p className="text-right block">{spending.total}</p>
       </td>
@@ -30,17 +32,24 @@ const SpendingsRow: FC<SpendingsRowProps> = ({ spending, parentRefetch }) => {
             onClick={() => handleEdit()}
           />
         </button>
-        <br />
+
         <button>
           <DeleteIcon
             className="h-7 w-fit"
             stroke={"red"}
-            onClick={(_) => deleteSpending(spending.spendingUserAggrId)}
+            onClick={() => setShowModalWrapper(true)}
           />
         </button>
       </td>
+
+      <DeleteModal
+        show={showModal}
+        parentRefetch={parentRefetch}
+        spendingId={spending.spendingUserAggrId}
+        parentSetShow={setShowModalWrapper}
+      />
     </tr>
   );
 };
 
-export default SpendingsRow;
+export default TableRow;
