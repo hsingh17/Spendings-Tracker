@@ -36,12 +36,14 @@ const ViewSpendings = () => {
         />
         
         <SpendingsTable
+          key={response?.timestamp}
           spendings={response?.data}
           parentRefetch={refetchWrapper}
         />
       </div>
 
       <TableFooterContainer
+        key={response?.timestamp}
         apiMetaData={metadata}
         parentSetSearchParams={setSearchParamsWrapper}
       />

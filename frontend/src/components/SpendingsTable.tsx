@@ -53,7 +53,6 @@ const SpendingsTable: FC<SpendingsTableProps> = ({
       sortType: SortType.DATE,
       sortOrder: SortOrder.DESC,
     });
-    setSpendingCopy(spendings);
   }, [spendings]);
 
   return (

@@ -24,7 +24,7 @@ const TableHeader: FC<TableHeaderProps> = ({ parentHandleSort, sort }) => {
             <SortIcon sortOrder={sort.sortType === SortType.TOTAL ? sort.sortOrder : SortOrder.NONE}/>
           </div>
         </td>
-        <td className="px-2 py-2 text-center hover:cursor-pointer">
+        <td className="px-2 py-2 text-center">
           <div className="flex flex-row items-center justify-center">
             Actions
           </div>
