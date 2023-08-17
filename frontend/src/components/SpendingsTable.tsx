@@ -1,14 +1,13 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import {
+  Sort,
+  SortOrder,
+  SortType,
   SpendingListRow,
   SpendingsTableProps,
-  Sort,
-  SortType,
-  SortOrder,
 } from "../utils/types";
-import TableRow from "./TableRow";
-import TableHeader from "./TableHeader";
 import TableBody from "./TableBody";
+import TableHeader from "./TableHeader";
 
 const SpendingsTable: FC<SpendingsTableProps> = ({
   spendings,
@@ -40,13 +39,22 @@ const SpendingsTable: FC<SpendingsTableProps> = ({
         (a, b) => -sortOrder * (a.total - b.total)
       );
     }
-
+    
     setSort({ sortType: sortType, sortOrder: sortOrder });
     setSpendingCopy(newSpendingsCopy);
   };
 
   const getSortOrder = (sortOn: SortType) =>
     sort.sortType === sortOn ? sort.sortOrder * -1 : SortOrder.DESC;
+
+
+  useEffect(() => {
+    setSort({
+      sortType: SortType.DATE,
+      sortOrder: SortOrder.DESC,
+    });
+    setSpendingCopy(spendings);
+  }, [spendings]);
 
   return (
     <div className="overflow-x-scroll">

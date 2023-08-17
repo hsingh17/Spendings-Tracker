@@ -6,6 +6,16 @@ module.exports = {
   ],
   theme: {
     extend: {
+      keyframes: {
+        slidein: {
+          "0%": { transform: "translate(-50%, -110%)" },
+          "100%": { transform: "translate(-50%, 0)" }
+        },
+        slideout: {
+          "0%": { transform: "translate(-50%, 0)" },
+          "100%": { transform: "translate(-50%, -110%)" }
+        }
+      },
       colors: {
         "theme-brand-secondary": "#222831",
         "theme-brand": "#393E46",
