@@ -10,8 +10,10 @@ import TableBody from "./TableBody";
 import TableHeader from "./TableHeader";
 
 const SpendingsTable: FC<SpendingsTableProps> = ({
+  isLoading,
   spendings,
   parentRefetch,
+  parentSetSpendingId
 }) => {
   if (!spendings) {
     return null;
@@ -39,14 +41,13 @@ const SpendingsTable: FC<SpendingsTableProps> = ({
         (a, b) => -sortOrder * (a.total - b.total)
       );
     }
-    
+
     setSort({ sortType: sortType, sortOrder: sortOrder });
     setSpendingCopy(newSpendingsCopy);
   };
 
   const getSortOrder = (sortOn: SortType) =>
     sort.sortType === sortOn ? sort.sortOrder * -1 : SortOrder.DESC;
-
 
   useEffect(() => {
     setSort({
@@ -57,9 +58,14 @@ const SpendingsTable: FC<SpendingsTableProps> = ({
 
   return (
     <div className="overflow-x-scroll">
-      <table className="mt-5 table-fixed w-[750px] md:w-full overflow-x-scroll">
+      <table className="mt-5 table-fixed w-[750px] md:w-full border-collapse">
         <TableHeader parentHandleSort={handleSort} sort={sort} />
-        <TableBody parentRefetch={parentRefetch} spendings={spendings} />
+        <TableBody
+          isLoading={isLoading}
+          spendings={spendings}
+          parentRefetch={parentRefetch}
+          parentSetSpendingId={parentSetSpendingId}
+        />
       </table>
     </div>
   );

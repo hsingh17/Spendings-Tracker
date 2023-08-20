@@ -25,7 +25,7 @@ async function fetchRequestWrapper<T>(apiUrl: string, method: string, body: stri
             "Content-Type": "application/json"  
         };
     }
-  
+    
     const promise = await fetch(apiUrl, options);
     const response: ApiResponse<T> = await promise.json();
     if (!response.ok) {

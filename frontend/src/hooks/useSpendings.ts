@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Constants } from "../utils/constants";
-import { Nullable, SpendingListRow } from "../utils/types";
 import fetchRequestWrapper from "../utils/fetch-utils";
+import { Nullable } from "../utils/types";
 
 async function getSpendings<T>(searchParams: URLSearchParams) {
   let apiUrl: Nullable<string> = `${Constants.BASE_API_URL + Constants.SPENDINGS_API_ROUTE}?${searchParams.toString()}`;

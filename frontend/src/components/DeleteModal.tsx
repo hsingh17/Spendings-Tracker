@@ -18,6 +18,10 @@ const DeleteModal: FC<DeleteModalProps> = ({
 
   const handleDelete = (e: React.MouseEvent) => {
     e.preventDefault();
+    if (!spendingId) {
+      return;
+    }
+    
     deleteSpending(spendingId);
     parentSetShow(false);
   }
@@ -32,7 +36,7 @@ const DeleteModal: FC<DeleteModalProps> = ({
     }, 300); // Delay setting state so animation can play
   }
 
-  if (!show) {
+  if (!show || !spendingId) {
     return null;
   }
 

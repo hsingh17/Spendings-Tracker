@@ -31,7 +31,7 @@ const TableFilterForm: FC<TableFilterFormProps> = ({
 
   return (
     <div
-      className="top-12 w-full md:w-72 h-fit shadow-2xl border border-gray-300 rounded-xl bg-white absolute"
+      className="top-12 w-full md:w-72 h-fit shadow-2xl border border-gray-300 rounded-xl bg-white absolute z-10"
       hidden={!isOpen}
     >
       <CloseIcon

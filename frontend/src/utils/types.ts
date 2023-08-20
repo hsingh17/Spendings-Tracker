@@ -63,10 +63,10 @@ export type SaveSpendingsFormProps = {
 };
 
 export type SpendingsFormRowProps = {
-  parentHandleDeleteRow: (idx: number) => void;
-  parentHandleChange: (idx: number, newSpending: Spending) => void;
   idx: number;
   spending: Spending;
+  parentHandleDeleteRow: (idx: number) => void;
+  parentHandleChange: (idx: number, newSpending: Spending) => void;
 };
 
 export type SpendingsFormInputProps = {
@@ -74,11 +74,6 @@ export type SpendingsFormInputProps = {
   idx: number;
   labelText: string;
   value: Nullable<string | number>;
-};
-
-export type SpendingsTableProps = {
-  parentRefetch: () => void;
-  spendings: Nullable<Array<SpendingListRow>>;
 };
 
 export enum SortType {
@@ -97,30 +92,41 @@ export type Sort = {
   sortOrder: SortOrder;
 };
 
-export type TableHeaderProps = {
-  parentHandleSort: (sortType: SortType) => void;
-  sort: Sort;
-};
-
-export type TableBodyProps = {
-  parentRefetch: () => void;
-  spendings: Array<SpendingListRow>;
-};
-
 export type SortIconProps = {
   sortOrder: SortOrder;
 };
 
-export type TableRowProps = {
+export type SpendingsTableProps = {
+  isLoading: boolean;
+  spendings: Nullable<Array<SpendingListRow>>;
   parentRefetch: () => void;
+  parentSetSpendingId: (spendingId: number) => void;
+};
+
+export type TableHeaderProps = {
+  sort: Sort;
+  parentHandleSort: (sortType: SortType) => void;
+};
+
+export type TableBodyProps = {
+  isLoading: boolean;
+  spendings: Array<SpendingListRow>;
+  parentRefetch: () => void;
+  parentSetSpendingId: (spendingId: number) => void;
+};
+
+export type TableRowProps = {
+  isLoading: boolean;
   spending: SpendingListRow;
+  parentRefetch: () => void;
+  parentSetSpendingId: (spendingId: number) => void;
 };
 
 export type DeleteModalProps = {
   show: boolean;
+  spendingId: Nullable<number>;
   parentSetShow: (show: boolean) => void;
   parentRefetch: () => void;
-  spendingId: number;
 };
 
 export type SpendingComponentProps = {
@@ -137,6 +143,7 @@ export type UserFormData = {
 };
 
 export type TableFilterProps = {
+  isLoading: boolean;
   parentSetSearchParams: (searchParams: URLSearchParams) => void;
   parentResetSearchParams: () => void;
 };
@@ -154,6 +161,7 @@ export type TableFilterFormProps = {
 };
 
 export type TableFooterContainerProps = {
+  isLoading: boolean;
   parentSetSearchParams: (searchParams: URLSearchParams) => void;
   apiMetaData: Nullable<ApiMetadata>;
 };

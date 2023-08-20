@@ -5,6 +5,7 @@ import TableFilterForm from "./TableFilterForm";
 import useDetectOutsideComponent from "../hooks/useDetectOutsideComponent";
 
 const TableFilter: FC<TableFilterProps> = ({
+  isLoading,
   parentSetSearchParams,
   parentResetSearchParams,
 }) => {
@@ -20,7 +21,12 @@ const TableFilter: FC<TableFilterProps> = ({
     setIsOpen(open);
   };
 
+  
   useDetectOutsideComponent([filterButtonRef, filterFormRef], setIsOpenWrapper);
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <div className="mt-5 relative">

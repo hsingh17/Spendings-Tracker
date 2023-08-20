@@ -1,14 +1,15 @@
 import { FC } from "react";
-import { ApiLinks, Nullable, TableFooterContainerProps } from "../utils/types";
-import TablePageDropdown from "./TablePageDropdown";
+import { TableFooterContainerProps } from "../utils/types";
 import TableButtonsContainer from "./TableButtonsContainer";
 import TableFooterPageData from "./TableFooterPageData";
+import TablePageDropdown from "./TablePageDropdown";
 
 const TableFooterContainer: FC<TableFooterContainerProps> = ({
+  isLoading,
   apiMetaData,
   parentSetSearchParams,
 }) => {
-  if (apiMetaData === null) {
+  if (!apiMetaData || isLoading) {
     return null;
   }
 
