@@ -8,12 +8,13 @@ import {
 } from "../utils/types";
 import TableBody from "./TableBody";
 import TableHeader from "./TableHeader";
+import TableEmptyState from "./TableEmptyState";
 
 const SpendingsTable: FC<SpendingsTableProps> = ({
   isLoading,
   spendings,
   parentRefetch,
-  parentSetSpendingId
+  parentSetSpendingId,
 }) => {
   if (!spendings) {
     return null;
@@ -58,15 +59,19 @@ const SpendingsTable: FC<SpendingsTableProps> = ({
 
   return (
     <div className="overflow-x-scroll">
-      <table className="mt-5 table-fixed w-[750px] md:w-full border-collapse">
-        <TableHeader parentHandleSort={handleSort} sort={sort} />
-        <TableBody
-          isLoading={isLoading}
-          spendings={spendings}
-          parentRefetch={parentRefetch}
-          parentSetSpendingId={parentSetSpendingId}
-        />
-      </table>
+      {spendingsCopy.length === 0 ? (
+        <TableEmptyState />
+      ) : (
+        <table className="mt-5 table-fixed w-[750px] md:w-full border-collapse">
+          <TableHeader parentHandleSort={handleSort} sort={sort} />
+          <TableBody
+            isLoading={isLoading}
+            spendings={spendings}
+            parentRefetch={parentRefetch}
+            parentSetSpendingId={parentSetSpendingId}
+          />
+        </table>
+      )}
     </div>
   );
 };

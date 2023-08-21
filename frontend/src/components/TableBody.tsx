@@ -6,7 +6,7 @@ const TableBody: FC<TableBodyProps> = ({
   isLoading,
   spendings,
   parentRefetch,
-  parentSetSpendingId
+  parentSetSpendingId,
 }) => {
   return (
     <tbody>

@@ -65,10 +65,6 @@ public class ApiLinks {
         private String last;
 
         public ApiLinksBuilder(String requestUri, String queryString, int curPage, int lastPage) {
-            if (curPage > lastPage) { // Case where user requested a page that doesn't exist
-                return;
-            }
-
             String pageQueryParam = "page=";
             queryString = Optional.ofNullable(queryString).orElse(pageQueryParam + curPage);
             StringBuilder currentUri = new StringBuilder(requestUri + "?" + queryString);
@@ -83,10 +79,10 @@ public class ApiLinks {
             end = (end == -1) ? currentUri.length() : end;
 
             this.self = currentUri.toString();
-            this.first = (curPage != 0) ? new StringBuilder(currentUri).replace(start, end, pageQueryParam + "0").toString() : null;
-            this.prev = (curPage != 0) ? new StringBuilder(currentUri).replace(start, end, pageQueryParam + (curPage -1)).toString() : null;
-            this.next = (curPage != lastPage) ? new StringBuilder(currentUri).replace(start, end, pageQueryParam + (curPage + 1)).toString() : null;
-            this.last = (curPage != lastPage) ? new StringBuilder(currentUri).replace(start, end, pageQueryParam + lastPage).toString() : null;
+            this.first = (curPage > 0) ? new StringBuilder(currentUri).replace(start, end, pageQueryParam + "0").toString() : null;
+            this.prev = (curPage > 0) ? new StringBuilder(currentUri).replace(start, end, pageQueryParam + (curPage -1)).toString() : null;
+            this.next = (curPage < lastPage) ? new StringBuilder(currentUri).replace(start, end, pageQueryParam + (curPage + 1)).toString() : null;
+            this.last = (curPage < lastPage) ? new StringBuilder(currentUri).replace(start, end, pageQueryParam + lastPage).toString() : null;
         }
 
         public ApiLinks build() {
