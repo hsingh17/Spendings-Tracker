@@ -1,7 +1,11 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, ReactNode } from "react";
 import { Constants } from "./constants";
 
 export type Nullable<T> = T | null | undefined;
+
+export type RenderChildrenProps = {
+  children: ReactNode;
+};
 
 export type User = {
   userId: number;
@@ -57,23 +61,35 @@ export type SpendingListRow = {
 };
 
 export type SaveSpendingsFormProps = {
-  parentHandleDateChange: (date: string) => void;
   date: string;
   initialSpendings: Nullable<Array<Spending>>;
+  isCreateMode: boolean;
 };
 
-export type SpendingsFormRowProps = {
+export type SaveSpendingsTitleProps = {
+  date: string;
+  isCreateMode: boolean;
+  parentHandleDateChange: (date: string) => void;
+};
+
+export type FormInputColumnsProps = {
+  spendings: Array<Spending>;
+  parentHandleDeleteRow: (idx: number) => void;
+  parentHandleChange: (idx: number, newSpending: Spending) => void;
+}
+
+export type FormRowProps = {
   idx: number;
   spending: Spending;
   parentHandleDeleteRow: (idx: number) => void;
   parentHandleChange: (idx: number, newSpending: Spending) => void;
 };
 
-export type SpendingsFormInputProps = {
-  parentHandleChange: (e: React.ChangeEvent, labelText: string) => void;
+export type FormInputProps = {
   idx: number;
   labelText: string;
   value: Nullable<string | number>;
+  parentHandleChange: (e: React.ChangeEvent, labelText: string) => void;
 };
 
 export enum SortType {
@@ -149,26 +165,26 @@ export type TableFilterProps = {
 };
 
 export type TableFilterButtonProps = {
-  parentSetOpen: (e: Nullable<React.MouseEvent>, open: boolean) => void;
   isOpen: boolean;
+  parentSetOpen: (e: Nullable<React.MouseEvent>, open: boolean) => void;
 };
 
 export type TableFilterFormProps = {
+  isOpen: boolean;
   parentSetSearchParams: (searchParams: URLSearchParams) => void;
   parentResetSearchParams: () => void;
   parentSetOpen: (e: Nullable<React.MouseEvent>, open: boolean) => void;
-  isOpen: boolean;
 };
 
 export type TableFooterContainerProps = {
   isLoading: boolean;
-  parentSetSearchParams: (searchParams: URLSearchParams) => void;
   apiMetaData: Nullable<ApiMetadata>;
+  parentSetSearchParams: (searchParams: URLSearchParams) => void;
 };
 
 export type TableButtonsContainerProps = {
-  parentSetSearchParams: (searchParams: URLSearchParams) => void;
   apiLinks: Nullable<ApiLinks>;
+  parentSetSearchParams: (searchParams: URLSearchParams) => void;
 };
 
 export type TablePageDropdownProps = {
@@ -176,9 +192,9 @@ export type TablePageDropdownProps = {
 };
 
 export type TableButtonProps = {
-  parentSetSearchParams: (searchParams: URLSearchParams) => void;
   buttonIcon: ReactElement<any, any>;
   buttonUrl: Nullable<string>;
+  parentSetSearchParams: (searchParams: URLSearchParams) => void;
 };
 
 export type TableFooterPageDataProps = {

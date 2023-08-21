@@ -7,6 +7,7 @@ import useSpendings from "../hooks/useSpendings";
 import { ApiMetadata, Nullable, SpendingListRow } from "../utils/types";
 import DeleteModal from "../components/DeleteModal";
 import { useState } from "react";
+import Card from "../components/Card";
 
 const DUMMY_SPENDINGS: Array<SpendingListRow> = Array(25).fill({});
 
@@ -41,8 +42,8 @@ const ViewSpendings = () => {
   const refetchWrapper = () => refetch();
 
   return (
-    <div className="container p-5">
-      <div className="border p-7 border-slate-950 rounded-lg shadow-md bg-white">
+    <>
+      <Card>
         <TableTitle />
 
         <TableFilter
@@ -58,7 +59,7 @@ const ViewSpendings = () => {
           parentRefetch={refetchWrapper}
           parentSetSpendingId={setSpendingIdWrapper}
         />
-      </div>
+      </Card>
 
       <TableFooterContainer
         isLoading={isLoading}
@@ -73,7 +74,7 @@ const ViewSpendings = () => {
         parentRefetch={refetch}
         parentSetShow={setShowModalWrapper}
       />
-    </div>
+    </>
   );
 };
 

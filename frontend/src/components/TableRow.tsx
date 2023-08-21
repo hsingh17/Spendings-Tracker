@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ReactComponent as DeleteIcon } from "../assets/delete-icon.svg";
 import { ReactComponent as EditIcon } from "../assets/edit-icon.svg";
 import { Constants } from "../utils/constants";
-import DateFormatter from "../utils/dates-formatter";
+import DateUtils from "../utils/date-utils";
 import { TableRowProps } from "../utils/types";
 import ShimmerLoadingBox from "./ShimmerLoadingBox";
 
@@ -30,7 +30,7 @@ const TableRow: FC<TableRowProps> = ({
   return (
     <tr className="border-b-2 leading-[3rem]">
       <td>
-        <p>{DateFormatter.formatDateUS(spending.date)}</p>
+        <p>{DateUtils.formatDateUS(spending.date)}</p>
       </td>
 
       <td className="text-center">

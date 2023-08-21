@@ -14,5 +14,3 @@ This repository holds the code for my spendings tracker app built with Java and 
 - home page
 
 ## Known issues
-- deleting all spendings on the last page causes user to be stuck on a page with no spendings and can't navigate anywhere 
-- when changing the number of items on the page, if the page the user currently is beyond the viewable pages, user gets stuck on page and can't navigate anywhere
