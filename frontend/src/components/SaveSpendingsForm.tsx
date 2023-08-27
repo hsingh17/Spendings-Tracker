@@ -90,8 +90,8 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
   };
 
   return (
-    <div className="flex flex-col justify-center items-center mt-7 overflow-x-scroll">
-      <Card>
+    <div className="flex flex-col items-center mt-7">
+      <Card itemsCenter={true}>
         <FormInputColumns
           spendings={spendings}
           parentHandleChange={handleChange}

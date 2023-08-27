@@ -7,6 +7,10 @@ export type RenderChildrenProps = {
   children: ReactNode;
 };
 
+export type CardProps = RenderChildrenProps & {
+  itemsCenter: boolean;
+};
+
 export type User = {
   userId: number;
   username: string;

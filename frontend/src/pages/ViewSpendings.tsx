@@ -43,7 +43,7 @@ const ViewSpendings = () => {
 
   return (
     <>
-      <Card>
+      <Card itemsCenter={false}>
         <TableTitle />
 
         <TableFilter

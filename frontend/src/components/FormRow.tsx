@@ -36,7 +36,7 @@ const FormRow: FC<FormRowProps> = ({
 
   return (
     <>
-      <div className="col-span-1">
+      <div className="col-span-1 w-fit">
         <input
           className="border-2 border-slate-300 rounded-lg px-2 py-1"
           type="text"
@@ -45,7 +45,7 @@ const FormRow: FC<FormRowProps> = ({
         />
       </div>
 
-      <div className="col-span-1 relative">
+      <div className="col-span-1 relative w-fit">
         <input
           className="border-2 border-slate-300 rounded-lg px-2 py-1"
           type="text"
