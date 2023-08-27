@@ -57,21 +57,21 @@ const SpendingsTable: FC<SpendingsTableProps> = ({
     });
   }, [spendings]);
 
+  if (spendingsCopy.length === 0) {
+    return <TableEmptyState />;
+  }
+
   return (
     <div className="overflow-x-scroll">
-      {spendingsCopy.length === 0 ? (
-        <TableEmptyState />
-      ) : (
-        <table className="mt-5 table-fixed w-[750px] md:w-full border-collapse">
-          <TableHeader parentHandleSort={handleSort} sort={sort} />
-          <TableBody
-            isLoading={isLoading}
-            spendings={spendings}
-            parentRefetch={parentRefetch}
-            parentSetSpendingId={parentSetSpendingId}
-          />
-        </table>
-      )}
+      <table className="mt-5 table-fixed w-[750px] md:w-full border-collapse">
+        <TableHeader parentHandleSort={handleSort} sort={sort} />
+        <TableBody
+          isLoading={isLoading}
+          spendings={spendings}
+          parentRefetch={parentRefetch}
+          parentSetSpendingId={parentSetSpendingId}
+        />
+      </table>
     </div>
   );
 };

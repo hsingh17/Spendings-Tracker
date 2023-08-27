@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { FormRowProps, Spending } from "../utils/types";
-import { ReactComponent as DeleteRowIcon } from "../assets/delete-row.svg";
+import { ReactComponent as DeleteRowIcon } from "../assets/delete-icon.svg";
 const FormRow: FC<FormRowProps> = ({
   idx,
   spending,
@@ -36,7 +36,7 @@ const FormRow: FC<FormRowProps> = ({
 
   return (
     <>
-      <div>
+      <div className="col-span-1">
         <input
           className="border-2 border-slate-300 rounded-lg px-2 py-1"
           type="text"
@@ -44,17 +44,22 @@ const FormRow: FC<FormRowProps> = ({
           value={spending.category ? spending.category : ""}
         />
       </div>
-      <div>
+
+      <div className="col-span-1 relative">
         <input
           className="border-2 border-slate-300 rounded-lg px-2 py-1"
           type="text"
           onChange={(e: React.ChangeEvent) => handleChange(e, "Spending")}
           value={spending.amount ? spending.amount.toString() : ""}
         />
+
+        <button
+          className="col-span-1 absolute -right-10 top-0.5 opacity-70 hover:opacity-100"
+          onClick={(e: React.MouseEvent) => handleDelete(e)}
+        >
+          <DeleteRowIcon className="w-7 h-7" stroke="red" />
+        </button>
       </div>
-      <button onClick={(e: React.MouseEvent) => handleDelete(e)}>
-        <DeleteRowIcon className="w-7 h-7" fill="red" />
-      </button>
     </>
   );
 };

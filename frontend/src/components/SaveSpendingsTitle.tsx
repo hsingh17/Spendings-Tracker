@@ -5,7 +5,6 @@ const SaveSpendingsTitle: FC<SaveSpendingsTitleProps> = ({ date, isCreateMode, p
   const handleChange = (e: React.FormEvent) => {
     e.preventDefault();
     // TODO
-
     parentHandleDateChange("TODO");
   }
 

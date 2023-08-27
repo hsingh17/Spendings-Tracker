@@ -4,7 +4,7 @@ import { Constants } from "../utils/constants";
 import { Nullable, SaveSpendingsFormProps, Spending } from "../utils/types";
 import FormInputColumns from "./FormInputColumns";
 import Card from "./Card";
-import {ReactComponent as AddRow} from "../assets/add-row.svg";
+import { ReactComponent as AddRow } from "../assets/add-row.svg";
 
 function spendingComparator(a: Spending, b: Spending): number {
   const aCategory: Nullable<string> = a.category;
@@ -26,7 +26,7 @@ function spendingComparator(a: Spending, b: Spending): number {
   }
 
   return aAmount < bAmount ? -1 : 1;
-};
+}
 
 const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
   date,
@@ -42,22 +42,21 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
     setSpendings(initialSpendings ? initialSpendings : []);
   }, [initialSpendings]);
 
-  const filterSpendingsToDisplay = () =>
-    spendings.filter((spending) => !spending.delete);
   const countSpendingsToDisplay = () =>
     spendings.filter((spending) => !spending.delete).length;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.MouseEvent) => {
     e.preventDefault();
     // TODO: Input validation
     mutate(spendings);
   };
 
-  const handleAddNewRow = (e: React.FormEvent) => {
+  const handleAddNewRow = (e: React.MouseEvent) => {
     e.preventDefault();
 
     if (countSpendingsToDisplay() >= Constants.MAX_SPENDINGS_FOR_A_DAY) {
       // No more spendings allowed for the day
+      alert("Reached maximum spendings for a day!"); // TODO: Replace
       return;
     }
 
@@ -73,7 +72,7 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
 
   const handleDeleteRow = (idx: number) => {
     let newSpendings: Array<Spending> = [...spendings];
-
+    console.log(newSpendings)
     if (newSpendings[idx].spendingId !== null) {
       newSpendings[idx].delete = true;
     } else {
@@ -91,33 +90,35 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
   };
 
   return (
-    <div className="flex flex-col justify-center items-center mt-7">
-      <form onSubmit={(e: React.FormEvent) => handleSubmit(e)}>
-        <Card>
-          <FormInputColumns
-            spendings={filterSpendingsToDisplay()}
-            parentHandleChange={handleChange}
-            parentHandleDeleteRow={handleDeleteRow}
-          />
+    <div className="flex flex-col justify-center items-center mt-7 overflow-x-scroll">
+      <Card>
+        <FormInputColumns
+          spendings={spendings}
+          parentHandleChange={handleChange}
+          parentHandleDeleteRow={handleDeleteRow}
+        />
 
-          <button className="flex justify-center mt-5" onClick={(e: React.FormEvent) => handleAddNewRow(e)}>
-            <AddRow className="w-10 h-10" />
-          </button>
-        </Card>
-      </form>
+        <button
+          className="flex justify-center mt-1"
+          onClick={(e: React.MouseEvent) => handleAddNewRow(e)}
+        >
+          <AddRow className="w-10 h-10 opacity-50 hover:opacity-80" />
+        </button>
+      </Card>
 
       <div className="ml-auto mt-5">
         <button
           className="mr-4 text-slate-600 text-lg"
-          onClick={(e: React.FormEvent) => alert("TODO")}
+          onClick={(e: React.MouseEvent) => alert("TODO")}
         >
           Cancel
         </button>
-        <input
+        <button
           className="bg-theme-cta px-5 py-2 text-white font-semibold rounded-xl hover:cursor-pointer text-lg"
-          type="submit"
-          value={isCreateMode ? "Create" : "Update"}
-        />
+          onClick={(e: React.MouseEvent) => handleSubmit(e)}
+        >
+          {isCreateMode ? "Create" : "Update"}
+        </button>
       </div>
     </div>
   );

@@ -8,27 +8,33 @@ const FormInputColumns: FC<FormInputColumnsProps> = ({
   parentHandleChange,
   parentHandleDeleteRow,
 }) => {
-  if (!spendings || spendings.length === 0) {
+  const countSpendingsToDisplay = (spendings: Array<Spending>) =>
+    spendings.filter((spending) => !spending.delete).length;
+
+  if (!spendings || countSpendingsToDisplay(spendings) === 0) {
     return <TableEmptyState />;
   }
 
   return (
-    <div className="grid gap-x-5 gap-y-5 grid-cols-3">
-      <div className="text-center font-semibold text-lg text-theme-cta">Category</div>
-      <div className="text-center font-semibold text-lg text-theme-cta">Amount</div>
-      <div>&nbsp;</div>
-      {spendings
-        .map((spending: Spending, idx: number) => {
-          return (
-            <FormRow
-              key={idx}
-              idx={idx}
-              spending={spending}
-              parentHandleChange={parentHandleChange}
-              parentHandleDeleteRow={parentHandleDeleteRow}
-            />
-          );
-        })}
+    <div className="grid gap-x-5 gap-y-5 grid-cols-2 p-10 w-[500px] md:w-full">
+      <div className="text-center font-semibold text-lg text-theme-cta col-span-1">
+        Category
+      </div>
+      <div className="text-center font-semibold text-lg text-theme-cta col-span-1">
+        Amount
+      </div>
+
+      {spendings.map((spending: Spending, idx: number) => {
+        return (
+          <FormRow
+            key={idx}
+            idx={idx}
+            spending={spending}
+            parentHandleChange={parentHandleChange}
+            parentHandleDeleteRow={parentHandleDeleteRow}
+          />
+        );
+      })}
     </div>
   );
 };
