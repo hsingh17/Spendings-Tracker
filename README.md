@@ -3,14 +3,10 @@ This repository holds the code for my spendings tracker app built with Java and 
 
 
 ## TODO
-- fix overflow not working on save spending page for smaller screen sizes
-- wire up cancel button on save spending page
-- return back to previous page after updating/editing spending
-
-- breadcrumbs
 - navbar
 - dashboard
 - home page
+- breadcrumbs
 - add suspense and error boundary 
 - use Zod library for input validation
     - Only allow money amount inputs when editing or adding spendings

@@ -9,9 +9,9 @@ async function deleteSpending(spendingId: number) {
   );
 }
 
-export default function useDeleteSpending(refetch: () => void) {
+export default function useDeleteSpending(onSuccess: () => void) {
   return useMutation({
     mutationFn: (spendingId: number) => deleteSpending(spendingId),
-    onSuccess: refetch
+    onSuccess: onSuccess
   });
 }

@@ -12,7 +12,7 @@ const SaveSpendings = () => {
   const { data: response } = useSpending(params.date as string);
 
   const handleDateChange = (spendingDate: string) =>
-    navigate(`${Constants.SAVE_SPENDINGS_PAGE}/${spendingDate}`);
+    navigate(`${Constants.SAVE_SPENDINGS_PAGE}/${spendingDate}`, {replace: true});
 
   return (
     <>

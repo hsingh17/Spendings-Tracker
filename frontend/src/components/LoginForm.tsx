@@ -1,9 +1,11 @@
 import { FC } from "react";
 import useLogin from "../hooks/useLogin";
 import { UserFormData } from "../utils/types";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm: FC = () => {
-  const {mutate: login} = useLogin();
+  const navigate = useNavigate();
+  const {mutate: login} = useLogin(() => navigate(-1));
 
   const parseFormData = (e: React.FormEvent) => {
     e.preventDefault();

@@ -5,6 +5,7 @@ import { Nullable, SaveSpendingsFormProps, Spending } from "../utils/types";
 import FormInputColumns from "./FormInputColumns";
 import Card from "./Card";
 import { ReactComponent as AddRow } from "../assets/add-row.svg";
+import { useNavigate } from "react-router-dom";
 
 function spendingComparator(a: Spending, b: Spending): number {
   const aCategory: Nullable<string> = a.category;
@@ -36,7 +37,8 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
   const [spendings, setSpendings] = useState<Array<Spending>>(
     initialSpendings ? initialSpendings.sort(spendingComparator) : []
   );
-  const { mutate } = useSaveSpendings(date, isCreateMode);
+  const navigate = useNavigate();
+  const { mutate } = useSaveSpendings(date, isCreateMode, () => navigate(-1));
 
   useEffect(() => {
     setSpendings(initialSpendings ? initialSpendings : []);
@@ -72,7 +74,6 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
 
   const handleDeleteRow = (idx: number) => {
     let newSpendings: Array<Spending> = [...spendings];
-    console.log(newSpendings)
     if (newSpendings[idx].spendingId !== null) {
       newSpendings[idx].delete = true;
     } else {
@@ -109,7 +110,7 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
       <div className="ml-auto mt-5">
         <button
           className="mr-4 text-slate-600 text-lg"
-          onClick={(e: React.MouseEvent) => alert("TODO")}
+          onClick={(e: React.MouseEvent) => navigate(-1)}
         >
           Cancel
         </button>

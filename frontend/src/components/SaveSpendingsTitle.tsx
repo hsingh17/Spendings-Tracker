@@ -4,8 +4,10 @@ import { SaveSpendingsTitleProps } from "../utils/types";
 const SaveSpendingsTitle: FC<SaveSpendingsTitleProps> = ({ date, isCreateMode, parentHandleDateChange }) => {
   const handleChange = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO
-    parentHandleDateChange("TODO");
+    const target = e.target as typeof e.target & {
+      "value": string;
+    };
+    parentHandleDateChange(target.value);
   }
 
   return (
