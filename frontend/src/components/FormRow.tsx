@@ -33,6 +33,7 @@ const FormRow: FC<FormRowProps> = ({
     charArr.splice(charArr.indexOf("."), 1)    // Remove the old "."
     charArr.splice(charArr.length-2, 0, ".");  // Add the new "."
     const newAmount: number = parseFloat(charArr.join(""));
+
     if (newAmount.toString().length > MAX_CHAR) {
       return; 
     }
@@ -45,6 +46,13 @@ const FormRow: FC<FormRowProps> = ({
     e.preventDefault();
     parentHandleDeleteRow(idx);
   };
+
+  const checkValidKey = (e: React.KeyboardEvent) => {
+    // Stop event from continuing if it's not a number and a backspace
+    if (e.key !== "Backspace" && isNaN(parseInt(e.key))) { 
+      e.preventDefault();
+    }
+  }
 
   if (spending.delete) {
     // Spending marked for deletion
@@ -67,12 +75,8 @@ const FormRow: FC<FormRowProps> = ({
           className="border-2 border-slate-300 rounded-lg px-2 py-1"
           type="text"
           onChange={(e: React.FormEvent) => handleChangeAmount(e)}
-          onKeyDown={(e: React.KeyboardEvent) => {
-            if (isNaN(parseInt(e.key))) { // Stop event from continuing if it's not a number
-              e.preventDefault();
-            }
-          }}
-          value={spending.amount !== null && spending.amount !== undefined ? spending.amount : "0.00"}
+          onKeyDown={(e: React.KeyboardEvent) => checkValidKey(e)}
+          value={spending.amount !== null && spending.amount !== undefined ? spending.amount.toFixed(2) : "0.00"}
         />
 
         <button

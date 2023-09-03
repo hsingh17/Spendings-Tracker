@@ -16,8 +16,8 @@ const FormInputColumns: FC<FormInputColumnsProps> = ({
   }
 
   return (
-    <div className="w-full h-full overflow-x-scroll">
-      <div className="grid gap-x-5 gap-y-5 grid-cols-2 p-10 w-[500px] md:w-fit flex-grow-0 flex-shrink-0 basis-full">
+    <div className="w-full md:w-fit h-full overflow-x-scroll">
+      <div className="grid gap-x-5 gap-y-5 grid-cols-2 p-10 w-[500px] md:w-full flex-grow-0 flex-shrink-0 basis-full">
         <div className="text-center font-semibold text-lg text-theme-cta col-span-1">
           Category
         </div>

@@ -16,7 +16,7 @@ const SaveSpendingsTitle: FC<SaveSpendingsTitleProps> = ({ date, isCreateMode, p
       isCreateMode ? "Create" : "Edit"
     } spendings for`}
     <input
-      className="ml-2 bg-theme-white border-[3px] border-theme-cta rounded-lg px-2 py-1 text-theme-brand-secondary"
+      className="block md:inline mt-3 md:mt-0 w-full md:w-fit md:ml-2 bg-theme-white border-[3px] border-theme-cta rounded-lg px-2 py-1 text-theme-brand-secondary"
       type="date"
       id="spending-date"
       defaultValue={date}

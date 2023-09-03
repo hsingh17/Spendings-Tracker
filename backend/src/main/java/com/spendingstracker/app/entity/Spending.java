@@ -24,7 +24,6 @@ public class Spending {
     private String category;
 
     @Column(name = "AMOUNT")
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private BigDecimal amount;
 
     @Transient
