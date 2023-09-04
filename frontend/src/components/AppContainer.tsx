@@ -3,7 +3,7 @@ import { RenderChildrenProps } from "../utils/types";
 
 const AppContainer: FC<RenderChildrenProps> = ({ children }) => {
   return (
-    <div className="container p-5">
+    <div className="relative m-0 p-0 flex flex-row h-fit w-full">
       {children}
     </div>
   );

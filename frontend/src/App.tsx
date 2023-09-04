@@ -11,6 +11,8 @@ import { Constants } from "./utils/constants";
 import NotFound from "./pages/NotFound";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import MainContentContainer from "./components/MainContentContainer";
+import Navbar from "./components/Navbar";
 import AppContainer from "./components/AppContainer";
 
 const queryClient = new QueryClient();
@@ -22,20 +24,23 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <UserContext.Provider value={{ user, setUser }}>
         <AppContainer>
-          <Routes>
-            <Route path={Constants.HOME_PAGE} element={<Home />} />
-            <Route path={Constants.LOGIN_PAGE} element={<Login />} />
-            <Route path={Constants.DASHBOARD_PAGE} element={<Dashboard />} />
-            <Route
-              path={Constants.VIEW_SPENDINGS_PAGE}
-              element={<ViewSpendings />}
-            />
-            <Route
-              path={`${Constants.SAVE_SPENDINGS_PAGE}/:date`}
-              element={<SaveSpendings />}
-            />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <Navbar />
+          <MainContentContainer>
+            <Routes>
+              <Route path={Constants.HOME_PAGE} element={<Home />} />
+              <Route path={Constants.LOGIN_PAGE} element={<Login />} />
+              <Route path={Constants.DASHBOARD_PAGE} element={<Dashboard />} />
+              <Route
+                path={Constants.VIEW_SPENDINGS_PAGE}
+                element={<ViewSpendings />}
+              />
+              <Route
+                path={`${Constants.SAVE_SPENDINGS_PAGE}/:date`}
+                element={<SaveSpendings />}
+              />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </MainContentContainer>
         </AppContainer>
       </UserContext.Provider>
       <ReactQueryDevtools initialIsOpen={false} />
