@@ -227,6 +227,13 @@ export type PieChartProps = GenericChartProps<CategoricalSpendings> & {
   outerRadius: number;
 };
 
+export type NavbarHeaderProps = {
+  collapsed: boolean;
+  parentSetCollapsed: (collapse: boolean) => void;
+};
+
+export type NavbarArrowProps = NavbarHeaderProps;
+
 export type NavbarListItem = {
   category: string;
   children: Array<NavbarSublistItem>;
@@ -238,10 +245,16 @@ export type NavbarSublistItem = {
   onClick: (e: React.MouseEvent) => void;
 };
 
+export type NavbarListProps = {
+  collapsed: boolean;
+};
+
 export type NavbarSublistProps = {
+  collapsed: boolean;
   item: NavbarListItem;
 };
 
 export type NavbarSublistItemProps = {
+  collapsed: boolean;
   item: NavbarSublistItem;
 };

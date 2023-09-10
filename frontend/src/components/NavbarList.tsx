@@ -1,11 +1,11 @@
-import { NavbarListItem } from "../utils/types";
-import { useNavigate } from "react-router-dom";
+import { NavbarListItem, NavbarListProps } from "../utils/types";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 import { Constants } from "../utils/constants";
 import NavbarSublist from "./NavbarSublist";
+import { FC } from "react";
 
-const NavbarList = () => {
-  const navigate = useNavigate();
-  const ITEMS: Array<NavbarListItem> = [
+function getItemsList(navigate: NavigateFunction): Array<NavbarListItem> {
+  return [
     {
       category: "Overview",
       children: [
@@ -21,7 +21,7 @@ const NavbarList = () => {
         },
         {
           iconPath: "../assets/components/TableIcon",
-          name: "View Spendings",
+          name: "View",
           onClick: () => navigate(Constants.VIEW_SPENDINGS_PAGE),
         },
         {
@@ -47,11 +47,16 @@ const NavbarList = () => {
       ],
     },
   ];
+}
+
+const NavbarList: FC<NavbarListProps> = ({ collapsed }) => {
+  const navigate = useNavigate();
+  const items = getItemsList(navigate);
 
   return (
-    <ul className="mt-7 ml-5">
-      {ITEMS.map((item, index) => (
-        <NavbarSublist key={index} item={item} />
+    <ul className="mt-10 h-full">
+      {items.map((item, index) => (
+        <NavbarSublist key={index} item={item} collapsed={collapsed} />
       ))}
     </ul>
   );
