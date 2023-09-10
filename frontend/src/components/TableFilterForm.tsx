@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { ReactComponent as CloseIcon } from "../assets/close-icon.svg";
+import { ReactComponent as CloseIcon } from "../assets/raw/close-icon.svg";
 import { TableFilterFormProps } from "../utils/types";
 
 const TableFilterForm: FC<TableFilterFormProps> = ({

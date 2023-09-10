@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
-import { ReactComponent as DeleteIcon } from "../assets/delete-icon.svg";
-import { ReactComponent as EditIcon } from "../assets/edit-icon.svg";
+import { ReactComponent as DeleteIcon } from "../assets/raw/delete-icon.svg";
+import { ReactComponent as EditIcon } from "../assets/raw/edit-icon.svg";
 import { Constants } from "../utils/constants";
 import DateUtils from "../utils/date-utils";
 import { TableRowProps } from "../utils/types";

@@ -1,5 +1,5 @@
-import { ReactComponent as FilterIcon } from "../assets/filter-icon.svg";
-import { ReactComponent as DownChevron } from "../assets/down-chevron.svg";
+import { ReactComponent as FilterIcon } from "../assets/raw/filter-icon.svg";
+import { ReactComponent as DownChevron } from "../assets/raw/down-chevron.svg";
 import { FC } from "react";
 import { TableFilterButtonProps } from "../utils/types";
 

@@ -1,5 +1,5 @@
-import { ReactComponent as SortUp } from "../assets/sort-up.svg";
-import { ReactComponent as SortDown } from "../assets/sort-down.svg";
+import { ReactComponent as SortUp } from "../assets/raw/sort-up.svg";
+import { ReactComponent as SortDown } from "../assets/raw/sort-down.svg";
 import { FC } from "react";
 import { SortIconProps, SortOrder } from "../utils/types";
 

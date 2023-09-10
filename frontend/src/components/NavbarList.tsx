@@ -1,33 +1,33 @@
-import React from "react";
 import { NavbarListItem } from "../utils/types";
 import { useNavigate } from "react-router-dom";
+import { Constants } from "../utils/constants";
+import NavbarSublist from "./NavbarSublist";
 
 const NavbarList = () => {
   const navigate = useNavigate();
-  
   const ITEMS: Array<NavbarListItem> = [
     {
       category: "Overview",
       children: [
         {
-          iconPath: "TODO",
+          iconPath: "../assets/components/HomeIcon",
           name: "Home",
-          onClick: (e: React.MouseEvent) => e.preventDefault(), //TODO
+          onClick: () => navigate(Constants.HOME_PAGE),
         },
         {
-          iconPath: "TODO",
+          iconPath: "../assets/components/DashboardIcon",
           name: "Dashboard",
-          onClick: (e: React.MouseEvent) => e.preventDefault(), //TODO
+          onClick: () => navigate(Constants.DASHBOARD_PAGE),
         },
         {
-          iconPath: "TODO",
-          name: "Table View",
-          onClick: (e: React.MouseEvent) => e.preventDefault(), //TODO
+          iconPath: "../assets/components/TableIcon",
+          name: "View Spendings",
+          onClick: () => navigate(Constants.VIEW_SPENDINGS_PAGE),
         },
         {
-          iconPath: "TODO",
+          iconPath: "../assets/components/MetricsIcon",
           name: "Metrics",
-          onClick: (e: React.MouseEvent) => e.preventDefault(), //TODO
+          onClick: () => navigate(Constants.METRICS_PAGE),
         },
       ],
     },
@@ -35,20 +35,26 @@ const NavbarList = () => {
       category: "Account",
       children: [
         {
-          iconPath: "TODO",
+          iconPath: "../assets/components/SettingsIcon",
           name: "Settings",
-          onClick: (e: React.MouseEvent) => e.preventDefault(), //TODO
+          onClick: () => navigate(Constants.SETTINGS_PAGE),
         },
         {
-          iconPath: "TODO",
+          iconPath: "../assets/components/LogoutIcon",
           name: "Logout",
-          onClick: (e: React.MouseEvent) => e.preventDefault(), //TODO
+          onClick: () => alert("Logging out (not really) TODO"),
         },
       ],
     },
   ];
 
-  return <></>;
+  return (
+    <ul className="mt-7 ml-5">
+      {ITEMS.map((item, index) => (
+        <NavbarSublist key={index} item={item} />
+      ))}
+    </ul>
+  );
 };
 
 export default NavbarList;

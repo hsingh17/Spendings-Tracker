@@ -1,4 +1,4 @@
-import { ReactComponent as EmptyStateIcon } from "../assets/empty-state.svg";
+import { ReactComponent as EmptyStateIcon } from "../assets/raw/empty-state.svg";
 
 const TableEmptyState = () => {
   return (

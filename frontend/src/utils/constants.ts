@@ -11,6 +11,8 @@ export namespace Constants {
   export const DASHBOARD_PAGE: string = "/dashboard";
   export const VIEW_SPENDINGS_PAGE: string = "/view";
   export const SAVE_SPENDINGS_PAGE: string = "/save";
+  export const METRICS_PAGE: string = "/metrics";
+  export const SETTINGS_PAGE: string = "/settings";
 
   
   // #######################################################################################

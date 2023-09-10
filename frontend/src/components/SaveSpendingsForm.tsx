@@ -4,7 +4,7 @@ import { Constants } from "../utils/constants";
 import { Nullable, SaveSpendingsFormProps, Spending } from "../utils/types";
 import FormInputColumns from "./FormInputColumns";
 import Card from "./Card";
-import { ReactComponent as AddRow } from "../assets/add-row.svg";
+import { ReactComponent as AddRow } from "../assets/raw/add-row.svg";
 import { useNavigate } from "react-router-dom";
 
 function spendingComparator(a: Spending, b: Spending): number {

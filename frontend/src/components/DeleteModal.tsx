@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
 import useDeleteSpending from "../hooks/useDeleteSpending";
 import { DeleteModalProps } from "../utils/types";
-import {ReactComponent as WarningIcon} from "../assets/warning-icon.svg";
+import {ReactComponent as WarningIcon} from "../assets/raw/warning-icon.svg";
 
 const ANIMATE_IN: string = "animate-[slidein_0.3s_ease-in-out_forwards]";
 const ANIMATE_OUT: string = "animate-[slideout_0.3s_ease-in-out_forwards]";

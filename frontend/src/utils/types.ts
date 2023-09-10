@@ -227,7 +227,6 @@ export type PieChartProps = GenericChartProps<CategoricalSpendings> & {
   outerRadius: number;
 };
 
-
 export type NavbarListItem = {
   category: string;
   children: Array<NavbarSublistItem>;
@@ -237,4 +236,12 @@ export type NavbarSublistItem = {
   iconPath: string; 
   name: string;
   onClick: (e: React.MouseEvent) => void;
+};
+
+export type NavbarSublistProps = {
+  item: NavbarListItem;
+};
+
+export type NavbarSublistItemProps = {
+  item: NavbarSublistItem;
 };

@@ -4,17 +4,13 @@ import useUser from "../hooks/useUser";
 import { Constants } from "../utils/constants";
 
 const Login = () => {
-  const {data: response} = useUser();
-  
-  if (response?.ok) { // TODO: Better way?
-    return <Navigate to={Constants.DASHBOARD_PAGE}/>
+  const { data: response } = useUser();
+
+  if (response?.ok) {
+    return <Navigate to={Constants.DASHBOARD_PAGE} />;
   }
 
-  return (
-    <>
-      <LoginForm />
-    </>
-  );
+  return <LoginForm />;
 };
 
 export default Login;

@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { ReactComponent as DeleteRowIcon } from "../assets/delete-icon.svg";
+import { ReactComponent as DeleteRowIcon } from "../assets/raw/delete-icon.svg";
 import { FormRowProps, Spending } from "../utils/types";
 
 const MAX_CHAR = 11;
