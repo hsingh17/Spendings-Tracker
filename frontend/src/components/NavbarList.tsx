@@ -54,7 +54,7 @@ const NavbarList: FC<NavbarListProps> = ({ collapsed }) => {
   const items = getItemsList(navigate);
 
   return (
-    <ul className="mt-10 h-full">
+    <ul className="mt-10 h-fit">
       {items.map((item, index) => (
         <NavbarSublist key={index} item={item} collapsed={collapsed} />
       ))}
