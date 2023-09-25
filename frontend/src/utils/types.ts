@@ -228,6 +228,7 @@ export type PieChartProps = GenericChartProps<CategoricalSpendings> & {
 };
 
 export type NavbarHeaderProps = {
+  mobile: boolean;
   collapsed: boolean;
   parentSetCollapsed: (collapse: boolean) => void;
 };

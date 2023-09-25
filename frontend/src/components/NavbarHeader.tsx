@@ -3,6 +3,7 @@ import { NavbarHeaderProps } from "../utils/types";
 import NavbarArrow from "./NavbarArrow";
 
 const NavbarHeader: FC<NavbarHeaderProps> = ({
+  mobile,
   collapsed,
   parentSetCollapsed,
 }) => {
@@ -19,6 +20,7 @@ const NavbarHeader: FC<NavbarHeaderProps> = ({
       )}
 
       <NavbarArrow
+        mobile={mobile}
         collapsed={collapsed}
         parentSetCollapsed={parentSetCollapsed}
       />

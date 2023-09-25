@@ -4,9 +4,15 @@ import { ReactComponent as LeftArrow } from "../assets/raw/left-arrow.svg";
 import { ReactComponent as RightArrow } from "../assets/raw/right-arrow.svg";
 
 const NavbarArrow: FC<NavbarArrowProps> = ({
+  mobile,
   collapsed,
   parentSetCollapsed,
 }) => {
+
+  if (mobile) {
+    return <></>
+  }
+  
   return (
     <>
       {collapsed ? (
