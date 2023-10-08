@@ -228,9 +228,14 @@ export type PieChartProps = GenericChartProps<CategoricalSpendings> & {
 };
 
 export type NavbarHeaderProps = {
-  mobile: boolean;
-  collapsed: boolean;
-  parentSetCollapsed: (collapse: boolean) => void;
+  state: NavbarState;
+  transitionState: (action: NavbarAction) => void;
+};
+
+export type NavbarHamburgerIconProps = NavbarHeaderProps;
+
+export type NavbarHeaderTitleProps = {
+  state: NavbarState;
 };
 
 export type NavbarArrowProps = NavbarHeaderProps;
@@ -247,15 +252,33 @@ export type NavbarSublistItem = {
 };
 
 export type NavbarListProps = {
-  collapsed: boolean;
+  state: NavbarState;
+  transitionState: (action: NavbarAction) => void;
 };
 
 export type NavbarSublistProps = {
-  collapsed: boolean;
+  state: NavbarState;
   item: NavbarListItem;
 };
 
 export type NavbarSublistItemProps = {
-  collapsed: boolean;
+  state: NavbarState;
   item: NavbarSublistItem;
 };
+
+export enum NavbarState {
+  NON_MOBILE_EXPANDED,
+  NON_MOBILE_COLLAPSED,
+  MOBILE_MENU_HIDDEN,
+  MOBILE_MENU_SHOWN,
+};
+
+export enum NavbarAction {
+  NON_MOBILE_COLLAPSE,
+  NON_MOBILE_EXPAND,
+  RESIZE_TO_NON_MOBILE,
+  RESIZE_TO_MOBILE,
+  MOBILE_SHOW_MENU,
+  MOBILE_HIDE_MENU,
+  MOBILE_NAVIGATE_TO_PAGE
+}

@@ -1,30 +1,29 @@
 import { FC } from "react";
-import { NavbarArrowProps } from "../utils/types";
+import { NavbarAction, NavbarArrowProps, NavbarState } from "../utils/types";
 import { ReactComponent as LeftArrow } from "../assets/raw/left-arrow.svg";
 import { ReactComponent as RightArrow } from "../assets/raw/right-arrow.svg";
 
-const NavbarArrow: FC<NavbarArrowProps> = ({
-  mobile,
-  collapsed,
-  parentSetCollapsed,
-}) => {
+const NavbarArrow: FC<NavbarArrowProps> = ({ state, transitionState }) => {
+  const isMobile: boolean =
+    state === NavbarState.MOBILE_MENU_HIDDEN ||
+    state === NavbarState.MOBILE_MENU_SHOWN;
 
-  if (mobile) {
-    return <></>
+  if (isMobile) {
+    return <></>;
   }
-  
+
   return (
     <>
-      {collapsed ? (
+      {state === NavbarState.NON_MOBILE_COLLAPSED ? (
         <RightArrow
           className="w-10 h-10 mb-7 hover:cursor-pointer -order-1"
-          onClick={() => parentSetCollapsed(false)}
+          onClick={() => transitionState(NavbarAction.NON_MOBILE_EXPAND)}
           stroke="gray"
         />
       ) : (
         <LeftArrow
           className="w-10 h-10 ml-auto hover:cursor-pointer"
-          onClick={() => parentSetCollapsed(true)}
+          onClick={() => transitionState(NavbarAction.NON_MOBILE_COLLAPSE)}
           stroke="gray"
         />
       )}

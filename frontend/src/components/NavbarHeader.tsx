@@ -1,29 +1,30 @@
 import { FC } from "react";
-import { NavbarHeaderProps } from "../utils/types";
+import { NavbarHeaderProps, NavbarState } from "../utils/types";
 import NavbarArrow from "./NavbarArrow";
+import NavbarHamburgerIcon from "./NavbarHamburgerIcon";
+import NavbarHeaderTitle from "./NavbarHeaderTitle";
 
-const NavbarHeader: FC<NavbarHeaderProps> = ({
-  mobile,
-  collapsed,
-  parentSetCollapsed,
-}) => {
-  const collapsedStyle: string = collapsed ? "flex-col" : "flex-row";
+const NavbarHeader: FC<NavbarHeaderProps> = ({ state, transitionState }) => {
+  const isMobile: boolean =
+    state === NavbarState.MOBILE_MENU_HIDDEN ||
+    state === NavbarState.MOBILE_MENU_SHOWN;
+
+  const collapsedStyle: string =
+    state === NavbarState.NON_MOBILE_COLLAPSED ? "flex-col" : "flex-row";
+  const mobileStyle: string = isMobile ? "h-full" : "h-fit";
 
   return (
-    <div className={`flex ${collapsedStyle} items-center`}>
-      <div className="w-10 h-10 bg-theme-cta"></div> {/*TODO*/}
-      
-      {collapsed ? (
-        <></>
-      ) : (
-        <h1 className="font-bold text-xl ml-3">Spendings Tracker</h1>
-      )}
-
-      <NavbarArrow
-        mobile={mobile}
-        collapsed={collapsed}
-        parentSetCollapsed={parentSetCollapsed}
-      />
+    <div className={`flex ${collapsedStyle} items-center ${mobileStyle}`}>
+      {
+        isMobile ? (
+          <></>
+        ) : (
+          <div className="w-10 h-10 bg-theme-cta"></div>
+        ) /*TODO*/
+      }
+      <NavbarHeaderTitle state={state} />
+      <NavbarHamburgerIcon state={state} transitionState={transitionState} />
+      <NavbarArrow state={state} transitionState={transitionState} />
     </div>
   );
 };

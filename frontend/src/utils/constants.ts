@@ -92,5 +92,5 @@ export namespace Constants {
   // #######################################################################################
   // #######################################################################################
   
-  export const MOBILE_SCREEN_WIDTH: number = 800;
+  export const MOBILE_SCREEN_WIDTH: number = 767;
 };

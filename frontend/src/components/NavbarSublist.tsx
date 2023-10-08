@@ -1,11 +1,12 @@
 import { FC } from "react";
-import { NavbarSublistProps } from "../utils/types";
+import { NavbarState, NavbarSublistProps } from "../utils/types";
 import NavbarSublistItem from "./NavbarSublistItem";
+import Navbar from "./Navbar";
 
-const NavbarSublist: FC<NavbarSublistProps> = ({ collapsed, item }) => {
+const NavbarSublist: FC<NavbarSublistProps> = ({ item, state }) => {
   return (
     <li className="last:mt-16">
-      {collapsed ? (
+      {state === NavbarState.NON_MOBILE_COLLAPSED ? (
         <></>
       ) : (
         <h2 className="text-lg font-semibold">{item.category}</h2>
@@ -13,7 +14,7 @@ const NavbarSublist: FC<NavbarSublistProps> = ({ collapsed, item }) => {
       
       <ul>
         {item.children.map((child, index) => (
-          <NavbarSublistItem key={index} item={child} collapsed={collapsed} />
+          <NavbarSublistItem key={index} item={child} state={state} />
         ))}
       </ul>
     </li>

@@ -2,32 +2,53 @@ import { useEffect, useState } from "react";
 import NavbarHeader from "./NavbarHeader";
 import NavbarList from "./NavbarList";
 import useDetectMobile from "../hooks/useDetectMobile";
+import { NavbarAction, NavbarState } from "../utils/types";
 
-const NON_MOBILE_STYLE = "z-10 sticky top-0 bg-theme-brand-secondary h-screen w-fit text-theme-neutral p-5";
-const MOBILE_STYLE = "z-10 sticky top-0 left-0 bg-theme-brand-secondary h-10 w-screen text-theme-neutral"
+const NON_MOBILE_STYLE =
+  "z-10 sticky top-0 bg-theme-brand-secondary h-screen w-fit text-theme-neutral p-5";
+const MOBILE_STYLE =
+  "z-10 sticky top-0 left-0 bg-theme-brand-secondary h-20 w-screen text-theme-neutral";
 
 const Navbar = () => {
   const mobile = useDetectMobile();
-  const [collapsed, setCollapsed] = useState<boolean>(false);
-  const [show, setShow] = useState<boolean>(!mobile);
+  const [state, setState] = useState<NavbarState>(
+    mobile ? NavbarState.MOBILE_MENU_HIDDEN : NavbarState.NON_MOBILE_EXPANDED
+  );
 
-  useEffect(() => setShow(!mobile), [mobile]);
+  const transitionState = (action: NavbarAction) => {
+    switch (action) {
+      case NavbarAction.MOBILE_SHOW_MENU:
+        setState(NavbarState.MOBILE_MENU_SHOWN);
+        return;
+      case NavbarAction.MOBILE_NAVIGATE_TO_PAGE:
+      case NavbarAction.RESIZE_TO_MOBILE:
+      case NavbarAction.MOBILE_HIDE_MENU:
+        setState(NavbarState.MOBILE_MENU_HIDDEN);
+        return;
+      case NavbarAction.NON_MOBILE_COLLAPSE:
+        setState(NavbarState.NON_MOBILE_COLLAPSED);
+        return;
+      case NavbarAction.NON_MOBILE_EXPAND:
+      case NavbarAction.RESIZE_TO_NON_MOBILE:
+        setState(NavbarState.NON_MOBILE_EXPANDED);
+        return;
+    }
+  };
+
+  useEffect(
+    () =>
+      transitionState(
+        mobile
+          ? NavbarAction.RESIZE_TO_MOBILE
+          : NavbarAction.RESIZE_TO_NON_MOBILE
+      ),
+    [mobile]
+  );
 
   return (
     <div className={mobile ? MOBILE_STYLE : NON_MOBILE_STYLE}>
-      <span>&nbsp;</span>
-      {show ? (
-        <>
-          <NavbarHeader
-            mobile={mobile}
-            collapsed={collapsed}
-            parentSetCollapsed={setCollapsed}
-          />
-          <NavbarList collapsed={collapsed} />
-        </>
-      ) : (
-        <></>
-      )}
+      <NavbarHeader state={state} transitionState={transitionState} />
+      <NavbarList state={state} transitionState={transitionState} />
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import React, { FC, Suspense, lazy, useState } from "react";
-import { NavbarSublistItemProps } from "../utils/types";
+import { NavbarState, NavbarSublistItemProps } from "../utils/types";
 
-const NavbarSublistItem: FC<NavbarSublistItemProps> = ({ collapsed, item }) => {
+const NavbarSublistItem: FC<NavbarSublistItemProps> = ({ state, item }) => {
   const IconComponent = lazy(() => import(item.iconPath));
 
   return (
@@ -11,7 +11,7 @@ const NavbarSublistItem: FC<NavbarSublistItemProps> = ({ collapsed, item }) => {
         onClick={item.onClick}
       >
         <IconComponent />
-        {collapsed ? (
+        {state === NavbarState.NON_MOBILE_COLLAPSED ? (
           <></>
         ) : (
           <h3 className="ml-2 text-lg font-normal">{item.name}</h3>

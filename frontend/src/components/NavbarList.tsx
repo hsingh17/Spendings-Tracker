@@ -1,4 +1,4 @@
-import { NavbarListItem, NavbarListProps } from "../utils/types";
+import { NavbarListItem, NavbarListProps, NavbarState } from "../utils/types";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { Constants } from "../utils/constants";
 import NavbarSublist from "./NavbarSublist";
@@ -49,14 +49,22 @@ function getItemsList(navigate: NavigateFunction): Array<NavbarListItem> {
   ];
 }
 
-const NavbarList: FC<NavbarListProps> = ({ collapsed }) => {
+const NavbarList: FC<NavbarListProps> = ({ state, transitionState }) => {
   const navigate = useNavigate();
   const items = getItemsList(navigate);
+  const isMobile: boolean =
+    state === NavbarState.MOBILE_MENU_HIDDEN ||
+    state === NavbarState.MOBILE_MENU_SHOWN;
+
+  const mobileStyle: string = isMobile ? "p-5 h-screen w-screen absolute" : "mt-10 h-fit"
+  if (state === NavbarState.MOBILE_MENU_HIDDEN) {
+    return <></>;
+  }
 
   return (
-    <ul className="mt-10 h-fit">
+    <ul className={`${mobileStyle} bg-theme-brand-secondary`}>
       {items.map((item, index) => (
-        <NavbarSublist key={index} item={item} collapsed={collapsed} />
+        <NavbarSublist key={index} item={item} state={state} />
       ))}
     </ul>
   );
