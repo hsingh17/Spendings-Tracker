@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { FormInputColumnsProps, Spending } from "../utils/types";
+import { FormInputColumnsProps, SpendingFormInput } from "../utils/types";
 import FormRow from "./FormRow";
 import TableEmptyState from "./TableEmptyState";
 
@@ -8,7 +8,7 @@ const FormInputColumns: FC<FormInputColumnsProps> = ({
   parentHandleChange,
   parentHandleDeleteRow,
 }) => {
-  const countSpendingsToDisplay = (spendings: Array<Spending>) =>
+  const countSpendingsToDisplay = (spendings: Array<SpendingFormInput>) =>
     spendings.filter((spending) => !spending.delete).length;
 
   if (!spendings || countSpendingsToDisplay(spendings) === 0) {
@@ -25,7 +25,7 @@ const FormInputColumns: FC<FormInputColumnsProps> = ({
           Amount
         </div>
 
-        {spendings.map((spending: Spending, idx: number) => {
+        {spendings.map((spending: SpendingFormInput, idx: number) => {
           return (
             <FormRow
               key={idx}

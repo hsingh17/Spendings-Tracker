@@ -53,6 +53,11 @@ export type Spending = {
   delete: Nullable<boolean>;
 };
 
+export type SpendingFormInput = Spending & {
+  categoryError: Nullable<FormInputError>;
+  amountError: Nullable<FormInputError>;
+};
+
 export type CategoricalSpendings = {
   category: string;
   total: number;
@@ -77,16 +82,16 @@ export type SaveSpendingsTitleProps = {
 };
 
 export type FormInputColumnsProps = {
-  spendings: Array<Spending>;
+  spendings: Array<SpendingFormInput>;
   parentHandleDeleteRow: (idx: number) => void;
-  parentHandleChange: (idx: number, newSpending: Spending) => void;
+  parentHandleChange: (idx: number, newSpending: SpendingFormInput) => void;
 }
 
 export type FormRowProps = {
   idx: number;
-  spending: Spending;
+  spending: SpendingFormInput;
   parentHandleDeleteRow: (idx: number) => void;
-  parentHandleChange: (idx: number, newSpending: Spending) => void;
+  parentHandleChange: (idx: number, newSpending: SpendingFormInput) => void;
 };
 
 export type FormInputProps = {
@@ -253,6 +258,7 @@ export type NavbarSublistItem = {
 
 export type NavbarListProps = {
   state: NavbarState;
+  items: Array<NavbarListItem>;
   transitionState: (action: NavbarAction) => void;
 };
 
@@ -281,4 +287,11 @@ export enum NavbarAction {
   MOBILE_SHOW_MENU,
   MOBILE_HIDE_MENU,
   MOBILE_NAVIGATE_TO_PAGE
+}
+
+export enum FormInputError {
+  EMPTY_CATEGORY = "Enter a category!",
+  ZERO_AMOUNT = "Must be greater than 0!",
+  MAX_AMOUNT = "Must be less than 99,999,999!",
+  MAX_CATEGORY_LENGTH = "Must be less than 100 characters!",
 }

@@ -1,13 +1,13 @@
 import React, { FC, useEffect, useState } from "react";
 import useSaveSpendings from "../hooks/useSaveSpendings";
 import { Constants } from "../utils/constants";
-import { Nullable, SaveSpendingsFormProps, Spending } from "../utils/types";
+import { FormInputError, Nullable, SaveSpendingsFormProps, Spending, SpendingFormInput } from "../utils/types";
 import FormInputColumns from "./FormInputColumns";
 import Card from "./Card";
 import { ReactComponent as AddRow } from "../assets/raw/add-row.svg";
 import { useNavigate } from "react-router-dom";
 
-function spendingComparator(a: Spending, b: Spending): number {
+function spendingComparator(a: SpendingFormInput, b: SpendingFormInput): number {
   const aCategory: Nullable<string> = a.category;
   const bCategory: Nullable<string> = b.category;
 
@@ -34,23 +34,77 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
   isCreateMode,
   initialSpendings,
 }) => {
-  const [spendings, setSpendings] = useState<Array<Spending>>(
-    initialSpendings ? initialSpendings.sort(spendingComparator) : []
+  const mappedSpendings: Nullable<Array<SpendingFormInput>> = initialSpendings?.map((spending) => ({
+    spendingId: spending.spendingId,
+    amount: spending.amount,
+    category: spending.category,
+    delete: spending.delete,
+    categoryError: null,
+    amountError: null
+  }));
+
+  const [spendings, setSpendings] = useState<Array<SpendingFormInput>>(
+    mappedSpendings ? mappedSpendings.sort(spendingComparator) : []
   );
+
   const navigate = useNavigate();
   const { mutate } = useSaveSpendings(date, isCreateMode, () => navigate(-1));
 
   useEffect(() => {
-    setSpendings(initialSpendings ? initialSpendings : []);
+    setSpendings(mappedSpendings ? mappedSpendings : []);
   }, [initialSpendings]);
 
   const countSpendingsToDisplay = () =>
-    spendings.filter((spending) => !spending.delete).length;
+    spendings.filter((SpendingFormInput) => !SpendingFormInput.delete).length;
 
   const handleSubmit = (e: React.MouseEvent) => {
+    const isValidFormInput = () : boolean => {
+      let isValid: boolean = true;
+      let newSpendings: Array<SpendingFormInput> = spendings.map((spending) => {
+        const newSpending: SpendingFormInput = {...spending};
+        if (!newSpending.category || newSpending.category.trim().length === 0)  {
+          newSpending.categoryError = FormInputError.EMPTY_CATEGORY;
+        } else if (newSpending.category.length > Constants.MAX_CATEGORY_LENGTH) {
+          newSpending.categoryError = FormInputError.MAX_CATEGORY_LENGTH
+        } else {
+          newSpending.categoryError = null;
+        }
+
+        if (!newSpending.amount || newSpending.amount === 0) {
+          newSpending.amountError = FormInputError.ZERO_AMOUNT;
+        } else if (newSpending.amount >= Constants.MAX_AMOUNT) {
+          newSpending.amountError = FormInputError.MAX_AMOUNT;
+        } else {
+          newSpending.amountError = null;
+        }
+        
+        if (newSpending.categoryError || newSpending.amountError) {
+          isValid = false; // Can do this inline but TypeScript warning/error makes it look uglier than this
+        }
+
+        return newSpending;
+      });
+
+      if (!isValid) {
+        setSpendings(newSpendings);
+      }
+
+      return isValid;
+    };
+
     e.preventDefault();
-    // TODO: Input validation
-    mutate(spendings);
+    if (!isValidFormInput()) {
+      return;
+    }
+
+    const mappedSpendings: Array<Spending> = spendings.map(spending => ({
+      spendingId: spending.spendingId,
+      amount: spending.amount,
+      category: spending.category!.trim(),
+      delete: spending.delete
+    }));
+
+    mutate(mappedSpendings);
   };
 
   const handleAddNewRow = (e: React.MouseEvent) => {
@@ -62,30 +116,32 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
       return;
     }
 
-    let newSpendings: Array<Spending> = [...spendings];
+    let newSpendings: Array<SpendingFormInput> = [...spendings];
     newSpendings.push({
       spendingId: null,
       category: null,
       amount: null,
       delete: false,
+      categoryError: null,
+      amountError: null
     });
     setSpendings(newSpendings);
   };
 
   const handleDeleteRow = (idx: number) => {
-    let newSpendings: Array<Spending> = [...spendings];
+    let newSpendings: Array<SpendingFormInput> = [...spendings];
     if (newSpendings[idx].spendingId !== null) {
       newSpendings[idx].delete = true;
     } else {
-      // Completely new spending that can be safely removed
+      // Completely new SpendingFormInput that can be safely removed
       newSpendings.splice(idx, 1);
     }
 
     setSpendings(newSpendings);
   };
 
-  const handleChange = (idx: number, newSpending: Spending) => {
-    let newSpendings: Array<Spending> = [...spendings];
+  const handleChange = (idx: number, newSpending: SpendingFormInput) => {
+    let newSpendings: Array<SpendingFormInput> = [...spendings];
     newSpendings[idx] = newSpending;
     setSpendings(newSpendings);
   };
@@ -115,7 +171,8 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
           Cancel
         </button>
         <button
-          className="bg-theme-cta px-5 py-2 text-white font-semibold rounded-xl hover:cursor-pointer text-lg"
+          className="bg-theme-cta px-5 py-2 text-white font-semibold rounded-xl hover:cursor-pointer text-lg disabled:opacity-25"
+          disabled={spendings.length === 0}
           onClick={(e: React.MouseEvent) => handleSubmit(e)}
         >
           {isCreateMode ? "Create" : "Update"}

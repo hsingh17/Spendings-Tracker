@@ -4,11 +4,10 @@ import { ReactComponent as LeftArrow } from "../assets/raw/left-arrow.svg";
 import { ReactComponent as RightArrow } from "../assets/raw/right-arrow.svg";
 
 const NavbarArrow: FC<NavbarArrowProps> = ({ state, transitionState }) => {
-  const isMobile: boolean =
+  if (
     state === NavbarState.MOBILE_MENU_HIDDEN ||
-    state === NavbarState.MOBILE_MENU_SHOWN;
-
-  if (isMobile) {
+    state === NavbarState.MOBILE_MENU_SHOWN
+  ) {
     return <></>;
   }
 

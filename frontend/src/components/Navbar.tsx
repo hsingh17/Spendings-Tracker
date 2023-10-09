@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import NavbarHeader from "./NavbarHeader";
 import NavbarList from "./NavbarList";
 import useDetectMobile from "../hooks/useDetectMobile";
-import { NavbarAction, NavbarState } from "../utils/types";
+import { NavbarAction, NavbarListItem, NavbarState } from "../utils/types";
+import { Constants } from "../utils/constants";
+import { useNavigate } from "react-router-dom";
 
 const NON_MOBILE_STYLE =
   "z-10 sticky top-0 bg-theme-brand-secondary h-screen w-fit text-theme-neutral p-5";
@@ -10,6 +12,7 @@ const MOBILE_STYLE =
   "z-10 sticky top-0 left-0 bg-theme-brand-secondary h-20 w-screen text-theme-neutral";
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const mobile = useDetectMobile();
   const [state, setState] = useState<NavbarState>(
     mobile ? NavbarState.MOBILE_MENU_HIDDEN : NavbarState.NON_MOBILE_EXPANDED
@@ -35,6 +38,58 @@ const Navbar = () => {
     }
   };
 
+  const getNavList = () : Array<NavbarListItem> => {
+    const onClickWrapper = (page: string) => {
+      navigate(page);
+      if (mobile) {
+        transitionState(NavbarAction.MOBILE_NAVIGATE_TO_PAGE);
+      }
+    };
+
+    return [
+      {
+        category: "Overview",
+        children: [
+          {
+            iconPath: "../assets/components/HomeIcon",
+            name: "Home",
+            onClick: () => onClickWrapper(Constants.HOME_PAGE),
+          },
+          {
+            iconPath: "../assets/components/DashboardIcon",
+            name: "Dashboard",
+            onClick: () => onClickWrapper(Constants.DASHBOARD_PAGE),
+          },
+          {
+            iconPath: "../assets/components/TableIcon",
+            name: "View",
+            onClick: () => onClickWrapper(Constants.VIEW_SPENDINGS_PAGE),
+          },
+          {
+            iconPath: "../assets/components/MetricsIcon",
+            name: "Metrics",
+            onClick: () => onClickWrapper(Constants.METRICS_PAGE),
+          },
+        ],
+      },
+      {
+        category: "Account",
+        children: [
+          {
+            iconPath: "../assets/components/SettingsIcon",
+            name: "Settings",
+            onClick: () => onClickWrapper(Constants.SETTINGS_PAGE),
+          },
+          {
+            iconPath: "../assets/components/LogoutIcon",
+            name: "Logout",
+            onClick: () => alert("Logging out (not really) TODO"),
+          },
+        ],
+      },
+    ];
+  }
+
   useEffect(
     () =>
       transitionState(
@@ -48,7 +103,7 @@ const Navbar = () => {
   return (
     <div className={mobile ? MOBILE_STYLE : NON_MOBILE_STYLE}>
       <NavbarHeader state={state} transitionState={transitionState} />
-      <NavbarList state={state} transitionState={transitionState} />
+      <NavbarList state={state} items={getNavList()} transitionState={transitionState} />
     </div>
   );
 };

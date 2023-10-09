@@ -11,10 +11,9 @@ const NavbarHeader: FC<NavbarHeaderProps> = ({ state, transitionState }) => {
 
   const collapsedStyle: string =
     state === NavbarState.NON_MOBILE_COLLAPSED ? "flex-col" : "flex-row";
-  const mobileStyle: string = isMobile ? "h-full" : "h-fit";
 
   return (
-    <div className={`flex ${collapsedStyle} items-center ${mobileStyle}`}>
+    <div className={`flex ${collapsedStyle} items-center h-full md:h-fit`}>
       {
         isMobile ? (
           <></>

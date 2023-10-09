@@ -5,11 +5,11 @@ This repository holds the code for my spendings tracker app built with Java and 
 ## TODO
 - navbar
 - basic form validation
-    - Only allow money amount inputs when editing or adding spendings
-    - Need input cleansing and validation when editing or adding spendings
-    - Need max cap on both amount and category
+    - If user deletes all spendings from the form table and clicks 'Update', it should delete the SPENDING_USER_AGGR id associated to it as well (backend)
     - When adding or editing a spending and someone puts duplicate categories, collect them to be together (likely to be done on the backend)
 - add suspense and error boundary 
+    - don't show navbar till user logs in
+    - redirect to login if trying to reach page w/o being logged in
 - dashboard
 - home page
 - breadcrumbs (?)

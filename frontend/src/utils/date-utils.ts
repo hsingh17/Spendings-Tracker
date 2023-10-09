@@ -2,7 +2,6 @@ import { Nullable } from "./types";
 
 const DateUtils = {
   formatDateUS(date: Nullable<string>): Nullable<string> {
-    // TODO: Error handling (?)
     if (!date) {
       return null;
     }
