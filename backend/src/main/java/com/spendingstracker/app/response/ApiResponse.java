@@ -1,7 +1,5 @@
 package com.spendingstracker.app.response;
 
-import org.springframework.http.HttpStatus;
-
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
@@ -10,7 +8,7 @@ public class ApiResponse<T> {
     private ZonedDateTime timestamp = ZonedDateTime.now(ZoneId.of("Z"));
     private boolean ok;
     private String message;
-    private HttpStatus httpStatus;
+    private Integer httpStatus;
     private T data;
 
     public ApiResponse(ApiResponseBuilder<T> apiResponseBuilder) {
@@ -53,11 +51,11 @@ public class ApiResponse<T> {
         this.message = message;
     }
 
-    public HttpStatus getHttpStatus() {
+    public Integer getHttpStatus() {
         return httpStatus;
     }
 
-    public void setHttpStatus(HttpStatus httpStatus) {
+    public void setHttpStatus(Integer httpStatus) {
         this.httpStatus = httpStatus;
     }
 
@@ -74,7 +72,7 @@ public class ApiResponse<T> {
         private ZonedDateTime timestamp;
         private boolean ok;
         private String message;
-        private HttpStatus httpStatus;
+        private Integer httpStatus;
         private T data;
 
         public ApiResponseBuilder() {}
@@ -94,7 +92,7 @@ public class ApiResponse<T> {
             return this;
         }
 
-        public ApiResponseBuilder<T> setHttpStatus(HttpStatus httpStatus) {
+        public ApiResponseBuilder<T> setHttpStatus(Integer httpStatus) {
             this.httpStatus = httpStatus;
             return this;
         }

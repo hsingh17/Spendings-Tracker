@@ -69,7 +69,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://127.0.0.1:5173"));
+        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://127.0.0.1:5173")); // TODO: Make this dynamic
         corsConfiguration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "DELETE", "PUT"));
         corsConfiguration.setAllowCredentials(true); // Need for cookies
         corsConfiguration.setAllowedHeaders(List.of("Content-Type"));

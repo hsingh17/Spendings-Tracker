@@ -1,4 +1,4 @@
-import React, { FC, Suspense, lazy, useState } from "react";
+import { FC, Suspense, lazy } from "react";
 import { NavbarState, NavbarSublistItemProps } from "../utils/types";
 
 const NavbarSublistItem: FC<NavbarSublistItemProps> = ({ state, item }) => {

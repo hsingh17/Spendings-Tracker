@@ -1,3 +1,4 @@
+import HttpError from "../error/HttpError";
 import { Constants } from "./constants";
 import { ApiResponse } from "./types";
 
@@ -28,8 +29,10 @@ async function makeRequest<T>(apiUrl: string, method: string, body: string): Pro
 
   const promise = await fetch(apiUrl, options);
   const response: ApiResponse<T> = await promise.json();
+  // We need to throw an error because React-Query needs a rejected promise to handle errors 
+  // properly and fetch does not do that by default
   if (!response.ok) {
-    throw new Error(response.message);
+    throw new HttpError(response.httpStatus, response.message);
   }
 
   return response;

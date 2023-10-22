@@ -34,7 +34,7 @@ public class ApiRestController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
         ApiResponse<UserDetails> apiResponse = new ApiResponse.ApiResponseBuilder<UserDetails>()
-                .setHttpStatus(HttpStatus.OK)
+                .setHttpStatus(HttpStatus.OK.value())
                 .setData(userDetails)
                 .setOk(true)
                 .build();
@@ -65,7 +65,7 @@ public class ApiRestController {
                 .build();
 
         ApiResponse<List<SpendingsListProjection>> apiResponse = new ApiResponse.ApiResponseBuilder<List<SpendingsListProjection>>()
-                .setHttpStatus(HttpStatus.OK)
+                .setHttpStatus(HttpStatus.OK.value())
                 .setOk(true)
                 .setMetadata(apiMetadata)
                 .setData(spendingsPage.getContent())
@@ -79,7 +79,7 @@ public class ApiRestController {
             @PathVariable("spending-date") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date spendingDate) {
         List<Spending> spendings = spendingService.getSpendingDetails(spendingDate, getUserId());
         ApiResponse<List<Spending>> apiResponse = new ApiResponse.ApiResponseBuilder<List<Spending>>()
-                .setHttpStatus(HttpStatus.OK)
+                .setHttpStatus(HttpStatus.OK.value())
                 .setOk(true)
                 .setData(spendings)
                 .build();
@@ -94,7 +94,7 @@ public class ApiRestController {
 
         spendingService.createSpending(spendings, spendingDate, getUserId());
         ApiResponse apiResponse = new ApiResponse.ApiResponseBuilder()
-                .setHttpStatus(HttpStatus.OK)
+                .setHttpStatus(HttpStatus.OK.value())
                 .setMessage("Success")
                 .setOk(true)
                 .build();
@@ -109,7 +109,7 @@ public class ApiRestController {
 
         spendingService.updateSpending(spendings, spendingDate, getUserId());
         ApiResponse<List<Spending>> apiResponse = new ApiResponse.ApiResponseBuilder<List<Spending>>()
-                .setHttpStatus(HttpStatus.OK)
+                .setHttpStatus(HttpStatus.OK.value())
                 .setOk(true)
                 .setMessage("Updated spending for spending date: " + spendingDate)
                 .build();
@@ -122,7 +122,7 @@ public class ApiRestController {
             @PathVariable("spending-user-aggr-id") long spendingUserAggrId) {
         spendingService.deleteSpending(spendingUserAggrId);
         ApiResponse<List<Spending>> apiResponse = new ApiResponse.ApiResponseBuilder<List<Spending>>()
-                .setHttpStatus(HttpStatus.OK)
+                .setHttpStatus(HttpStatus.OK.value())
                 .setOk(true)
                 .setMessage("Delete spending for id: " + spendingUserAggrId)
                 .build();

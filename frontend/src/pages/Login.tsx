@@ -5,8 +5,8 @@ import { Constants } from "../utils/constants";
 
 const Login = () => {
   const { data: response } = useUser();
-
-  if (response?.ok) {
+ 
+  if (response?.ok) { // Already logged in
     return <Navigate to={Constants.DASHBOARD_PAGE} />;
   }
 

@@ -10,6 +10,6 @@ async function getUser() {
 export default function useUser() {
   return useQuery({
     queryKey: ["user"],
-    queryFn: getUser
+    queryFn: getUser,
   });
 }

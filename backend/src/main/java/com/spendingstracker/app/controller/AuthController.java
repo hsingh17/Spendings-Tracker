@@ -53,7 +53,7 @@ public class AuthController {
         ApiResponse<CustomUserDetails> apiResponse = new ApiResponse.ApiResponseBuilder<CustomUserDetails>()
                 .setData(userDetails)
                 .setOk(true)
-                .setHttpStatus(HttpStatus.OK)
+                .setHttpStatus(HttpStatus.OK.value())
                 .build();
 
         return ResponseEntity.ok(apiResponse);

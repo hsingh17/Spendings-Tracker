@@ -10,18 +10,17 @@ import SaveSpendings from "./pages/SaveSpendings";
 import { Constants } from "./utils/constants";
 import NotFound from "./pages/NotFound";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import MainContentContainer from "./components/MainContentContainer";
 import Navbar from "./components/Navbar";
 import AppContainer from "./components/AppContainer";
-
-const queryClient = new QueryClient();
+import QueryClientConfig from "./config/QueryClientConfig";
 
 const App = () => {
   const [user, setUser] = useState<User | null>(null);
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={QueryClientConfig}>
       <UserContext.Provider value={{ user, setUser }}>
         <AppContainer>
           <Navbar />

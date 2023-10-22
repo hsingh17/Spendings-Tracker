@@ -75,12 +75,12 @@ public class JwtFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (Exception e) {
             ApiResponse internalErrResponse = new ApiResponse.ApiResponseBuilder()
-                    .setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
                     .setOk(false)
                     .setMessage(e.getMessage())
                     .build();
 
-            response.setStatus(internalErrResponse.getHttpStatus().value());
+            response.setStatus(internalErrResponse.getHttpStatus());
             response.getOutputStream().println(new Gson().toJson(internalErrResponse));
         }
     }

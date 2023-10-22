@@ -13,14 +13,14 @@ import java.io.IOException;
 
 public class CustomAuthEntryPoint implements AuthenticationEntryPoint {
     private final ApiResponse AUTH_ERR_RESPONSE = new ApiResponse.ApiResponseBuilder()
-            .setHttpStatus(HttpStatus.UNAUTHORIZED)
+            .setHttpStatus(HttpStatus.UNAUTHORIZED.value())
             .setOk(false)
             .setMessage("Failed to authenticate user")
             .build();
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        response.setStatus(AUTH_ERR_RESPONSE.getHttpStatus().value());
+        response.setStatus(AUTH_ERR_RESPONSE.getHttpStatus());
         response.getOutputStream().println(new Gson().toJson(AUTH_ERR_RESPONSE));
     }
 }

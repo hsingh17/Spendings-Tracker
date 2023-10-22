@@ -15,10 +15,10 @@ public class GlobalExceptionHandler {
         ApiResponse apiResponse = new ApiResponse.ApiResponseBuilder<>()
                 .setMessage(e.getMessage())
                 .setOk(false)
-                .setHttpStatus(HttpStatus.NOT_FOUND)
+                .setHttpStatus(HttpStatus.NOT_FOUND.value())
                 .build();
 
-        return new ResponseEntity<ApiResponse>(apiResponse, apiResponse.getHttpStatus());
+        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(AuthenticationException.class)
@@ -26,10 +26,10 @@ public class GlobalExceptionHandler {
         ApiResponse apiResponse = new ApiResponse.ApiResponseBuilder<>()
                 .setMessage(e.getMessage())
                 .setOk(false)
-                .setHttpStatus(HttpStatus.NOT_FOUND)
+                .setHttpStatus(HttpStatus.NOT_FOUND.value())
                 .build();
 
-        return new ResponseEntity<ApiResponse>(apiResponse, apiResponse.getHttpStatus());
+        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -37,10 +37,10 @@ public class GlobalExceptionHandler {
         ApiResponse apiResponse = new ApiResponse.ApiResponseBuilder<>()
                 .setMessage(e.getMessage())
                 .setOk(false)
-                .setHttpStatus(HttpStatus.BAD_REQUEST)
+                .setHttpStatus(HttpStatus.BAD_REQUEST.value())
                 .build();
 
-        return new ResponseEntity<ApiResponse>(apiResponse, apiResponse.getHttpStatus());
+        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
@@ -48,9 +48,9 @@ public class GlobalExceptionHandler {
         ApiResponse apiResponse = new ApiResponse.ApiResponseBuilder<>()
                 .setMessage(e.getMessage())
                 .setOk(false)
-                .setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+                .setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .build();
 
-        return new ResponseEntity<ApiResponse>(apiResponse, apiResponse.getHttpStatus());
+        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
