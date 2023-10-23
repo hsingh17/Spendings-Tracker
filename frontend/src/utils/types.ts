@@ -9,6 +9,8 @@ export type RenderChildrenProps = {
 
 export type CardProps = RenderChildrenProps & {
   itemsCenter: boolean;
+  widthStyle?: string;
+  heightStyle?: string;
 };
 
 export type User = {

@@ -4,7 +4,7 @@ import useUser from "../hooks/useUser";
 import DashboardChartsContainer from "../components/DashboardChartsContainer";
 
 const Dashboard = () => {
-  const {data: response, isError} = useUser();
+  const {data: response} = useUser();
   const navigate = useNavigate();
   const user = response?.data;
 

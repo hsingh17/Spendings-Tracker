@@ -4,7 +4,6 @@ This repository holds the code for my spendings tracker app built with Java and 
 
 ## TODO
 - add suspense and error boundary 
-    - redirect to login if trying to reach page w/o being logged in
     - don't show navbar till user logs in
     - login form should give toast/error popup of some kind if user enters bad credentials
 - basic form validation

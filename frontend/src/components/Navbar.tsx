@@ -5,6 +5,7 @@ import useDetectMobile from "../hooks/useDetectMobile";
 import { NavbarAction, NavbarListItem, NavbarState } from "../utils/types";
 import { Constants } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
+import useUser from "../hooks/useUser";
 
 const NON_MOBILE_STYLE =
   "z-10 sticky top-0 bg-theme-brand-secondary h-screen w-fit text-theme-neutral p-5";
@@ -12,6 +13,7 @@ const MOBILE_STYLE =
   "z-10 sticky top-0 left-0 bg-theme-brand-secondary h-20 w-screen text-theme-neutral";
 
 const Navbar = () => {
+  const {data: response} = useUser();
   const navigate = useNavigate();
   const mobile = useDetectMobile();
   const [state, setState] = useState<NavbarState>(
