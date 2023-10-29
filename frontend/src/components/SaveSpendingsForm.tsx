@@ -1,13 +1,23 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import useSaveSpendings from "../hooks/useSaveSpendings";
 import { Constants } from "../utils/constants";
-import { FormInputError, Nullable, SaveSpendingsFormProps, Spending, SpendingFormInput } from "../utils/types";
+import {
+  FormInputError,
+  Nullable,
+  SaveSpendingsFormProps,
+  Spending,
+  SpendingFormInput,
+} from "../utils/types";
 import FormInputColumns from "./FormInputColumns";
 import Card from "./Card";
 import { ReactComponent as AddRow } from "../assets/raw/add-row.svg";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
-function spendingComparator(a: SpendingFormInput, b: SpendingFormInput): number {
+function spendingComparator(
+  a: SpendingFormInput,
+  b: SpendingFormInput
+): number {
   const aCategory: Nullable<string> = a.category;
   const bCategory: Nullable<string> = b.category;
 
@@ -34,19 +44,21 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
   isCreateMode,
   initialSpendings,
 }) => {
-  const mappedSpendings: Nullable<Array<SpendingFormInput>> = initialSpendings?.map((spending) => ({
-    spendingId: spending.spendingId,
-    amount: spending.amount,
-    category: spending.category,
-    delete: spending.delete,
-    categoryError: null,
-    amountError: null
-  }));
+  const mappedSpendings: Nullable<Array<SpendingFormInput>> =
+    initialSpendings?.map((spending) => ({
+      spendingId: spending.spendingId,
+      amount: spending.amount,
+      category: spending.category,
+      delete: spending.delete,
+      categoryError: null,
+      amountError: null,
+    }));
 
   const [spendings, setSpendings] = useState<Array<SpendingFormInput>>(
     mappedSpendings ? mappedSpendings.sort(spendingComparator) : []
   );
 
+  const cardRef = useRef<HTMLDivElement>();
   const navigate = useNavigate();
   const { mutate } = useSaveSpendings(date, isCreateMode, () => navigate(-1));
 
@@ -58,26 +70,28 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
     spendings.filter((SpendingFormInput) => !SpendingFormInput.delete).length;
 
   const handleSubmit = (e: React.MouseEvent) => {
-    const isValidFormInput = () : boolean => {
+    const isValidFormInput = (): boolean => {
       let isValid: boolean = true;
       let newSpendings: Array<SpendingFormInput> = spendings.map((spending) => {
-        const newSpending: SpendingFormInput = {...spending};
-        if (!newSpending.category || newSpending.category.trim().length === 0)  {
+        const newSpending: SpendingFormInput = { ...spending };
+        if (!newSpending.category || newSpending.category.trim().length === 0) {
           newSpending.categoryError = FormInputError.EMPTY_CATEGORY;
-        } else if (newSpending.category.length > Constants.MAX_CATEGORY_LENGTH) {
-          newSpending.categoryError = FormInputError.MAX_CATEGORY_LENGTH
+        } else if (
+          newSpending.category.length > Constants.MAX_CATEGORY_LENGTH
+        ) {
+          newSpending.categoryError = FormInputError.MAX_CATEGORY_LENGTH;
         } else {
+          newSpending.amountError = FormInputError.ZERO_AMOUNT;
           newSpending.categoryError = null;
         }
 
         if (!newSpending.amount || newSpending.amount === 0) {
-          newSpending.amountError = FormInputError.ZERO_AMOUNT;
         } else if (newSpending.amount >= Constants.MAX_AMOUNT) {
           newSpending.amountError = FormInputError.MAX_AMOUNT;
         } else {
           newSpending.amountError = null;
         }
-        
+
         if (newSpending.categoryError || newSpending.amountError) {
           isValid = false; // Can do this inline but TypeScript warning/error makes it look uglier than this
         }
@@ -97,13 +111,14 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
       return;
     }
 
-    const mappedSpendings: Array<Spending> = spendings.map(spending => ({
+    const mappedSpendings: Array<Spending> = spendings.map((spending) => ({
       spendingId: spending.spendingId,
       amount: spending.amount,
-      category: spending.category!.trim(),
-      delete: spending.delete
+      category: spending.category?.trim(),
+      delete: spending.delete,
     }));
 
+    
     mutate(mappedSpendings);
   };
 
@@ -112,7 +127,7 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
 
     if (countSpendingsToDisplay() >= Constants.MAX_SPENDINGS_FOR_A_DAY) {
       // No more spendings allowed for the day
-      alert("Reached maximum spendings for a day!"); // TODO: Replace
+      toast.error("Reached maximum spendings for a day!");
       return;
     }
 
@@ -123,8 +138,17 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
       amount: null,
       delete: false,
       categoryError: null,
-      amountError: null
+      amountError: null,
     });
+    
+    if (cardRef.current) { 
+      // Auto scroll user down to bottom of the card
+      window.scrollTo({
+        top: cardRef.current.scrollHeight + 100, // + 100 for a little padding
+        behavior: "smooth"
+      });
+    }
+
     setSpendings(newSpendings);
   };
 
@@ -148,7 +172,7 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
 
   return (
     <div className="flex flex-col items-center mt-7">
-      <Card itemsCenter={true}>
+      <Card itemsCenter={true} innerRef={cardRef}>
         <FormInputColumns
           spendings={spendings}
           parentHandleChange={handleChange}

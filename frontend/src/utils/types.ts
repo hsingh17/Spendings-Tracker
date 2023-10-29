@@ -11,6 +11,7 @@ export type CardProps = RenderChildrenProps & {
   itemsCenter: boolean;
   widthStyle?: string;
   heightStyle?: string;
+  innerRef?: React.MutableRefObject<HTMLDivElement | undefined>;
 };
 
 export type User = {

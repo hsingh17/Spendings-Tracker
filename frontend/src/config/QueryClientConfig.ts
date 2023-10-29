@@ -22,14 +22,13 @@ const QueryClientConfig = new QueryClient({
         if (!(error instanceof HttpError)) {
           return false;
         }
+        
         return error.status >= 500;
       }, 
       refetchOnWindowFocus: false, // Don't want to make API calls when window is refocused
       retry: false, // Don't want to retry failed API calls
-      staleTime: 300000, // 5 minutes,
-      cacheTime: 300000 * 2 // 10 minutes
     }
-  }
+  },
 });
 
 export default QueryClientConfig;

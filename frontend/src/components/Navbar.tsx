@@ -41,7 +41,7 @@ const Navbar = () => {
   };
 
   const getNavList = () : Array<NavbarListItem> => {
-    const onClickWrapper = (page: string) => {
+    const navigateToPage = (page: string) => {
       navigate(page);
       if (mobile) {
         transitionState(NavbarAction.MOBILE_NAVIGATE_TO_PAGE);
@@ -55,22 +55,22 @@ const Navbar = () => {
           {
             iconPath: "../assets/components/HomeIcon",
             name: "Home",
-            onClick: () => onClickWrapper(Constants.HOME_PAGE),
+            onClick: () => navigateToPage(Constants.HOME_PAGE),
           },
           {
             iconPath: "../assets/components/DashboardIcon",
             name: "Dashboard",
-            onClick: () => onClickWrapper(Constants.DASHBOARD_PAGE),
+            onClick: () => navigateToPage(Constants.DASHBOARD_PAGE),
           },
           {
             iconPath: "../assets/components/TableIcon",
             name: "View",
-            onClick: () => onClickWrapper(Constants.VIEW_SPENDINGS_PAGE),
+            onClick: () => navigateToPage(Constants.VIEW_SPENDINGS_PAGE),
           },
           {
             iconPath: "../assets/components/MetricsIcon",
             name: "Metrics",
-            onClick: () => onClickWrapper(Constants.METRICS_PAGE),
+            onClick: () => navigateToPage(Constants.METRICS_PAGE),
           },
         ],
       },
@@ -80,7 +80,7 @@ const Navbar = () => {
           {
             iconPath: "../assets/components/SettingsIcon",
             name: "Settings",
-            onClick: () => onClickWrapper(Constants.SETTINGS_PAGE),
+            onClick: () => navigateToPage(Constants.SETTINGS_PAGE),
           },
           {
             iconPath: "../assets/components/LogoutIcon",
@@ -101,6 +101,10 @@ const Navbar = () => {
       ),
     [mobile]
   );
+
+  if (!response || !response.data || !response.ok) {
+    return <></>;
+  }
 
   return (
     <div className={mobile ? MOBILE_STYLE : NON_MOBILE_STYLE}>

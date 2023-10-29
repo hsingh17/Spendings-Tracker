@@ -8,9 +8,10 @@ async function postLogin(formData: UserFormData) {
   return await fetchRequestWrapper<User>(Constants.BASE_API_URL + Constants.AUTH_LOGIN_ROUTE + "/", Constants.POST, JSON.stringify(formData));
 }
 
-export default function useLogin(onSuccess: () => void) {
+export default function useLogin(onSuccess: () => void, onError: () => void) {
   return useMutation({
     mutationFn: (formData: UserFormData) => postLogin(formData),
-    onSuccess: onSuccess
+    onSuccess: onSuccess,
+    onError: onError
   });
 }

@@ -15,6 +15,7 @@ import MainContentContainer from "./components/MainContentContainer";
 import Navbar from "./components/Navbar";
 import AppContainer from "./components/AppContainer";
 import QueryClientConfig from "./config/QueryClientConfig";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -39,6 +40,7 @@ const App = () => {
               />
               <Route path="*" element={<NotFound />} />
             </Routes>
+            <Toaster />
           </MainContentContainer>
         </AppContainer>
       </UserContext.Provider>

@@ -1,17 +1,32 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import useLogin from "../hooks/useLogin";
 import { UserFormData } from "../utils/types";
 import { useNavigate } from "react-router-dom";
 import { Constants } from "../utils/constants";
 import Card from "./Card";
+import QueryClientConfig from "../config/QueryClientConfig";
+import toast from "react-hot-toast";
+import { ReactComponent as ShowEye } from "../assets/raw/eye-show.svg";
+import { ReactComponent as HideEye } from "../assets/raw/eye-hide.svg";
 
 const LoginForm: FC = () => {
   const navigate = useNavigate();
-  const { mutate: login } = useLogin(() => navigate(Constants.DASHBOARD_PAGE));
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  const { mutate: login } = useLogin(
+    () => {
+      navigate(Constants.DASHBOARD_PAGE);
+      QueryClientConfig.removeQueries(["user"]); // Invalidate the user key from cache so we get the new logged in user
+    },
+    () => {
+      toast.error("Invalid login credentials!", {
+        position: "bottom-center",
+      });
+    }
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Validate Form data
     const target = e.target as typeof e.target & {
       username: { value: string };
       password: { value: string };
@@ -56,11 +71,25 @@ const LoginForm: FC = () => {
                 Forgot password
               </p>
             </label>
-            <input
-              type="password"
-              name="password"
-              className="mt-1 p-1 border-2 border-slate-500 focus:outline-none focus:border-theme-cta rounded-lg w-full"
-            />
+
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                className="relative mt-1 p-1 border-2 border-slate-500 focus:outline-none focus:border-theme-cta rounded-lg w-full"
+              />
+              {showPassword ? (
+                <HideEye
+                  onClick={() => setShowPassword(false)}
+                  className="absolute top-0.5 right-2 w-10 h-10 scale-75 hover:cursor-pointer"
+                />
+              ) : (
+                <ShowEye
+                  onClick={() => setShowPassword(true)}
+                  className="absolute top-0.5 right-2 w-10 h-10 scale-75 hover:cursor-pointer"
+                />
+              )}
+            </div>
           </div>
 
           <input

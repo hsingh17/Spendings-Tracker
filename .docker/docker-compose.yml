@@ -21,7 +21,10 @@ services:
       - "database"
   frontend:
     container_name: React-Frontend
-    build: ../frontend/
+    build: 
+      context: ../frontend/
+      args:
+        MODE: ${MODE}
     volumes:
       - ../frontend/src:/frontend/src
     ports:
