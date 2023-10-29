@@ -5,15 +5,20 @@ services:
     build: ../database/
     volumes:
       - db-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     ports:
       - "3306:3306"
   backend:
     container_name: Spring-Backend
-    build: ../backend/
+    build: 
+      context: ../backend/
     volumes:
       - ../backend:/backend:rw
     environment:
       - MYSQL_HOST=database
+      - ENV=${MODE}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     ports:
       - "8080:8080"
       - "5005:5005"
@@ -21,12 +26,12 @@ services:
       - "database"
   frontend:
     container_name: React-Frontend
-    build: 
+    build:
       context: ../frontend/
-      args:
-        MODE: ${MODE}
     volumes:
       - ../frontend/src:/frontend/src
+    environment:
+      - MODE=${MODE}
     ports:
       - "5173:5173"
     depends_on:

@@ -1,14 +1,13 @@
 package com.spendingstracker.app.util;
 
-import com.spendingstracker.app.config.SecretKeyConfig;
 import com.spendingstracker.app.entity.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
@@ -16,10 +15,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-@Service
+@Component
 public class JwtUtil {
-    @Autowired
-    private SecretKeyConfig secretKeyConfig;
+    private final String secretKey;
+
+    public JwtUtil(
+            @Qualifier("secretKey") String secretKey) {
+        this.secretKey = secretKey;
+    }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -65,6 +68,6 @@ public class JwtUtil {
     }
 
     private Key getSecretKey() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKeyConfig.getJwtSecretKey()));
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
     }
 }

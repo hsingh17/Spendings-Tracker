@@ -52,9 +52,9 @@ public interface SpendingUserAggrRepository extends JpaRepository<SpendingUserAg
             + " 	DATE_FORMAT(SUA.DATE, \"%Y-%m-%d\") DESC  ",
             nativeQuery = true)
     Page<SpendingsListProjection> findSpendingsNumericalGroupByDay(@Param("userId") long userId,
-                                                     @Param("startDate") Date startDate,
-                                                     @Param("endDate") Date endDate,
-                                                     Pageable pageable);
+                                                                   @Param("startDate") Date startDate,
+                                                                   @Param("endDate") Date endDate,
+                                                                   Pageable pageable);
     @Query(value =
               " SELECT "
             + " 	MAX(SUA.SPENDING_USER_AGGR_ID) AS spendingUserAggrId, "
@@ -89,9 +89,9 @@ public interface SpendingUserAggrRepository extends JpaRepository<SpendingUserAg
             + " 	DATE_FORMAT(DATE_SUB(SUA.DATE, INTERVAL WEEKDAY(SUA.DATE) DAY), \"%Y-%m-%d\") DESC  ",
             nativeQuery = true)
     Page<SpendingsListProjection> findSpendingsNumericalGroupByWeek(@Param("userId") long userId,
-                                                               @Param("startDate") Date startDate,
-                                                               @Param("endDate") Date endDate,
-                                                               Pageable pageable);
+                                                                    @Param("startDate") Date startDate,
+                                                                    @Param("endDate") Date endDate,
+                                                                    Pageable pageable);
     @Query(value =
               " SELECT "
             + " 	MAX(SUA.SPENDING_USER_AGGR_ID) AS spendingUserAggrId, "
@@ -126,9 +126,9 @@ public interface SpendingUserAggrRepository extends JpaRepository<SpendingUserAg
             + " 	DATE_FORMAT(SUA.DATE, \"%Y-%m-01\") DESC  ",
             nativeQuery = true)
     Page<SpendingsListProjection> findSpendingsNumericalGroupByMonth(@Param("userId") long userId,
-                                                               @Param("startDate") Date startDate,
-                                                               @Param("endDate") Date endDate,
-                                                               Pageable pageable);
+                                                                     @Param("startDate") Date startDate,
+                                                                     @Param("endDate") Date endDate,
+                                                                     Pageable pageable);
 
     @Query(value =
               " SELECT "
@@ -201,7 +201,7 @@ public interface SpendingUserAggrRepository extends JpaRepository<SpendingUserAg
             + " 	SUM(S.AMOUNT) DESC  ",
             nativeQuery = true)
     Page<SpendingsListProjection> findSpendingsCategorical(@Param("userId") long userId,
-                                                         @Param("startDate") Date startDate,
-                                                         @Param("endDate") Date endDate,
-                                                         Pageable pageable);
+                                                           @Param("startDate") Date startDate,
+                                                           @Param("endDate") Date endDate,
+                                                           Pageable pageable);
 }

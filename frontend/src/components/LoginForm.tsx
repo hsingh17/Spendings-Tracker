@@ -79,12 +79,12 @@ const LoginForm: FC = () => {
                 className="relative mt-1 p-1 border-2 border-slate-500 focus:outline-none focus:border-theme-cta rounded-lg w-full"
               />
               {showPassword ? (
-                <HideEye
+                <ShowEye
                   onClick={() => setShowPassword(false)}
                   className="absolute top-0.5 right-2 w-10 h-10 scale-75 hover:cursor-pointer"
                 />
               ) : (
-                <ShowEye
+                <HideEye
                   onClick={() => setShowPassword(true)}
                   className="absolute top-0.5 right-2 w-10 h-10 scale-75 hover:cursor-pointer"
                 />

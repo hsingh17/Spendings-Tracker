@@ -1,6 +1,8 @@
 package com.spendingstracker.app.config;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 
@@ -13,10 +15,10 @@ import java.util.stream.Stream;
 
 @Configuration
 public class SecretKeyConfig {
-    @Value("${jwt.secret-key-path}")
-    private Resource jwtSecretKeyResource;
-
-    public String getJwtSecretKey() {
+    @Bean
+    @Qualifier("secretKey")
+    public String getJwtSecretKey(
+            @Value("${jwt.secret-key-path}") Resource jwtSecretKeyResource) {
         try {
              File jwtFile = jwtSecretKeyResource.getFile();
              Path jwtFilePath = jwtFile.toPath();

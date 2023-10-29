@@ -1,6 +1,7 @@
 package com.spendingstracker.app.controller;
 
-import com.spendingstracker.app.constants.Constants;
+import com.spendingstracker.app.constants.GroupBy;
+import com.spendingstracker.app.constants.SpendingType;
 import com.spendingstracker.app.entity.CustomUserDetails;
 import com.spendingstracker.app.entity.Spending;
 import com.spendingstracker.app.projection.SpendingsListProjection;
@@ -8,9 +9,7 @@ import com.spendingstracker.app.response.ApiLinks;
 import com.spendingstracker.app.response.ApiMetadata;
 import com.spendingstracker.app.response.ApiResponse;
 import com.spendingstracker.app.service.SpendingService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -19,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.Min;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -26,8 +26,12 @@ import java.util.Set;
 @RestController
 @RequestMapping("/v1/api")
 public class ApiRestController {
-    @Autowired
-    private SpendingService spendingService;
+    private final SpendingService spendingService;
+
+    public ApiRestController(
+            SpendingService spendingService) {
+        this.spendingService = spendingService;
+    }
 
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<UserDetails>> getMe() {
@@ -43,18 +47,23 @@ public class ApiRestController {
 
     @GetMapping("/spendings")
     public ResponseEntity<ApiResponse<List<SpendingsListProjection>>> getSpendings(
-            @RequestParam(name = "start-date", defaultValue = "1000-01-01") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date startDate,
-            @RequestParam(name = "end-date", defaultValue = "9999-12-31") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date endDate,
-            @RequestParam(name = "group-by", defaultValue = "D") String groupBy,
-            @RequestParam(name = "type", defaultValue = "N") String type,
-            @RequestParam(name = "page", defaultValue = "0") Integer page,
-            @RequestParam(name = "limit", defaultValue = "25") Integer limit,
+            @RequestParam(name = "start-date", defaultValue = "1000-01-01") Date startDate,
+            @RequestParam(name = "end-date", defaultValue = "9999-12-31") Date endDate,
+            @RequestParam(name = "group-by", defaultValue = "D") GroupBy groupBy,
+            @RequestParam(name = "type", defaultValue = "N") SpendingType type,
+            @RequestParam(name = "page", defaultValue = "0") @Min(1) Integer page,
+            @RequestParam(name = "limit", defaultValue = "25") @Min(1) Integer limit,
             HttpServletRequest request)
     throws IllegalArgumentException {
-        validateListQueryParams(groupBy, type, page, limit);
+        Page<SpendingsListProjection> spendingsPage = spendingService
+                .getSpendings(getUserId(), startDate, endDate, page, limit, groupBy, type);
 
-        Page<SpendingsListProjection> spendingsPage = spendingService.getSpendings(getUserId(), startDate, endDate, page, limit, groupBy, type);
-        ApiLinks apiLinks = new ApiLinks.ApiLinksBuilder(request.getRequestURI(), request.getQueryString(), page, spendingsPage.getTotalPages()-1).build();
+        ApiLinks apiLinks = new ApiLinks.ApiLinksBuilder(
+                request.getRequestURI(),
+                request.getQueryString(),
+                page,
+                spendingsPage.getTotalPages()-1)
+                .build();
 
         ApiMetadata apiMetadata = new ApiMetadata.ApiMetadataBuilder()
                 .setCurrentPage(page)
@@ -76,7 +85,7 @@ public class ApiRestController {
 
     @GetMapping("/spendings/{spending-date}")
     public ResponseEntity<ApiResponse<List<Spending>>> getSpendingDetails(
-            @PathVariable("spending-date") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date spendingDate) {
+            @PathVariable("spending-date") Date spendingDate) {
         List<Spending> spendings = spendingService.getSpendingDetails(spendingDate, getUserId());
         ApiResponse<List<Spending>> apiResponse = new ApiResponse.ApiResponseBuilder<List<Spending>>()
                 .setHttpStatus(HttpStatus.OK.value())
@@ -90,7 +99,7 @@ public class ApiRestController {
     @PostMapping("/spendings/{spending-date}")
     public ResponseEntity<ApiResponse> createSpending(
             @RequestBody Set<Spending> spendings,
-            @PathVariable("spending-date") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date spendingDate) {
+            @PathVariable("spending-date") Date spendingDate) {
 
         spendingService.createSpending(spendings, spendingDate, getUserId());
         ApiResponse apiResponse = new ApiResponse.ApiResponseBuilder()
@@ -105,7 +114,7 @@ public class ApiRestController {
     @PutMapping("/spendings/{spending-date}")
     public ResponseEntity<ApiResponse> updateSpending(
             @RequestBody Set<Spending> spendings,
-            @PathVariable("spending-date") @DateTimeFormat(pattern = Constants.DATE_FORMAT) Date spendingDate) {
+            @PathVariable("spending-date") Date spendingDate) {
 
         spendingService.updateSpending(spendings, spendingDate, getUserId());
         ApiResponse<List<Spending>> apiResponse = new ApiResponse.ApiResponseBuilder<List<Spending>>()
@@ -134,24 +143,5 @@ public class ApiRestController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
         return userDetails.getUserId();
-    }
-
-    private void validateListQueryParams(String groupBy, String type, int page, int limit) {
-        if (!Constants.GROUP_BY.contains(groupBy)) {
-            throw new IllegalArgumentException(groupBy + " is not a valid option! Must be on of: " + Constants.GROUP_BY);
-        }
-
-        if (!Constants.REQUEST_TYPES.contains(type)) {
-            throw new IllegalArgumentException(type + " is not a valid option! Must be on of: " + Constants.REQUEST_TYPES);
-        }
-
-        if (page < 0) {
-            throw new IllegalArgumentException("Page number must be non-negative!");
-        }
-
-        if (limit <= 0) {
-            throw new IllegalArgumentException("Limit must be greater than zero!");
-        }
-
     }
 }

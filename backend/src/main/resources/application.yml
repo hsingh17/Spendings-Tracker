@@ -1,0 +1,34 @@
+--- # Applies to all profiles/envs
+spring:
+  mvc:
+    format:
+      date: yyyy-MM-dd
+  jackson:
+    date-format: yyyy-MM-dd
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    generate-ddl: false
+--- # DEV Profile
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/APP
+    username: root
+    password: ${MYSQL_ROOT_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+  devtools:
+    remote:
+      secret: mysecret
+    restart:
+      poll-interval: 2s
+      quiet-period: 1s
+      enabled: true
+jwt:
+  secret-key-path: classpath:/keys/secret-key

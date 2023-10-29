@@ -4,7 +4,6 @@ import com.spendingstracker.app.entity.CustomUserDetails;
 import com.spendingstracker.app.entity.LoginRequestBody;
 import com.spendingstracker.app.response.ApiResponse;
 import com.spendingstracker.app.util.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -23,11 +22,16 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @RequestMapping("/v1/auth")
 public class AuthController {
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
+
+    public AuthController(
+            AuthenticationManager authenticationManager,
+            JwtUtil jwtUtil) {
+        this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse> postLogin(@RequestBody LoginRequestBody loginRequestBody, HttpServletResponse response) throws AuthenticationException {

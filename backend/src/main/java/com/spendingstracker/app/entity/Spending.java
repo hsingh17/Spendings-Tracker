@@ -69,4 +69,13 @@ public class Spending {
     public void setDelete(boolean delete) {
         this.delete = delete;
     }
+
+    public void addAmount(BigDecimal amount) {
+        this.amount = this.amount.add(amount);
+    }
+
+    public static Spending merge(Spending l, Spending r) {
+        l.addAmount(r.getAmount());
+        return l;
+    }
 }
