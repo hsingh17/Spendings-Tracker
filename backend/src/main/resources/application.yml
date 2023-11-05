@@ -11,7 +11,7 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     generate-ddl: false
---- # DEV Profile
+--- # Local Profile
 spring:
   config:
     activate:
@@ -32,3 +32,5 @@ spring:
       enabled: true
 jwt:
   secret-key-path: classpath:/keys/secret-key
+cors:
+  allowed-origins: http://localhost:5173, http://127.0.0.1:5173

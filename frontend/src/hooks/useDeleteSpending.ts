@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 async function deleteSpending(spendingId: number) {
   return await fetchRequestWrapper(
-    `${Constants.BASE_API_URL + Constants.SPENDINGS_API_ROUTE}/${spendingId}`,
+    `${Constants.SPENDINGS_API_ROUTE}/${spendingId}`,
     Constants.DELETE
   );
 }

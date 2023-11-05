@@ -3,8 +3,11 @@ package com.spendingstracker.app.config;
 import com.spendingstracker.app.filter.CustomAuthEntryPoint;
 import com.spendingstracker.app.filter.JwtFilter;
 import com.spendingstracker.app.service.UserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -44,7 +47,7 @@ public class SecurityConfig {
         httpSecurity.csrf().disable(); // Disable CSRF since we will use JWT to validate requests
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // Stateless policy since JWT is stateless
         httpSecurity.authorizeRequests()
-                .antMatchers("/v1/auth/login/").permitAll() // Anyone can go to login route
+                .antMatchers("/v1/auth/login").permitAll() // Anyone can go to login route
                 .anyRequest().authenticated(); // All other routes require user to be authenticated
         httpSecurity.authenticationProvider(authenticationProvider()); // Set the DaoAuthenticationProvider
         httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
@@ -71,12 +74,19 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    public CorsConfigurationSource corsConfigurationSource(
+            @Value("${cors.allowed-origins}") List<String> allowedOrigins) {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://127.0.0.1:5173")); // TODO: Make this dynamic
-        corsConfiguration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "DELETE", "PUT"));
+        corsConfiguration.setAllowedOrigins(allowedOrigins);
+        corsConfiguration.setAllowedMethods(Arrays.asList(
+                HttpMethod.HEAD.toString(),
+                HttpMethod.GET.toString(),
+                HttpMethod.POST.toString(),
+                HttpMethod.DELETE.toString(),
+                HttpMethod.PUT.toString()
+        ));
         corsConfiguration.setAllowCredentials(true); // Need for cookies
-        corsConfiguration.setAllowedHeaders(List.of("Content-Type"));
+        corsConfiguration.setAllowedHeaders(List.of(HttpHeaders.CONTENT_TYPE));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
         return source;

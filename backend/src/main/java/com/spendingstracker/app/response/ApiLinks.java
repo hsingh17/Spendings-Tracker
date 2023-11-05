@@ -80,7 +80,7 @@ public class ApiLinks {
 
             this.self = currentUri.toString();
             this.first = (curPage > 0) ? new StringBuilder(currentUri).replace(start, end, pageQueryParam + "0").toString() : null;
-            this.prev = (curPage > 0) ? new StringBuilder(currentUri).replace(start, end, pageQueryParam + (curPage -1)).toString() : null;
+            this.prev = (curPage > 0) ? new StringBuilder(currentUri).replace(start, end, pageQueryParam + (curPage - 1)).toString() : null;
             this.next = (curPage < lastPage) ? new StringBuilder(currentUri).replace(start, end, pageQueryParam + (curPage + 1)).toString() : null;
             this.last = (curPage < lastPage) ? new StringBuilder(currentUri).replace(start, end, pageQueryParam + lastPage).toString() : null;
         }

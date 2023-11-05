@@ -4,7 +4,9 @@ import { Spending } from "../utils/types";
 import { Constants } from "../utils/constants";
 
 async function getSpending(spendingDate: string) {
-  return await fetchRequestWrapper<Array<Spending>>(`${Constants.BASE_API_URL + Constants.SPENDINGS_API_ROUTE}/${spendingDate}`, Constants.GET);
+  return await fetchRequestWrapper<Array<Spending>>(
+    `${Constants.SPENDINGS_API_ROUTE}/${spendingDate}`, 
+    Constants.GET);
 }
 
 export default function useSpending(spendingDate: string) {

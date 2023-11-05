@@ -30,7 +30,8 @@ public class SpendingUserAggr {
     @Transient
     private BigDecimal total;
 
-    public SpendingUserAggr() {}
+    public SpendingUserAggr() {
+    }
 
     public SpendingUserAggr(User user, Date date, Set<Spending> spendings) {
         this.user = user;

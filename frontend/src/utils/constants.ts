@@ -35,9 +35,10 @@ export namespace Constants {
 
   export const API_VERSION = "/v1";
   export const BASE_API_URL: string = import.meta.env.VITE_SERVER_BASE_URL;
-  export const AUTH_LOGIN_ROUTE: string = `${API_VERSION}/auth/login`;
-  export const ME_API_ROUTE: string = `${API_VERSION}/api/me`;
-  export const SPENDINGS_API_ROUTE: string = `${API_VERSION}/api/spendings`;
+  export const AUTH_LOGIN_ROUTE: string = `${BASE_API_URL}${API_VERSION}/auth/login`;
+  export const AUTH_LOGOUT_ROUTE: string = `${BASE_API_URL}${API_VERSION}/auth/logout`;
+  export const ME_API_ROUTE: string = `${BASE_API_URL}${API_VERSION}/api/me`;
+  export const SPENDINGS_API_ROUTE: string = `${BASE_API_URL}${API_VERSION}/api/spendings`;
 
   // #######################################################################################
   // #######################################################################################

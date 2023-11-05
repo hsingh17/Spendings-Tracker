@@ -19,7 +19,10 @@ public class CustomAuthEntryPoint implements AuthenticationEntryPoint {
             .build();
 
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+    public void commence(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            AuthenticationException authException) throws IOException, ServletException {
         response.setStatus(AUTH_ERR_RESPONSE.getHttpStatus());
         response.getOutputStream().println(new Gson().toJson(AUTH_ERR_RESPONSE));
     }

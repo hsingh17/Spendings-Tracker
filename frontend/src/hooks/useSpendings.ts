@@ -4,7 +4,7 @@ import fetchRequestWrapper from "../utils/fetch-utils";
 import { Nullable } from "../utils/types";
 
 async function getSpendings<T>(searchParams: URLSearchParams) {
-  let apiUrl: Nullable<string> = `${Constants.BASE_API_URL + Constants.SPENDINGS_API_ROUTE}?${searchParams.toString()}`;
+  let apiUrl: Nullable<string> = `${Constants.SPENDINGS_API_ROUTE}?${searchParams.toString()}`;
   return await fetchRequestWrapper<Array<T>>(apiUrl, Constants.GET);
 }
 

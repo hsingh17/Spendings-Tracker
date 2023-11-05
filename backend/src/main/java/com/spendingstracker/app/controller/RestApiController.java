@@ -9,6 +9,7 @@ import com.spendingstracker.app.response.ApiLinks;
 import com.spendingstracker.app.response.ApiMetadata;
 import com.spendingstracker.app.response.ApiResponse;
 import com.spendingstracker.app.service.SpendingService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,16 +26,19 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/v1/api")
-public class ApiRestController {
+@Slf4j
+public class RestApiController {
     private final SpendingService spendingService;
 
-    public ApiRestController(
+    public RestApiController(
             SpendingService spendingService) {
         this.spendingService = spendingService;
     }
 
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<UserDetails>> getMe() {
+        log.info("GET /me");
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
         ApiResponse<UserDetails> apiResponse = new ApiResponse.ApiResponseBuilder<UserDetails>()
@@ -54,7 +58,9 @@ public class ApiRestController {
             @RequestParam(name = "page", defaultValue = "0") @Min(1) Integer page,
             @RequestParam(name = "limit", defaultValue = "25") @Min(1) Integer limit,
             HttpServletRequest request)
-    throws IllegalArgumentException {
+            throws IllegalArgumentException {
+        log.info("GET /spendings");
+
         Page<SpendingsListProjection> spendingsPage = spendingService
                 .getSpendings(getUserId(), startDate, endDate, page, limit, groupBy, type);
 
@@ -62,7 +68,7 @@ public class ApiRestController {
                 request.getRequestURI(),
                 request.getQueryString(),
                 page,
-                spendingsPage.getTotalPages()-1)
+                spendingsPage.getTotalPages() - 1)
                 .build();
 
         ApiMetadata apiMetadata = new ApiMetadata.ApiMetadataBuilder()
@@ -86,6 +92,8 @@ public class ApiRestController {
     @GetMapping("/spendings/{spending-date}")
     public ResponseEntity<ApiResponse<List<Spending>>> getSpendingDetails(
             @PathVariable("spending-date") Date spendingDate) {
+        log.info("GET /spendings/" + spendingDate);
+
         List<Spending> spendings = spendingService.getSpendingDetails(spendingDate, getUserId());
         ApiResponse<List<Spending>> apiResponse = new ApiResponse.ApiResponseBuilder<List<Spending>>()
                 .setHttpStatus(HttpStatus.OK.value())
@@ -100,6 +108,7 @@ public class ApiRestController {
     public ResponseEntity<ApiResponse> createSpending(
             @RequestBody Set<Spending> spendings,
             @PathVariable("spending-date") Date spendingDate) {
+        log.info("POST /spendings/" + spendingDate);
 
         spendingService.createSpending(spendings, spendingDate, getUserId());
         ApiResponse apiResponse = new ApiResponse.ApiResponseBuilder()
@@ -115,6 +124,7 @@ public class ApiRestController {
     public ResponseEntity<ApiResponse> updateSpending(
             @RequestBody Set<Spending> spendings,
             @PathVariable("spending-date") Date spendingDate) {
+        log.info("PUT /spendings/" + spendingDate);
 
         spendingService.updateSpending(spendings, spendingDate, getUserId());
         ApiResponse<List<Spending>> apiResponse = new ApiResponse.ApiResponseBuilder<List<Spending>>()
@@ -129,6 +139,8 @@ public class ApiRestController {
     @DeleteMapping("/spendings/{spending-user-aggr-id}")
     public ResponseEntity<ApiResponse> deleteSpending(
             @PathVariable("spending-user-aggr-id") long spendingUserAggrId) {
+        log.info("DELETE /spendings/" + spendingUserAggrId);
+
         spendingService.deleteSpending(spendingUserAggrId);
         ApiResponse<List<Spending>> apiResponse = new ApiResponse.ApiResponseBuilder<List<Spending>>()
                 .setHttpStatus(HttpStatus.OK.value())

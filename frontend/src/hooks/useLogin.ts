@@ -5,7 +5,10 @@ import { User, UserFormData } from "../utils/types";
 
 
 async function postLogin(formData: UserFormData) {
-  return await fetchRequestWrapper<User>(Constants.BASE_API_URL + Constants.AUTH_LOGIN_ROUTE + "/", Constants.POST, JSON.stringify(formData));
+  return await fetchRequestWrapper<User>(
+    Constants.AUTH_LOGIN_ROUTE, 
+    Constants.POST,
+    JSON.stringify(formData));
 }
 
 export default function useLogin(onSuccess: () => void, onError: () => void) {

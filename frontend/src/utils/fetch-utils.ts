@@ -20,7 +20,7 @@ async function makeRequest<T>(apiUrl: string, method: string, body: string): Pro
     credentials: "include"
   };
 
-  if (method !== Constants.GET) { // This request requires body
+  if (method !== Constants.GET && body) { // This request may require a body
     options.body = body;
     options.headers = {
       "Content-Type": "application/json"

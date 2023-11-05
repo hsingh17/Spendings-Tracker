@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 
 async function postOrPutSpendings(spendings: Array<Spending>, spendingDate: string, isCreate: boolean) {
   return await fetchRequestWrapper(
-    `${Constants.BASE_API_URL + Constants.SPENDINGS_API_ROUTE}/${spendingDate}`,
+    `${Constants.SPENDINGS_API_ROUTE}/${spendingDate}`,
     isCreate ? Constants.POST : Constants.PUT,
     JSON.stringify(spendings)
   );

@@ -6,6 +6,9 @@ import { NavbarAction, NavbarListItem, NavbarState } from "../utils/types";
 import { Constants } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
 import useUser from "../hooks/useUser";
+import useLogout from "../hooks/useLogout";
+import QueryClientConfig from "../config/QueryClientConfig";
+import toast from "react-hot-toast";
 
 const NON_MOBILE_STYLE =
   "z-10 sticky top-0 bg-theme-brand-secondary h-screen w-fit text-theme-neutral p-5";
@@ -15,6 +18,18 @@ const MOBILE_STYLE =
 const Navbar = () => {
   const {data: response} = useUser();
   const navigate = useNavigate();
+  const {mutate: logout} = useLogout(
+    () => {
+      navigate(Constants.LOGIN_PAGE);
+      QueryClientConfig.removeQueries(["user"]); // Invalidate the user key from cache so we don't keep any cached user data
+    },
+    () => {
+      toast.error("An unexpected error occurred while logging out!", {
+        position: "bottom-center",
+      });
+    }
+  );
+  
   const mobile = useDetectMobile();
   const [state, setState] = useState<NavbarState>(
     mobile ? NavbarState.MOBILE_MENU_HIDDEN : NavbarState.NON_MOBILE_EXPANDED
@@ -85,7 +100,7 @@ const Navbar = () => {
           {
             iconPath: "../assets/components/LogoutIcon",
             name: "Logout",
-            onClick: () => alert("Logging out (not really) TODO"),
+            onClick: () => logout(),
           },
         ],
       },

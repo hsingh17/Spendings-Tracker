@@ -1,6 +1,7 @@
 package com.spendingstracker.app.filter;
 
 import com.google.gson.Gson;
+import com.spendingstracker.app.constants.Constants;
 import com.spendingstracker.app.response.ApiResponse;
 import com.spendingstracker.app.util.JwtUtil;
 import org.springframework.http.HttpStatus;
@@ -46,7 +47,7 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         String token = Arrays.stream(cookies)
-                .filter(cookie -> cookie.getName().equals("token"))
+                .filter(cookie -> Constants.TOKEN_KEY.equals(cookie.getName()))
                 .map(Cookie::getValue)
                 .findFirst()
                 .orElse(null);

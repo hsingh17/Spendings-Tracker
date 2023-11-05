@@ -20,10 +20,10 @@ public class SecretKeyConfig {
     public String getJwtSecretKey(
             @Value("${jwt.secret-key-path}") Resource jwtSecretKeyResource) {
         try {
-             File jwtFile = jwtSecretKeyResource.getFile();
-             Path jwtFilePath = jwtFile.toPath();
-             Stream<String> lines = Files.lines(jwtFilePath);
-             return lines.collect(Collectors.joining(""));
+            File jwtFile = jwtSecretKeyResource.getFile();
+            Path jwtFilePath = jwtFile.toPath();
+            Stream<String> lines = Files.lines(jwtFilePath);
+            return lines.collect(Collectors.joining(""));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
