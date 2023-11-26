@@ -2,10 +2,55 @@ import Card from "./Card";
 
 const Carousel = () => {
   return (
-    <div className="overflow-y-scroll outline-red-500 border-dotted border border-green-700">
-      <div className="w-[750px] flex flex-row h-fit">
+    <div className="overflow-y-scroll w-full">
+      <div className="flex flex-row w-[125%] h-fit p-5">
         <Card itemsCenter={false}>
           Date:
+        </Card>
+        <Card itemsCenter={true}>
+          Hello
+        </Card>
+        <Card itemsCenter={true}>
+          Hello
+        </Card>
+        <Card itemsCenter={true}>
+          Hello
+        </Card>
+        <Card itemsCenter={true}>
+          Hello
+        </Card>
+        <Card itemsCenter={true}>
+          Hello
+        </Card><Card itemsCenter={true}>
+          Hello
+        </Card><Card itemsCenter={true}>
+          Hello
+        </Card><Card itemsCenter={true}>
+          Hello
+        </Card><Card itemsCenter={true}>
+          Hello
+        </Card><Card itemsCenter={true}>
+          Hello
+        </Card><Card itemsCenter={true}>
+          Hello
+        </Card><Card itemsCenter={true}>
+          Hello
+        </Card><Card itemsCenter={true}>
+          Hello
+        </Card><Card itemsCenter={true}>
+          Hello
+        </Card>
+        <Card itemsCenter={true}>
+          Hello
+        </Card>
+        <Card itemsCenter={true}>
+          Hello
+        </Card>
+        <Card itemsCenter={true}>
+          Hello
+        </Card>
+        <Card itemsCenter={true}>
+          Hello
         </Card>
         <Card itemsCenter={true}>
           Hello
