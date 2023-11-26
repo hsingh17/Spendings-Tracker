@@ -1,19 +1,19 @@
 import { Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import UserContext from "./contexts/UserContext";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import ViewSpendings from "./pages/ViewSpendings";
+import Home from "./pages/home/Home";
+import Login from "./pages/login/Login";
+import Dashboard from "./pages/dashboard/Dashboard";
+import ViewSpendings from "./pages/view/ViewSpendings";
 import { User } from "./utils/types";
-import SaveSpendings from "./pages/SaveSpendings";
+import SaveSpendings from "./pages/save/SaveSpendings";
 import { Constants } from "./utils/constants";
-import NotFound from "./pages/NotFound";
+import NotFound from "./pages/error/NotFound";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClientProvider } from "@tanstack/react-query";
-import MainContentContainer from "./components/MainContentContainer";
-import Navbar from "./components/Navbar";
-import AppContainer from "./components/AppContainer";
+import MainContentContainer from "./common/MainContentContainer";
+import Navbar from "./pages/navbar/Navbar";
+import AppContainer from "./common/AppContainer";
 import QueryClientConfig from "./config/QueryClientConfig";
 import { Toaster } from "react-hot-toast";
 
