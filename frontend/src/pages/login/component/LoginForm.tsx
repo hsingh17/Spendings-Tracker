@@ -42,11 +42,7 @@ const LoginForm: FC = () => {
 
   return (
     <div className="flex flex-col lg:justify-center lg:items-center lg:w-full lg:h-screen">
-      <Card
-        itemsCenter={true}
-        widthStyle={"w-full lg:w-2/6"}
-        heightStyle={"h-1/2"}
-      >
+      <Card customStyles="items-center w-full lg:w-2/6 h-1/2 p-7">
         <h1 className="mr-auto text-3xl font-bold">Log in</h1>
         <form
           className="w-full"

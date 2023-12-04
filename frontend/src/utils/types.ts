@@ -8,9 +8,7 @@ export type RenderChildrenProps = {
 };
 
 export type CardProps = RenderChildrenProps & {
-  itemsCenter: boolean;
-  widthStyle?: string;
-  heightStyle?: string;
+  customStyles?: string;
   innerRef?: React.MutableRefObject<HTMLDivElement | undefined>;
 };
 

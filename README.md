@@ -16,4 +16,3 @@ This repository holds the code for my spendings tracker app built with Java and 
 - add audit fields to db model (created on, created by, last modified on, last modified by)
 
 ## Known issues
-- delete modal looks wonky if not full sized screen

@@ -118,7 +118,6 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
       delete: spending.delete,
     }));
 
-    
     mutate(mappedSpendings);
   };
 
@@ -140,12 +139,12 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
       categoryError: null,
       amountError: null,
     });
-    
-    if (cardRef.current) { 
+
+    if (cardRef.current) {
       // Auto scroll user down to bottom of the card
       window.scrollTo({
         top: cardRef.current.scrollHeight + 100, // + 100 for a little padding
-        behavior: "smooth"
+        behavior: "smooth",
       });
     }
 
@@ -172,7 +171,7 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
 
   return (
     <div className="flex flex-col items-center mt-7">
-      <Card itemsCenter={true} innerRef={cardRef}>
+      <Card customStyles="items-center p-7" innerRef={cardRef}>
         <FormInputColumns
           spendings={spendings}
           parentHandleChange={handleChange}

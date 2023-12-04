@@ -11,7 +11,7 @@ import QueryClientConfig from "../../config/QueryClientConfig";
 import toast from "react-hot-toast";
 
 const NON_MOBILE_STYLE =
-  "z-10 sticky top-0 bg-theme-brand-secondary h-screen w-fit text-theme-neutral p-5";
+  "z-10 sticky top-0 bg-theme-brand-secondary h-screen w-fit text-theme-neutral p-5 whitespace-nowrap";
 const MOBILE_STYLE =
   "z-10 sticky top-0 left-0 bg-theme-brand-secondary h-20 w-screen text-theme-neutral";
 

@@ -4,8 +4,6 @@ import NavbarSublist from "./NavbarSublist";
 import { FC } from "react";
 
 const NavbarList: FC<NavbarListProps> = ({ state, items, transitionState }) => {
-  const navigate = useNavigate();
-
   if (state === NavbarState.MOBILE_MENU_HIDDEN) {
     return <></>;
   }

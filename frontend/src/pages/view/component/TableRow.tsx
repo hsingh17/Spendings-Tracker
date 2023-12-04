@@ -6,11 +6,12 @@ import { Constants } from "../../../utils/constants";
 import DateUtils from "../../../utils/date-utils";
 import { TableRowProps } from "../../../utils/types";
 import ShimmerLoadingBox from "../../../common/ShimmerLoadingBox";
+import MoneyUtils from "../../../utils/money-utils";
 
 const TableRow: FC<TableRowProps> = ({
   isLoading,
   spending,
-  parentSetSpendingId
+  parentSetSpendingId,
 }) => {
   const navigate = useNavigate();
 
@@ -20,9 +21,15 @@ const TableRow: FC<TableRowProps> = ({
   if (isLoading) {
     return (
       <tr className="border-gray-300 leading-[3rem]">
-        <td><ShimmerLoadingBox /></td>
-        <td><ShimmerLoadingBox /></td>
-        <td><ShimmerLoadingBox /></td>
+        <td>
+          <ShimmerLoadingBox />
+        </td>
+        <td>
+          <ShimmerLoadingBox />
+        </td>
+        <td>
+          <ShimmerLoadingBox />
+        </td>
       </tr>
     );
   }
@@ -34,7 +41,9 @@ const TableRow: FC<TableRowProps> = ({
       </td>
 
       <td className="text-center">
-        <p className="text-right block">{spending.total}</p>
+        <p className="text-right block">
+          {MoneyUtils.formatMoneyUsd(spending.total)}
+        </p>
       </td>
 
       <td>
