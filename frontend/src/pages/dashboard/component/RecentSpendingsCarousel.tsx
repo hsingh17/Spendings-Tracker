@@ -1,18 +1,16 @@
+import { useNavigate } from "react-router-dom";
+import { ReactComponent as RightArrow } from "../../../assets/raw/right-arrow.svg";
+import Carousel from "../../../common/Carousel";
 import useSpendings from "../../../hooks/useSpendings";
+import { Constants } from "../../../utils/constants";
 import { SpendingListRow } from "../../../utils/types";
 import NoSpendingActivity from "./NoSpendingActivity";
-import Carousel from "../../../common/Carousel";
-import Card from "../../../common/Card";
-import DateUtils from "../../../utils/date-utils";
-import MoneyUtils from "../../../utils/money-utils";
-import { useNavigate } from "react-router-dom";
-import { Constants } from "../../../utils/constants";
-import { ReactComponent as RightArrow } from "../../../assets/raw/right-arrow.svg";
+import RecentSpendingsCard from "./RecentSpendingsCard";
+const SEARCH_PARAMS = new URLSearchParams([["limit", "7"]]);
 
 const RecentSpendingsCarousel = () => {
   const navigate = useNavigate();
-  const searchParams = new URLSearchParams([["limit", "7"]]);
-  let { data: response } = useSpendings<SpendingListRow>(searchParams);
+  let { data: response } = useSpendings<SpendingListRow>(SEARCH_PARAMS);
 
   if (!response || !response.ok) {
     return (
@@ -29,34 +27,14 @@ const RecentSpendingsCarousel = () => {
   return (
     <Carousel>
       {response.data.map((spendingListRow: SpendingListRow) => {
-        return (
-          <div
-            className="hover: cursor-pointer"
-            onClick={() =>
-              navigate(
-                `${Constants.SAVE_SPENDINGS_PAGE}/${spendingListRow.date}`
-              )
-            }
-          >
-            <Card customStyles="mr-5 w-60 h-fit p-3">
-              <p className="font-medium text-theme-brand mb-auto">
-                {DateUtils.formatDateUS(spendingListRow.date)}
-              </p>
-              <p className="font-semibold text-theme-cta text-xl mb-auto break-words">
-                {MoneyUtils.formatMoneyUsd(spendingListRow.total)}
-              </p>
-            </Card>
-          </div>
-        );
+        return <RecentSpendingsCard key={spendingListRow.date} spendingListRow={spendingListRow} />;
       })}
 
       <div
-        className="w-40 hover:cursor-pointer flex flex-row items-center"
+        className="w-40 flex flex-row items-center text-center hover:cursor-pointer hover:opacity-50"
         onClick={() => navigate(`${Constants.VIEW_SPENDINGS_PAGE}`)}
       >
-        <p className="font-semibold text-theme-cta text-2xl">
-          View all
-        </p>
+        <p className="font-semibold text-theme-cta text-2xl">View all</p>
         <RightArrow className="w-10 h-10" stroke="#00ADB5" />
       </div>
     </Carousel>

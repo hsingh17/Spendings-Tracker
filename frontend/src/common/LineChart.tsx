@@ -1,62 +1,92 @@
 import {
-	extent,
+  extent,
+  format,
   line,
-  max,
-  min,
   scaleLinear,
   scaleTime,
-  select,
-  Selection,
+  timeFormat,
   timeParse,
 } from "d3";
-import { LineChartProps, Nullable, SpendingListRow } from "../utils/types";
-import { FC, useEffect, useRef, useState } from "react";
+import { FC } from "react";
 import { Constants } from "../utils/constants";
+import { SpendingListRow } from "../utils/types";
+import useDetectMobile from "../hooks/useDetectMobile";
 
-const LineChart: FC<LineChartProps> = ({ data, height, width, groupBy }) => {
-  const svgRef = useRef(null);
-  const [selection, setSelection] = useState<Nullable<Selection<null, unknown, null, undefined>>>(null);
+type LineChartProps = {
+  width: number;
+  height: number;
+  data: SpendingListRow[];
+};
 
-  useEffect(() => {
-    if (!selection) {
-      setSelection(select(svgRef.current));
-      return;
-    }
+function calculateMargins(height: number, width: number) {
+  return {
+    left: width / 20,
+    right: width / 20,
+    top: height / 5,
+    bottom: height / 20,
+  };
+}
 
-    if (!data) {
-      return;
-    }
+const LineChart: FC<LineChartProps> = ({ data, height, width }) => {
+  const parser = timeParse(Constants.ISO_FORMAT);
+  const margins = calculateMargins(height, width);
+  const isMobile = useDetectMobile();
 
-		// Date parser
-		const parser = timeParse(Constants.ISO_FORMAT);
+  const xScale = scaleTime()
+    .domain(
+      extent(data, (d: SpendingListRow) => parser(d.date)) as [Date, Date]
+    )
+    .range([margins.left, width - margins.right]);
 
-    // X Scale
-    const xScale = scaleTime()
-      .domain(extent(data, (d: SpendingListRow) => parser(d.date)) as [Date, Date])
-      .range([0, width]);
+  const yScale = scaleLinear()
+    .domain(extent(data, (d) => d.total) as [number, number])
+    .range([height - margins.top, margins.bottom]);
 
-    // Y scale
-    const yScale = scaleLinear()
-      .domain(extent(data, (d) => d.total) as [number, number])
-      .range([0, height]);
+  const lineFn = line<SpendingListRow>()
+    .x((d) => xScale(parser(d.date)!))
+    .y((d) => yScale(d.total));
 
-    selection
-      .selectAll("path")
-      .data([data]) // [data] not data since we want to bind a path element to ALL the data not each individual data point
-      .join(
-        enter => enter.append("path"),
-        update => update.attr("class", "updated"),
-        exit => exit.remove()
-      )
-      .attr("fill", "none")
-      .attr("stroke", "black")
-      .attr("d", line<SpendingListRow>()
-          .x((d) => xScale(parser(d.date)!))
-          .y((d) => yScale(d.total))
-      );
-  }, [selection, data]);
+  const d = lineFn(data);
 
-  return <svg ref={svgRef} height={height} width={width}></svg>;
+  const xAxisFormatter = timeFormat(isMobile ? "%m/%y" : "%b %Y");
+
+  const xTicks = isMobile ? xScale.ticks(xScale.ticks().length / 2) : xScale.ticks();
+  
+  return (
+    <svg height={height} width={width}>
+      <g>
+        <path d={d ? d : ""} fill="none" stroke="#00ADB5" strokeWidth={2} />
+
+        {data.map((spendingListRow) => {
+          return (
+            <circle
+              key={spendingListRow.date}
+              fill="#00ADB5"
+              stroke="#EEEEEE"
+              strokeWidth={2}
+              cx={xScale(parser(spendingListRow.date)!)}
+              cy={yScale(spendingListRow.total)}
+              r={4}
+            />
+          );
+        })}
+
+        {xTicks.map((date) => {
+          return (
+            <text
+              key={date.toDateString()}
+              className="font-semibold"
+              fill="gray"
+              x={xScale(date)}
+              y={height - margins.bottom}
+            >
+              {xAxisFormatter(date)}
+            </text>
+          );
+        })}
+      </g>
+    </svg>
+  );
 };
 
 export default LineChart;

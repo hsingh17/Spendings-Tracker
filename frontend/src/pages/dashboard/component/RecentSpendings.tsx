@@ -1,4 +1,3 @@
-import Card from "../../../common/Card";
 import RecentSpendingsCarousel from "./RecentSpendingsCarousel";
 
 const RecentSpendings = () => {

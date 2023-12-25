@@ -6,7 +6,7 @@ This repository holds the code for my spendings tracker app built with Java and 
     - add logging to backend
     - add logout functionality
 - metrics page
-- dashboard
+- dashboard -> graphs
 - home page
 - breadcrumbs (?)
 - add ability to create an account w/ code that sends to person's email

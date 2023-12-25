@@ -1,8 +1,8 @@
-import { Routes, Route } from "react-router-dom";
 import { useState } from "react";
+import { Routes, Route } from "react-router-dom";
 import UserContext from "./contexts/UserContext";
 import Home from "./pages/home/Home";
-import Login from "./pages/login/Login";
+import Login from "./pages/login/Login";  
 import Dashboard from "./pages/dashboard/Dashboard";
 import ViewSpendings from "./pages/view/ViewSpendings";
 import { User } from "./utils/types";
@@ -13,13 +13,14 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClientProvider } from "@tanstack/react-query";
 import MainContentContainer from "./common/MainContentContainer";
 import Navbar from "./pages/navbar/Navbar";
+import Metrics from "./pages/metrics-page/Metrics";
 import AppContainer from "./common/AppContainer";
 import QueryClientConfig from "./config/QueryClientConfig";
 import { Toaster } from "react-hot-toast";
 
 const App = () => {
   const [user, setUser] = useState<User | null>(null);
-
+  
   return (
     <QueryClientProvider client={QueryClientConfig}>
       <UserContext.Provider value={{ user, setUser }}>
@@ -38,6 +39,7 @@ const App = () => {
                 path={`${Constants.SAVE_SPENDINGS_PAGE}/:date`}
                 element={<SaveSpendings />}
               />
+              <Route path={`${Constants.METRICS_PAGE}`} element={<Metrics />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <Toaster />
