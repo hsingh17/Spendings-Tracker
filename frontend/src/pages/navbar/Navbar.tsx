@@ -11,14 +11,30 @@ import QueryClientConfig from "../../config/QueryClientConfig";
 import toast from "react-hot-toast";
 
 const NON_MOBILE_STYLE =
-  "z-10 sticky top-0 bg-theme-brand-secondary h-screen w-fit text-theme-neutral p-5 whitespace-nowrap";
+  "z-10 sticky top-0 bg-theme-brand-secondary h-screen w-fit text-theme-neutral p-5 whitespace-nowrap overflow-y-scroll overflow-x-hidden";
 const MOBILE_STYLE =
   "z-10 sticky top-0 left-0 bg-theme-brand-secondary h-20 w-screen text-theme-neutral";
 
+function transitionState(action: NavbarAction): NavbarState {
+  switch (action) {
+    case NavbarAction.MOBILE_SHOW_MENU:
+      return NavbarState.MOBILE_MENU_SHOWN;
+    case NavbarAction.MOBILE_NAVIGATE_TO_PAGE:
+    case NavbarAction.RESIZE_TO_MOBILE:
+    case NavbarAction.MOBILE_HIDE_MENU:
+      return NavbarState.MOBILE_MENU_HIDDEN;
+    case NavbarAction.NON_MOBILE_COLLAPSE:
+      return NavbarState.NON_MOBILE_COLLAPSED;
+    case NavbarAction.NON_MOBILE_EXPAND:
+    case NavbarAction.RESIZE_TO_NON_MOBILE:
+      return NavbarState.NON_MOBILE_EXPANDED;
+  }
+}
+
 const Navbar = () => {
-  const {data: response} = useUser();
+  const { data: response } = useUser();
   const navigate = useNavigate();
-  const {mutate: logout} = useLogout(
+  const { mutate: logout } = useLogout(
     () => {
       navigate(Constants.LOGIN_PAGE);
       QueryClientConfig.removeQueries(["user"]); // Invalidate the user key from cache so we don't keep any cached user data
@@ -29,37 +45,21 @@ const Navbar = () => {
       });
     }
   );
-  
+
   const mobile = useDetectMobile();
   const [state, setState] = useState<NavbarState>(
     mobile ? NavbarState.MOBILE_MENU_HIDDEN : NavbarState.NON_MOBILE_EXPANDED
   );
 
-  const transitionState = (action: NavbarAction) => {
-    switch (action) {
-      case NavbarAction.MOBILE_SHOW_MENU:
-        setState(NavbarState.MOBILE_MENU_SHOWN);
-        return;
-      case NavbarAction.MOBILE_NAVIGATE_TO_PAGE:
-      case NavbarAction.RESIZE_TO_MOBILE:
-      case NavbarAction.MOBILE_HIDE_MENU:
-        setState(NavbarState.MOBILE_MENU_HIDDEN);
-        return;
-      case NavbarAction.NON_MOBILE_COLLAPSE:
-        setState(NavbarState.NON_MOBILE_COLLAPSED);
-        return;
-      case NavbarAction.NON_MOBILE_EXPAND:
-      case NavbarAction.RESIZE_TO_NON_MOBILE:
-        setState(NavbarState.NON_MOBILE_EXPANDED);
-        return;
-    }
+  const transitionStateWrapper = (action: NavbarAction) => {
+    setState(transitionState(action));
   };
 
-  const getNavList = () : Array<NavbarListItem> => {
+  const getNavList = (): Array<NavbarListItem> => {
     const navigateToPage = (page: string) => {
       navigate(page);
       if (mobile) {
-        transitionState(NavbarAction.MOBILE_NAVIGATE_TO_PAGE);
+        transitionStateWrapper(NavbarAction.MOBILE_NAVIGATE_TO_PAGE);
       }
     };
 
@@ -105,11 +105,11 @@ const Navbar = () => {
         ],
       },
     ];
-  }
+  };
 
   useEffect(
     () =>
-      transitionState(
+      transitionStateWrapper(
         mobile
           ? NavbarAction.RESIZE_TO_MOBILE
           : NavbarAction.RESIZE_TO_NON_MOBILE
@@ -123,8 +123,12 @@ const Navbar = () => {
 
   return (
     <div className={mobile ? MOBILE_STYLE : NON_MOBILE_STYLE}>
-      <NavbarHeader state={state} transitionState={transitionState} />
-      <NavbarList state={state} items={getNavList()} transitionState={transitionState} />
+      <NavbarHeader state={state} transitionState={transitionStateWrapper} />
+      <NavbarList
+        state={state}
+        items={getNavList()}
+        transitionState={transitionStateWrapper}
+      />
     </div>
   );
 };

@@ -1,5 +1,5 @@
-import useSpendings from "../hooks/useSpendings";
-import { CategoricalSpendings } from "../utils/types";
+import useSpendings from "../../hooks/useSpendings";
+import { CategoricalSpendings } from "../../utils/types";
 import BarChart from "./BarChart";
 
 const ThumbnailBarChart = () => {

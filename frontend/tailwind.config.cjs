@@ -14,6 +14,9 @@ module.exports = {
         slideout: {
           "0%": { transform: "translate(-50%, 0)" },
           "100%": { transform: "translate(-50%, -1000%)" }
+        },
+        linechart: {
+          "100%": { "stroke-dashoffset": "0"}
         }
       },
       colors: {

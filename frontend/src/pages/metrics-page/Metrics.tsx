@@ -1,8 +1,8 @@
 import { useState } from "react";
+import GraphsContainer from "../../common/graph/GraphsContainer";
 import useSpendings from "../../hooks/useSpendings";
 import { Constants } from "../../utils/constants";
 import { SpendingListRow } from "../../utils/types";
-import GraphsContainer from "../../common/GraphsContainer";
 
 export const Metrics = () => {
   const [graphType, setGraphType] = useState<number>(
@@ -21,7 +21,7 @@ export const Metrics = () => {
   }
 
   return (
-    <div className="p-2 w-full h-full flex flex-col">
+    <div className="p-2 w-full h-fit flex flex-col">
       <h3 className="text-slate-700 font-semibold">Metrics</h3>
       <h1>Filters</h1>
       <GraphsContainer

@@ -1,5 +1,5 @@
-import useSpendings from "../hooks/useSpendings";
-import { SpendingListRow } from "../utils/types";
+import useSpendings from "../../hooks/useSpendings";
+import { SpendingListRow } from "../../utils/types";
 import LineChart from "./LineChart";
 
 const ThumbnailLineChart = () => {

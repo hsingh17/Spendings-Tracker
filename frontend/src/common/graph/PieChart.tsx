@@ -1,6 +1,6 @@
 import { PieArcDatum, Selection, arc, interpolateCool, pie, scaleSequential, select } from "d3";
 import { FC, useEffect, useRef, useState } from "react";
-import { CategoricalSpendings, Nullable, PieChartProps } from "../utils/types";
+import { CategoricalSpendings, Nullable, PieChartProps } from "../../utils/types";
 
 const PieChart: FC<PieChartProps> = ({ data, height, width, innerRadius, outerRadius }) => {
   const svgRef = useRef(null);

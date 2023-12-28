@@ -1,5 +1,5 @@
 import useUser from "../../hooks/useUser";
-import DashboardChartsContainer from "../../common/DashboardChartsContainer";
+import DashboardChartsContainer from "./component/DashboardChartsContainer";
 import RecentSpendings from "./component/RecentSpendings";
 
 const Dashboard = () => {

@@ -1,10 +1,10 @@
 import { useNavigate, useParams } from "react-router-dom";
-import SaveSpendingsForm from "./component/SaveSpendingsForm";
-import SaveSpendingsTitle from "./component/SaveSpendingsTitle";
 import useSpending from "../../hooks/useSpending";
 import { Constants } from "../../utils/constants";
 import DateUtils from "../../utils/date-utils";
 import { SaveSpendingProps } from "../../utils/types";
+import SaveSpendingsForm from "./component/SaveSpendingsForm";
+import SaveSpendingsTitle from "./component/SaveSpendingsTitle";
 
 const SaveSpendings = () => {
   const navigate = useNavigate();
@@ -12,7 +12,9 @@ const SaveSpendings = () => {
   const { data: response } = useSpending(params.date as string);
 
   const handleDateChange = (spendingDate: string) =>
-    navigate(`${Constants.SAVE_SPENDINGS_PAGE}/${spendingDate}`, {replace: true});
+    navigate(`${Constants.SAVE_SPENDINGS_PAGE}/${spendingDate}`, {
+      replace: true,
+    });
 
   return (
     <>
