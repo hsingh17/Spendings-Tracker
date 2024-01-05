@@ -27,7 +27,12 @@ const RecentSpendingsCarousel = () => {
   return (
     <Carousel>
       {response.data.map((spendingListRow: SpendingListRow) => {
-        return <RecentSpendingsCard key={spendingListRow.date} spendingListRow={spendingListRow} />;
+        return (
+          <RecentSpendingsCard
+            key={spendingListRow.date}
+            spendingListRow={spendingListRow}
+          />
+        );
       })}
 
       <div

@@ -20,7 +20,7 @@ const RecentSpendingsCard: FC<RecentSpendingsCardProps> = ({
         navigate(`${Constants.SAVE_SPENDINGS_PAGE}/${spendingListRow.date}`)
       }
     >
-      <Card customStyles="mr-5 w-60 h-fit p-3 hover:cursor-pointer hover:opacity-50">
+      <Card customStyles="mr-5 w-48 h-fit p-3 hover:cursor-pointer hover:opacity-50">
         <p className="font-medium text-theme-brand mb-auto">
           {DateUtils.formatDateUS(spendingListRow.date)}
         </p>
