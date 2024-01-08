@@ -1,6 +1,6 @@
 import useSpendings from "../../hooks/useSpendings";
 import { SpendingListRow } from "../../utils/types";
-import LineChart from "./LineChart";
+import LineChart from "./line/LineChart";
 
 const ThumbnailLineChart = () => {
   const searchParams: URLSearchParams = new URLSearchParams([
@@ -9,8 +9,12 @@ const ThumbnailLineChart = () => {
   ]);
   const {data: response} = useSpendings<SpendingListRow>(searchParams);
 
+  if (!response || !response.ok || !response.data) {
+    return <>TODO</>;
+  }
+
   return (
-    <LineChart data={response?.data} width={500} height={500} groupBy={searchParams.get("group-by")!} />
+    <LineChart data={response.data} width={500} height={500} />
   )
 };
 

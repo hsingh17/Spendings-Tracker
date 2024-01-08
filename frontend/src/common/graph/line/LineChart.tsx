@@ -9,9 +9,11 @@ import {
   timeParse,
 } from "d3";
 import React, { FC, useState } from "react";
-import useDetectMobile from "../../hooks/useDetectMobile";
-import { Constants } from "../../utils/constants";
-import { Nullable, SpendingListRow } from "../../utils/types";
+import useDetectMobile from "../../../hooks/useDetectMobile";
+import { Constants } from "../../../utils/constants";
+import { Nullable, SpendingListRow } from "../../../utils/types";
+import DateUtils from "../../../utils/date-utils";
+import MoneyUtils from "../../../utils/money-utils";
 
 const TRACER_X_INITIAL = -10;
 const POINT_RADIUS = 7;
@@ -85,14 +87,16 @@ const Line: FC<LineProps> = ({ d }) => {
 };
 
 type PointProps = {
+  idx: number;
   spendingListRow: SpendingListRow;
-  setTooltipDate: (date: Nullable<string>) => void;
+  setTooltipIdx: (date: Nullable<number>) => void;
   xScale: ScaleTime<number, number, never>;
   yScale: ScaleLinear<number, number, never>;
 };
 
 const Point: FC<PointProps> = ({
-  setTooltipDate,
+  idx,
+  setTooltipIdx,
   spendingListRow,
   xScale,
   yScale,
@@ -102,8 +106,8 @@ const Point: FC<PointProps> = ({
     <circle
       key={spendingListRow.date}
       className="hover:cursor-pointer"
-      onMouseOver={() => setTooltipDate(spendingListRow.date)}
-      onMouseLeave={() => setTooltipDate(null)}
+      onMouseOver={() => setTooltipIdx(idx)}
+      onMouseLeave={() => setTooltipIdx(null)}
       fill="white"
       stroke="#374151"
       strokeWidth={5}
@@ -157,7 +161,7 @@ const LineChart: FC<LineChartProps> = ({ data, height, width }) => {
   const margins = calculateMargins(height, width);
   const isMobile = useDetectMobile();
   const [tracerX, setTracerX] = useState<number>(TRACER_X_INITIAL);
-  const [tooltipDate, setTooltipDate] = useState<Nullable<string>>(null);
+  const [tooltipIdx, setTooltipIdx] = useState<Nullable<number>>(null);
   const [tooltipPosition, setTooltipPosition] =
     useState<Nullable<TooltipPosition>>(null);
 
@@ -173,10 +177,11 @@ const LineChart: FC<LineChartProps> = ({ data, height, width }) => {
     let date: Nullable<string> = null;
     let pos: Nullable<TooltipPosition> = null;
 
-    for (let spendingListRow of data) {
+    let i = 0;
+    for (; i < data.length; i++) {
+      const spendingListRow = data[i];
       const d = Math.floor(xScale(parser(spendingListRow.date)!) - svgPoint.x);
       if (Math.abs(d) <= POINT_RADIUS * 2) {
-        date = spendingListRow.date;
         pos = {
           left: svgPoint.x,
           top: yScale(spendingListRow.total),
@@ -185,7 +190,7 @@ const LineChart: FC<LineChartProps> = ({ data, height, width }) => {
       }
     }
 
-    setTooltipDate(date);
+    setTooltipIdx(i == data.length ? null : i);
     setTooltipPosition(pos);
   };
 
@@ -230,11 +235,12 @@ const LineChart: FC<LineChartProps> = ({ data, height, width }) => {
           <Tracer height={height - margins.top} x={tracerX} />
           <Line d={d} />
 
-          {data.map((spendingListRow) => (
+          {data.map((spendingListRow, idx) => (
             <Point
+              idx={idx}
               key={spendingListRow.date}
               spendingListRow={spendingListRow}
-              setTooltipDate={setTooltipDate}
+              setTooltipIdx={setTooltipIdx}
               xScale={xScale}
               yScale={yScale}
             />
@@ -244,20 +250,25 @@ const LineChart: FC<LineChartProps> = ({ data, height, width }) => {
         </g>
       </svg>
 
-      <div
-        className={"w-fit h-fit bg-red-600 absolute"}
-        style={{
-          display: tooltipPosition ? "block" : "none",
-          top: tooltipPosition?.top,
-          left: tooltipPosition?.left,
-        }}
-      >
-        TEST
-        TEST
-        TEST
-        TEST
-        TEST
-      </div>
+      {tooltipIdx !== null && tooltipIdx !== undefined && (
+        <div
+          className={
+            "absolute w-fit h-fit bg-theme-cta text-white p-2 rounded-xl"
+          }
+          style={{
+            display: tooltipPosition ? "block" : "none",
+            top: tooltipPosition?.top,
+            left: tooltipPosition?.left,
+          }}
+        >
+          <p className="text-sm">
+            {DateUtils.formatDateUS(data[tooltipIdx].date)}
+          </p>
+          <p className="font-bold md:text-lg">
+            {MoneyUtils.formatMoneyUsd(data[tooltipIdx].total)}
+          </p>
+        </div>
+      )}
     </div>
   );
 };

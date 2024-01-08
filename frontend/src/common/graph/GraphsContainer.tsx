@@ -1,7 +1,7 @@
 import { FC, useEffect, useRef, useState } from "react";
 import { Constants } from "../../utils/constants";
 import { CategoricalSpendings, SpendingListRow } from "../../utils/types";
-import LineChart from "./LineChart";
+import LineChart from "./line/LineChart";
 
 type MetricsGraphContainerProps =
   | {

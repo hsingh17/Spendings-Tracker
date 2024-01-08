@@ -8,7 +8,7 @@ import {
   select
 } from "d3";
 import { FC, useEffect, useRef, useState } from "react";
-import { BarChartProps, Nullable } from "../../utils/types";
+import { BarChartProps, Nullable } from "../../../utils/types";
 
 const BarChart: FC<BarChartProps> = ({ data, height, width }) => {
   const svgRef = useRef(null);
