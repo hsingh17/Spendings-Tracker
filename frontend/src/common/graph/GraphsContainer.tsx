@@ -1,19 +1,19 @@
 import { FC, useEffect, useRef, useState } from "react";
 import { Constants } from "../../utils/constants";
-import { CategoricalSpendings, SpendingListRow } from "../../utils/types";
+import { ApiResponse, CategoricalSpendings, SpendingListRow } from "../../utils/types";
 import LineChart from "./line/LineChart";
 
 type MetricsGraphContainerProps =
   | {
       type: Constants.GRAPH_TYPES.LINE;
-      data: SpendingListRow[];
+      response: ApiResponse<SpendingListRow[]>;
     }
   | {
       type: Constants.GRAPH_TYPES.CHART | Constants.GRAPH_TYPES.PIE;
-      data: CategoricalSpendings[];
+      response: ApiResponse<CategoricalSpendings[]>;
     };
 
-const GraphsContainer: FC<MetricsGraphContainerProps> = ({ type, data }) => {
+const GraphsContainer: FC<MetricsGraphContainerProps> = ({ type, response }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState<number>(-1);
   const [width, setWidth] = useState<number>(-1);
@@ -27,10 +27,10 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({ type, data }) => {
     setWidth(ref.current.offsetWidth);
   };
 
-  const switchOnGraphType = () => {
+  const getGraph = () => {
     switch (type) {
       case Constants.GRAPH_TYPES.LINE:
-        return <LineChart data={data} height={height} width={width} />;
+        return <LineChart response={response} height={height} width={width} />;
       default:
         return <h1>No graph found for {type}</h1>;
     }
@@ -50,7 +50,7 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({ type, data }) => {
       className="w-full md:w-3/4 h-72 md:h-96 justify-self-center ml-auto mr-auto bg-gray-700"
       ref={ref}
     >
-      {switchOnGraphType()}
+      {getGraph()}
     </div>
   );
 };

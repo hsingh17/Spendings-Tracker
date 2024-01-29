@@ -8,8 +8,13 @@ export const Metrics = () => {
   const [graphType, setGraphType] = useState<number>(
     Constants.GRAPH_TYPES.LINE
   );
-  const searchParams = new URLSearchParams([["page", "1"]]);
-  const { data: response } = useSpendings<SpendingListRow>(searchParams);
+  const [searchParams, setSearchParams] = useState<URLSearchParams>(
+    new URLSearchParams([])
+  );
+
+  const { data: response, refetch } =
+    useSpendings<SpendingListRow>(searchParams);
+
   // TODO: Error handling
   if (!response || !response.ok) {
     return <h1>Error!</h1>;
@@ -17,17 +22,14 @@ export const Metrics = () => {
 
   if (!response.data) {
     // TODO: Empty state
-    return <h1>Nothing to graph</h1>
+    return <h1>Nothing to graph</h1>;
   }
 
   return (
     <div className="p-2 w-full h-fit flex flex-col">
       <h3 className="text-slate-700 font-semibold">Metrics</h3>
       <h1>Filters</h1>
-      <GraphsContainer
-        type={graphType}
-        data={response.data}
-      />
+      <GraphsContainer type={graphType} response={response} />
     </div>
   );
 };

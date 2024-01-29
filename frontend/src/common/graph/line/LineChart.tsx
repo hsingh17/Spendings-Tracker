@@ -1,22 +1,18 @@
-import {
-  ScaleLinear,
-  ScaleTime,
-  extent,
-  line,
-  scaleLinear,
-  scaleTime,
-  timeFormat,
-  timeParse,
-} from "d3";
+import { extent, line, scaleLinear, scaleTime, timeParse } from "d3";
 import React, { FC, useState } from "react";
 import useDetectMobile from "../../../hooks/useDetectMobile";
 import { Constants } from "../../../utils/constants";
-import { Nullable, SpendingListRow } from "../../../utils/types";
-import DateUtils from "../../../utils/date-utils";
-import MoneyUtils from "../../../utils/money-utils";
+import { ApiResponse, Nullable, SpendingListRow } from "../../../utils/types";
+import { Line } from "./Line";
+import { Point } from "./Point";
+import Tooltip from "./Tooltip";
+import Tracer from "./Tracer";
+import { XTicks } from "./XTicks";
+import { YTicks } from "./YTicks";
+import PaginationBar from "./PaginationBar";
 
 const TRACER_X_INITIAL = -10;
-const POINT_RADIUS = 7;
+export const POINT_RADIUS = 7;
 
 function calculateMargins(height: number, width: number) {
   return {
@@ -27,125 +23,7 @@ function calculateMargins(height: number, width: number) {
   };
 }
 
-type YTicksProps = {
-  yTicks: number[];
-  x1: number;
-  x2: number;
-  yScale: ScaleLinear<number, number, never>;
-};
-
-const YTicks: FC<YTicksProps> = ({ x1, x2, yScale, yTicks }) => {
-  return (
-    <>
-      {yTicks.map((value) => {
-        return (
-          <line
-            key={value}
-            x1={x1}
-            x2={x2}
-            y1={yScale(value)}
-            y2={yScale(value)}
-            stroke="gray"
-            strokeDasharray={"1,7"}
-            strokeLinecap="round"
-          />
-        );
-      })}
-    </>
-  );
-};
-
-type TracerProps = {
-  height: number;
-  x: number;
-};
-
-const Tracer: FC<TracerProps> = ({ height, x }) => {
-  return <rect width={2} height={height} x={x} fill="gray" />;
-};
-
-type LineProps = {
-  d: Nullable<string>;
-};
-
-const Line: FC<LineProps> = ({ d }) => {
-  if (!d) {
-    return <></>;
-  }
-
-  return (
-    <path
-      className="animate-[linechart_1.5s_cubic-bezier(1,0,0,1)_forwards]"
-      d={d}
-      fill="none"
-      stroke="#00ADB5"
-      strokeWidth={2}
-      strokeDasharray={"10000"}
-      strokeDashoffset={-10000}
-    />
-  );
-};
-
-type PointProps = {
-  idx: number;
-  spendingListRow: SpendingListRow;
-  setTooltipIdx: (date: Nullable<number>) => void;
-  xScale: ScaleTime<number, number, never>;
-  yScale: ScaleLinear<number, number, never>;
-};
-
-const Point: FC<PointProps> = ({
-  idx,
-  setTooltipIdx,
-  spendingListRow,
-  xScale,
-  yScale,
-}) => {
-  const parser = timeParse(Constants.ISO_FORMAT);
-  return (
-    <circle
-      key={spendingListRow.date}
-      className="hover:cursor-pointer"
-      onMouseOver={() => setTooltipIdx(idx)}
-      onMouseLeave={() => setTooltipIdx(null)}
-      fill="white"
-      stroke="#374151"
-      strokeWidth={5}
-      cx={xScale(parser(spendingListRow.date)!)}
-      cy={yScale(spendingListRow.total)}
-      r={POINT_RADIUS}
-    />
-  );
-};
-
-type XTicksProps = {
-  xTicks: Date[];
-  xScale: ScaleTime<number, number, never>;
-  y: number;
-};
-
-const XTicks: FC<XTicksProps> = ({ xTicks, xScale, y }) => {
-  const xAxisFormatter = timeFormat("%m/%Y");
-  return (
-    <>
-      {xTicks.map((date) => {
-        return (
-          <text
-            key={date.toDateString()}
-            className="font-semibold"
-            fill="#EEEEEE"
-            x={xScale(date)}
-            y={y}
-          >
-            {xAxisFormatter(date)}
-          </text>
-        );
-      })}
-    </>
-  );
-};
-
-type TooltipPosition = {
+export type TooltipPosition = {
   top: number;
   left: number;
 };
@@ -153,10 +31,13 @@ type TooltipPosition = {
 type LineChartProps = {
   width: number;
   height: number;
-  data: SpendingListRow[];
+  response: ApiResponse<SpendingListRow[]>;
 };
 
-const LineChart: FC<LineChartProps> = ({ data, height, width }) => {
+const LineChart: FC<LineChartProps> = ({ response, height, width }) => {
+  const data = response.data;
+  const prev = response.metadata?.links.prev;
+  const next = response.metadata?.links.next;
   const parser = timeParse(Constants.ISO_FORMAT);
   const margins = calculateMargins(height, width);
   const isMobile = useDetectMobile();
@@ -165,21 +46,33 @@ const LineChart: FC<LineChartProps> = ({ data, height, width }) => {
   const [tooltipPosition, setTooltipPosition] =
     useState<Nullable<TooltipPosition>>(null);
 
-  const moveTracer = (e: React.MouseEvent) => {
-    const domPoint = new DOMPointReadOnly(e.clientX, e.clientY);
-    const svgNode: SVGGraphicsElement = e.currentTarget as SVGGraphicsElement;
+  const moveTracerMouse = (e: React.MouseEvent) => {
+    moveTracer(e.clientX, e.clientY, e.currentTarget);
+  };
+
+  const moveTracerTouch = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    moveTracer(touch.clientX, touch.clientY, e.currentTarget);
+  };
+
+  const moveTracer = (
+    clientX: number,
+    clientY: number,
+    currentTarget: EventTarget
+  ) => {
+    const domPoint = new DOMPointReadOnly(clientX, clientY);
+    const svgNode = currentTarget as SVGGraphicsElement;
     const svgPoint = domPoint.matrixTransform(
       svgNode.getScreenCTM()?.inverse()
     );
     setTracerX(svgPoint.x);
 
     // If tracer hovers over a circle then show tooltip
-    let date: Nullable<string> = null;
     let pos: Nullable<TooltipPosition> = null;
 
     let i = 0;
-    for (; i < data.length; i++) {
-      const spendingListRow = data[i];
+    for (; i < data!.length; i++) {
+      const spendingListRow = data![i];
       const d = Math.floor(xScale(parser(spendingListRow.date)!) - svgPoint.x);
       if (Math.abs(d) <= POINT_RADIUS * 2) {
         pos = {
@@ -190,28 +83,28 @@ const LineChart: FC<LineChartProps> = ({ data, height, width }) => {
       }
     }
 
-    setTooltipIdx(i == data.length ? null : i);
+    setTooltipIdx(i == data!.length ? null : i);
     setTooltipPosition(pos);
   };
 
   const xScale = scaleTime()
     .domain(
-      extent(data, (d: SpendingListRow) => parser(d.date)) as [Date, Date]
+      extent(data!, (d: SpendingListRow) => parser(d.date)) as [Date, Date]
     )
     .range([margins.left, width - margins.right]);
 
   const yScale = scaleLinear()
-    .domain(extent(data, (d) => d.total) as [number, number])
+    .domain(extent(data!, (d) => d.total) as [number, number])
     .range([height - margins.top, margins.bottom]);
 
   const lineFn = line<SpendingListRow>()
     .x((d) => xScale(parser(d.date)!))
     .y((d) => yScale(d.total));
 
-  const d = lineFn(data);
+  const d = lineFn(data!);
 
   const xTicks = isMobile
-    ? xScale.ticks(Math.floor(xScale.ticks().length / 3))
+    ? xScale.ticks(Math.floor(xScale.ticks().length / 2))
     : xScale.ticks(Math.floor(xScale.ticks().length / 2));
 
   const yTicks = yScale.ticks(yScale.ticks().length / 2);
@@ -221,7 +114,8 @@ const LineChart: FC<LineChartProps> = ({ data, height, width }) => {
       <svg
         height={height}
         width={width}
-        onMouseMove={(e: React.MouseEvent) => moveTracer(e)}
+        onTouchMove={(e: React.TouchEvent) => moveTracerTouch(e)}
+        onMouseMove={(e: React.MouseEvent) => moveTracerMouse(e)}
         onMouseLeave={() => setTracerX(TRACER_X_INITIAL)}
       >
         <g>
@@ -235,7 +129,7 @@ const LineChart: FC<LineChartProps> = ({ data, height, width }) => {
           <Tracer height={height - margins.top} x={tracerX} />
           <Line d={d} />
 
-          {data.map((spendingListRow, idx) => (
+          {data!.map((spendingListRow, idx) => (
             <Point
               idx={idx}
               key={spendingListRow.date}
@@ -251,24 +145,16 @@ const LineChart: FC<LineChartProps> = ({ data, height, width }) => {
       </svg>
 
       {tooltipIdx !== null && tooltipIdx !== undefined && (
-        <div
-          className={
-            "absolute w-fit h-fit bg-theme-cta text-white p-2 rounded-xl"
-          }
-          style={{
-            display: tooltipPosition ? "block" : "none",
-            top: tooltipPosition?.top,
-            left: tooltipPosition?.left,
-          }}
-        >
-          <p className="text-sm">
-            {DateUtils.formatDateUS(data[tooltipIdx].date)}
-          </p>
-          <p className="font-bold md:text-lg">
-            {MoneyUtils.formatMoneyUsd(data[tooltipIdx].total)}
-          </p>
-        </div>
+        <Tooltip
+          tooltipPosition={tooltipPosition}
+          date={data![tooltipIdx].date}
+          total={data![tooltipIdx].total}
+        />
       )}
+
+      {prev && <PaginationBar isLeft={true} />}
+
+      {next && <PaginationBar isLeft={false} />}
     </div>
   );
 };

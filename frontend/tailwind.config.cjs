@@ -17,6 +17,10 @@ module.exports = {
         },
         linechart: {
           "100%": { "stroke-dashoffset": "0"}
+        },
+        pointfadein: {
+          "0%": { "opacity": "0%"},
+          "100%": { "opacity": "100%"}
         }
       },
       colors: {
