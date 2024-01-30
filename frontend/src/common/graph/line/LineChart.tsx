@@ -1,5 +1,5 @@
 import { extent, line, scaleLinear, scaleTime, timeParse } from "d3";
-import React, { FC, useState } from "react";
+import React, { Dispatch, FC, SetStateAction, useState } from "react";
 import useDetectMobile from "../../../hooks/useDetectMobile";
 import { Constants } from "../../../utils/constants";
 import { ApiResponse, Nullable, SpendingListRow } from "../../../utils/types";
@@ -32,9 +32,15 @@ type LineChartProps = {
   width: number;
   height: number;
   response: ApiResponse<SpendingListRow[]>;
+  setSearchParams: Dispatch<SetStateAction<URLSearchParams>>;
 };
 
-const LineChart: FC<LineChartProps> = ({ response, height, width }) => {
+const LineChart: FC<LineChartProps> = ({
+  response,
+  height,
+  width,
+  setSearchParams,
+}) => {
   const data = response.data;
   const prev = response.metadata?.links.prev;
   const next = response.metadata?.links.next;
@@ -85,6 +91,25 @@ const LineChart: FC<LineChartProps> = ({ response, height, width }) => {
 
     setTooltipIdx(i == data!.length ? null : i);
     setTooltipPosition(pos);
+  };
+
+  const onClickPaginationBar = (e: React.MouseEvent, isLeft: boolean) => {
+    const link = isLeft
+      ? response.metadata?.links.prev
+      : response.metadata?.links.next;
+
+    if (!link) {
+      return;
+    }
+
+    const searchTerm = "page";
+    const idxPage = link.indexOf(searchTerm + "=");
+    if (idxPage == -1) {
+      return;
+    }
+
+    const page = link.substring(idxPage + searchTerm.length + 1);
+    setSearchParams(new URLSearchParams([[searchTerm, page]]));
   };
 
   const xScale = scaleTime()
@@ -152,9 +177,8 @@ const LineChart: FC<LineChartProps> = ({ response, height, width }) => {
         />
       )}
 
-      {prev && <PaginationBar isLeft={true} />}
-
-      {next && <PaginationBar isLeft={false} />}
+      {prev && <PaginationBar isLeft={true} onClick={onClickPaginationBar} />}
+      {next && <PaginationBar isLeft={false} onClick={onClickPaginationBar} />}
     </div>
   );
 };

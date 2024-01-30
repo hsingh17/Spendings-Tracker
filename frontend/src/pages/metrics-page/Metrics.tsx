@@ -12,8 +12,7 @@ export const Metrics = () => {
     new URLSearchParams([])
   );
 
-  const { data: response, refetch } =
-    useSpendings<SpendingListRow>(searchParams);
+  const { data: response } = useSpendings<SpendingListRow>(searchParams);
 
   // TODO: Error handling
   if (!response || !response.ok) {
@@ -29,7 +28,11 @@ export const Metrics = () => {
     <div className="p-2 w-full h-fit flex flex-col">
       <h3 className="text-slate-700 font-semibold">Metrics</h3>
       <h1>Filters</h1>
-      <GraphsContainer type={graphType} response={response} />
+      <GraphsContainer
+        type={graphType}
+        response={response}
+        setSearchParams={setSearchParams}
+      />
     </div>
   );
 };
