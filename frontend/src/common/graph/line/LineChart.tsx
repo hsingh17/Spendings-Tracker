@@ -46,7 +46,6 @@ const LineChart: FC<LineChartProps> = ({
   const next = response.metadata?.links.next;
   const parser = timeParse(Constants.ISO_FORMAT);
   const margins = calculateMargins(height, width);
-  const isMobile = useDetectMobile();
   const [tracerX, setTracerX] = useState<number>(TRACER_X_INITIAL);
   const [tooltipIdx, setTooltipIdx] = useState<Nullable<number>>(null);
   const [tooltipPosition, setTooltipPosition] =
@@ -128,9 +127,9 @@ const LineChart: FC<LineChartProps> = ({
 
   const d = lineFn(data!);
 
-  const xTicks = isMobile
-    ? xScale.ticks(Math.floor(xScale.ticks().length / 2))
-    : xScale.ticks(Math.floor(xScale.ticks().length / 2));
+  const xTicks = xScale.ticks(
+    Math.max(2, Math.floor(xScale.ticks().length / 2))
+  );
 
   const yTicks = yScale.ticks(yScale.ticks().length / 2);
 

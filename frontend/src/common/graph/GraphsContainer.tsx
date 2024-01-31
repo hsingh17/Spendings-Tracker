@@ -14,22 +14,16 @@ import {
 } from "../../utils/types";
 import LineChart from "./line/LineChart";
 
-type MetricsGraphContainerProps =
-  | {
-      type: Constants.GRAPH_TYPES.LINE;
-      response: ApiResponse<SpendingListRow[]>;
-      setSearchParams: Dispatch<SetStateAction<URLSearchParams>>;
-    }
-  | {
-      type: Constants.GRAPH_TYPES.CHART | Constants.GRAPH_TYPES.PIE;
-      response: ApiResponse<CategoricalSpendings[]>;
+type MetricsGraphContainerProps = {
+      graphType: Constants.GRAPH_TYPES;
+      response: ApiResponse<SpendingListRow[] | CategoricalSpendings[]> ;
       setSearchParams: Dispatch<SetStateAction<URLSearchParams>>;
     };
 
 const GraphsContainer: FC<MetricsGraphContainerProps> = ({
-  type,
+  graphType,
   response,
-  setSearchParams
+  setSearchParams,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState<number>(-1);
@@ -45,18 +39,18 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({
   };
 
   const getGraph = () => {
-    switch (type) {
-      case Constants.GRAPH_TYPES.LINE:
+    switch (graphType) {
+      case Constants.GRAPH_TYPES.Line:
         return (
           <LineChart
-            response={response}
+            response={response as ApiResponse<SpendingListRow[]>} // Hacky but I gave up trying to fight Typescript
             height={height}
             width={width}
             setSearchParams={setSearchParams}
           />
         );
       default:
-        return <h1>No graph found for {type}</h1>;
+        return <h1>No graph found for {graphType}</h1>;
     }
   };
 
@@ -71,7 +65,7 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({
 
   return (
     <div
-      className="w-full md:w-3/4 h-72 md:h-96 justify-self-center ml-auto mr-auto bg-gray-700"
+      className="w-full h-72 md:h-full justify-self-center ml-auto mr-auto bg-gray-700"
       ref={ref}
     >
       {getGraph()}
