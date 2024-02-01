@@ -62,8 +62,7 @@ public class ApiMetadata {
         private int totalPages;
         private ApiLinks links;
 
-        public ApiMetadataBuilder() {
-        }
+        public ApiMetadataBuilder() {}
 
         public ApiMetadataBuilder setCurrentPage(int currentPage) {
             this.currentPage = currentPage;

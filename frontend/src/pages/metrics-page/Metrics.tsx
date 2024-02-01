@@ -12,9 +12,12 @@ export const Metrics = () => {
       ["page", "0"],
     ])
   );
+
   const { data: response } = useSpendings<SpendingListRow>(searchParams);
   const getGraphType = (): Constants.GRAPH_TYPES => {
     const graphType = searchParams.get("graph-type");
+    console.log(graphType);
+    
     if (!graphType) {
       return Constants.GRAPH_TYPES.Line;
     }
@@ -42,7 +45,10 @@ export const Metrics = () => {
         setSearchParams={setSearchParams}
       />
 
-      <GraphsFilter graphType={getGraphType()} />
+      <GraphsFilter
+        graphType={getGraphType()}
+        setSearchParams={setSearchParams}
+      />
     </div>
   );
 };

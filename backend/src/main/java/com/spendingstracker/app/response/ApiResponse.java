@@ -76,8 +76,7 @@ public class ApiResponse<T> {
         private Integer httpStatus;
         private T data;
 
-        public ApiResponseBuilder() {
-        }
+        public ApiResponseBuilder() {}
 
         public ApiResponseBuilder<T> setMetadata(ApiMetadata metadata) {
             this.metadata = metadata;

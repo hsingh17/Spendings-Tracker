@@ -3,6 +3,7 @@ package com.spendingstracker.app.repository;
 import com.spendingstracker.app.entity.SpendingUserAggr;
 import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.projection.SpendingsListProjection;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

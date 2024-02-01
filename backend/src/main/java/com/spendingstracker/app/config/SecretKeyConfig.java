@@ -17,8 +17,7 @@ import java.util.stream.Stream;
 public class SecretKeyConfig {
     @Bean
     @Qualifier("secretKey")
-    public String getJwtSecretKey(
-            @Value("${jwt.secret-key-path}") Resource jwtSecretKeyResource) {
+    public String getJwtSecretKey(@Value("${jwt.secret-key-path}") Resource jwtSecretKeyResource) {
         try {
             File jwtFile = jwtSecretKeyResource.getFile();
             Path jwtFilePath = jwtFile.toPath();

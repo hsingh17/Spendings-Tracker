@@ -61,7 +61,7 @@
   - `start-date`* (Default value: `1000-01-01`)
   - `end-date`* (Default value: `9999-12-31`)
   - `group-by`* (Default value: `D`)
-  - `type`* (Default value: `N`)
+  - `graph-type`* (Default value: `L`)
   - `page`* (Default value: `0`)
   - `limit`* (Default value: `25`)
 - Purpose:

@@ -15,10 +15,10 @@ import {
 import LineChart from "./line/LineChart";
 
 type MetricsGraphContainerProps = {
-      graphType: Constants.GRAPH_TYPES;
-      response: ApiResponse<SpendingListRow[] | CategoricalSpendings[]> ;
-      setSearchParams: Dispatch<SetStateAction<URLSearchParams>>;
-    };
+  graphType: Constants.GRAPH_TYPES;
+  response: ApiResponse<SpendingListRow[] | CategoricalSpendings[]>;
+  setSearchParams: Dispatch<SetStateAction<URLSearchParams>>;
+};
 
 const GraphsContainer: FC<MetricsGraphContainerProps> = ({
   graphType,

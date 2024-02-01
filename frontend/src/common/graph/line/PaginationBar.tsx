@@ -10,7 +10,7 @@ type PaginationBarProps = {
 const PaginationBar: FC<PaginationBarProps> = ({ isLeft, onClick }) => {
   return (
     <div
-      className={`absolute bg-theme-brand-secondary top-0 h-full w-10 opacity-25 z-10 hover:opacity-100
+      className={`absolute bg-theme-brand-secondary top-0 h-full w-10 opacity-25 hover:opacity-100
         flex flex-row items-center hover:cursor-pointer ${
           isLeft ? "left-0" : "right-0"
         }`}

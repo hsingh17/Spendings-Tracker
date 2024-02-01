@@ -101,14 +101,11 @@ const LineChart: FC<LineChartProps> = ({
       return;
     }
 
-    const searchTerm = "page";
-    const idxPage = link.indexOf(searchTerm + "=");
-    if (idxPage == -1) {
-      return;
-    }
-
-    const page = link.substring(idxPage + searchTerm.length + 1);
-    setSearchParams(new URLSearchParams([[searchTerm, page]]));
+    const queryParams = new URLSearchParams(
+      link.substring(link.indexOf("?") + 1)
+    );
+    
+    setSearchParams(queryParams);
   };
 
   const xScale = scaleTime()

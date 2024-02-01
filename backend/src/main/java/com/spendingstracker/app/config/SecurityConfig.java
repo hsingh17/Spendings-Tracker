@@ -3,6 +3,7 @@ package com.spendingstracker.app.config;
 import com.spendingstracker.app.filter.CustomAuthEntryPoint;
 import com.spendingstracker.app.filter.JwtFilter;
 import com.spendingstracker.app.service.UserDetailsServiceImpl;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,9 +35,7 @@ public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
 
-    public SecurityConfig(
-            UserDetailsServiceImpl userDetailsService,
-            JwtFilter jwtFilter) {
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService, JwtFilter jwtFilter) {
         this.userDetailsService = userDetailsService;
         this.jwtFilter = jwtFilter;
     }
@@ -45,11 +44,18 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.cors(Customizer.withDefaults());
         httpSecurity.csrf().disable(); // Disable CSRF since we will use JWT to validate requests
-        httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // Stateless policy since JWT is stateless
-        httpSecurity.authorizeRequests()
-                .antMatchers("/v1/auth/login").permitAll() // Anyone can go to login route
-                .anyRequest().authenticated(); // All other routes require user to be authenticated
-        httpSecurity.authenticationProvider(authenticationProvider()); // Set the DaoAuthenticationProvider
+        httpSecurity
+                .sessionManagement()
+                .sessionCreationPolicy(
+                        SessionCreationPolicy.STATELESS); // Stateless policy since JWT is stateless
+        httpSecurity
+                .authorizeRequests()
+                .antMatchers("/v1/auth/login")
+                .permitAll() // Anyone can go to login route
+                .anyRequest()
+                .authenticated(); // All other routes require user to be authenticated
+        httpSecurity.authenticationProvider(
+                authenticationProvider()); // Set the DaoAuthenticationProvider
         httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         httpSecurity.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint());
         return httpSecurity.build();
@@ -69,7 +75,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
@@ -78,13 +85,13 @@ public class SecurityConfig {
             @Value("${cors.allowed-origins}") List<String> allowedOrigins) {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedOrigins(allowedOrigins);
-        corsConfiguration.setAllowedMethods(Arrays.asList(
-                HttpMethod.HEAD.toString(),
-                HttpMethod.GET.toString(),
-                HttpMethod.POST.toString(),
-                HttpMethod.DELETE.toString(),
-                HttpMethod.PUT.toString()
-        ));
+        corsConfiguration.setAllowedMethods(
+                Arrays.asList(
+                        HttpMethod.HEAD.toString(),
+                        HttpMethod.GET.toString(),
+                        HttpMethod.POST.toString(),
+                        HttpMethod.DELETE.toString(),
+                        HttpMethod.PUT.toString()));
         corsConfiguration.setAllowCredentials(true); // Need for cookies
         corsConfiguration.setAllowedHeaders(List.of(HttpHeaders.CONTENT_TYPE));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

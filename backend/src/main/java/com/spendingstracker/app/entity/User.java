@@ -2,9 +2,10 @@ package com.spendingstracker.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.*;
 
 @Entity
 @Table(schema = "APP", name = "USER")
@@ -21,12 +22,15 @@ public class User {
     @JsonIgnore // Don't want to send password (even if it's encrypted)
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            orphanRemoval = true)
     @JsonIgnore
     private Set<SpendingUserAggr> spendingUserAggrs = new HashSet<>();
 
-    public User() {
-    }
+    public User() {}
 
     public long getUserId() {
         return userId;

@@ -1,39 +1,24 @@
-import { FC } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 import Card from "../../common/Card";
 import useDetectMobile from "../../hooks/useDetectMobile";
 import { Constants } from "../../utils/constants";
+import GraphDataPointFilter from "./GraphDataPointFilter";
+import GraphTypeFilter from "./GraphTypeFilter";
+import GraphDateFilter from "./GraphDateFilter";
 
 type GraphsFilterProps = {
   graphType: Constants.GRAPH_TYPES;
+  setSearchParams: Dispatch<SetStateAction<URLSearchParams>>;
 };
 
-const GraphsFilter: FC<GraphsFilterProps> = ({ graphType }) => {
+const GraphsFilter: FC<GraphsFilterProps> = ({ graphType, setSearchParams }) => {
   const isMobile = useDetectMobile();
-  const graphTypes = Object.keys(Constants.GRAPH_TYPES).filter((val) =>
-    isNaN(Number(val))
-  );
-
+  
   return (
     <Card customStyles="p-2 absolute top-8 right-64">
-      <label>Graph type:</label>
-      <select
-        name="graph-type"
-        defaultValue={"TODO"}
-      >
-        {graphTypes.map((type) => {
-          return <option key={type}>{type}</option>;
-        })}
-      </select>
-
-      <label>Data Points:</label>
-      <select
-        name="data-points"
-        defaultValue={"TODO"}
-      >
-        {Constants.PAGE_LIMITS.map((limit) => {
-          return <option key={limit}>{limit}</option>;
-        })}
-      </select>
+      <GraphTypeFilter graphType={graphType} setSearchParams={setSearchParams} />
+      <GraphDataPointFilter setSearchParams={setSearchParams} />
+      <GraphDateFilter setSearchParams={setSearchParams} />
     </Card>
   );
 };

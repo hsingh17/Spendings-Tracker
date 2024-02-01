@@ -2,11 +2,12 @@ package com.spendingstracker.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.*;
 
 @Entity
 @Table(schema = "APP", name = "SPENDING_USER_AGGR")
@@ -24,14 +25,16 @@ public class SpendingUserAggr {
     @Column(name = "DATE")
     private Date date;
 
-    @OneToMany(mappedBy = "spendingUserAggr", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(
+            mappedBy = "spendingUserAggr",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            orphanRemoval = true)
     private Set<Spending> spendings = new HashSet<>();
 
-    @Transient
-    private BigDecimal total;
+    @Transient private BigDecimal total;
 
-    public SpendingUserAggr() {
-    }
+    public SpendingUserAggr() {}
 
     public SpendingUserAggr(User user, Date date, Set<Spending> spendings) {
         this.user = user;
