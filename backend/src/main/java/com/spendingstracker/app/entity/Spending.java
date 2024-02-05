@@ -2,9 +2,9 @@ package com.spendingstracker.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.math.BigDecimal;
+import jakarta.persistence.*;
 
-import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(schema = "APP", name = "SPENDING")

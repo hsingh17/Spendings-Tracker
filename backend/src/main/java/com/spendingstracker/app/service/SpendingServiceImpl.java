@@ -1,7 +1,7 @@
 package com.spendingstracker.app.service;
 
+import com.spendingstracker.app.constants.Granularity;
 import com.spendingstracker.app.constants.GraphType;
-import com.spendingstracker.app.constants.GroupBy;
 import com.spendingstracker.app.entity.Spending;
 import com.spendingstracker.app.entity.SpendingUserAggr;
 import com.spendingstracker.app.entity.User;
@@ -35,40 +35,39 @@ public class SpendingServiceImpl implements SpendingService {
             Date endDate,
             int page,
             int limit,
-            GroupBy groupBy,
+            Granularity granularity,
             GraphType type) {
         PageRequest pageRequest = PageRequest.of(page, limit);
 
         switch (type) {
-            case BAR:
-            case PIE:
+            case BAR, PIE -> {
                 return spendingUserAggrRepository.findSpendingsCategorical(
                         userId, startDate, endDate, pageRequest);
-            case LINE:
-                switch (groupBy) {
-                    case DAY:
-                        return spendingUserAggrRepository.findSpendingsNumericalGroupByDay(
-                                userId, startDate, endDate, pageRequest);
-                    case WEEK:
-                        return spendingUserAggrRepository.findSpendingsNumericalGroupByWeek(
-                                userId, startDate, endDate, pageRequest);
-                    case MONTH:
-                        return spendingUserAggrRepository.findSpendingsNumericalGroupByMonth(
-                                userId, startDate, endDate, pageRequest);
-                    case YEAR:
-                        return spendingUserAggrRepository.findSpendingsNumericalGroupByYear(
-                                userId, startDate, endDate, pageRequest);
-                }
+            }
+            case LINE -> {
+                return switch (granularity) {
+                    case DAY ->
+                            spendingUserAggrRepository.findSpendingsNumericalGroupByDay(
+                                    userId, startDate, endDate, pageRequest);
+                    case WEEK ->
+                            spendingUserAggrRepository.findSpendingsNumericalGroupByWeek(
+                                    userId, startDate, endDate, pageRequest);
+                    case MONTH ->
+                            spendingUserAggrRepository.findSpendingsNumericalGroupByMonth(
+                                    userId, startDate, endDate, pageRequest);
+                    case YEAR ->
+                            spendingUserAggrRepository.findSpendingsNumericalGroupByYear(
+                                    userId, startDate, endDate, pageRequest);
+                };
+            }
         }
 
         throw new RuntimeException("Could not get spendings!");
     }
 
     public List<Spending> getSpendingDetails(Date spendingDate, long userId) {
-        User user =
-                userRepository
-                        .findById(userId)
-                        .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+        User user = getUser(userId);
+
         Optional<SpendingUserAggr> spendingUserAggrOpt =
                 spendingUserAggrRepository.findSpendingUserAggrByUserAndDate(user, spendingDate);
 
@@ -78,10 +77,8 @@ public class SpendingServiceImpl implements SpendingService {
     }
 
     public void updateSpending(Set<Spending> spendings, Date spendingDate, long userId) {
-        User user =
-                userRepository
-                        .findById(userId)
-                        .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+        User user = getUser(userId);
+
         SpendingUserAggr spendingUserAggr =
                 spendingUserAggrRepository
                         .findSpendingUserAggrByUserAndDate(user, spendingDate)
@@ -93,9 +90,9 @@ public class SpendingServiceImpl implements SpendingService {
 
         Set<Spending> spendingsToKeep = filterSpendings(spendings);
 
-        if (spendingsToKeep
-                .isEmpty()) { // User decided to delete all the spendings, therefore, this is
-            // effectively a delete operation
+        // User decided to delete all the spendings, therefore, this is
+        // effectively a delete operation
+        if (spendingsToKeep.isEmpty()) {
             deleteSpending(spendingUserAggr.getSpendingUserAggrId());
             return;
         }
@@ -107,10 +104,7 @@ public class SpendingServiceImpl implements SpendingService {
     }
 
     public void createSpending(Set<Spending> spendings, Date spendingDate, long userId) {
-        User user =
-                userRepository
-                        .findById(userId)
-                        .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+        User user = getUser(userId);
 
         spendings = filterSpendings(spendings);
         SpendingUserAggr spendingUserAggr = new SpendingUserAggr(user, spendingDate, spendings);
@@ -141,5 +135,11 @@ public class SpendingServiceImpl implements SpendingService {
         }
 
         return spendingsToKeep;
+    }
+
+    private User getUser(long userId) {
+        return userRepository
+                .findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
     }
 }

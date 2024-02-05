@@ -3,10 +3,12 @@ import { Constants } from "../../utils/constants";
 import { Nullable } from "../../utils/types";
 
 type GraphDataPointFilterProps = {
+  searchParams: URLSearchParams;
   setSearchParams: Dispatch<SetStateAction<URLSearchParams>>;
 };
 
 const GraphDataPointFilter: FC<GraphDataPointFilterProps> = ({
+  searchParams,
   setSearchParams,
 }) => {
   const getCurrentLimit = (): number => {
@@ -20,12 +22,13 @@ const GraphDataPointFilter: FC<GraphDataPointFilterProps> = ({
       value: number;
     };
 
-    // TODO
+    searchParams.set("limit", String(target.value));
+    setSearchParams(searchParams);
   };
 
   return (
     <>
-      <label>Data Points:</label>
+      <label>Data points to show:</label>
       <select
         name="data-points"
         defaultValue={getCurrentLimit()}

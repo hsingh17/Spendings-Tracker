@@ -4,7 +4,7 @@ import { Nullable } from "../../../utils/types";
 type LineProps = {
   d: Nullable<string>;
 };
-export const Line: FC<LineProps> = ({ d }) => {
+const Line: FC<LineProps> = ({ d }) => {
   if (!d) {
     return <></>;
   }
@@ -16,8 +16,8 @@ export const Line: FC<LineProps> = ({ d }) => {
       fill="none"
       stroke="#00ADB5"
       strokeWidth={2}
-      strokeDasharray={"10000"}
-      strokeDashoffset={-10000} />
+      strokeDasharray={"100000"}
+      strokeDashoffset={-100000} />
   );
 };
 

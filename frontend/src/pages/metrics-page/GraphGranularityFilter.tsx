@@ -1,18 +1,19 @@
 import React, { Dispatch, FC, SetStateAction } from "react";
 import { Constants } from "../../utils/constants";
+import { Nullable } from "../../utils/types";
 
-type GraphTypeFilterProps = {
-  graphType: Constants.GRAPH_TYPES;
+type GraphGranularityFilter = {
+  granularity: Constants.GRANULARITY;
   searchParams: URLSearchParams;
   setSearchParams: Dispatch<SetStateAction<URLSearchParams>>;
 };
 
-const GraphTypeFilter: FC<GraphTypeFilterProps> = ({
-  graphType,
+const GraphGranularityFilter: FC<GraphGranularityFilter> = ({
+  granularity,
   searchParams,
   setSearchParams,
 }) => {
-  const graphTypes = Object.keys(Constants.GRAPH_TYPES).filter((val) =>
+  const granularities = Object.keys(Constants.GRANULARITY).filter((val) =>
     isNaN(Number(val))
   );
 
@@ -20,20 +21,20 @@ const GraphTypeFilter: FC<GraphTypeFilterProps> = ({
     const target = e.target as typeof e.target & {
       value: string;
     };
-    
-    searchParams.set("graph-type", target.value);
+
+    searchParams.set("granularity", target.value);
     setSearchParams(searchParams);
   };
 
   return (
     <>
-      <label>Graph type:</label>
+      <label>Granularity:</label>
       <select
-        name="graph-type"
-        defaultValue={Constants.GRAPH_TYPES[graphType]}
+        name="granularity"
+        defaultValue={Constants.GRANULARITY[granularity]}
         onChange={(e: React.ChangeEvent) => onChange(e)}
       >
-        {graphTypes.map((type) => {
+        {granularities.map((type) => {
           return <option key={type}>{type}</option>;
         })}
       </select>
@@ -41,4 +42,4 @@ const GraphTypeFilter: FC<GraphTypeFilterProps> = ({
   );
 };
 
-export default GraphTypeFilter;
+export default GraphGranularityFilter;

@@ -7,7 +7,7 @@ type XTicksProps = {
   xScale: ScaleTime<number, number, never>;
   y: number;
 };
-export const XTicks: FC<XTicksProps> = ({ xTicks, xScale, y }) => {
+const XTicks: FC<XTicksProps> = ({ xTicks, xScale, y }) => {
   const isMobile = useDetectMobile();
   const xAxisFormatter = timeFormat(isMobile ? "%m/%y" : "%m/%Y");
   return (

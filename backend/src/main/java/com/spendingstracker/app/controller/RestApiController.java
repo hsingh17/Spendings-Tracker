@@ -1,14 +1,17 @@
 package com.spendingstracker.app.controller;
 
 import com.spendingstracker.app.constants.GraphType;
-import com.spendingstracker.app.constants.GroupBy;
-import com.spendingstracker.app.entity.CustomUserDetails;
+import com.spendingstracker.app.constants.Granularity;
+import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.entity.Spending;
 import com.spendingstracker.app.projection.SpendingsListProjection;
 import com.spendingstracker.app.response.ApiLinks;
 import com.spendingstracker.app.response.ApiMetadata;
 import com.spendingstracker.app.response.ApiResponse;
 import com.spendingstracker.app.service.SpendingService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.Min;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,9 +26,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.Min;
 
 @RestController
 @RequestMapping("/v1/api")
@@ -56,9 +56,9 @@ public class RestApiController {
     public ResponseEntity<ApiResponse<List<SpendingsListProjection>>> getSpendings(
             @RequestParam(name = "start-date", defaultValue = "1000-01-01") Date startDate,
             @RequestParam(name = "end-date", defaultValue = "9999-12-31") Date endDate,
-            @RequestParam(name = "group-by", defaultValue = "D") GroupBy groupBy,
-            @RequestParam(name = "graph-type", defaultValue = "L") GraphType graphType,
-            @RequestParam(name = "page", defaultValue = "0") @Min(1) Integer page,
+            @RequestParam(name = "granularity", defaultValue = "Day") Granularity granularity,
+            @RequestParam(name = "graph-type", defaultValue = "Line") GraphType graphType,
+            @RequestParam(name = "page", defaultValue = "0") @Min(0) Integer page,
             @RequestParam(name = "limit", defaultValue = "25") @Min(1) Integer limit,
             HttpServletRequest request)
             throws IllegalArgumentException {
@@ -66,14 +66,14 @@ public class RestApiController {
                 "GET /spendings?start-date={}&end-date={}&group-by={}&graph-type={}&page={}&limit={}",
                 startDate,
                 endDate,
-                groupBy,
-                graphType,
+                granularity.getCode(),
+                graphType.getCode(),
                 page,
                 limit);
 
         Page<SpendingsListProjection> spendingsPage =
                 spendingService.getSpendings(
-                        getUserId(), startDate, endDate, page, limit, groupBy, graphType);
+                        getUserId(), startDate, endDate, page, limit, granularity, graphType);
 
         ApiLinks apiLinks =
                 new ApiLinks.ApiLinksBuilder(

@@ -5,7 +5,6 @@ This repository holds the code for my spendings tracker app built with Java and 
 - metrics page
 - add eslint and prettier -> clean up accordingly
 - clean up backend api more
-    - upgrade to java 17
     - date -> localdate
     - add audit fields to db model (created on, created by, last modified on, last modified by)
     - add logging to backend

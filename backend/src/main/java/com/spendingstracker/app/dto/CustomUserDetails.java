@@ -1,4 +1,4 @@
-package com.spendingstracker.app.entity;
+package com.spendingstracker.app.dto;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;

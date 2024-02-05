@@ -7,7 +7,7 @@ type YTicksProps = {
   x2: number;
   yScale: ScaleLinear<number, number, never>;
 };
-export const YTicks: FC<YTicksProps> = ({ x1, x2, yScale, yTicks }) => {
+const YTicks: FC<YTicksProps> = ({ x1, x2, yScale, yTicks }) => {
   return (
     <>
       {yTicks.map((value) => {

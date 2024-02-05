@@ -1,6 +1,6 @@
 package com.spendingstracker.app.util;
 
-import com.spendingstracker.app.entity.CustomUserDetails;
+import com.spendingstracker.app.dto.CustomUserDetails;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -1,15 +1,14 @@
 import { extent, line, scaleLinear, scaleTime, timeParse } from "d3";
 import React, { Dispatch, FC, SetStateAction, useState } from "react";
-import useDetectMobile from "../../../hooks/useDetectMobile";
 import { Constants } from "../../../utils/constants";
 import { ApiResponse, Nullable, SpendingListRow } from "../../../utils/types";
-import { Line } from "./Line";
-import { Point } from "./Point";
+import Line from "./Line";
+import PaginationBar from "./PaginationBar";
+import Point from "./Point";
 import Tooltip from "./Tooltip";
 import Tracer from "./Tracer";
-import { XTicks } from "./XTicks";
-import { YTicks } from "./YTicks";
-import PaginationBar from "./PaginationBar";
+import XTicks from "./XTicks";
+import YTicks from "./YTicks";
 
 const TRACER_X_INITIAL = -10;
 export const POINT_RADIUS = 7;

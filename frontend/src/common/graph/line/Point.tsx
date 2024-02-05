@@ -1,11 +1,9 @@
-import {
-  ScaleLinear,
-  ScaleTime, timeParse
-} from "d3";
+import { ScaleLinear, ScaleTime, timeParse } from "d3";
 import { FC } from "react";
 import { Constants } from "../../../utils/constants";
 import { Nullable, SpendingListRow } from "../../../utils/types";
 import { POINT_RADIUS } from "./LineChart";
+import useDetectMobile from "../../../hooks/useDetectMobile";
 
 type PointProps = {
   idx: number;
@@ -14,10 +12,20 @@ type PointProps = {
   xScale: ScaleTime<number, number, never>;
   yScale: ScaleLinear<number, number, never>;
 };
-export const Point: FC<PointProps> = ({
-  idx, setTooltipIdx, spendingListRow, xScale, yScale,
+
+const Point: FC<PointProps> = ({
+  idx,
+  setTooltipIdx,
+  spendingListRow,
+  xScale,
+  yScale,
 }) => {
   const parser = timeParse(Constants.ISO_FORMAT);
+  const isMobile = useDetectMobile();
+  if (isMobile) {
+    return <></>;
+  }
+  
   return (
     <circle
       key={spendingListRow.date}
@@ -29,7 +37,8 @@ export const Point: FC<PointProps> = ({
       strokeWidth={5}
       cx={xScale(parser(spendingListRow.date)!)}
       cy={yScale(spendingListRow.total)}
-      r={POINT_RADIUS} />
+      r={POINT_RADIUS}
+    />
   );
 };
 

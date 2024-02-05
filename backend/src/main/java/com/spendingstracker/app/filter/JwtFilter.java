@@ -5,6 +5,12 @@ import com.spendingstracker.app.constants.Constants;
 import com.spendingstracker.app.response.ApiResponse;
 import com.spendingstracker.app.util.JwtUtil;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,19 +23,15 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Arrays;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 @Component
 public class JwtFilter extends OncePerRequestFilter {
+    private final Gson gson;
     private final JwtUtil jwtUtil;
 
     private final UserDetailsService userDetailsService;
 
-    public JwtFilter(JwtUtil jwtUtil, UserDetailsService userDetailsService) {
+    public JwtFilter(Gson gson, JwtUtil jwtUtil, UserDetailsService userDetailsService) {
+        this.gson = gson;
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
     }
@@ -74,7 +76,7 @@ public class JwtFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext()
                 .setAuthentication(
                         usernamePasswordAuthenticationToken); // Set the context to use the
-                                                              // UsernamePasswordAuthenticationToken
+        // UsernamePasswordAuthenticationToken
         doFilterWrapper(request, response, filterChain);
     }
 
@@ -92,7 +94,7 @@ public class JwtFilter extends OncePerRequestFilter {
                             .build();
 
             response.setStatus(internalErrResponse.getHttpStatus());
-            response.getOutputStream().println(new Gson().toJson(internalErrResponse));
+            response.getOutputStream().println(gson.toJson(internalErrResponse));
         }
     }
 }

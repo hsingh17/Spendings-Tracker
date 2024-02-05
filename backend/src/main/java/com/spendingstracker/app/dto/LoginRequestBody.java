@@ -1,4 +1,4 @@
-package com.spendingstracker.app.entity;
+package com.spendingstracker.app.dto;
 
 public class LoginRequestBody {
     private String username;

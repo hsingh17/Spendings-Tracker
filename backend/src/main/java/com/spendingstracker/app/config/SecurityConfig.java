@@ -16,6 +16,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -41,29 +42,36 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.cors(Customizer.withDefaults());
-        httpSecurity.csrf().disable(); // Disable CSRF since we will use JWT to validate requests
-        httpSecurity
-                .sessionManagement()
-                .sessionCreationPolicy(
-                        SessionCreationPolicy.STATELESS); // Stateless policy since JWT is stateless
-        httpSecurity
-                .authorizeRequests()
-                .antMatchers("/v1/auth/login")
-                .permitAll() // Anyone can go to login route
-                .anyRequest()
-                .authenticated(); // All other routes require user to be authenticated
-        httpSecurity.authenticationProvider(
-                authenticationProvider()); // Set the DaoAuthenticationProvider
-        httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-        httpSecurity.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint());
-        return httpSecurity.build();
-    }
+    public SecurityFilterChain filterChain(
+            HttpSecurity httpSecurity,
+            AuthenticationProvider authProvider,
+            AuthenticationEntryPoint authEntryPoint)
+            throws Exception {
 
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint() {
-        return new CustomAuthEntryPoint();
+        return httpSecurity
+                .cors(Customizer.withDefaults())
+                .csrf(
+                        AbstractHttpConfigurer
+                                ::disable) // Disable CSRF since we will use JWT to validate
+                // requests
+                .sessionManagement(
+                        httpSecuritySessionManagementConfigurer ->
+                                httpSecuritySessionManagementConfigurer.sessionCreationPolicy(
+                                        SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(
+                        authorizationManagerRequestMatcherRegistry ->
+                                authorizationManagerRequestMatcherRegistry
+                                        .requestMatchers("/v1/auth/login")
+                                        .permitAll()
+                                        .anyRequest()
+                                        .authenticated())
+                .authenticationProvider(authProvider) // Set the DaoAuthenticationProvider
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(
+                        httpSecurityExceptionHandlingConfigurer ->
+                                httpSecurityExceptionHandlingConfigurer.authenticationEntryPoint(
+                                        authEntryPoint))
+                .build();
     }
 
     @Bean

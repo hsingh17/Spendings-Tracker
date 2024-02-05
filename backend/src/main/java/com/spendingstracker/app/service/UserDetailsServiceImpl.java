@@ -1,6 +1,6 @@
 package com.spendingstracker.app.service;
 
-import com.spendingstracker.app.entity.CustomUserDetails;
+import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.repository.UserRepository;
 

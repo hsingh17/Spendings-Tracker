@@ -9,15 +9,30 @@ export const Metrics = () => {
   const [searchParams, setSearchParams] = useSearchParams(
     new URLSearchParams([
       ["graph-type", "Line"],
+      ["granularity", "Day"],
       ["page", "0"],
     ])
   );
 
   const { data: response } = useSpendings<SpendingListRow>(searchParams);
+
+  const getGranularity = (): Constants.GRANULARITY => {
+    const graphType = searchParams.get("granularity");
+    console.log(graphType);
+
+    if (!graphType) {
+      return Constants.GRANULARITY.Day;
+    }
+
+    return Constants.GRANULARITY[
+      graphType as keyof typeof Constants.GRANULARITY
+    ];
+  };
+
   const getGraphType = (): Constants.GRAPH_TYPES => {
     const graphType = searchParams.get("graph-type");
     console.log(graphType);
-    
+
     if (!graphType) {
       return Constants.GRAPH_TYPES.Line;
     }
@@ -46,7 +61,9 @@ export const Metrics = () => {
       />
 
       <GraphsFilter
+        granularity={getGranularity()}
         graphType={getGraphType()}
+        searchParams={searchParams}
         setSearchParams={setSearchParams}
       />
     </div>

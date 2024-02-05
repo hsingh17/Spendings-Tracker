@@ -1,10 +1,12 @@
 package com.spendingstracker.app.controller;
 
 import com.spendingstracker.app.constants.Constants;
-import com.spendingstracker.app.entity.CustomUserDetails;
-import com.spendingstracker.app.entity.LoginRequestBody;
+import com.spendingstracker.app.dto.CustomUserDetails;
+import com.spendingstracker.app.dto.LoginRequestBody;
 import com.spendingstracker.app.response.ApiResponse;
 import com.spendingstracker.app.util.JwtUtil;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,8 +22,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/v1/auth")
@@ -56,13 +56,11 @@ public class AuthController {
                 ResponseCookie.from(Constants.TOKEN_KEY, token)
                         .httpOnly(true)
                         .path("/v1/")
-                        .secure(
-                                true) // If SameSite is "None", then secure must be true (it's fine
-                                      // if localhost uses http though as it is an exception)
-                        .sameSite(
-                                "None") // None because eventually backend and frontend will be on
-                                        // different domains so we need to allow for cross-site
-                                        // cookies
+                        .secure(true) // If SameSite is "None", then secure must be true (it's fine
+                        // if localhost uses http though as it is an exception)
+                        .sameSite("None") // None because eventually backend and frontend will be on
+                        // different domains so we need to allow for cross-site
+                        // cookies
                         .build();
 
         response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
@@ -85,13 +83,11 @@ public class AuthController {
                         .httpOnly(true)
                         .maxAge(0)
                         .path("/v1/")
-                        .secure(
-                                true) // If SameSite is "None", then secure must be true (it's fine
-                                      // if localhost uses http though as it is an exception)
-                        .sameSite(
-                                "None") // None because eventually backend and frontend will be on
-                                        // different domains so we need to allow for cross-site
-                                        // cookies
+                        .secure(true) // If SameSite is "None", then secure must be true (it's fine
+                        // if localhost uses http though as it is an exception)
+                        .sameSite("None") // None because eventually backend and frontend will be on
+                        // different domains so we need to allow for cross-site
+                        // cookies
                         .build();
 
         response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString()); // Set "token" to be null

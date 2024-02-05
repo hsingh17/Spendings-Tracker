@@ -13,7 +13,6 @@ public class ApiResponse<T> {
 
     public ApiResponse(ApiResponseBuilder<T> apiResponseBuilder) {
         this.metadata = apiResponseBuilder.metadata;
-        ;
         this.ok = apiResponseBuilder.ok;
         this.message = apiResponseBuilder.message;
         this.httpStatus = apiResponseBuilder.httpStatus;

@@ -2,16 +2,16 @@ package com.spendingstracker.app.constants;
 
 import java.util.Arrays;
 
-public enum GroupBy {
-    DAY("D"),
-    WEEK("W"),
+public enum Granularity {
+    DAY("Day"),
+    WEEK("Week"),
 
-    MONTH("M"),
-    YEAR("Y");
+    MONTH("Month"),
+    YEAR("Year");
 
     private final String code;
 
-    GroupBy(String code) {
+    Granularity(String code) {
         this.code = code;
     }
 
@@ -19,8 +19,8 @@ public enum GroupBy {
         return code;
     }
 
-    public static GroupBy fromCode(String code) {
-        return Arrays.stream(GroupBy.values())
+    public static Granularity fromCode(String code) {
+        return Arrays.stream(Granularity.values())
                 .filter(groupBy -> groupBy.code.equals(code))
                 .findFirst()
                 .orElseThrow(

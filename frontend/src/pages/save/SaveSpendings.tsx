@@ -17,7 +17,7 @@ const SaveSpendings = () => {
     });
 
   return (
-    <>
+    <div className="p-3">
       <SaveSpendingsTitle
         date={params.date || DateUtils.getCurrentDate()}
         isCreateMode={!response?.data || response.data.length === 0}
@@ -29,7 +29,7 @@ const SaveSpendings = () => {
         isCreateMode={!response?.data || response.data.length === 0}
         initialSpendings={response ? response.data : null}
       />
-    </>
+    </div>
   );
 };
 

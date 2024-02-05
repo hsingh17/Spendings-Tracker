@@ -1,7 +1,7 @@
 package com.spendingstracker.app.service;
 
 import com.spendingstracker.app.constants.GraphType;
-import com.spendingstracker.app.constants.GroupBy;
+import com.spendingstracker.app.constants.Granularity;
 import com.spendingstracker.app.entity.Spending;
 import com.spendingstracker.app.projection.SpendingsListProjection;
 
@@ -20,7 +20,7 @@ public interface SpendingService {
             Date endDate,
             int page,
             int limit,
-            GroupBy groupBy,
+            Granularity granularity,
             GraphType type);
 
     List<Spending> getSpendingDetails(Date spendingDate, long userId);
