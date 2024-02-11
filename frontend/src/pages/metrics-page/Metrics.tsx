@@ -5,13 +5,15 @@ import { Constants } from "../../utils/constants";
 import { SpendingListRow } from "../../utils/types";
 import GraphsFilter from "./GraphsFilter";
 
+const DEFAULT_URL_SEARCH_PARAMS = new URLSearchParams([
+  ["graph-type", "Line"],
+  ["granularity", "Day"],
+  ["page", "0"],
+]);
+
 export const Metrics = () => {
   const [searchParams, setSearchParams] = useSearchParams(
-    new URLSearchParams([
-      ["graph-type", "Line"],
-      ["granularity", "Day"],
-      ["page", "0"],
-    ])
+    DEFAULT_URL_SEARCH_PARAMS
   );
 
   const { data: response } = useSpendings<SpendingListRow>(searchParams);
@@ -64,6 +66,7 @@ export const Metrics = () => {
         granularity={getGranularity()}
         graphType={getGraphType()}
         searchParams={searchParams}
+        defaultUrlSearchParams={DEFAULT_URL_SEARCH_PARAMS}
         setSearchParams={setSearchParams}
       />
     </div>

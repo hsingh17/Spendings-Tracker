@@ -2,6 +2,10 @@
 This repository holds the code for my spendings tracker app built with Java and React.js
 
 ## TODO
+- filters modal thing
+    - reset filters button
+    - collapse and expand buttons
+    - in mobile view, just show filters under the graph
 - metrics page
 - add eslint and prettier -> clean up accordingly
 - clean up backend api more
@@ -17,6 +21,7 @@ This repository holds the code for my spendings tracker app built with Java and 
 - reset password
 - export spendings to csv
 - popup on errors
+- add fontawesome icons to relevant areas (signin button, username/password icons)
 
 ## Known issues
 - graph looks odd on mid-sized screens since navbar cuts into it

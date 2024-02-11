@@ -20,15 +20,16 @@ const GraphTypeFilter: FC<GraphTypeFilterProps> = ({
     const target = e.target as typeof e.target & {
       value: string;
     };
-    
+
     searchParams.set("graph-type", target.value);
     setSearchParams(searchParams);
   };
 
   return (
     <>
-      <label>Graph type:</label>
+      <label className="text-sm font-semibold mb-1">Graph type</label>
       <select
+        className="p-2 mb-2 rounded-lg"
         name="graph-type"
         defaultValue={Constants.GRAPH_TYPES[graphType]}
         onChange={(e: React.ChangeEvent) => onChange(e)}

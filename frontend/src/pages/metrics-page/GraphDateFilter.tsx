@@ -43,12 +43,13 @@ const GraphDateFilter: FC<GraphDateFilterProps> = ({
 
   return (
     <>
-      <label>Date Range:</label>
+      <label className="text-sm font-semibold mb-1">Date Range</label>
       <DatePicker
         range
         rangeHover
+        inputClass="p-2 mb-2 rounded-lg border-slate border-2 text-wrap bg-gray-200"
         format="MM/DD/YYYY"
-        dateSeparator=" to "
+        dateSeparator=" - "
         onChange={onChange}
         calendarPosition="bottom-center"
         value={

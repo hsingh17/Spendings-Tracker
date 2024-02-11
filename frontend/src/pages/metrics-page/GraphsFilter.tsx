@@ -10,6 +10,7 @@ type GraphsFilterProps = {
   granularity: Constants.GRANULARITY;
   graphType: Constants.GRAPH_TYPES;
   searchParams: URLSearchParams;
+  defaultUrlSearchParams: URLSearchParams;
   setSearchParams: Dispatch<SetStateAction<URLSearchParams>>;
 };
 
@@ -17,10 +18,11 @@ const GraphsFilter: FC<GraphsFilterProps> = ({
   granularity,
   graphType,
   searchParams,
+  defaultUrlSearchParams,
   setSearchParams,
 }) => {
   return (
-    <Card customStyles="p-2 absolute top-8 right-64">
+    <Card customStyles="p-3 absolute top-8 right-64">
       <GraphTypeFilter
         graphType={graphType}
         searchParams={searchParams}
@@ -42,6 +44,15 @@ const GraphsFilter: FC<GraphsFilterProps> = ({
         searchParams={searchParams}
         setSearchParams={setSearchParams}
       />
+
+      <div
+        className="mt-5 p-2 w-full bg-theme-cta text-theme-neutral text-center text-xl font-semibold rounded-3xl hover:cursor-pointer"
+        onClick={(_) =>
+          setSearchParams(new URLSearchParams(defaultUrlSearchParams))
+        }
+      >
+        Reset
+      </div>
     </Card>
   );
 };

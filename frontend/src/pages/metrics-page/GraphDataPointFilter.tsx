@@ -28,8 +28,9 @@ const GraphDataPointFilter: FC<GraphDataPointFilterProps> = ({
 
   return (
     <>
-      <label>Data points to show:</label>
+      <label className="text-sm font-semibold mb-1">Data points</label>
       <select
+        className="p-2 mb-2 rounded-lg"
         name="data-points"
         defaultValue={getCurrentLimit()}
         onChange={(e: React.ChangeEvent) => onChange(e)}

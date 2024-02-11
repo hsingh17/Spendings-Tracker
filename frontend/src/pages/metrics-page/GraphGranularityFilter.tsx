@@ -28,8 +28,9 @@ const GraphGranularityFilter: FC<GraphGranularityFilter> = ({
 
   return (
     <>
-      <label>Granularity:</label>
+      <label className="text-sm font-semibold mb-1">Granularity</label>
       <select
+        className="p-2 mb-2 rounded-lg"
         name="granularity"
         defaultValue={Constants.GRANULARITY[granularity]}
         onChange={(e: React.ChangeEvent) => onChange(e)}
