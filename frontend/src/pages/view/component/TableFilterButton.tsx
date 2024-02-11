@@ -1,7 +1,7 @@
-import { ReactComponent as FilterIcon } from "../../../assets/raw/filter-icon.svg";
-import { ReactComponent as DownChevron } from "../../../assets/raw/down-chevron.svg";
+import FilterIcon from "../../../assets/components/FilterIcon";
 import { FC } from "react";
 import { TableFilterButtonProps } from "../../../utils/types";
+import DownChevron from "../../../assets/components/DownChevron";
 
 const TableFilterButton: FC<TableFilterButtonProps> = ({
   parentSetOpen,

@@ -1,12 +1,15 @@
-import { Dispatch, FC, SetStateAction } from "react";
-import Card from "../../common/Card";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 import { Constants } from "../../utils/constants";
-import GraphDataPointFilter from "./GraphDataPointFilter";
-import GraphDateFilter from "./GraphDateFilter";
-import GraphTypeFilter from "./GraphTypeFilter";
-import GraphGranularityFilter from "./GraphGranularityFilter";
+import Card from "../../common/Card";
+import GraphFilterExpanded from "./GraphFilterExpanded";
+import GraphFilterCollapsed from "./GraphFilterCollapsed";
 
-type GraphsFilterProps = {
+export enum GraphFilterState {
+  EXPANDED,
+  COLLAPSED,
+}
+
+type GraphFilterProps = {
   granularity: Constants.GRANULARITY;
   graphType: Constants.GRAPH_TYPES;
   searchParams: URLSearchParams;
@@ -14,47 +17,58 @@ type GraphsFilterProps = {
   setSearchParams: Dispatch<SetStateAction<URLSearchParams>>;
 };
 
-const GraphsFilter: FC<GraphsFilterProps> = ({
+function switchStylingGraphsFilterState(graphFilterState: GraphFilterState) {
+  switch (graphFilterState) {
+    case GraphFilterState.COLLAPSED:
+      return "rounded-full hover:bg-slate-300 hover:cursor-pointer";
+    case GraphFilterState.EXPANDED:
+    default:
+      return "rounded-sm";
+  }
+}
+
+const GraphFilter: FC<GraphFilterProps> = ({
   granularity,
   graphType,
   searchParams,
   defaultUrlSearchParams,
   setSearchParams,
 }) => {
+  const [graphFilterState, setGraphFilterState] = useState<GraphFilterState>(
+    GraphFilterState.COLLAPSED
+  );
+
+  const switchCompOnGraphsFilterState = () => {
+    switch (graphFilterState) {
+      case GraphFilterState.COLLAPSED:
+        return (
+          <GraphFilterCollapsed setGraphFilterState={setGraphFilterState} />
+        );
+      case GraphFilterState.EXPANDED:
+        return (
+          <GraphFilterExpanded
+            granularity={granularity}
+            graphType={graphType}
+            searchParams={searchParams}
+            defaultUrlSearchParams={defaultUrlSearchParams}
+            setSearchParams={setSearchParams}
+            setGraphFilterState={setGraphFilterState}
+          />
+        );
+      default:
+        return <h1>No such state!</h1>; // TODO
+    }
+  };
+
   return (
-    <Card customStyles="p-3 absolute top-8 right-64">
-      <GraphTypeFilter
-        graphType={graphType}
-        searchParams={searchParams}
-        setSearchParams={setSearchParams}
-      />
-
-      <GraphDataPointFilter
-        searchParams={searchParams}
-        setSearchParams={setSearchParams}
-      />
-
-      <GraphDateFilter
-        searchParams={searchParams}
-        setSearchParams={setSearchParams}
-      />
-
-      <GraphGranularityFilter
-        granularity={granularity}
-        searchParams={searchParams}
-        setSearchParams={setSearchParams}
-      />
-
-      <div
-        className="mt-5 p-2 w-full bg-theme-cta text-theme-neutral text-center text-xl font-semibold rounded-3xl hover:cursor-pointer"
-        onClick={(_) =>
-          setSearchParams(new URLSearchParams(defaultUrlSearchParams))
-        }
-      >
-        Reset
-      </div>
+    <Card
+      customStyles={`p-3 absolute top-8 right-64 rounded-full ${switchStylingGraphsFilterState(
+        graphFilterState
+      )}`}
+    >
+      {switchCompOnGraphsFilterState()}
     </Card>
   );
 };
 
-export default GraphsFilter;
+export default GraphFilter;

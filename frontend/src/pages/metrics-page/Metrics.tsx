@@ -3,7 +3,7 @@ import GraphsContainer from "../../common/graph/GraphsContainer";
 import useSpendings from "../../hooks/useSpendings";
 import { Constants } from "../../utils/constants";
 import { SpendingListRow } from "../../utils/types";
-import GraphsFilter from "./GraphsFilter";
+import GraphFilter from "./GraphsFilter";
 
 const DEFAULT_URL_SEARCH_PARAMS = new URLSearchParams([
   ["graph-type", "Line"],
@@ -20,7 +20,6 @@ export const Metrics = () => {
 
   const getGranularity = (): Constants.GRANULARITY => {
     const graphType = searchParams.get("granularity");
-    console.log(graphType);
 
     if (!graphType) {
       return Constants.GRANULARITY.Day;
@@ -33,7 +32,6 @@ export const Metrics = () => {
 
   const getGraphType = (): Constants.GRAPH_TYPES => {
     const graphType = searchParams.get("graph-type");
-    console.log(graphType);
 
     if (!graphType) {
       return Constants.GRAPH_TYPES.Line;
@@ -62,7 +60,7 @@ export const Metrics = () => {
         setSearchParams={setSearchParams}
       />
 
-      <GraphsFilter
+      <GraphFilter
         granularity={getGranularity()}
         graphType={getGraphType()}
         searchParams={searchParams}
