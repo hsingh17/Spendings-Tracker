@@ -1,13 +1,24 @@
-import { Dispatch, FC, SetStateAction, useState } from "react";
-import { Constants } from "../../utils/constants";
+import React, { Dispatch, FC, SetStateAction, useState } from "react";
 import Card from "../../common/Card";
-import GraphFilterExpanded from "./GraphFilterExpanded";
+import { Constants } from "../../utils/constants";
 import GraphFilterCollapsed from "./GraphFilterCollapsed";
+import GraphFilterExpanded from "./GraphFilterExpanded";
+
+const DEFAULT_FILTER_POSITION: Position = {
+  top: "32px",
+  right: "80px",
+};
 
 export enum GraphFilterState {
   EXPANDED,
   COLLAPSED,
 }
+
+type Position = {
+  top: string;
+  left?: string;
+  right?: string;
+};
 
 type GraphFilterProps = {
   granularity: Constants.GRANULARITY;
@@ -34,6 +45,13 @@ const GraphFilter: FC<GraphFilterProps> = ({
   defaultUrlSearchParams,
   setSearchParams,
 }) => {
+  const savedPositionStyling = window.localStorage.getItem("positionStyling");
+  const [positionStyling, setPositionStyling] = useState<Position>(
+    savedPositionStyling
+      ? JSON.parse(savedPositionStyling)
+      : DEFAULT_FILTER_POSITION
+  );
+
   const [graphFilterState, setGraphFilterState] = useState<GraphFilterState>(
     GraphFilterState.COLLAPSED
   );
@@ -60,14 +78,47 @@ const GraphFilter: FC<GraphFilterProps> = ({
     }
   };
 
+  const handleDrag = (e: React.DragEvent) => {
+    const parentElement = e.currentTarget.parentElement;
+    if (!parentElement) {
+      // TODO
+      return;
+    }
+
+    const parentBoundingRect = parentElement.getBoundingClientRect();
+
+    const yOffset = e.clientY - parentBoundingRect.y;
+    const xOffset = e.clientX - parentBoundingRect.x;
+
+    // Out-of-bounds of parent
+    if (yOffset < 0 || xOffset < 0) {
+      return;
+    }
+
+    const newPosition: Position = {
+      top: `${yOffset}px`,
+      left: `${xOffset}px`,
+    };
+
+    window.localStorage.setItem("positionStyling", JSON.stringify(newPosition));
+    setPositionStyling(newPosition);
+  };
+
   return (
-    <Card
-      customStyles={`p-3 absolute top-8 right-64 rounded-full ${switchStylingGraphsFilterState(
-        graphFilterState
-      )}`}
+    <div
+      className="absolute w-fit h-fit"
+      style={positionStyling}
+      draggable={true}
+      onDragEnd={(e: React.DragEvent) => handleDrag(e)}
     >
-      {switchCompOnGraphsFilterState()}
-    </Card>
+      <Card
+        customStyles={`p-3 rounded-full ${switchStylingGraphsFilterState(
+          graphFilterState
+        )}`}
+      >
+        {switchCompOnGraphsFilterState()}
+      </Card>
+    </div>
   );
 };
 

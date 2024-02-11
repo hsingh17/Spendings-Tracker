@@ -6,6 +6,7 @@ import GraphTypeFilter from "./GraphTypeFilter";
 import { Constants } from "../../utils/constants";
 import { GraphFilterState } from "./GraphsFilter";
 import UpChevron from "../../assets/components/UpChevron";
+import DragDropIcon from "../../assets/components/DragDropIcon";
 
 type GraphFilterExpandedProps = {
   granularity: Constants.GRANULARITY;
@@ -25,7 +26,11 @@ const GraphFilterExpanded: FC<GraphFilterExpandedProps> = ({
   setGraphFilterState,
 }) => (
   <>
-    <div className="p-1 hover:cursor-pointer" onClick={(_) => setGraphFilterState(GraphFilterState.COLLAPSED)}>
+    <div
+      className="flex flex-row p-1 hover:cursor-pointer"
+      onClick={(_) => setGraphFilterState(GraphFilterState.COLLAPSED)}
+    >
+      <DragDropIcon className="w-5 h-5 mr-auto opacity-50" />
       <UpChevron className="w-5 h-5 ml-auto mr-3" />
     </div>
 
