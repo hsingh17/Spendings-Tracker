@@ -1,11 +1,5 @@
-import {
-  Dispatch,
-  FC,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { FC, useEffect, useRef, useState } from "react";
+import useDetectMobile from "../../hooks/useDetectMobile";
 import { Constants } from "../../utils/constants";
 import {
   ApiResponse,
@@ -17,14 +11,17 @@ import LineChart from "./line/LineChart";
 type MetricsGraphContainerProps = {
   graphType: Constants.GRAPH_TYPES;
   response: ApiResponse<SpendingListRow[] | CategoricalSpendings[]>;
-  setSearchParams: Dispatch<SetStateAction<URLSearchParams>>;
+  setSearchParams: (urlSearchParams: URLSearchParams) => void;
 };
+
+const MOBILE_HEIGHT = 315;
 
 const GraphsContainer: FC<MetricsGraphContainerProps> = ({
   graphType,
   response,
   setSearchParams,
 }) => {
+  const isMobile = useDetectMobile();
   const ref = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState<number>(-1);
   const [width, setWidth] = useState<number>(-1);
@@ -34,7 +31,7 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({
       return;
     }
 
-    setHeight(ref.current.offsetHeight);
+    setHeight(isMobile ? MOBILE_HEIGHT : ref.current.offsetHeight);
     setWidth(ref.current.offsetWidth);
   };
 
@@ -60,12 +57,16 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({
     }
 
     // Mount a ResizeObserver to watch for any changes to the div element being resized
-    new ResizeObserver(handleResize).observe(ref.current);
-  }, []);
+    const resizeObserver = new ResizeObserver(handleResize);
+    resizeObserver.observe(ref.current);
+
+    return () => resizeObserver.disconnect();
+  }, [isMobile]);
 
   return (
     <div
-      className="w-full h-72 md:h-full justify-self-center ml-auto mr-auto bg-gray-700"
+      className="w-full md:h-full justify-self-center ml-auto mr-auto bg-gray-700"
+      style={isMobile ? { height: MOBILE_HEIGHT } : {}}
       ref={ref}
     >
       {getGraph()}

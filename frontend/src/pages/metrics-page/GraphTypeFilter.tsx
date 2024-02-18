@@ -4,7 +4,7 @@ import { Constants } from "../../utils/constants";
 type GraphTypeFilterProps = {
   graphType: Constants.GRAPH_TYPES;
   searchParams: URLSearchParams;
-  setSearchParams: Dispatch<SetStateAction<URLSearchParams>>;
+  setSearchParams: (urlSearchParams: URLSearchParams) => void;
 };
 
 const GraphTypeFilter: FC<GraphTypeFilterProps> = ({
@@ -31,7 +31,7 @@ const GraphTypeFilter: FC<GraphTypeFilterProps> = ({
       <select
         className="p-2 mb-2 rounded-lg"
         name="graph-type"
-        defaultValue={Constants.GRAPH_TYPES[graphType]}
+        value={Constants.GRAPH_TYPES[graphType]}
         onChange={(e: React.ChangeEvent) => onChange(e)}
       >
         {graphTypes.map((type) => {

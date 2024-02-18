@@ -1,6 +1,5 @@
 import { ScaleTime, timeFormat } from "d3";
 import { FC } from "react";
-import useDetectMobile from "../../../hooks/useDetectMobile";
 
 type XTicksProps = {
   xTicks: Date[];
@@ -8,8 +7,7 @@ type XTicksProps = {
   y: number;
 };
 const XTicks: FC<XTicksProps> = ({ xTicks, xScale, y }) => {
-  const isMobile = useDetectMobile();
-  const xAxisFormatter = timeFormat(isMobile ? "%m/%y" : "%m/%Y");
+  const xAxisFormatter = timeFormat("%m/%Y");
   return (
     <>
       {xTicks.map((date) => {

@@ -3,7 +3,7 @@ import GraphsContainer from "../../common/graph/GraphsContainer";
 import useSpendings from "../../hooks/useSpendings";
 import { Constants } from "../../utils/constants";
 import { SpendingListRow } from "../../utils/types";
-import GraphFilter from "./GraphsFilter";
+import GraphFilter from "./GraphFilter";
 
 const DEFAULT_URL_SEARCH_PARAMS = new URLSearchParams([
   ["graph-type", "Line"],
@@ -17,6 +17,15 @@ export const Metrics = () => {
   );
 
   const { data: response } = useSpendings<SpendingListRow>(searchParams);
+
+  const setSearchParamsResetPage = (urlSearchParams: URLSearchParams) => {
+    urlSearchParams.delete("page"); // Reset page
+    setSearchParams(urlSearchParams);
+  };
+
+  const setSearchParamsKeepPage = (urlSearchParams: URLSearchParams) => {
+    setSearchParams(urlSearchParams);
+  };
 
   const getGranularity = (): Constants.GRANULARITY => {
     const graphType = searchParams.get("granularity");
@@ -53,11 +62,11 @@ export const Metrics = () => {
   }
 
   return (
-    <div className="relative w-full h-full flex flex-col">
+    <div className="md:relative w-full h-full flex flex-col">
       <GraphsContainer
         graphType={getGraphType()}
         response={response}
-        setSearchParams={setSearchParams}
+        setSearchParams={setSearchParamsKeepPage}
       />
 
       <GraphFilter
@@ -65,7 +74,7 @@ export const Metrics = () => {
         graphType={getGraphType()}
         searchParams={searchParams}
         defaultUrlSearchParams={DEFAULT_URL_SEARCH_PARAMS}
-        setSearchParams={setSearchParams}
+        setSearchParams={setSearchParamsResetPage}
       />
     </div>
   );

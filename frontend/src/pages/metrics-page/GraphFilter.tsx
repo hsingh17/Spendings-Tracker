@@ -1,8 +1,15 @@
-import React, { Dispatch, FC, SetStateAction, useState } from "react";
+import React, {
+  Dispatch,
+  FC,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import Card from "../../common/Card";
 import { Constants } from "../../utils/constants";
 import GraphFilterCollapsed from "./GraphFilterCollapsed";
 import GraphFilterExpanded from "./GraphFilterExpanded";
+import useDetectMobile from "../../hooks/useDetectMobile";
 
 const DEFAULT_FILTER_POSITION: Position = {
   top: "32px",
@@ -25,7 +32,7 @@ type GraphFilterProps = {
   graphType: Constants.GRAPH_TYPES;
   searchParams: URLSearchParams;
   defaultUrlSearchParams: URLSearchParams;
-  setSearchParams: Dispatch<SetStateAction<URLSearchParams>>;
+  setSearchParams: (urlSearchParams: URLSearchParams) => void;
 };
 
 function switchStylingGraphsFilterState(graphFilterState: GraphFilterState) {
@@ -45,15 +52,18 @@ const GraphFilter: FC<GraphFilterProps> = ({
   defaultUrlSearchParams,
   setSearchParams,
 }) => {
-  const savedPositionStyling = window.localStorage.getItem("positionStyling");
+  const savedPositionStyling = localStorage.getItem("positionStyling");
+
   const [positionStyling, setPositionStyling] = useState<Position>(
     savedPositionStyling
       ? JSON.parse(savedPositionStyling)
       : DEFAULT_FILTER_POSITION
   );
 
+  const isMobile = useDetectMobile();
+
   const [graphFilterState, setGraphFilterState] = useState<GraphFilterState>(
-    GraphFilterState.COLLAPSED
+    isMobile ? GraphFilterState.EXPANDED : GraphFilterState.COLLAPSED
   );
 
   const switchCompOnGraphsFilterState = () => {
@@ -78,8 +88,27 @@ const GraphFilter: FC<GraphFilterProps> = ({
     }
   };
 
-  const handleDrag = (e: React.DragEvent) => {
-    const parentElement = e.currentTarget.parentElement;
+  const handleTouchAndDrag = (e: React.TouchEvent) => {
+    if (!e.changedTouches) {
+      return;
+    }
+
+    handleMoveFilterModal(
+      e.currentTarget.parentElement,
+      e.changedTouches[0].clientX,
+      e.changedTouches[0].clientY
+    );
+  };
+
+  const handleClickAndDrag = (e: React.MouseEvent) => {
+    handleMoveFilterModal(e.currentTarget.parentElement, e.clientX, e.clientY);
+  };
+
+  const handleMoveFilterModal = (
+    parentElement: HTMLElement | null,
+    clientX: number,
+    clientY: number
+  ) => {
     if (!parentElement) {
       // TODO
       return;
@@ -87,8 +116,8 @@ const GraphFilter: FC<GraphFilterProps> = ({
 
     const parentBoundingRect = parentElement.getBoundingClientRect();
 
-    const yOffset = e.clientY - parentBoundingRect.y;
-    const xOffset = e.clientX - parentBoundingRect.x;
+    const yOffset = clientY - parentBoundingRect.y;
+    const xOffset = clientX - parentBoundingRect.x;
 
     // Out-of-bounds of parent
     if (yOffset < 0 || xOffset < 0) {
@@ -100,19 +129,25 @@ const GraphFilter: FC<GraphFilterProps> = ({
       left: `${xOffset}px`,
     };
 
-    window.localStorage.setItem("positionStyling", JSON.stringify(newPosition));
+    localStorage.setItem("positionStyling", JSON.stringify(newPosition));
     setPositionStyling(newPosition);
   };
 
+  useEffect(() => {
+    setGraphFilterState(
+      isMobile ? GraphFilterState.EXPANDED : GraphFilterState.COLLAPSED
+    );
+  }, [isMobile]);
   return (
     <div
-      className="absolute w-fit h-fit"
+      className="md:absolute w-full md:w-fit h-full md:h-fit"
       style={positionStyling}
       draggable={true}
-      onDragEnd={(e: React.DragEvent) => handleDrag(e)}
+      onDragEnd={(e: React.DragEvent) => handleClickAndDrag(e)}
+      onTouchEnd={(e: React.TouchEvent) => handleTouchAndDrag(e)}
     >
       <Card
-        customStyles={`p-3 rounded-full ${switchStylingGraphsFilterState(
+        customStyles={`p-3 rounded-full h-full ${switchStylingGraphsFilterState(
           graphFilterState
         )}`}
       >

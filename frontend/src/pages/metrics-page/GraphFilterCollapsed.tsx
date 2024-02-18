@@ -1,7 +1,7 @@
 import { Dispatch, FC, SetStateAction } from "react";
 import DownChevron from "../../assets/components/DownChevron";
 import FilterIcon from "../../assets/components/FilterIcon";
-import { GraphFilterState } from "./GraphsFilter";
+import { GraphFilterState } from "./GraphFilter";
 import DragDropIcon from "../../assets/components/DragDropIcon";
 
 type GraphFilterCollapsedProps = {

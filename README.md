@@ -3,8 +3,6 @@ This repository holds the code for my spendings tracker app built with Java and 
 
 ## TODO
 - filters modal thing
-    - reset filters button
-    - collapse and expand buttons
     - in mobile view, just show filters under the graph
 - metrics page
 - add eslint and prettier -> clean up accordingly

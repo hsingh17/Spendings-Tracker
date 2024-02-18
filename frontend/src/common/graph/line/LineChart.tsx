@@ -9,19 +9,10 @@ import Tooltip from "./Tooltip";
 import Tracer from "./Tracer";
 import XTicks from "./XTicks";
 import YTicks from "./YTicks";
+import ArrayUtils from "../../../utils/array-utils";
 
 const TRACER_X_INITIAL = -10;
 export const POINT_RADIUS = 7;
-
-function calculateMargins(height: number, width: number) {
-  return {
-    left: width / 20,
-    right: width / 20,
-    top: height / 5,
-    bottom: height / 20,
-  };
-}
-
 export type TooltipPosition = {
   top: number;
   left: number;
@@ -31,8 +22,17 @@ type LineChartProps = {
   width: number;
   height: number;
   response: ApiResponse<SpendingListRow[]>;
-  setSearchParams: Dispatch<SetStateAction<URLSearchParams>>;
+  setSearchParams: (urlSearchParams: URLSearchParams) => void;
 };
+
+function calculateMargins(height: number, width: number) {
+  return {
+    left: width / 20,
+    right: width / 20,
+    top: height / 5,
+    bottom: height / 20,
+  };
+}
 
 const LineChart: FC<LineChartProps> = ({
   response,
@@ -103,7 +103,7 @@ const LineChart: FC<LineChartProps> = ({
     const queryParams = new URLSearchParams(
       link.substring(link.indexOf("?") + 1)
     );
-    
+
     setSearchParams(queryParams);
   };
 
@@ -123,10 +123,14 @@ const LineChart: FC<LineChartProps> = ({
 
   const d = lineFn(data!);
 
-  const xTicks = xScale.ticks(
-    Math.max(2, Math.floor(xScale.ticks().length / 2))
+  // Formula based on width to determine the number of x ticks to show.
+  // Display at least 2
+  const xTicksToShow = Math.max(
+    2,
+    Math.floor(xScale.ticks().length * Math.min(width / 2000, 1))
   );
 
+  const xTicks = ArrayUtils.spreadEvenly(xScale.ticks(), xTicksToShow);
   const yTicks = yScale.ticks(yScale.ticks().length / 2);
 
   return (

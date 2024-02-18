@@ -4,7 +4,7 @@ import { Nullable } from "../../utils/types";
 
 type GraphDataPointFilterProps = {
   searchParams: URLSearchParams;
-  setSearchParams: Dispatch<SetStateAction<URLSearchParams>>;
+  setSearchParams: (urlSearchParams: URLSearchParams) => void;
 };
 
 const GraphDataPointFilter: FC<GraphDataPointFilterProps> = ({
@@ -32,7 +32,7 @@ const GraphDataPointFilter: FC<GraphDataPointFilterProps> = ({
       <select
         className="p-2 mb-2 rounded-lg"
         name="data-points"
-        defaultValue={getCurrentLimit()}
+        value={getCurrentLimit()}
         onChange={(e: React.ChangeEvent) => onChange(e)}
       >
         {Constants.PAGE_LIMITS.map((limit) => {

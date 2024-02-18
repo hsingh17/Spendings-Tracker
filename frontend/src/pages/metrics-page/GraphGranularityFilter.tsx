@@ -1,11 +1,10 @@
-import React, { Dispatch, FC, SetStateAction } from "react";
+import React, { FC } from "react";
 import { Constants } from "../../utils/constants";
-import { Nullable } from "../../utils/types";
 
 type GraphGranularityFilter = {
   granularity: Constants.GRANULARITY;
   searchParams: URLSearchParams;
-  setSearchParams: Dispatch<SetStateAction<URLSearchParams>>;
+  setSearchParams: (urlSearchParams: URLSearchParams) => void;
 };
 
 const GraphGranularityFilter: FC<GraphGranularityFilter> = ({
@@ -32,7 +31,7 @@ const GraphGranularityFilter: FC<GraphGranularityFilter> = ({
       <select
         className="p-2 mb-2 rounded-lg"
         name="granularity"
-        defaultValue={Constants.GRANULARITY[granularity]}
+        value={Constants.GRANULARITY[granularity]}
         onChange={(e: React.ChangeEvent) => onChange(e)}
       >
         {granularities.map((type) => {

@@ -46,9 +46,9 @@ const Navbar = () => {
     }
   );
 
-  const mobile = useDetectMobile();
+  const isMobile = useDetectMobile();
   const [state, setState] = useState<NavbarState>(
-    mobile ? NavbarState.MOBILE_MENU_HIDDEN : NavbarState.NON_MOBILE_EXPANDED
+    isMobile ? NavbarState.MOBILE_MENU_HIDDEN : NavbarState.NON_MOBILE_EXPANDED
   );
 
   const transitionStateWrapper = (action: NavbarAction) => {
@@ -58,7 +58,7 @@ const Navbar = () => {
   const getNavList = (): Array<NavbarListItem> => {
     const navigateToPage = (page: string) => {
       navigate(page);
-      if (mobile) {
+      if (isMobile) {
         transitionStateWrapper(NavbarAction.MOBILE_NAVIGATE_TO_PAGE);
       }
     };
@@ -110,11 +110,11 @@ const Navbar = () => {
   useEffect(
     () =>
       transitionStateWrapper(
-        mobile
+        isMobile
           ? NavbarAction.RESIZE_TO_MOBILE
           : NavbarAction.RESIZE_TO_NON_MOBILE
       ),
-    [mobile]
+    [isMobile]
   );
 
   if (!response || !response.data || !response.ok) {
@@ -122,7 +122,7 @@ const Navbar = () => {
   }
 
   return (
-    <div className={mobile ? MOBILE_STYLE : NON_MOBILE_STYLE}>
+    <div className={isMobile ? MOBILE_STYLE : NON_MOBILE_STYLE}>
       <NavbarHeader state={state} transitionState={transitionStateWrapper} />
       <NavbarList
         state={state}

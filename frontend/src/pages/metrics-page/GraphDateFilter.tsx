@@ -5,7 +5,7 @@ import { Nullable } from "../../utils/types";
 
 type GraphDateFilterProps = {
   searchParams: URLSearchParams;
-  setSearchParams: Dispatch<SetStateAction<URLSearchParams>>;
+  setSearchParams: (urlSearchParams: URLSearchParams) => void;
 };
 
 const GraphDateFilter: FC<GraphDateFilterProps> = ({
@@ -47,7 +47,7 @@ const GraphDateFilter: FC<GraphDateFilterProps> = ({
       <DatePicker
         range
         rangeHover
-        inputClass="p-2 mb-2 rounded-lg border-slate border-2 text-wrap bg-gray-200"
+        inputClass="p-2 mb-2 w-full rounded-lg border-slate border-2 text-wrap bg-gray-200"
         format="MM/DD/YYYY"
         dateSeparator=" - "
         onChange={onChange}
