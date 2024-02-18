@@ -4,7 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { ReactComponent as AddRow } from "../../../assets/raw/add-row.svg";
 import Card from "../../../common/Card";
 import useSaveSpendings from "../../../hooks/useSaveSpendings";
-import { Constants } from "../../../utils/constants";
+import {
+  MAX_AMOUNT,
+  MAX_CATEGORY_LENGTH,
+  MAX_SPENDINGS_FOR_A_DAY,
+} from "../../../utils/constants";
 import {
   FormInputError,
   Nullable,
@@ -72,32 +76,35 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
   const handleSubmit = (e: React.MouseEvent) => {
     const isValidFormInput = (): boolean => {
       let isValid: boolean = true;
-      let newSpendings: Array<SpendingFormInput> = spendings.map((spending) => {
-        const newSpending: SpendingFormInput = { ...spending };
-        if (!newSpending.category || newSpending.category.trim().length === 0) {
-          newSpending.categoryError = FormInputError.EMPTY_CATEGORY;
-        } else if (
-          newSpending.category.length > Constants.MAX_CATEGORY_LENGTH
-        ) {
-          newSpending.categoryError = FormInputError.MAX_CATEGORY_LENGTH;
-        } else {
-          newSpending.amountError = FormInputError.ZERO_AMOUNT;
-          newSpending.categoryError = null;
-        }
+      const newSpendings: Array<SpendingFormInput> = spendings.map(
+        (spending) => {
+          const newSpending: SpendingFormInput = { ...spending };
+          if (
+            !newSpending.category ||
+            newSpending.category.trim().length === 0
+          ) {
+            newSpending.categoryError = FormInputError.EMPTY_CATEGORY;
+          } else if (newSpending.category.length > MAX_CATEGORY_LENGTH) {
+            newSpending.categoryError = FormInputError.MAX_CATEGORY_LENGTH;
+          } else {
+            newSpending.categoryError = null;
+          }
 
-        if (!newSpending.amount || newSpending.amount === 0) {
-        } else if (newSpending.amount >= Constants.MAX_AMOUNT) {
-          newSpending.amountError = FormInputError.MAX_AMOUNT;
-        } else {
-          newSpending.amountError = null;
-        }
+          if (!newSpending.amount || newSpending.amount === 0) {
+            newSpending.amountError = FormInputError.ZERO_AMOUNT;
+          } else if (newSpending.amount >= MAX_AMOUNT) {
+            newSpending.amountError = FormInputError.MAX_AMOUNT;
+          } else {
+            newSpending.amountError = null;
+          }
 
-        if (newSpending.categoryError || newSpending.amountError) {
-          isValid = false; // Can do this inline but TypeScript warning/error makes it look uglier than this
-        }
+          if (newSpending.categoryError || newSpending.amountError) {
+            isValid = false; // Can do this inline but TypeScript warning/error makes it look uglier than this
+          }
 
-        return newSpending;
-      });
+          return newSpending;
+        }
+      );
 
       if (!isValid) {
         setSpendings(newSpendings);
@@ -124,13 +131,13 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
   const handleAddNewRow = (e: React.MouseEvent) => {
     e.preventDefault();
 
-    if (countSpendingsToDisplay() >= Constants.MAX_SPENDINGS_FOR_A_DAY) {
+    if (countSpendingsToDisplay() >= MAX_SPENDINGS_FOR_A_DAY) {
       // No more spendings allowed for the day
       toast.error("Reached maximum spendings for a day!");
       return;
     }
 
-    let newSpendings: Array<SpendingFormInput> = [...spendings];
+    const newSpendings: Array<SpendingFormInput> = [...spendings];
     newSpendings.push({
       spendingId: null,
       category: null,
@@ -152,7 +159,7 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
   };
 
   const handleDeleteRow = (idx: number) => {
-    let newSpendings: Array<SpendingFormInput> = [...spendings];
+    const newSpendings: Array<SpendingFormInput> = [...spendings];
     if (newSpendings[idx].spendingId !== null) {
       newSpendings[idx].delete = true;
     } else {
@@ -164,7 +171,7 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
   };
 
   const handleChange = (idx: number, newSpending: SpendingFormInput) => {
-    let newSpendings: Array<SpendingFormInput> = [...spendings];
+    const newSpendings: Array<SpendingFormInput> = [...spendings];
     newSpendings[idx] = newSpending;
     setSpendings(newSpendings);
   };
@@ -189,7 +196,7 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
       <div className="ml-auto mt-5">
         <button
           className="mr-4 text-slate-600 text-lg"
-          onClick={(e: React.MouseEvent) => navigate(-1)}
+          onClick={() => navigate(-1)}
         >
           Cancel
         </button>

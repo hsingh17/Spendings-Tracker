@@ -1,9 +1,13 @@
-import { NavbarListProps, NavbarState } from "../../utils/types";
-import { useNavigate } from "react-router-dom";
-import NavbarSublist from "./NavbarSublist";
 import { FC } from "react";
+import { NavbarListItem, NavbarState } from "../../utils/types";
+import NavbarSublist from "./NavbarSublist";
 
-const NavbarList: FC<NavbarListProps> = ({ state, items, transitionState }) => {
+type NavbarListProps = {
+  state: NavbarState;
+  items: NavbarListItem[];
+};
+
+const NavbarList: FC<NavbarListProps> = ({ state, items }) => {
   if (state === NavbarState.MOBILE_MENU_HIDDEN) {
     return <></>;
   }

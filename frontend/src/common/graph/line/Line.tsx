@@ -17,7 +17,8 @@ const Line: FC<LineProps> = ({ d }) => {
       stroke="#00ADB5"
       strokeWidth={2}
       strokeDasharray={"100000"}
-      strokeDashoffset={-100000} />
+      strokeDashoffset={-100000}
+    />
   );
 };
 

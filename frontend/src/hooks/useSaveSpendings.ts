@@ -1,18 +1,26 @@
 import { useMutation } from "@tanstack/react-query";
-import { Constants } from "../utils/constants";
+import toast from "react-hot-toast";
+import { POST, PUT, SPENDINGS_API_ROUTE } from "../utils/constants";
 import fetchRequestWrapper from "../utils/fetch-utils";
 import { Spending } from "../utils/types";
-import toast from "react-hot-toast";
 
-async function postOrPutSpendings(spendings: Array<Spending>, spendingDate: string, isCreate: boolean) {
+async function postOrPutSpendings(
+  spendings: Array<Spending>,
+  spendingDate: string,
+  isCreate: boolean,
+) {
   return await fetchRequestWrapper(
-    `${Constants.SPENDINGS_API_ROUTE}/${spendingDate}`,
-    isCreate ? Constants.POST : Constants.PUT,
-    JSON.stringify(spendings)
+    `${SPENDINGS_API_ROUTE}/${spendingDate}`,
+    isCreate ? POST : PUT,
+    JSON.stringify(spendings),
   );
 }
 
-export default function useSaveSpendings(date: string, isCreate: boolean, onSuccess: () => void) {
+export default function useSaveSpendings(
+  date: string,
+  isCreate: boolean,
+  onSuccess: () => void,
+) {
   return useMutation({
     mutationFn: (spendings: Array<Spending>) => {
       const promise = postOrPutSpendings(spendings, date, isCreate);
@@ -26,4 +34,4 @@ export default function useSaveSpendings(date: string, isCreate: boolean, onSucc
     },
     onSuccess: onSuccess,
   });
-};
+}

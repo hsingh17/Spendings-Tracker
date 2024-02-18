@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import GraphsContainer from "../../common/graph/GraphsContainer";
 import useSpendings from "../../hooks/useSpendings";
-import { Constants } from "../../utils/constants";
+import { GRANULARITY, GRAPH_TYPES } from "../../utils/constants";
 import { SpendingListRow } from "../../utils/types";
 import GraphFilter from "./GraphFilter";
 
@@ -27,28 +27,24 @@ export const Metrics = () => {
     setSearchParams(urlSearchParams);
   };
 
-  const getGranularity = (): Constants.GRANULARITY => {
+  const getGranularity = (): GRANULARITY => {
     const graphType = searchParams.get("granularity");
 
     if (!graphType) {
-      return Constants.GRANULARITY.Day;
+      return GRANULARITY.Day;
     }
 
-    return Constants.GRANULARITY[
-      graphType as keyof typeof Constants.GRANULARITY
-    ];
+    return GRANULARITY[graphType as keyof typeof GRANULARITY];
   };
 
-  const getGraphType = (): Constants.GRAPH_TYPES => {
+  const getGraphType = (): GRAPH_TYPES => {
     const graphType = searchParams.get("graph-type");
 
     if (!graphType) {
-      return Constants.GRAPH_TYPES.Line;
+      return GRAPH_TYPES.Line;
     }
 
-    return Constants.GRAPH_TYPES[
-      graphType as keyof typeof Constants.GRAPH_TYPES
-    ];
+    return GRAPH_TYPES[graphType as keyof typeof GRAPH_TYPES];
   };
 
   // TODO: Error handling

@@ -24,7 +24,7 @@ const NavbarHamburgerIcon: FC<NavbarHamburgerIconProps> = ({
         transitionState(
           state === NavbarState.MOBILE_MENU_SHOWN
             ? NavbarAction.MOBILE_HIDE_MENU
-            : NavbarAction.MOBILE_SHOW_MENU
+            : NavbarAction.MOBILE_SHOW_MENU,
         )
       }
       className="hover:cursor-pointer w-10 h-10 ml-auto mr-10 scale-125"

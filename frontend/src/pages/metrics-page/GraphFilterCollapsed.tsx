@@ -1,8 +1,8 @@
 import { Dispatch, FC, SetStateAction } from "react";
 import DownChevron from "../../assets/components/DownChevron";
+import DragDropIcon from "../../assets/components/DragDropIcon";
 import FilterIcon from "../../assets/components/FilterIcon";
 import { GraphFilterState } from "./GraphFilter";
-import DragDropIcon from "../../assets/components/DragDropIcon";
 
 type GraphFilterCollapsedProps = {
   setGraphFilterState: Dispatch<SetStateAction<GraphFilterState>>;
@@ -14,7 +14,7 @@ const GraphFilterCollapsed: FC<GraphFilterCollapsedProps> = ({
   return (
     <div
       className="p-1 flex flex-row items-center"
-      onClick={(_) => setGraphFilterState(GraphFilterState.EXPANDED)}
+      onClick={() => setGraphFilterState(GraphFilterState.EXPANDED)}
     >
       <DragDropIcon className="w-5 h-5 mr-auto opacity-50" />
 

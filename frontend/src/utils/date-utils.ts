@@ -13,22 +13,23 @@ const DateUtils = {
     const dateNum: number = parseInt(split[2]);
 
     const dateObj: Date = new Date(yearNum, monthIdx, dateNum);
-    if (isNaN(dateObj.getTime())) { // NaN check
+    if (isNaN(dateObj.getTime())) {
+      // NaN check
       return null;
     }
 
     const monthRaw: number = dateObj.getMonth() + 1;
-    const month: string = (monthRaw < 10) ? `0${monthRaw}` : `${monthRaw}`;
+    const month: string = monthRaw < 10 ? `0${monthRaw}` : `${monthRaw}`;
 
     const dayRaw: number = dateObj.getDate();
-    const day: string = (dayRaw < 10) ? `0${dayRaw}` : `${dayRaw}`;
+    const day: string = dayRaw < 10 ? `0${dayRaw}` : `${dayRaw}`;
 
     return `${month}/${day}/${dateObj.getFullYear()}`;
   },
 
   getCurrentDate(): string {
     return new Date().toISOString().split("T")[0];
-  }
-}
+  },
+};
 
 export default DateUtils;

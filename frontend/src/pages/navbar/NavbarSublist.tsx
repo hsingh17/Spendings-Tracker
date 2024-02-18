@@ -10,7 +10,7 @@ const NavbarSublist: FC<NavbarSublistProps> = ({ item, state }) => {
       ) : (
         <h2 className="text-lg font-semibold">{item.category}</h2>
       )}
-      
+
       <ul>
         {item.children.map((child, index) => (
           <NavbarSublistItem key={index} item={child} state={state} />

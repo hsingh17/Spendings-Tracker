@@ -1,6 +1,7 @@
 import { extent, line, scaleLinear, scaleTime, timeParse } from "d3";
-import React, { Dispatch, FC, SetStateAction, useState } from "react";
-import { Constants } from "../../../utils/constants";
+import React, { FC, useState } from "react";
+import ArrayUtils from "../../../utils/array-utils";
+import { ISO_FORMAT } from "../../../utils/constants";
 import { ApiResponse, Nullable, SpendingListRow } from "../../../utils/types";
 import Line from "./Line";
 import PaginationBar from "./PaginationBar";
@@ -9,7 +10,6 @@ import Tooltip from "./Tooltip";
 import Tracer from "./Tracer";
 import XTicks from "./XTicks";
 import YTicks from "./YTicks";
-import ArrayUtils from "../../../utils/array-utils";
 
 const TRACER_X_INITIAL = -10;
 export const POINT_RADIUS = 7;
@@ -43,7 +43,7 @@ const LineChart: FC<LineChartProps> = ({
   const data = response.data;
   const prev = response.metadata?.links.prev;
   const next = response.metadata?.links.next;
-  const parser = timeParse(Constants.ISO_FORMAT);
+  const parser = timeParse(ISO_FORMAT);
   const margins = calculateMargins(height, width);
   const [tracerX, setTracerX] = useState<number>(TRACER_X_INITIAL);
   const [tooltipIdx, setTooltipIdx] = useState<Nullable<number>>(null);

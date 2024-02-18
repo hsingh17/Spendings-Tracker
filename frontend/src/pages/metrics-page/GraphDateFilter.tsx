@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, SetStateAction } from "react";
+import { FC } from "react";
 import DatePicker, { DateObject } from "react-multi-date-picker";
 import DateUtils from "../../utils/date-utils";
 import { Nullable } from "../../utils/types";

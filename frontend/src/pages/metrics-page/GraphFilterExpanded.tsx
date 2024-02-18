@@ -1,15 +1,15 @@
 import { Dispatch, FC, SetStateAction } from "react";
+import { GRANULARITY, GRAPH_TYPES } from "../../utils/constants";
 import GraphDataPointFilter from "./GraphDataPointFilter";
 import GraphDateFilter from "./GraphDateFilter";
-import GraphGranularityFilter from "./GraphGranularityFilter";
-import GraphTypeFilter from "./GraphTypeFilter";
-import { Constants } from "../../utils/constants";
 import { GraphFilterState } from "./GraphFilter";
 import GraphFilterHeader from "./GraphFilterHeader";
+import GraphGranularityFilter from "./GraphGranularityFilter";
+import GraphTypeFilter from "./GraphTypeFilter";
 
 type GraphFilterExpandedProps = {
-  granularity: Constants.GRANULARITY;
-  graphType: Constants.GRAPH_TYPES;
+  granularity: GRANULARITY;
+  graphType: GRAPH_TYPES;
   searchParams: URLSearchParams;
   defaultUrlSearchParams: URLSearchParams;
   setSearchParams: (urlSearchParams: URLSearchParams) => void;
@@ -52,7 +52,7 @@ const GraphFilterExpanded: FC<GraphFilterExpandedProps> = ({
 
       <div
         className="mt-5 p-2 w-full bg-theme-cta text-theme-neutral text-center text-xl font-semibold rounded-3xl hover:cursor-pointer"
-        onClick={(_) =>
+        onClick={() =>
           setSearchParams(new URLSearchParams(defaultUrlSearchParams))
         }
       >

@@ -1,8 +1,8 @@
-import React, { Dispatch, FC, SetStateAction } from "react";
-import { Constants } from "../../utils/constants";
+import React, { FC } from "react";
+import { GRAPH_TYPES } from "../../utils/constants";
 
 type GraphTypeFilterProps = {
-  graphType: Constants.GRAPH_TYPES;
+  graphType: GRAPH_TYPES;
   searchParams: URLSearchParams;
   setSearchParams: (urlSearchParams: URLSearchParams) => void;
 };
@@ -12,7 +12,7 @@ const GraphTypeFilter: FC<GraphTypeFilterProps> = ({
   searchParams,
   setSearchParams,
 }) => {
-  const graphTypes = Object.keys(Constants.GRAPH_TYPES).filter((val) =>
+  const graphTypes = Object.keys(GRAPH_TYPES).filter((val) =>
     isNaN(Number(val))
   );
 
@@ -31,7 +31,7 @@ const GraphTypeFilter: FC<GraphTypeFilterProps> = ({
       <select
         className="p-2 mb-2 rounded-lg"
         name="graph-type"
-        value={Constants.GRAPH_TYPES[graphType]}
+        value={GRAPH_TYPES[graphType]}
         onChange={(e: React.ChangeEvent) => onChange(e)}
       >
         {graphTypes.map((type) => {

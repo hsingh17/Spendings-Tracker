@@ -4,11 +4,9 @@ import BarChart from "./bar/BarChart";
 
 const ThumbnailBarChart = () => {
   const searchParams: URLSearchParams = new URLSearchParams([["type", "C"]]);
-  const {data: response} = useSpendings<CategoricalSpendings>(searchParams);
+  const { data: response } = useSpendings<CategoricalSpendings>(searchParams);
 
-  return (
-    <BarChart data={response?.data} width={200} height={200} />
-  )
+  return <BarChart data={response?.data} width={200} height={200} />;
 };
 
 export default ThumbnailBarChart;

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Constants } from "../../../utils/constants";
+import { SAVE_SPENDINGS_PAGE } from "../../../utils/constants";
 import DateUtils from "../../../utils/date-utils";
 
 const NoSpendingActivity = () => {
@@ -10,9 +10,7 @@ const NoSpendingActivity = () => {
       <a
         className="text-theme-cta font-semibold hover:cursor-pointer underline"
         onClick={() =>
-          navigate(
-            `${Constants.SAVE_SPENDINGS_PAGE}/${DateUtils.getCurrentDate()}`
-          )
+          navigate(`${SAVE_SPENDINGS_PAGE}/${DateUtils.getCurrentDate()}`)
         }
       >
         Let's fix that!

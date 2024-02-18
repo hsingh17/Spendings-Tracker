@@ -1,14 +1,14 @@
 import { Nullable } from "./types";
 
-const usdFormatter = new Intl.NumberFormat('en-US', {
+const usdFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
-  currency: "USD"
+  currency: "USD",
 });
 
 const MoneyUtils = {
   formatMoneyUsd(amount: Nullable<number>): string {
     return !amount ? "" : usdFormatter.format(amount);
-  }
+  },
 };
 
 export default MoneyUtils;

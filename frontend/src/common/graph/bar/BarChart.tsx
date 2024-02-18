@@ -1,12 +1,4 @@
-import {
-  Selection,
-  extent,
-  max,
-  min,
-  scaleBand,
-  scaleLinear,
-  select
-} from "d3";
+import { Selection, extent, scaleBand, scaleLinear, select } from "d3";
 import { FC, useEffect, useRef, useState } from "react";
 import { BarChartProps, Nullable } from "../../../utils/types";
 
@@ -41,15 +33,14 @@ const BarChart: FC<BarChartProps> = ({ data, height, width }) => {
       .selectAll("rect")
       .data(data)
       .join(
-        enter => enter.append("rect"),
-        update => update.attr("class", "updated"),
-        exit => exit.remove()
+        (enter) => enter.append("rect"),
+        (update) => update.attr("class", "updated"),
+        (exit) => exit.remove()
       )
-      .attr("x", d => xScale(d.category)!)
+      .attr("x", (d) => xScale(d.category)!)
       .attr("width", xScale.bandwidth())
-      .attr("height", d => yScale(d.total))
+      .attr("height", (d) => yScale(d.total))
       .attr("fill", "black");
-
   }, [selection, data]);
 
   return <svg ref={svgRef} height={height} width={width}></svg>;

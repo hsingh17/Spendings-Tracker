@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { User } from "../utils/types"
+import { User } from "../utils/types";
 
 type UserContextType = {
   user: User | null;
@@ -8,7 +8,7 @@ type UserContextType = {
 
 const UserContext = createContext<UserContextType>({
   user: null,
-  setUser: () => {}
+  setUser: () => {},
 });
 
 export default UserContext;

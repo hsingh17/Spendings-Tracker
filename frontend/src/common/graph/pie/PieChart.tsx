@@ -1,10 +1,29 @@
-import { PieArcDatum, Selection, arc, interpolateCool, pie, scaleSequential, select } from "d3";
+import {
+  PieArcDatum,
+  Selection,
+  arc,
+  interpolateCool,
+  pie,
+  scaleSequential,
+  select,
+} from "d3";
 import { FC, useEffect, useRef, useState } from "react";
-import { CategoricalSpendings, Nullable, PieChartProps } from "../../../utils/types";
+import {
+  CategoricalSpendings,
+  Nullable,
+  PieChartProps,
+} from "../../../utils/types";
 
-const PieChart: FC<PieChartProps> = ({ data, height, width, innerRadius, outerRadius }) => {
+const PieChart: FC<PieChartProps> = ({
+  data,
+  height,
+  width,
+  innerRadius,
+  outerRadius,
+}) => {
   const svgRef = useRef(null);
-  const [selection, setSelection] = useState<Nullable<Selection<null, unknown, null, undefined>>>(null);
+  const [selection, setSelection] =
+    useState<Nullable<Selection<null, unknown, null, undefined>>>(null);
 
   useEffect(() => {
     if (!selection) {
@@ -24,11 +43,11 @@ const PieChart: FC<PieChartProps> = ({ data, height, width, innerRadius, outerRa
     // Will be used to compute arcs from data
     const pieGenerator = pie<CategoricalSpendings>()
       .padAngle(0)
-      .value(d => d.total);
+      .value((d) => d.total);
 
-    // Will be used to draw the arcs 
+    // Will be used to draw the arcs
     const arcGenerator = arc<PieArcDatum<CategoricalSpendings>>()
-      .innerRadius(innerRadius)      
+      .innerRadius(innerRadius)
       .outerRadius(outerRadius);
 
     // Create an svg group
@@ -36,23 +55,22 @@ const PieChart: FC<PieChartProps> = ({ data, height, width, innerRadius, outerRa
       .selectAll("g")
       .data([true]) // Data in this case doesn't matter we just want a svg group element
       .join(
-        enter => enter.append("g"),
-        update => update.attr("class", "updated"),
-        exit => exit.remove()
+        (enter) => enter.append("g"),
+        (update) => update.attr("class", "updated"),
+        (exit) => exit.remove(),
       )
       .attr("transform", `translate(${width / 2}, ${height / 2})`);
 
     svgGroup
       .selectAll("path")
-      .data(pieGenerator(data)) 
+      .data(pieGenerator(data))
       .join(
         (enter) => enter.append("path"),
         (update) => update.attr("class", "updated"),
-        (exit) => exit.remove()
+        (exit) => exit.remove(),
       )
       .attr("d", arcGenerator)
       .style("fill", (_, i) => interpolatorScale(i));
-
   }, [selection, data]);
 
   return <svg ref={svgRef} height={height} width={width}></svg>;

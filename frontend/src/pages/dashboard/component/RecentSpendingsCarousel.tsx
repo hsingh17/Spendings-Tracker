@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { ReactComponent as RightArrow } from "../../../assets/raw/right-arrow.svg";
 import Carousel from "../../../common/Carousel";
 import useSpendings from "../../../hooks/useSpendings";
-import { Constants } from "../../../utils/constants";
+import { VIEW_SPENDINGS_PAGE } from "../../../utils/constants";
 import { SpendingListRow } from "../../../utils/types";
 import NoSpendingActivity from "./NoSpendingActivity";
 import RecentSpendingsCard from "./RecentSpendingsCard";
@@ -10,7 +10,7 @@ const SEARCH_PARAMS = new URLSearchParams([["limit", "7"]]);
 
 const RecentSpendingsCarousel = () => {
   const navigate = useNavigate();
-  let { data: response } = useSpendings<SpendingListRow>(SEARCH_PARAMS);
+  const { data: response } = useSpendings<SpendingListRow>(SEARCH_PARAMS);
 
   if (!response || !response.ok) {
     return (
@@ -37,7 +37,7 @@ const RecentSpendingsCarousel = () => {
 
       <div
         className="w-40 flex flex-row items-center text-center hover:cursor-pointer hover:opacity-50"
-        onClick={() => navigate(`${Constants.VIEW_SPENDINGS_PAGE}`)}
+        onClick={() => navigate(`${VIEW_SPENDINGS_PAGE}`)}
       >
         <p className="font-semibold text-theme-cta text-2xl">View all</p>
         <RightArrow className="w-10 h-10" stroke="#00ADB5" />

@@ -1,13 +1,13 @@
 import { FC, useState } from "react";
-import useLogin from "../../../hooks/useLogin";
-import { UserFormData } from "../../../utils/types";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { Constants } from "../../../utils/constants";
+import { ReactComponent as HideEye } from "../../../assets/raw/eye-hide.svg";
+import { ReactComponent as ShowEye } from "../../../assets/raw/eye-show.svg";
 import Card from "../../../common/Card";
 import QueryClientConfig from "../../../config/QueryClientConfig";
-import toast from "react-hot-toast";
-import { ReactComponent as ShowEye } from "../../../assets/raw/eye-show.svg";
-import { ReactComponent as HideEye } from "../../../assets/raw/eye-hide.svg";
+import useLogin from "../../../hooks/useLogin";
+import { DASHBOARD_PAGE } from "../../../utils/constants";
+import { UserFormData } from "../../../utils/types";
 
 const LoginForm: FC = () => {
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ const LoginForm: FC = () => {
 
   const { mutate: login } = useLogin(
     () => {
-      navigate(Constants.DASHBOARD_PAGE);
+      navigate(DASHBOARD_PAGE);
       QueryClientConfig.removeQueries(["user"]); // Invalidate the user key from cache so we get the new logged in user
     },
     () => {

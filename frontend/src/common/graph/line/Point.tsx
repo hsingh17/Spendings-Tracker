@@ -1,9 +1,9 @@
 import { ScaleLinear, ScaleTime, timeParse } from "d3";
 import { FC } from "react";
-import { Constants } from "../../../utils/constants";
+import useDetectMobile from "../../../hooks/useDetectMobile";
+import { ISO_FORMAT } from "../../../utils/constants";
 import { Nullable, SpendingListRow } from "../../../utils/types";
 import { POINT_RADIUS } from "./LineChart";
-import useDetectMobile from "../../../hooks/useDetectMobile";
 
 type PointProps = {
   idx: number;
@@ -20,12 +20,12 @@ const Point: FC<PointProps> = ({
   xScale,
   yScale,
 }) => {
-  const parser = timeParse(Constants.ISO_FORMAT);
+  const parser = timeParse(ISO_FORMAT);
   const isMobile = useDetectMobile();
   if (isMobile) {
     return <></>;
   }
-  
+
   return (
     <circle
       key={spendingListRow.date}
