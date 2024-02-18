@@ -1,8 +1,9 @@
 package com.spendingstracker.app.service;
 
-import com.spendingstracker.app.entity.CustomUserDetails;
+import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.repository.UserRepository;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,8 +15,7 @@ import java.util.Collections;
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
-    public UserDetailsServiceImpl(
-            UserRepository userRepository) {
+    public UserDetailsServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -27,6 +27,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
         // A CustomUserDetails object since userId must be saved
-        return new CustomUserDetails(username, user.getPassword(), Collections.emptyList(), user.getUserId());
+        return new CustomUserDetails(
+                username, user.getPassword(), Collections.emptyList(), user.getUserId());
     }
 }

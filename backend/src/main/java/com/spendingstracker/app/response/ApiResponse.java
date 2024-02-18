@@ -13,7 +13,6 @@ public class ApiResponse<T> {
 
     public ApiResponse(ApiResponseBuilder<T> apiResponseBuilder) {
         this.metadata = apiResponseBuilder.metadata;
-        ;
         this.ok = apiResponseBuilder.ok;
         this.message = apiResponseBuilder.message;
         this.httpStatus = apiResponseBuilder.httpStatus;
@@ -76,8 +75,7 @@ public class ApiResponse<T> {
         private Integer httpStatus;
         private T data;
 
-        public ApiResponseBuilder() {
-        }
+        public ApiResponseBuilder() {}
 
         public ApiResponseBuilder<T> setMetadata(ApiMetadata metadata) {
             this.metadata = metadata;

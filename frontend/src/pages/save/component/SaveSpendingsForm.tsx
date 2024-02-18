@@ -1,4 +1,8 @@
 import React, { FC, useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { ReactComponent as AddRow } from "../../../assets/raw/add-row.svg";
+import Card from "../../../common/Card";
 import useSaveSpendings from "../../../hooks/useSaveSpendings";
 import { Constants } from "../../../utils/constants";
 import {
@@ -9,10 +13,6 @@ import {
   SpendingFormInput,
 } from "../../../utils/types";
 import FormInputColumns from "./FormInputColumns";
-import Card from "../../../common/Card";
-import { ReactComponent as AddRow } from "../../../assets/raw/add-row.svg";
-import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
 
 function spendingComparator(
   a: SpendingFormInput,

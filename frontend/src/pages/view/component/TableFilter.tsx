@@ -21,7 +21,6 @@ const TableFilter: FC<TableFilterProps> = ({
     setIsOpen(open);
   };
 
-  
   useDetectOutsideComponent([filterButtonRef, filterFormRef], setIsOpenWrapper);
 
   if (isLoading) {

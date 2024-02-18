@@ -1,10 +1,12 @@
 package com.spendingstracker.app.util;
 
-import com.spendingstracker.app.entity.CustomUserDetails;
+import com.spendingstracker.app.dto.CustomUserDetails;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -19,8 +21,7 @@ import java.util.function.Function;
 public class JwtUtil {
     private final String secretKey;
 
-    public JwtUtil(
-            @Qualifier("secretKey") String secretKey) {
+    public JwtUtil(@Qualifier("secretKey") String secretKey) {
         this.secretKey = secretKey;
     }
 
@@ -38,7 +39,11 @@ public class JwtUtil {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder().setSigningKey(getSecretKey()).build().parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder()
+                .setSigningKey(getSecretKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     private Boolean isTokenExpired(String token) {

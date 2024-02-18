@@ -224,10 +224,6 @@ export type GenericChartProps<T> = {
 }
 export type BarChartProps = GenericChartProps<CategoricalSpendings>;
 
-export type LineChartProps = GenericChartProps<SpendingListRow> & {
-  groupBy: string;
-};
-
 export type PieChartProps = GenericChartProps<CategoricalSpendings> & {
   innerRadius: number;
   outerRadius: number;

@@ -1,9 +1,10 @@
 package com.spendingstracker.app.service;
 
-import com.spendingstracker.app.constants.GroupBy;
-import com.spendingstracker.app.constants.SpendingType;
+import com.spendingstracker.app.constants.GraphType;
+import com.spendingstracker.app.constants.Granularity;
 import com.spendingstracker.app.entity.Spending;
 import com.spendingstracker.app.projection.SpendingsListProjection;
+
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +20,8 @@ public interface SpendingService {
             Date endDate,
             int page,
             int limit,
-            GroupBy groupBy,
-            SpendingType type);
+            Granularity granularity,
+            GraphType type);
 
     List<Spending> getSpendingDetails(Date spendingDate, long userId);
 

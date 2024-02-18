@@ -60,8 +60,8 @@
 - Query Params (* *Optional*):
   - `start-date`* (Default value: `1000-01-01`)
   - `end-date`* (Default value: `9999-12-31`)
-  - `group-by`* (Default value: `D`)
-  - `type`* (Default value: `N`)
+  - `granularity`* (Default value: `Day`)
+  - `graph-type`* (Default value: `Line`)
   - `page`* (Default value: `0`)
   - `limit`* (Default value: `25`)
 - Purpose:

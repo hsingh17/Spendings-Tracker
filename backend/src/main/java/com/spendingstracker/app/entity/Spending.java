@@ -2,7 +2,8 @@ package com.spendingstracker.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 
 @Entity
@@ -24,11 +25,9 @@ public class Spending {
     @Column(name = "AMOUNT")
     private BigDecimal amount;
 
-    @Transient
-    private boolean delete = false;
+    @Transient private boolean delete = false;
 
-    public Spending() {
-    }
+    public Spending() {}
 
     public long getSpendingId() {
         return spendingId;

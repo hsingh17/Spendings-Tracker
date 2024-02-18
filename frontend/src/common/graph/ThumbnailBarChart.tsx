@@ -1,6 +1,6 @@
-import useSpendings from "../hooks/useSpendings";
-import { CategoricalSpendings } from "../utils/types";
-import BarChart from "./BarChart";
+import useSpendings from "../../hooks/useSpendings";
+import { CategoricalSpendings } from "../../utils/types";
+import BarChart from "./bar/BarChart";
 
 const ThumbnailBarChart = () => {
   const searchParams: URLSearchParams = new URLSearchParams([["type", "C"]]);

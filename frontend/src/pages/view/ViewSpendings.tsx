@@ -42,7 +42,7 @@ const ViewSpendings = () => {
   const refetchWrapper = () => refetch();
 
   return (
-    <>
+    <div className="p-3">
       <Card customStyles="p-7">
         <TableTitle />
 
@@ -74,7 +74,7 @@ const ViewSpendings = () => {
         parentRefetch={refetch}
         parentSetShow={setShowModalWrapper}
       />
-    </>
+    </div>
   );
 };
 

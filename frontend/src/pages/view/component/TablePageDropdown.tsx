@@ -5,7 +5,6 @@ import { Nullable, TablePageDropdownProps } from "../../../utils/types";
 const TablePageDropdown: FC<TablePageDropdownProps> = ({
   parentSetSearchParams,
 }) => {
-
   const handleChange = (e: React.FormEvent) => {
     e.preventDefault();
     const target = e.target as typeof e.target & { value: string };

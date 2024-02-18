@@ -49,16 +49,16 @@ const LoginForm: FC = () => {
           onSubmit={(e: React.FormEvent) => handleSubmit(e)}
         >
           <div className="mt-5">
-            <label className="font-semibold">Username</label>
+            <label className="font-semibold text-slate-500">Username</label>
             <input
               type="text"
               name="username"
-              className="mt-1 p-1 border-2 border-slate-500 focus:outline-none focus:border-theme-cta rounded-lg w-full"
+              className="font-semibold mt-1 p-1 border-2 border-slate-500 focus:outline-none focus:border-theme-cta rounded-lg w-full"
             />
           </div>
 
           <div className="mt-5">
-            <label className="flex flex-row font-semibold">
+            <label className="flex flex-row font-semibold text-slate-500">
               <p>Password</p>
               <p
                 className="ml-auto text-slate-500 hover:cursor-pointer"
@@ -72,7 +72,7 @@ const LoginForm: FC = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
-                className="relative mt-1 p-1 border-2 border-slate-500 focus:outline-none focus:border-theme-cta rounded-lg w-full"
+                className="font-semibold relative mt-1 p-1 border-2 border-slate-500 focus:outline-none focus:border-theme-cta rounded-lg w-full"
               />
               {showPassword ? (
                 <ShowEye
