@@ -17,6 +17,8 @@ const TableRow: FC<TableRowProps> = ({
 
   const handleEdit = () => navigate(`${SAVE_SPENDINGS_PAGE}/${spending.date}`);
 
+  console.log("test");
+
   if (isLoading) {
     return (
       <tr className="border-gray-300 leading-[3rem]">
