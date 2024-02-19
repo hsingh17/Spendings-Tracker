@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef, useState } from "react";
 import useDetectMobile from "../../hooks/useDetectMobile";
-import { Constants } from "../../utils/constants";
+import { GRAPH_TYPES } from "../../utils/constants";
 import {
   ApiResponse,
   CategoricalSpendings,
@@ -9,7 +9,7 @@ import {
 import LineChart from "./line/LineChart";
 
 type MetricsGraphContainerProps = {
-  graphType: Constants.GRAPH_TYPES;
+  graphType: GRAPH_TYPES;
   response: ApiResponse<SpendingListRow[] | CategoricalSpendings[]>;
   setSearchParams: (urlSearchParams: URLSearchParams) => void;
 };
@@ -37,7 +37,7 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({
 
   const getGraph = () => {
     switch (graphType) {
-      case Constants.GRAPH_TYPES.Line:
+      case GRAPH_TYPES.Line:
         return (
           <LineChart
             response={response as ApiResponse<SpendingListRow[]>} // Hacky but I gave up trying to fight Typescript

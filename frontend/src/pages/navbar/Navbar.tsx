@@ -1,14 +1,21 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import QueryClientConfig from "../../config/QueryClientConfig";
+import useDetectMobile from "../../hooks/useDetectMobile";
+import useLogout from "../../hooks/useLogout";
+import useUser from "../../hooks/useUser";
+import {
+  DASHBOARD_PAGE,
+  HOME_PAGE,
+  LOGIN_PAGE,
+  METRICS_PAGE,
+  SETTINGS_PAGE,
+  VIEW_SPENDINGS_PAGE,
+} from "../../utils/constants";
+import { NavbarAction, NavbarListItem, NavbarState } from "../../utils/types";
 import NavbarHeader from "./NavbarHeader";
 import NavbarList from "./NavbarList";
-import useDetectMobile from "../../hooks/useDetectMobile";
-import { NavbarAction, NavbarListItem, NavbarState } from "../../utils/types";
-import { Constants } from "../../utils/constants";
-import { useNavigate } from "react-router-dom";
-import useUser from "../../hooks/useUser";
-import useLogout from "../../hooks/useLogout";
-import QueryClientConfig from "../../config/QueryClientConfig";
-import toast from "react-hot-toast";
 
 const NON_MOBILE_STYLE =
   "z-10 sticky top-0 bg-theme-brand-secondary h-screen w-fit text-theme-neutral p-5 whitespace-nowrap overflow-y-scroll overflow-x-hidden";
@@ -36,7 +43,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { mutate: logout } = useLogout(
     () => {
-      navigate(Constants.LOGIN_PAGE);
+      navigate(LOGIN_PAGE);
       QueryClientConfig.removeQueries(["user"]); // Invalidate the user key from cache so we don't keep any cached user data
     },
     () => {
@@ -70,22 +77,22 @@ const Navbar = () => {
           {
             iconPath: "../../assets/components/HomeIcon",
             name: "Home",
-            onClick: () => navigateToPage(Constants.HOME_PAGE),
+            onClick: () => navigateToPage(HOME_PAGE),
           },
           {
             iconPath: "../../assets/components/DashboardIcon",
             name: "Dashboard",
-            onClick: () => navigateToPage(Constants.DASHBOARD_PAGE),
+            onClick: () => navigateToPage(DASHBOARD_PAGE),
           },
           {
             iconPath: "../../assets/components/TableIcon",
             name: "View",
-            onClick: () => navigateToPage(Constants.VIEW_SPENDINGS_PAGE),
+            onClick: () => navigateToPage(VIEW_SPENDINGS_PAGE),
           },
           {
             iconPath: "../../assets/components/MetricsIcon",
             name: "Metrics",
-            onClick: () => navigateToPage(Constants.METRICS_PAGE),
+            onClick: () => navigateToPage(METRICS_PAGE),
           },
         ],
       },
@@ -95,7 +102,7 @@ const Navbar = () => {
           {
             iconPath: "../../assets/components/SettingsIcon",
             name: "Settings",
-            onClick: () => navigateToPage(Constants.SETTINGS_PAGE),
+            onClick: () => navigateToPage(SETTINGS_PAGE),
           },
           {
             iconPath: "../../assets/components/LogoutIcon",

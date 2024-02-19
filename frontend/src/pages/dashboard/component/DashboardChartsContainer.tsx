@@ -9,7 +9,7 @@ const DashboardChartsContainer = () => {
       <ThumbnailLineChart />
       <ThumbnailPieChart />
     </div>
-  )
+  );
 };
 
 export default DashboardChartsContainer;

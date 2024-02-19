@@ -35,11 +35,11 @@ const SpendingsTable: FC<SpendingsTableProps> = ({
     if (sortType === SortType.DATE) {
       newSpendingsCopy = spendingsCopy.sort(
         (a, b) =>
-          sortOrder * (new Date(a.date).getTime() - new Date(b.date).getTime())
+          sortOrder * (new Date(a.date).getTime() - new Date(b.date).getTime()),
       );
     } else if (sortType === SortType.TOTAL) {
       newSpendingsCopy = spendingsCopy.sort(
-        (a, b) => -sortOrder * (a.total - b.total)
+        (a, b) => -sortOrder * (a.total - b.total),
       );
     }
 

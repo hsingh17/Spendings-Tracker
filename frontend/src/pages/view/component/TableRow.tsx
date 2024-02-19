@@ -2,11 +2,11 @@ import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { ReactComponent as DeleteIcon } from "../../../assets/raw/delete-icon.svg";
 import { ReactComponent as EditIcon } from "../../../assets/raw/edit-icon.svg";
-import { Constants } from "../../../utils/constants";
-import DateUtils from "../../../utils/date-utils";
-import { TableRowProps } from "../../../utils/types";
 import ShimmerLoadingBox from "../../../common/ShimmerLoadingBox";
+import { SAVE_SPENDINGS_PAGE } from "../../../utils/constants";
+import DateUtils from "../../../utils/date-utils";
 import MoneyUtils from "../../../utils/money-utils";
+import { TableRowProps } from "../../../utils/types";
 
 const TableRow: FC<TableRowProps> = ({
   isLoading,
@@ -15,8 +15,7 @@ const TableRow: FC<TableRowProps> = ({
 }) => {
   const navigate = useNavigate();
 
-  const handleEdit = () =>
-    navigate(`${Constants.SAVE_SPENDINGS_PAGE}/${spending.date}`);
+  const handleEdit = () => navigate(`${SAVE_SPENDINGS_PAGE}/${spending.date}`);
 
   if (isLoading) {
     return (

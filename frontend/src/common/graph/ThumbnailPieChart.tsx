@@ -4,11 +4,17 @@ import PieChart from "./pie/PieChart";
 
 const ThumbnailPieChart = () => {
   const searchParams: URLSearchParams = new URLSearchParams([["type", "C"]]);
-  const {data: response} = useSpendings<CategoricalSpendings>(searchParams);
+  const { data: response } = useSpendings<CategoricalSpendings>(searchParams);
 
   return (
-    <PieChart data={response?.data} width={250} height={250} outerRadius={100} innerRadius={25}/>
-  )
+    <PieChart
+      data={response?.data}
+      width={250}
+      height={250}
+      outerRadius={100}
+      innerRadius={25}
+    />
+  );
 };
 
 export default ThumbnailPieChart;

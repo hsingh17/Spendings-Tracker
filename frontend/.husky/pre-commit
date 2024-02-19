@@ -1,0 +1,4 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+export ESLINT_USE_FLAT_CONFIG=true
+npx lint-staged

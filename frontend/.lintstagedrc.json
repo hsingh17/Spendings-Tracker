@@ -1,0 +1,14 @@
+{
+    "*.ts": [
+        "npx prettier --write",
+        "npx eslint --debug --config ./frontend/eslint.config.js"
+    ],
+    "*.tsx": [
+        "npx prettier --write",
+        "npx eslint --debug --config ./frontend/eslint.config.js"
+    ],
+    "*.html": [
+        "npx eslint --debug --config ./frontend/eslint.config.js",
+        "npx prettier --write"
+    ]
+}

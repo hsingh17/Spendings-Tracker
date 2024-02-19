@@ -1,10 +1,10 @@
-import TableButton from "./TableButton";
+import { FC } from "react";
 import { ReactComponent as DoubleLeftArrow } from "../../../assets/raw/double-left-arrow.svg";
 import { ReactComponent as DoubleRightArrow } from "../../../assets/raw/double-right-arrow.svg";
 import { ReactComponent as LeftArrow } from "../../../assets/raw/left-arrow.svg";
 import { ReactComponent as RightArrow } from "../../../assets/raw/right-arrow.svg";
-import { FC } from "react";
 import { TableButtonsContainerProps } from "../../../utils/types";
+import TableButton from "./TableButton";
 
 const TableButtonsContainer: FC<TableButtonsContainerProps> = ({
   apiLinks,
@@ -28,10 +28,7 @@ const TableButtonsContainer: FC<TableButtonsContainerProps> = ({
         parentSetSearchParams={parentSetSearchParams}
         buttonUrl={apiLinks?.prev}
         buttonIcon={
-          <LeftArrow 
-            className="w-7 h-7 border-l-2 border-gray" 
-            stroke="gray" 
-          />
+          <LeftArrow className="w-7 h-7 border-l-2 border-gray" stroke="gray" />
         }
       />
       <TableButton

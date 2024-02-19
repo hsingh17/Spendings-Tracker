@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Constants } from "../../../utils/constants";
+import { PAGE_LIMITS } from "../../../utils/constants";
 import { Nullable, TablePageDropdownProps } from "../../../utils/types";
 
 const TablePageDropdown: FC<TablePageDropdownProps> = ({
@@ -30,7 +30,7 @@ const TablePageDropdown: FC<TablePageDropdownProps> = ({
         defaultValue={getCurrentLimit()}
         onChange={(e: React.ChangeEvent) => handleChange(e)}
       >
-        {Constants.PAGE_LIMITS.map((limit, idx) => {
+        {PAGE_LIMITS.map((limit, idx) => {
           return (
             <option key={idx} value={limit}>
               {limit}

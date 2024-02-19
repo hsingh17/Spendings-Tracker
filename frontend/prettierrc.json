@@ -1,0 +1,6 @@
+{
+	"trailingComma": "es5",
+	"plugins": [
+		"./node_modules/prettier-plugin-organize-imports"
+	]
+}

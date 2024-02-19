@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { ReactComponent as DeleteRowIcon } from "../../../assets/raw/delete-icon.svg";
-import { FormRowProps, SpendingFormInput } from "../../../utils/types";
 import { ReactComponent as WarningIcon } from "../../../assets/raw/warning-icon.svg";
+import { FormRowProps, SpendingFormInput } from "../../../utils/types";
 
 const MAX_CHAR = 11;
 
@@ -14,7 +14,7 @@ const FormRow: FC<FormRowProps> = ({
   const handleCategoryChange = (e: React.ChangeEvent) => {
     e.preventDefault();
 
-    let changedSpending: SpendingFormInput = { ...spending };
+    const changedSpending: SpendingFormInput = { ...spending };
     const target = e.target as typeof e.target & {
       value: string;
     };
@@ -29,8 +29,8 @@ const FormRow: FC<FormRowProps> = ({
       value: string;
     };
 
-    let changedSpending: SpendingFormInput = { ...spending };
-    const charArr: Array<String> = target.value.split("");
+    const changedSpending: SpendingFormInput = { ...spending };
+    const charArr: Array<string> = target.value.split("");
     charArr.splice(charArr.indexOf("."), 1); // Remove the old "."
     charArr.splice(charArr.length - 2, 0, "."); // Add the new "."
     const newAmount: number = parseFloat(charArr.join(""));

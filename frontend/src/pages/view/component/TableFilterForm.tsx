@@ -42,7 +42,7 @@ const TableFilterForm: FC<TableFilterFormProps> = ({
       <form
         className="flex flex-col p-5 mt-1"
         onSubmit={(e: React.FormEvent) => processFilterForm(e)}
-        onReset={(_) => parentResetSearchParams()}
+        onReset={() => parentResetSearchParams()}
       >
         <div>
           <label className="block text-sm font-semibold" htmlFor="start-date">

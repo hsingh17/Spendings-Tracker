@@ -1,15 +1,9 @@
-import React, {
-  Dispatch,
-  FC,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import React, { FC, useEffect, useState } from "react";
 import Card from "../../common/Card";
-import { Constants } from "../../utils/constants";
+import useDetectMobile from "../../hooks/useDetectMobile";
+import { GRANULARITY, GRAPH_TYPES } from "../../utils/constants";
 import GraphFilterCollapsed from "./GraphFilterCollapsed";
 import GraphFilterExpanded from "./GraphFilterExpanded";
-import useDetectMobile from "../../hooks/useDetectMobile";
 
 const DEFAULT_FILTER_POSITION: Position = {
   top: "32px",
@@ -28,8 +22,8 @@ type Position = {
 };
 
 type GraphFilterProps = {
-  granularity: Constants.GRANULARITY;
-  graphType: Constants.GRAPH_TYPES;
+  granularity: GRANULARITY;
+  graphType: GRAPH_TYPES;
   searchParams: URLSearchParams;
   defaultUrlSearchParams: URLSearchParams;
   setSearchParams: (urlSearchParams: URLSearchParams) => void;

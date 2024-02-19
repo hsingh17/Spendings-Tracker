@@ -1,8 +1,8 @@
 import React, { FC } from "react";
-import { Constants } from "../../utils/constants";
+import { GRANULARITY } from "../../utils/constants";
 
 type GraphGranularityFilter = {
-  granularity: Constants.GRANULARITY;
+  granularity: GRANULARITY;
   searchParams: URLSearchParams;
   setSearchParams: (urlSearchParams: URLSearchParams) => void;
 };
@@ -12,7 +12,7 @@ const GraphGranularityFilter: FC<GraphGranularityFilter> = ({
   searchParams,
   setSearchParams,
 }) => {
-  const granularities = Object.keys(Constants.GRANULARITY).filter((val) =>
+  const granularities = Object.keys(GRANULARITY).filter((val) =>
     isNaN(Number(val))
   );
 
@@ -31,7 +31,7 @@ const GraphGranularityFilter: FC<GraphGranularityFilter> = ({
       <select
         className="p-2 mb-2 rounded-lg"
         name="granularity"
-        value={Constants.GRANULARITY[granularity]}
+        value={GRANULARITY[granularity]}
         onChange={(e: React.ChangeEvent) => onChange(e)}
       >
         {granularities.map((type) => {

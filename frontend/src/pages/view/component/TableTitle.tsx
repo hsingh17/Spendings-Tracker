@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Constants } from "../../../utils/constants";
+import { SAVE_SPENDINGS_PAGE } from "../../../utils/constants";
 import DateUtils from "../../../utils/date-utils";
 
 const TableTitle = () => {
@@ -13,9 +13,7 @@ const TableTitle = () => {
       <button
         className="text-theme-neutral font-semibold md:ml-auto bg-theme-cta md:px-5 py-2 md:py-1.5 mt-5 md:mt-0"
         onClick={() =>
-          navigate(
-            `${Constants.SAVE_SPENDINGS_PAGE}/${DateUtils.getCurrentDate()}`
-          )
+          navigate(`${SAVE_SPENDINGS_PAGE}/${DateUtils.getCurrentDate()}`)
         }
       >
         New Spending

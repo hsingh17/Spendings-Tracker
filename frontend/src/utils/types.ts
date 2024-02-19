@@ -1,5 +1,5 @@
-import React, { ReactElement, ReactNode } from "react";
-import { Constants } from "./constants";
+import React, { JSXElementConstructor, ReactElement, ReactNode } from "react";
+import { POPUP_TYPES } from "./constants";
 
 export type Nullable<T> = T | null | undefined;
 
@@ -22,20 +22,20 @@ export type User = {
   enabled: Nullable<boolean>;
 };
 
-export type ApiLinks =  {
-  first : Nullable<string>;
-  prev : Nullable<string>;
-  self : Nullable<string>;
-  next : Nullable<string>;
-  last : Nullable<string>;
+export type ApiLinks = {
+  first: Nullable<string>;
+  prev: Nullable<string>;
+  self: Nullable<string>;
+  next: Nullable<string>;
+  last: Nullable<string>;
 };
 
 export type ApiMetadata = {
-   currentPage: number;
-   pageSize: number;
-   totalCount: number;
-   totalPages: number;
-   links: ApiLinks;
+  currentPage: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+  links: ApiLinks;
 };
 
 export type ApiResponse<T> = {
@@ -86,7 +86,7 @@ export type FormInputColumnsProps = {
   spendings: Array<SpendingFormInput>;
   parentHandleDeleteRow: (idx: number) => void;
   parentHandleChange: (idx: number, newSpending: SpendingFormInput) => void;
-}
+};
 
 export type FormRowProps = {
   idx: number;
@@ -105,13 +105,13 @@ export type FormInputProps = {
 export enum SortType {
   DATE,
   TOTAL,
-};
+}
 
 export enum SortOrder {
   ASC = 1,
   NONE = 0,
   DESC = -1,
-};
+}
 
 export type Sort = {
   sortType: SortType;
@@ -161,7 +161,7 @@ export type SpendingComponentProps = {
 
 export type SaveSpendingProps = {
   date: string;
-}
+};
 
 export type UserFormData = {
   username: string;
@@ -202,7 +202,7 @@ export type TablePageDropdownProps = {
 };
 
 export type TableButtonProps = {
-  buttonIcon: ReactElement<any, any>;
+  buttonIcon: ReactElement<unknown, JSXElementConstructor<unknown>>;
   buttonUrl: Nullable<string>;
   parentSetSearchParams: (searchParams: URLSearchParams) => void;
 };
@@ -213,7 +213,7 @@ export type TableFooterPageDataProps = {
 
 export type PopupProps = {
   children: React.ReactNode;
-  type: Constants.POPUP_TYPES;
+  type: POPUP_TYPES;
   time: number;
 };
 
@@ -221,7 +221,7 @@ export type GenericChartProps<T> = {
   width: number;
   height: number;
   data: Nullable<Array<T>>;
-}
+};
 export type BarChartProps = GenericChartProps<CategoricalSpendings>;
 
 export type PieChartProps = GenericChartProps<CategoricalSpendings> & {
@@ -248,15 +248,9 @@ export type NavbarListItem = {
 };
 
 export type NavbarSublistItem = {
-  iconPath: string; 
+  iconPath: string;
   name: string;
   onClick: (e: React.MouseEvent) => void;
-};
-
-export type NavbarListProps = {
-  state: NavbarState;
-  items: Array<NavbarListItem>;
-  transitionState: (action: NavbarAction) => void;
 };
 
 export type NavbarSublistProps = {
@@ -274,7 +268,7 @@ export enum NavbarState {
   NON_MOBILE_COLLAPSED,
   MOBILE_MENU_HIDDEN,
   MOBILE_MENU_SHOWN,
-};
+}
 
 export enum NavbarAction {
   NON_MOBILE_COLLAPSE,
@@ -283,7 +277,7 @@ export enum NavbarAction {
   RESIZE_TO_MOBILE,
   MOBILE_SHOW_MENU,
   MOBILE_HIDE_MENU,
-  MOBILE_NAVIGATE_TO_PAGE
+  MOBILE_NAVIGATE_TO_PAGE,
 }
 
 export enum FormInputError {

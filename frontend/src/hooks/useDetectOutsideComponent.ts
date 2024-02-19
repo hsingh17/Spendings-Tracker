@@ -3,12 +3,12 @@ import { Nullable } from "../utils/types";
 
 export default function useDetectOutsideComponent(
   refs: Array<React.RefObject<HTMLElement>>,
-  handler: (e: Nullable<React.MouseEvent>, open: boolean) => void
+  handler: (e: Nullable<React.MouseEvent>, open: boolean) => void,
 ) {
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       const eventOutsideAllRefs: boolean = refs.every(
-        (ref) => ref && ref.current && !ref.current.contains(e.target as Node)
+        (ref) => ref && ref.current && !ref.current.contains(e.target as Node),
       );
 
       if (eventOutsideAllRefs) {
@@ -22,7 +22,7 @@ export default function useDetectOutsideComponent(
 
     return () => {
       document.removeEventListener("mousedown", (e: MouseEvent) =>
-        handleClick(e)
+        handleClick(e),
       );
     };
   }, [refs]);

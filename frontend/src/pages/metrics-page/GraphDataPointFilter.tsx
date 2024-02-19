@@ -1,5 +1,5 @@
-import React, { Dispatch, FC, SetStateAction } from "react";
-import { Constants } from "../../utils/constants";
+import React, { FC } from "react";
+import { PAGE_LIMITS } from "../../utils/constants";
 import { Nullable } from "../../utils/types";
 
 type GraphDataPointFilterProps = {
@@ -35,7 +35,7 @@ const GraphDataPointFilter: FC<GraphDataPointFilterProps> = ({
         value={getCurrentLimit()}
         onChange={(e: React.ChangeEvent) => onChange(e)}
       >
-        {Constants.PAGE_LIMITS.map((limit) => {
+        {PAGE_LIMITS.map((limit) => {
           return <option key={limit}>{limit}</option>;
         })}
       </select>
