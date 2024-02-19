@@ -15,7 +15,10 @@ const TableRow: FC<TableRowProps> = ({
 }) => {
   const navigate = useNavigate();
 
-  const handleEdit = () => navigate(`${SAVE_SPENDINGS_PAGE}/${spending.date.}`);
+  const handleEdit = () =>
+    navigate(`${SAVE_SPENDINGS_PAGE}/${spending.date.s}`);
+
+  console.log("test");
 
   if (isLoading) {
     return (
