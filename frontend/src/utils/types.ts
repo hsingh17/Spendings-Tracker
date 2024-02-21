@@ -222,12 +222,8 @@ export type GenericChartProps<T> = {
   height: number;
   data: Nullable<Array<T>>;
 };
-export type BarChartProps = GenericChartProps<CategoricalSpendings>;
 
-export type PieChartProps = GenericChartProps<CategoricalSpendings> & {
-  innerRadius: number;
-  outerRadius: number;
-};
+export type BarChartProps = GenericChartProps<CategoricalSpendings>;
 
 export type NavbarHeaderProps = {
   state: NavbarState;
