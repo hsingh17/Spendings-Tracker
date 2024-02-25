@@ -10,6 +10,9 @@ import {
 } from "../../../utils/types";
 import Tooltip from "../Tooltip";
 
+const PI_OVER_2 = Math.PI / 2;
+const ANIMATION_DISTANCE = 50;
+
 type PieChartProps = {
   width: number;
   height: number;
@@ -17,10 +20,25 @@ type PieChartProps = {
   setSearchParams: (urlSearchParams: URLSearchParams) => void;
 };
 
+function calculateDisplacedCoords(angle: number): number[] {
+  const refAngle = angle <= Math.PI ? PI_OVER_2 : 3 * PI_OVER_2;
+  const angleDiff = Math.abs(angle - refAngle);
+  let x = Math.round(ANIMATION_DISTANCE * Math.cos(angleDiff));
+  let y = Math.round(ANIMATION_DISTANCE * Math.sin(angleDiff));
+
+  // Need to know what quadrant the angle is in so we can apply proper translating
+  const quadrant = Math.ceil(angle / PI_OVER_2);
+  x *= quadrant == 3 || quadrant == 4 ? -1 : 1;
+  y *= quadrant == 2 || quadrant == 3 ? 1 : -1;
+
+  return [x, y];
+}
+
 const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
   const [tooltipIdx, setTooltipIdx] = useState<Nullable<number>>(null);
   const [tooltipPosition, setTooltipPosition] =
     useState<Nullable<TooltipPosition>>(null);
+  const [arcStyle, setArcStyle] = useState<string>();
 
   const data = response.data;
   if (!data) {
@@ -42,16 +60,15 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
     .innerRadius(innerRadius)
     .outerRadius(outerRadius);
 
-  const onMouseMove = (e: React.MouseEvent, idx: number) => {
-    const clientX = e.clientX;
-    const clientY = e.clientY;
-    const currentTarget = e.currentTarget;
-
-    const domPoint = new DOMPointReadOnly(clientX, clientY);
-    const svgNode = currentTarget as SVGGraphicsElement;
+  const onMouseMove = (e: React.MouseEvent, idx: number, curAngle: number) => {
+    const domPoint = new DOMPointReadOnly(e.clientX, e.clientY);
+    const svgNode = e.currentTarget as SVGGraphicsElement;
     const svgPoint = domPoint.matrixTransform(
       svgNode.getScreenCTM()?.inverse(),
     );
+
+    const [x, y] = calculateDisplacedCoords(curAngle);
+    setArcStyle(`translate(${x}px, ${y}px)`);
 
     setTooltipIdx(idx);
     setTooltipPosition({
@@ -62,6 +79,8 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
     });
   };
 
+  console.log(arcStyle);
+
   return (
     <div className="relative">
       <svg height={height} width={width}>
@@ -69,6 +88,7 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
           {pieGenerator(data).map((d, i) => {
             return (
               <path
+                style={i == tooltipIdx ? { transform: arcStyle } : {}}
                 key={d.data.category}
                 className="hover:cursor-pointer"
                 d={arcGenerator(d) || ""}
@@ -76,7 +96,7 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
                 stroke="#374151"
                 strokeWidth={3}
                 onMouseMove={(e) => {
-                  onMouseMove(e, i);
+                  onMouseMove(e, i, (d.startAngle + d.endAngle) / 2);
                 }}
                 onMouseLeave={() => setTooltipIdx(null)}
               />
@@ -85,7 +105,7 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
         </g>
       </svg>
 
-      {tooltipIdx && tooltipPosition && data && (
+      {(tooltipIdx || tooltipIdx == 0) && tooltipPosition && data && (
         <Tooltip
           position={tooltipPosition}
           className="w-fit h-fit bg-theme-neutral text-theme-brand p-2"

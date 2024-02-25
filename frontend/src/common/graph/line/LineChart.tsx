@@ -30,10 +30,10 @@ type LineChartProps = {
 
 function calculateMargins(height: number, width: number) {
   return {
-    left: width / 20,
-    right: width / 20,
+    left: width / 15,
+    right: width / 15,
     top: height / 5,
-    bottom: height / 20,
+    bottom: height / 10,
   };
 }
 
@@ -171,7 +171,7 @@ const LineChart: FC<LineChartProps> = ({
         </g>
       </svg>
 
-      {tooltipIdx && tooltipPosition && data && (
+      {(tooltipIdx || tooltipIdx == 0) && tooltipPosition && data && (
         <Tooltip
           position={tooltipPosition}
           className="w-fit h-fit bg-theme-cta text-white p-2 rounded-xl"
