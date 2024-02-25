@@ -2,21 +2,24 @@ import { extent, line, scaleLinear, scaleTime, timeParse } from "d3";
 import React, { FC, useState } from "react";
 import ArrayUtils from "../../../utils/array-utils";
 import { ISO_FORMAT } from "../../../utils/constants";
-import { ApiResponse, Nullable, SpendingListRow } from "../../../utils/types";
+import DateUtils from "../../../utils/date-utils";
+import MoneyUtils from "../../../utils/money-utils";
+import {
+  ApiResponse,
+  Nullable,
+  SpendingListRow,
+  TooltipPosition,
+} from "../../../utils/types";
+import Tooltip from "../Tooltip";
 import Line from "./Line";
 import PaginationBar from "./PaginationBar";
 import Point from "./Point";
-import Tooltip from "./Tooltip";
 import Tracer from "./Tracer";
 import XTicks from "./XTicks";
 import YTicks from "./YTicks";
 
 const TRACER_X_INITIAL = -10;
 export const POINT_RADIUS = 7;
-export type TooltipPosition = {
-  top: number;
-  left: number;
-};
 
 type LineChartProps = {
   width: number;
@@ -145,8 +148,8 @@ const LineChart: FC<LineChartProps> = ({
         <g>
           <YTicks
             x1={margins.left}
-            x2={width - margins.right}
             yScale={yScale}
+            x2={width - margins.right}
             yTicks={yTicks}
           />
 
@@ -168,12 +171,18 @@ const LineChart: FC<LineChartProps> = ({
         </g>
       </svg>
 
-      {tooltipIdx !== null && tooltipIdx !== undefined && (
+      {tooltipIdx && tooltipPosition && data && (
         <Tooltip
-          tooltipPosition={tooltipPosition}
-          date={data![tooltipIdx].date}
-          total={data![tooltipIdx].total}
-        />
+          position={tooltipPosition}
+          className="w-fit h-fit bg-theme-cta text-white p-2 rounded-xl"
+        >
+          <p className="text-sm">
+            {DateUtils.formatDateUS(data[tooltipIdx].date)}
+          </p>
+          <p className="font-bold md:text-lg">
+            {MoneyUtils.formatMoneyUsd(data[tooltipIdx].total)}
+          </p>
+        </Tooltip>
       )}
 
       {prev && <PaginationBar isLeft={true} onClick={onClickPaginationBar} />}

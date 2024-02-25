@@ -1,6 +1,6 @@
 import useSpendings from "../../hooks/useSpendings";
 import { CategoricalSpendings } from "../../utils/types";
-import PieChart from "./pie/PieChart";
+import PieChart from "./pie/PieChart.1";
 
 const ThumbnailPieChart = () => {
   const searchParams: URLSearchParams = new URLSearchParams([["type", "C"]]);

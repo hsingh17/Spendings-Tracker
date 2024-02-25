@@ -282,3 +282,8 @@ export enum FormInputError {
   MAX_AMOUNT = "Must be less than 99,999,999!",
   MAX_CATEGORY_LENGTH = "Must be less than 100 characters!",
 }
+
+export type TooltipPosition = {
+  top: number;
+  left: number;
+};
