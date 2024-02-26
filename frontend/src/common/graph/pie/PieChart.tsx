@@ -9,6 +9,7 @@ import {
   TooltipPosition,
 } from "../../../utils/types";
 import Tooltip from "../Tooltip";
+import PieChartSector from "./PieChartSector";
 
 const PI_OVER_2 = Math.PI / 2;
 const ANIMATION_DISTANCE = 50;
@@ -84,30 +85,16 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
         <g style={{ transform: `translate(${width / 2}px, ${height / 2}px)` }}>
           {pieGenerator(data).map((d, i) => {
             return (
-              <g
+              <PieChartSector
                 key={d.data.category}
-                className="hover:cursor-pointer"
-                onMouseMove={(e) => {
-                  showTooltip(e, i, (d.startAngle + d.endAngle) / 2);
-                }}
-                onMouseLeave={() => setTooltipIdx(null)}
-              >
-                <path
-                  d={arcGenerator(d) || ""}
-                  fill={"white"}
-                  stroke="#374151"
-                  fillOpacity={0}
-                  strokeWidth={3}
-                />
-
-                <path
-                  style={i == tooltipIdx ? { transform: arcStyle } : {}}
-                  d={arcGenerator(d) || ""}
-                  fill={interpolatorScale(i)}
-                  stroke="#374151"
-                  strokeWidth={3}
-                />
-              </g>
+                datum={d}
+                idx={i}
+                fill={interpolatorScale(i)}
+                arcStyle={i == tooltipIdx ? arcStyle : undefined}
+                path={arcGenerator(d) || ""}
+                setTooltipIdx={setTooltipIdx}
+                onMouseMove={showTooltip}
+              />
             );
           })}
         </g>

@@ -4,10 +4,7 @@ This repository holds the code for my spendings tracker app built with Java and 
 
 ## TODO
 
-- filters modal thing
-  - in mobile view, just show filters under the graph
 - metrics page
-- add eslint and prettier -> clean up accordingly
 - clean up backend api more
   - date -> localdate
   - add audit fields to db model (created on, created by, last modified on, last modified by)
