@@ -60,16 +60,15 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
     .innerRadius(innerRadius)
     .outerRadius(outerRadius);
 
-  const onMouseMove = (e: React.MouseEvent, idx: number, curAngle: number) => {
+  const showTooltip = (e: React.MouseEvent, idx: number, curAngle: number) => {
     const domPoint = new DOMPointReadOnly(e.clientX, e.clientY);
     const svgNode = e.currentTarget as SVGGraphicsElement;
     const svgPoint = domPoint.matrixTransform(
       svgNode.getScreenCTM()?.inverse(),
     );
-
     const [x, y] = calculateDisplacedCoords(curAngle);
-    setArcStyle(`translate(${x}px, ${y}px)`);
 
+    setArcStyle(`translate(${x}px, ${y}px)`);
     setTooltipIdx(idx);
     setTooltipPosition({
       // Need the width / 2 and height / 2 since we transform the svg group by that amount
@@ -79,27 +78,36 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
     });
   };
 
-  console.log(arcStyle);
-
   return (
     <div className="relative">
       <svg height={height} width={width}>
         <g style={{ transform: `translate(${width / 2}px, ${height / 2}px)` }}>
           {pieGenerator(data).map((d, i) => {
             return (
-              <path
-                style={i == tooltipIdx ? { transform: arcStyle } : {}}
+              <g
                 key={d.data.category}
                 className="hover:cursor-pointer"
-                d={arcGenerator(d) || ""}
-                fill={interpolatorScale(i)}
-                stroke="#374151"
-                strokeWidth={3}
                 onMouseMove={(e) => {
-                  onMouseMove(e, i, (d.startAngle + d.endAngle) / 2);
+                  showTooltip(e, i, (d.startAngle + d.endAngle) / 2);
                 }}
                 onMouseLeave={() => setTooltipIdx(null)}
-              />
+              >
+                <path
+                  d={arcGenerator(d) || ""}
+                  fill={"white"}
+                  stroke="#374151"
+                  fillOpacity={0}
+                  strokeWidth={3}
+                />
+
+                <path
+                  style={i == tooltipIdx ? { transform: arcStyle } : {}}
+                  d={arcGenerator(d) || ""}
+                  fill={interpolatorScale(i)}
+                  stroke="#374151"
+                  strokeWidth={3}
+                />
+              </g>
             );
           })}
         </g>

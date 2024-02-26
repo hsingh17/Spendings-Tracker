@@ -13,38 +13,29 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler({UsernameNotFoundException.class, AuthenticationException.class})
-    public ResponseEntity<ApiResponse> handleNotFoundException(UsernameNotFoundException e) {
-        ApiResponse apiResponse =
-                new ApiResponse.ApiResponseBuilder<>()
-                        .setMessage(e.getMessage())
-                        .setOk(false)
-                        .setHttpStatus(HttpStatus.NOT_FOUND.value())
-                        .build();
-
-        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ApiResponse<Object>> handleNotFoundException(UsernameNotFoundException e) {
+        return new ResponseEntity<>(
+                buildApiResponse(e.getMessage(), HttpStatus.NOT_FOUND), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler({IllegalArgumentException.class, ConversionFailedException.class})
-    public ResponseEntity<ApiResponse> handleBadRequestException(IllegalArgumentException e) {
-        ApiResponse apiResponse =
-                new ApiResponse.ApiResponseBuilder<>()
-                        .setMessage(e.getMessage())
-                        .setOk(false)
-                        .setHttpStatus(HttpStatus.BAD_REQUEST.value())
-                        .build();
-
-        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ApiResponse<Object>> handleBadRequestException(IllegalArgumentException e) {
+        return new ResponseEntity<>(
+                buildApiResponse(e.getMessage(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse> handleDefaultException(Exception e) {
-        ApiResponse apiResponse =
-                new ApiResponse.ApiResponseBuilder<>()
-                        .setMessage(e.getMessage())
-                        .setOk(false)
-                        .setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                        .build();
+    public ResponseEntity<ApiResponse<Object>> handleDefaultException(Exception e) {
+        return new ResponseEntity<>(
+                buildApiResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
-        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    private ApiResponse<Object> buildApiResponse(String message, HttpStatus httpStatus) {
+        return new ApiResponse.ApiResponseBuilder<>()
+                .setMessage(message)
+                .setOk(false)
+                .setHttpStatus(httpStatus.value())
+                .build();
     }
 }

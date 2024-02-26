@@ -28,7 +28,7 @@ public class ApiResponse<T> {
     }
 
     public ZonedDateTime getTimestamp() {
-        return timestamp;
+        return ZonedDateTime.now(ZoneId.of("Z"));
     }
 
     public void setTimestamp(ZonedDateTime timestamp) {
@@ -69,7 +69,6 @@ public class ApiResponse<T> {
 
     public static class ApiResponseBuilder<T> {
         private ApiMetadata metadata;
-        private ZonedDateTime timestamp;
         private boolean ok;
         private String message;
         private Integer httpStatus;
