@@ -83,7 +83,7 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
     <div className="relative">
       <svg height={height} width={width}>
         <g
-          className="animate-[scalein_1s_ease-in-out_forwards,rotatetozero_1.25s_ease-in-out_forwards]"
+          className="animate-[scale-in_1s_ease-in-out_forwards,rotate-to-zero_1.25s_ease-in-out_forwards]"
           style={{
             transform: `translate(${width / 2}px, ${height / 2}px)`,
             transformOrigin: "center center",

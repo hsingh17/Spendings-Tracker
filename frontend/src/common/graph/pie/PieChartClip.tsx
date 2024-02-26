@@ -7,7 +7,7 @@ type PieChartClipProps = {
 const PieChartClip: FC<PieChartClipProps> = ({ innerRadius, outerRadius }) => {
   return (
     <circle
-      className="animate-[drawstroke_2s_ease-in-out_reverse]"
+      className="animate-[draw-stroke_2s_ease-in-out_reverse]"
       r={(outerRadius + innerRadius) / 2}
       strokeDasharray={10000}
       strokeDashoffset={-10000}
