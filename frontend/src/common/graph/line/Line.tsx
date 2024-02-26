@@ -11,7 +11,7 @@ const Line: FC<LineProps> = ({ d }) => {
 
   return (
     <path
-      className="animate-[linechart_1.5s_cubic-bezier(1,0,0,1)_forwards]"
+      className="animate-[drawstroke_1.5s_cubic-bezier(1,0,0,1)_forwards]"
       d={d}
       fill="none"
       stroke="#00ADB5"

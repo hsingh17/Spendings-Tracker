@@ -1,15 +1,15 @@
 import { PieArcDatum, arc, interpolateRgb, pie, scaleSequential } from "d3";
 import React, { FC, useState } from "react";
 import useDetectMobile from "../../../hooks/useDetectMobile";
-import MoneyUtils from "../../../utils/money-utils";
 import {
   ApiResponse,
   CategoricalSpendings,
   Nullable,
   TooltipPosition,
 } from "../../../utils/types";
-import Tooltip from "../Tooltip";
+import PieChartClip from "./PieChartClip";
 import PieChartSector from "./PieChartSector";
+import PieChartTooltip from "./PieChartTooltip";
 
 const PI_OVER_2 = Math.PI / 2;
 const ANIMATION_DISTANCE = 50;
@@ -82,7 +82,15 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
   return (
     <div className="relative">
       <svg height={height} width={width}>
-        <g style={{ transform: `translate(${width / 2}px, ${height / 2}px)` }}>
+        <g
+          className="animate-[scalein_1s_ease-in-out_forwards,rotatetozero_1.25s_ease-in-out_forwards]"
+          style={{
+            transform: `translate(${width / 2}px, ${height / 2}px)`,
+            transformOrigin: "center center",
+            scale: "0",
+            rotate: "180deg",
+          }}
+        >
           {pieGenerator(data).map((d, i) => {
             return (
               <PieChartSector
@@ -97,22 +105,18 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
               />
             );
           })}
+
+          <PieChartClip outerRadius={outerRadius} innerRadius={innerRadius} />
         </g>
       </svg>
 
-      {(tooltipIdx || tooltipIdx == 0) && tooltipPosition && data && (
-        <Tooltip
-          position={tooltipPosition}
-          className="w-fit h-fit bg-theme-neutral text-theme-brand p-2"
-        >
-          <p className="text-lg md:text-xl font-semibold">
-            {data[tooltipIdx].category}
-          </p>
-          <p className="font-bold md:text-lg">
-            {MoneyUtils.formatMoneyUsd(data[tooltipIdx].total)}
-          </p>
-        </Tooltip>
-      )}
+      <PieChartTooltip
+        category={
+          tooltipIdx || tooltipIdx === 0 ? data[tooltipIdx].category : ""
+        }
+        total={tooltipIdx || tooltipIdx === 0 ? data[tooltipIdx].total : NaN}
+        tooltipPosition={tooltipPosition}
+      />
     </div>
   );
 };

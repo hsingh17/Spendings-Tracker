@@ -2,16 +2,14 @@ import { extent, line, scaleLinear, scaleTime, timeParse } from "d3";
 import React, { FC, useState } from "react";
 import ArrayUtils from "../../../utils/array-utils";
 import { ISO_FORMAT } from "../../../utils/constants";
-import DateUtils from "../../../utils/date-utils";
-import MoneyUtils from "../../../utils/money-utils";
 import {
   ApiResponse,
   Nullable,
   SpendingListRow,
   TooltipPosition,
 } from "../../../utils/types";
-import Tooltip from "../Tooltip";
 import Line from "./Line";
+import LineChartTooltip from "./LineChartTooltip";
 import PaginationBar from "./PaginationBar";
 import Point from "./Point";
 import Tracer from "./Tracer";
@@ -136,6 +134,10 @@ const LineChart: FC<LineChartProps> = ({
   const xTicks = ArrayUtils.spreadEvenly<Date>(xScale.ticks(), xTicksToShow);
   const yTicks = yScale.ticks(yScale.ticks().length / 2);
 
+  if (!data) {
+    return <>TODO</>;
+  }
+
   return (
     <div className="relative">
       <svg
@@ -171,19 +173,11 @@ const LineChart: FC<LineChartProps> = ({
         </g>
       </svg>
 
-      {(tooltipIdx || tooltipIdx == 0) && tooltipPosition && data && (
-        <Tooltip
-          position={tooltipPosition}
-          className="w-fit h-fit bg-theme-cta text-white p-2 rounded-xl"
-        >
-          <p className="text-sm">
-            {DateUtils.formatDateUS(data[tooltipIdx].date)}
-          </p>
-          <p className="font-bold md:text-lg">
-            {MoneyUtils.formatMoneyUsd(data[tooltipIdx].total)}
-          </p>
-        </Tooltip>
-      )}
+      <LineChartTooltip
+        date={tooltipIdx || tooltipIdx === 0 ? data[tooltipIdx].date : ""}
+        total={tooltipIdx || tooltipIdx === 0 ? data[tooltipIdx].total : NaN}
+        tooltipPosition={tooltipPosition}
+      />
 
       {prev && <PaginationBar isLeft={true} onClick={onClickPaginationBar} />}
       {next && <PaginationBar isLeft={false} onClick={onClickPaginationBar} />}
