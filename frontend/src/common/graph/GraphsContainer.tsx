@@ -7,6 +7,7 @@ import {
   SpendingListRow,
 } from "../../utils/types";
 import LineChart from "./line/LineChart";
+import PieChart from "./pie/PieChart";
 
 type MetricsGraphContainerProps = {
   graphType: GRAPH_TYPES;
@@ -41,6 +42,15 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({
         return (
           <LineChart
             response={response as ApiResponse<SpendingListRow[]>} // Hacky but I gave up trying to fight Typescript
+            height={height}
+            width={width}
+            setSearchParams={setSearchParams}
+          />
+        );
+      case GRAPH_TYPES.Pie:
+        return (
+          <PieChart
+            response={response as ApiResponse<CategoricalSpendings[]>}
             height={height}
             width={width}
             setSearchParams={setSearchParams}

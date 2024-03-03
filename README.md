@@ -1,17 +1,16 @@
 # Spendings-Tracker
+
 This repository holds the code for my spendings tracker app built with Java and React.js
 
 ## TODO
-- filters modal thing
-    - in mobile view, just show filters under the graph
+
 - metrics page
-- add eslint and prettier -> clean up accordingly
 - clean up backend api more
-    - date -> localdate
-    - add audit fields to db model (created on, created by, last modified on, last modified by)
-    - add logging to backend
-    - swagger openapi docs
-    - google oauth2 login -> maybe need separate table to store oauth tokens (idk why u would need to but maybe?) -> will need to check to see if user is already created in APP.USER
+  - date -> localdate
+  - add audit fields to db model (created on, created by, last modified on, last modified by)
+  - add logging to backend
+  - swagger openapi docs
+  - google oauth2 login -> maybe need separate table to store oauth tokens (idk why u would need to but maybe?) -> will need to check to see if user is already created in APP.USER
 - dashboard -> graphs
 - home page
 - breadcrumbs (?)
@@ -22,4 +21,5 @@ This repository holds the code for my spendings tracker app built with Java and 
 - add fontawesome icons to relevant areas (signin button, username/password icons)
 
 ## Known issues
-- graph looks odd on mid-sized screens since navbar cuts into it
+
+- on SaveSpendingsForm highlighting the entire amount and pressing any key results in "NaN"

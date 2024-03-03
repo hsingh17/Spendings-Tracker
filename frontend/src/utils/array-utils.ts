@@ -1,8 +1,8 @@
 const ArrayUtils = {
-  spreadEvenly(arr: Array<never>, desiredLength: number): Array<never> {
+  spreadEvenly<T>(arr: T[], desiredLength: number): T[] {
     const N = arr.length;
     const step = Math.ceil(N / desiredLength);
-    const ret: Array<never> = [];
+    const ret: T[] = [];
 
     for (let i = 0; i < N; i += step) {
       ret.push(arr[i]);

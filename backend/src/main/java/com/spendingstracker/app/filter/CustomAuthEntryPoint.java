@@ -1,11 +1,12 @@
 package com.spendingstracker.app.filter;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spendingstracker.app.response.ApiResponse;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
@@ -15,17 +16,17 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
+@Slf4j
 public class CustomAuthEntryPoint implements AuthenticationEntryPoint {
-    private final Gson gson;
-    private final ApiResponse AUTH_ERR_RESPONSE =
-            new ApiResponse.ApiResponseBuilder()
-                    .setHttpStatus(HttpStatus.UNAUTHORIZED.value())
-                    .setOk(false)
-                    .setMessage("Failed to authenticate user")
-                    .build();
+    private final ObjectMapper objectMapper;
+    private final ApiResponse<Object> authErrorResponse = new ApiResponse.ApiResponseBuilder<>()
+            .setHttpStatus(HttpStatus.UNAUTHORIZED.value())
+            .setOk(false)
+            .setMessage("Failed to authenticate user")
+            .build();
 
-    public CustomAuthEntryPoint(Gson gson) {
-        this.gson = gson;
+    public CustomAuthEntryPoint(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -33,8 +34,9 @@ public class CustomAuthEntryPoint implements AuthenticationEntryPoint {
             HttpServletRequest request,
             HttpServletResponse response,
             AuthenticationException authException)
-            throws IOException, ServletException {
-        response.setStatus(AUTH_ERR_RESPONSE.getHttpStatus());
-        response.getOutputStream().println(gson.toJson(AUTH_ERR_RESPONSE));
+            throws IOException {
+        log.error("Could not authenticate user!");
+        response.getWriter().write(objectMapper.writeValueAsString(authErrorResponse));
+        response.getWriter().flush();
     }
 }

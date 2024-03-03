@@ -1,79 +1,124 @@
+import { PieArcDatum, arc, interpolateRgb, pie, scaleSequential } from "d3";
+import React, { FC, useState } from "react";
+import useDetectMobile from "../../../hooks/useDetectMobile";
 import {
-  PieArcDatum,
-  Selection,
-  arc,
-  interpolateCool,
-  pie,
-  scaleSequential,
-  select,
-} from "d3";
-import { FC, useEffect, useRef, useState } from "react";
-import {
+  ApiResponse,
   CategoricalSpendings,
   Nullable,
-  PieChartProps,
+  TooltipPosition,
 } from "../../../utils/types";
+import PieChartClip from "./PieChartClip";
+import PieChartSector from "./PieChartSector";
+import PieChartTooltip from "./PieChartTooltip";
 
-const PieChart: FC<PieChartProps> = ({
-  data,
-  height,
-  width,
-  innerRadius,
-  outerRadius,
-}) => {
-  const svgRef = useRef(null);
-  const [selection, setSelection] =
-    useState<Nullable<Selection<null, unknown, null, undefined>>>(null);
+const PI_OVER_2 = Math.PI / 2;
+const ANIMATION_DISTANCE = 50;
 
-  useEffect(() => {
-    if (!selection) {
-      setSelection(select(svgRef.current));
-      return;
-    }
+type PieChartProps = {
+  width: number;
+  height: number;
+  response: ApiResponse<CategoricalSpendings[]>;
+  setSearchParams: (urlSearchParams: URLSearchParams) => void;
+};
 
-    if (!data) {
-      return;
-    }
+function calculateDisplacedCoords(angle: number): number[] {
+  const refAngle = angle <= Math.PI ? PI_OVER_2 : 3 * PI_OVER_2;
+  const angleDiff = Math.abs(angle - refAngle);
+  let x = Math.round(ANIMATION_DISTANCE * Math.cos(angleDiff));
+  let y = Math.round(ANIMATION_DISTANCE * Math.sin(angleDiff));
 
-    // Use interpolator since we can have variable number of categories
-    const interpolatorScale = scaleSequential()
-      .interpolator(interpolateCool)
-      .domain([0, data.length]);
+  // Need to know what quadrant the angle is in so we can apply proper translating
+  const quadrant = Math.ceil(angle / PI_OVER_2);
+  x *= quadrant == 3 || quadrant == 4 ? -1 : 1;
+  y *= quadrant == 2 || quadrant == 3 ? 1 : -1;
 
-    // Will be used to compute arcs from data
-    const pieGenerator = pie<CategoricalSpendings>()
-      .padAngle(0)
-      .value((d) => d.total);
+  return [x, y];
+}
 
-    // Will be used to draw the arcs
-    const arcGenerator = arc<PieArcDatum<CategoricalSpendings>>()
-      .innerRadius(innerRadius)
-      .outerRadius(outerRadius);
+const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
+  const [tooltipIdx, setTooltipIdx] = useState<Nullable<number>>(null);
+  const [tooltipPosition, setTooltipPosition] =
+    useState<Nullable<TooltipPosition>>(null);
+  const [arcStyle, setArcStyle] = useState<string>();
 
-    // Create an svg group
-    const svgGroup = selection
-      .selectAll("g")
-      .data([true]) // Data in this case doesn't matter we just want a svg group element
-      .join(
-        (enter) => enter.append("g"),
-        (update) => update.attr("class", "updated"),
-        (exit) => exit.remove(),
-      )
-      .attr("transform", `translate(${width / 2}, ${height / 2})`);
+  const data = response.data;
+  if (!data) {
+    return <>TODO</>;
+  }
 
-    svgGroup
-      .selectAll("path")
-      .data(pieGenerator(data))
-      .join(
-        (enter) => enter.append("path"),
-        (update) => update.attr("class", "updated"),
-        (exit) => exit.remove(),
-      )
-      .attr("d", arcGenerator)
-      .style("fill", (_, i) => interpolatorScale(i));
-  }, [selection, data]);
+  const isMobile = useDetectMobile();
+  const innerRadius = height / 4 + (isMobile ? 10 : 25);
+  const outerRadius = height / 2 - (isMobile ? 10 : 100);
+  const interpolatorScale = scaleSequential()
+    .interpolator(interpolateRgb("#EEEEEE", "#00ADB5"))
+    .domain([0, data.length]);
 
-  return <svg ref={svgRef} height={height} width={width}></svg>;
+  const pieGenerator = pie<CategoricalSpendings>()
+    .padAngle(0)
+    .value((d) => d.total);
+
+  const arcGenerator = arc<PieArcDatum<CategoricalSpendings>>()
+    .innerRadius(innerRadius)
+    .outerRadius(outerRadius);
+
+  const showTooltip = (e: React.MouseEvent, idx: number, curAngle: number) => {
+    const domPoint = new DOMPointReadOnly(e.clientX, e.clientY);
+    const svgNode = e.currentTarget as SVGGraphicsElement;
+    const svgPoint = domPoint.matrixTransform(
+      svgNode.getScreenCTM()?.inverse(),
+    );
+    const [x, y] = calculateDisplacedCoords(curAngle);
+
+    setArcStyle(`translate(${x}px, ${y}px)`);
+    setTooltipIdx(idx);
+    setTooltipPosition({
+      // Need the width / 2 and height / 2 since we transform the svg group by that amount
+      // The - 75 is a magic number to make tooltip appear above the mouse pointer not below
+      left: svgPoint.x + width / 2,
+      top: svgPoint.y + height / 2 - 75,
+    });
+  };
+
+  return (
+    <div className="relative">
+      <svg height={height} width={width}>
+        <g
+          className="animate-[scale-in_1s_ease-in-out_forwards,rotate-to-zero_1.25s_ease-in-out_forwards]"
+          style={{
+            transform: `translate(${width / 2}px, ${height / 2}px)`,
+            transformOrigin: "center center",
+            scale: "0",
+            rotate: "180deg",
+          }}
+        >
+          {pieGenerator(data).map((d, i) => {
+            return (
+              <PieChartSector
+                key={d.data.category}
+                datum={d}
+                idx={i}
+                fill={interpolatorScale(i)}
+                arcStyle={i == tooltipIdx ? arcStyle : undefined}
+                path={arcGenerator(d) || ""}
+                setTooltipIdx={setTooltipIdx}
+                onMouseMove={showTooltip}
+              />
+            );
+          })}
+
+          <PieChartClip outerRadius={outerRadius} innerRadius={innerRadius} />
+        </g>
+      </svg>
+
+      <PieChartTooltip
+        category={
+          tooltipIdx || tooltipIdx === 0 ? data[tooltipIdx].category : ""
+        }
+        total={tooltipIdx || tooltipIdx === 0 ? data[tooltipIdx].total : NaN}
+        tooltipPosition={tooltipPosition}
+      />
+    </div>
+  );
 };
 
 export default PieChart;

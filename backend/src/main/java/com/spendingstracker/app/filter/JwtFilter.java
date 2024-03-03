@@ -1,6 +1,6 @@
 package com.spendingstracker.app.filter;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spendingstracker.app.constants.Constants;
 import com.spendingstracker.app.response.ApiResponse;
 import com.spendingstracker.app.util.JwtUtil;
@@ -25,13 +25,14 @@ import java.util.Arrays;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
-    private final Gson gson;
+    private final ObjectMapper objectMapper;
     private final JwtUtil jwtUtil;
 
     private final UserDetailsService userDetailsService;
 
-    public JwtFilter(Gson gson, JwtUtil jwtUtil, UserDetailsService userDetailsService) {
-        this.gson = gson;
+    public JwtFilter(
+            ObjectMapper objectMapper, JwtUtil jwtUtil, UserDetailsService userDetailsService) {
+        this.objectMapper = objectMapper;
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
     }
@@ -94,7 +95,7 @@ public class JwtFilter extends OncePerRequestFilter {
                             .build();
 
             response.setStatus(internalErrResponse.getHttpStatus());
-            response.getOutputStream().println(gson.toJson(internalErrResponse));
+            response.getWriter().write(objectMapper.writeValueAsString(internalErrResponse));
         }
     }
 }

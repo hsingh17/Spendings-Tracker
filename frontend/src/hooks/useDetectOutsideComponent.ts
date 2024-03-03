@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Nullable } from "../utils/types";
 
-export default function useDetectOutsideComponent(
+export default function useDetectClickOutsideComponent(
   refs: Array<React.RefObject<HTMLElement>>,
   handler: (e: Nullable<React.MouseEvent>, open: boolean) => void,
 ) {

@@ -29,7 +29,7 @@ const Point: FC<PointProps> = ({
   return (
     <circle
       key={spendingListRow.date}
-      className="hover:cursor-pointer animate-[pointfadein_0.5s_linear_forwards]"
+      className="hover:cursor-pointer animate-[point-fade-in_0.5s_linear_forwards]"
       onMouseOver={() => setTooltipIdx(idx)}
       onMouseLeave={() => setTooltipIdx(null)}
       fill="white"

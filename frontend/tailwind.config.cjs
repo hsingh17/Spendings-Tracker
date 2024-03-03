@@ -7,20 +7,26 @@ module.exports = {
   theme: {
     extend: {
       keyframes: {
-        slidein: {
+        "slide-in": {
           "0%": { transform: "translate(-50%, -1000%)" },
           "100%": { transform: "translate(-50%, 0)" }
         },
-        slideout: {
+        "slide-out": {
           "0%": { transform: "translate(-50%, 0)" },
           "100%": { transform: "translate(-50%, -1000%)" }
         },
-        linechart: {
+        "draw-stroke": {
           "100%": { "stroke-dashoffset": "0"}
         },
-        pointfadein: {
+        "point-fade-in": {
           "0%": { "opacity": "0%"},
           "100%": { "opacity": "100%"}
+        },
+        "scale-in": {
+          "100%": { "scale": "1" }
+        },
+        "rotate-to-zero": {
+          "100%": { "rotate": "0deg" }
         }
       },
       colors: {

@@ -1,8 +1,8 @@
 import React, { FC, useRef, useState } from "react";
+import useDetectClickOutsideComponent from "../../../hooks/useDetectOutsideComponent";
 import { Nullable, TableFilterProps } from "../../../utils/types";
 import TableFilterButton from "./TableFilterButton";
 import TableFilterForm from "./TableFilterForm";
-import useDetectOutsideComponent from "../../../hooks/useDetectOutsideComponent";
 
 const TableFilter: FC<TableFilterProps> = ({
   isLoading,
@@ -21,7 +21,10 @@ const TableFilter: FC<TableFilterProps> = ({
     setIsOpen(open);
   };
 
-  useDetectOutsideComponent([filterButtonRef, filterFormRef], setIsOpenWrapper);
+  useDetectClickOutsideComponent(
+    [filterButtonRef, filterFormRef],
+    setIsOpenWrapper,
+  );
 
   if (isLoading) {
     return null;

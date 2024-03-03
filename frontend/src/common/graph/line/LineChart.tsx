@@ -2,21 +2,22 @@ import { extent, line, scaleLinear, scaleTime, timeParse } from "d3";
 import React, { FC, useState } from "react";
 import ArrayUtils from "../../../utils/array-utils";
 import { ISO_FORMAT } from "../../../utils/constants";
-import { ApiResponse, Nullable, SpendingListRow } from "../../../utils/types";
+import {
+  ApiResponse,
+  Nullable,
+  SpendingListRow,
+  TooltipPosition,
+} from "../../../utils/types";
 import Line from "./Line";
+import LineChartTooltip from "./LineChartTooltip";
 import PaginationBar from "./PaginationBar";
 import Point from "./Point";
-import Tooltip from "./Tooltip";
 import Tracer from "./Tracer";
 import XTicks from "./XTicks";
 import YTicks from "./YTicks";
 
 const TRACER_X_INITIAL = -10;
 export const POINT_RADIUS = 7;
-export type TooltipPosition = {
-  top: number;
-  left: number;
-};
 
 type LineChartProps = {
   width: number;
@@ -27,10 +28,10 @@ type LineChartProps = {
 
 function calculateMargins(height: number, width: number) {
   return {
-    left: width / 20,
-    right: width / 20,
+    left: width / 15,
+    right: width / 15,
     top: height / 5,
-    bottom: height / 20,
+    bottom: height / 10,
   };
 }
 
@@ -62,12 +63,12 @@ const LineChart: FC<LineChartProps> = ({
   const moveTracer = (
     clientX: number,
     clientY: number,
-    currentTarget: EventTarget
+    currentTarget: EventTarget,
   ) => {
     const domPoint = new DOMPointReadOnly(clientX, clientY);
     const svgNode = currentTarget as SVGGraphicsElement;
     const svgPoint = domPoint.matrixTransform(
-      svgNode.getScreenCTM()?.inverse()
+      svgNode.getScreenCTM()?.inverse(),
     );
     setTracerX(svgPoint.x);
 
@@ -78,7 +79,7 @@ const LineChart: FC<LineChartProps> = ({
     for (; i < data!.length; i++) {
       const spendingListRow = data![i];
       const d = Math.floor(xScale(parser(spendingListRow.date)!) - svgPoint.x);
-      if (Math.abs(d) <= POINT_RADIUS * 2) {
+      if (Math.abs(d) <= POINT_RADIUS * 3) {
         pos = {
           left: svgPoint.x,
           top: yScale(spendingListRow.total),
@@ -101,7 +102,7 @@ const LineChart: FC<LineChartProps> = ({
     }
 
     const queryParams = new URLSearchParams(
-      link.substring(link.indexOf("?") + 1)
+      link.substring(link.indexOf("?") + 1),
     );
 
     setSearchParams(queryParams);
@@ -109,7 +110,7 @@ const LineChart: FC<LineChartProps> = ({
 
   const xScale = scaleTime()
     .domain(
-      extent(data!, (d: SpendingListRow) => parser(d.date)) as [Date, Date]
+      extent(data!, (d: SpendingListRow) => parser(d.date)) as [Date, Date],
     )
     .range([margins.left, width - margins.right]);
 
@@ -127,11 +128,15 @@ const LineChart: FC<LineChartProps> = ({
   // Display at least 2
   const xTicksToShow = Math.max(
     2,
-    Math.floor(xScale.ticks().length * Math.min(width / 2000, 1))
+    Math.floor(xScale.ticks().length * Math.min(width / 2000, 1)),
   );
 
-  const xTicks = ArrayUtils.spreadEvenly(xScale.ticks(), xTicksToShow);
+  const xTicks = ArrayUtils.spreadEvenly<Date>(xScale.ticks(), xTicksToShow);
   const yTicks = yScale.ticks(yScale.ticks().length / 2);
+
+  if (!data) {
+    return <>TODO</>;
+  }
 
   return (
     <div className="relative">
@@ -145,8 +150,8 @@ const LineChart: FC<LineChartProps> = ({
         <g>
           <YTicks
             x1={margins.left}
-            x2={width - margins.right}
             yScale={yScale}
+            x2={width - margins.right}
             yTicks={yTicks}
           />
 
@@ -168,13 +173,11 @@ const LineChart: FC<LineChartProps> = ({
         </g>
       </svg>
 
-      {tooltipIdx !== null && tooltipIdx !== undefined && (
-        <Tooltip
-          tooltipPosition={tooltipPosition}
-          date={data![tooltipIdx].date}
-          total={data![tooltipIdx].total}
-        />
-      )}
+      <LineChartTooltip
+        date={tooltipIdx || tooltipIdx === 0 ? data[tooltipIdx].date : ""}
+        total={tooltipIdx || tooltipIdx === 0 ? data[tooltipIdx].total : NaN}
+        tooltipPosition={tooltipPosition}
+      />
 
       {prev && <PaginationBar isLeft={true} onClick={onClickPaginationBar} />}
       {next && <PaginationBar isLeft={false} onClick={onClickPaginationBar} />}
