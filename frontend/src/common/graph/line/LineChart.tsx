@@ -79,7 +79,7 @@ const LineChart: FC<LineChartProps> = ({
     for (; i < data!.length; i++) {
       const spendingListRow = data![i];
       const d = Math.floor(xScale(parser(spendingListRow.date)!) - svgPoint.x);
-      if (Math.abs(d) <= POINT_RADIUS * 2) {
+      if (Math.abs(d) <= POINT_RADIUS * 3) {
         pos = {
           left: svgPoint.x,
           top: yScale(spendingListRow.total),

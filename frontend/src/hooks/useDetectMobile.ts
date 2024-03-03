@@ -6,11 +6,11 @@ export default function useDetectMobile() {
     window.innerWidth <= MOBILE_SCREEN_WIDTH,
   );
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= MOBILE_SCREEN_WIDTH);
-    };
+  const handleResize = () => {
+    setIsMobile(window.innerWidth <= MOBILE_SCREEN_WIDTH);
+  };
 
+  useEffect(() => {
     window.addEventListener("resize", () => handleResize());
 
     return window.removeEventListener("resize", () => handleResize());
