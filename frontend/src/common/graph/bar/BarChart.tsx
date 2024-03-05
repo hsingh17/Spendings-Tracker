@@ -1,49 +1,42 @@
-import { Selection, extent, scaleBand, scaleLinear, select } from "d3";
-import { FC, useEffect, useRef, useState } from "react";
-import { BarChartProps, Nullable } from "../../../utils/types";
+import { extent, scaleBand, scaleLinear } from "d3";
+import { FC } from "react";
+import { ApiResponse, CategoricalSpendings } from "../../../utils/types";
+import Bars from "./Bars";
 
-const BarChart: FC<BarChartProps> = ({ data, height, width }) => {
-  const svgRef = useRef(null);
-  const [selection, setSelection] =
-    useState<Nullable<Selection<null, unknown, null, undefined>>>(null);
+type BarChartProps = {
+  width: number;
+  height: number;
+  response: ApiResponse<CategoricalSpendings[]>;
+  setSearchParams: (urlSearchParams: URLSearchParams) => void;
+};
 
-  useEffect(() => {
-    if (!selection) {
-      setSelection(select(svgRef.current));
-      return;
-    }
+const BarChart: FC<BarChartProps> = ({ response, height, width }) => {
+  const data = response.data;
+  if (!data) {
+    return <>TODO</>;
+  }
 
-    if (!data) {
-      return;
-    }
+  const xScale = scaleBand()
+    .domain(data.map((d) => d.category))
+    .range([0, width])
+    .padding(0.4);
 
-    // X Scale
-    const xScale = scaleBand()
-      .domain(data.map((d) => d.category))
-      .range([0, width])
-      .padding(0.1);
+  const yScale = scaleLinear()
+    .domain(extent(data, (d) => d.total) as [number, number])
+    .range([0, height - 100]);
 
-    // Y scale
-    const yScale = scaleLinear()
-      .domain(extent(data, (d) => d.total) as [number, number])
-      .range([0, height]);
-
-    // Create bars
-    selection
-      .selectAll("rect")
-      .data(data)
-      .join(
-        (enter) => enter.append("rect"),
-        (update) => update.attr("class", "updated"),
-        (exit) => exit.remove()
-      )
-      .attr("x", (d) => xScale(d.category)!)
-      .attr("width", xScale.bandwidth())
-      .attr("height", (d) => yScale(d.total))
-      .attr("fill", "black");
-  }, [selection, data]);
-
-  return <svg ref={svgRef} height={height} width={width}></svg>;
+  return (
+    <div>
+      <svg height={height} width={width}>
+        <Bars
+          categoricalSpendings={data}
+          height={height}
+          xScale={xScale}
+          yScale={yScale}
+        />
+      </svg>
+    </div>
+  );
 };
 
 export default BarChart;

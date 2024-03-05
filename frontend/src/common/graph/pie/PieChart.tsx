@@ -43,6 +43,7 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
 
   const data = response.data;
   if (!data) {
+    // TODO
     return <>TODO</>;
   }
 

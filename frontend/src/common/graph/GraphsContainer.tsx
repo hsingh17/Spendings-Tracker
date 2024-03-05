@@ -6,6 +6,7 @@ import {
   CategoricalSpendings,
   SpendingListRow,
 } from "../../utils/types";
+import BarChart from "./bar/BarChart";
 import LineChart from "./line/LineChart";
 import PieChart from "./pie/PieChart";
 
@@ -50,6 +51,15 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({
       case GRAPH_TYPES.Pie:
         return (
           <PieChart
+            response={response as ApiResponse<CategoricalSpendings[]>}
+            height={height}
+            width={width}
+            setSearchParams={setSearchParams}
+          />
+        );
+      case GRAPH_TYPES.Bar:
+        return (
+          <BarChart
             response={response as ApiResponse<CategoricalSpendings[]>}
             height={height}
             width={width}
