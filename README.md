@@ -8,6 +8,7 @@ This repository holds the code for my spendings tracker app built with Java and 
 - clean up backend api more
   - date -> localdate
   - add audit fields to db model (created on, created by, last modified on, last modified by)
+  - use block strings for sql queries -> possibly extract sql out into files instead
   - add logging to backend
   - swagger openapi docs
   - google oauth2 login -> maybe need separate table to store oauth tokens (idk why u would need to but maybe?) -> will need to check to see if user is already created in APP.USER

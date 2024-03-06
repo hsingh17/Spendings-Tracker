@@ -9,9 +9,15 @@ type TooltipProps = {
   position: TooltipPosition;
   className?: string;
   children: ReactNode;
+  enableDynamicTooltip?: boolean;
 };
 
-const Tooltip: FC<TooltipProps> = ({ position, className, children }) => {
+const Tooltip: FC<TooltipProps> = ({
+  position,
+  className,
+  children,
+  enableDynamicTooltip = true,
+}) => {
   const divRef = useRef<HTMLDivElement>(null);
   const mouseDir = useCalcMouseDir();
 
@@ -38,8 +44,8 @@ const Tooltip: FC<TooltipProps> = ({ position, className, children }) => {
       className={`absolute ${className}`}
       style={{
         display: "block",
-        top: position.top + yOffset,
-        left: position.left - xOffset,
+        top: enableDynamicTooltip ? position.top + yOffset : position.top,
+        left: enableDynamicTooltip ? position.left - xOffset : position.left,
       }}
     >
       {children}
