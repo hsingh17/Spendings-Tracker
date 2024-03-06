@@ -27,6 +27,9 @@ module.exports = {
         },
         "rotate-to-zero": {
           "100%": { "rotate": "0deg" }
+        },
+        "scale-bar-up": {
+          "100%": { transform: "scale(1, 1)" }
         }
       },
       colors: {

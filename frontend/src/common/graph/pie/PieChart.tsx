@@ -7,9 +7,9 @@ import {
   Nullable,
   TooltipPosition,
 } from "../../../utils/types";
+import CategoricalChartTooltip from "../CategoricalChartTooltip";
 import PieChartClip from "./PieChartClip";
 import PieChartSector from "./PieChartSector";
-import PieChartTooltip from "./PieChartTooltip";
 
 const PI_OVER_2 = Math.PI / 2;
 const ANIMATION_DISTANCE = 50;
@@ -43,6 +43,7 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
 
   const data = response.data;
   if (!data) {
+    // TODO
     return <>TODO</>;
   }
 
@@ -110,7 +111,7 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
         </g>
       </svg>
 
-      <PieChartTooltip
+      <CategoricalChartTooltip
         category={
           tooltipIdx || tooltipIdx === 0 ? data[tooltipIdx].category : ""
         }

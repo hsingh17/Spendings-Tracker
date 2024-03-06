@@ -135,6 +135,7 @@ const LineChart: FC<LineChartProps> = ({
   const yTicks = yScale.ticks(yScale.ticks().length / 2);
 
   if (!data) {
+    // TODO
     return <>TODO</>;
   }
 

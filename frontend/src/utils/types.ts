@@ -217,14 +217,6 @@ export type PopupProps = {
   time: number;
 };
 
-export type GenericChartProps<T> = {
-  width: number;
-  height: number;
-  data: Nullable<Array<T>>;
-};
-
-export type BarChartProps = GenericChartProps<CategoricalSpendings>;
-
 export type NavbarHeaderProps = {
   state: NavbarState;
   transitionState: (action: NavbarAction) => void;

@@ -1,49 +1,71 @@
-import { Selection, extent, scaleBand, scaleLinear, select } from "d3";
-import { FC, useEffect, useRef, useState } from "react";
-import { BarChartProps, Nullable } from "../../../utils/types";
+import { extent, scaleBand, scaleLinear } from "d3";
+import { FC, useState } from "react";
+import {
+  ApiResponse,
+  CategoricalSpendings,
+  Nullable,
+  TooltipPosition,
+} from "../../../utils/types";
+import CategoricalChartTooltip from "../CategoricalChartTooltip";
+import Bars from "./Bars";
 
-const BarChart: FC<BarChartProps> = ({ data, height, width }) => {
-  const svgRef = useRef(null);
-  const [selection, setSelection] =
-    useState<Nullable<Selection<null, unknown, null, undefined>>>(null);
+type BarChartProps = {
+  width: number;
+  height: number;
+  response: ApiResponse<CategoricalSpendings[]>;
+  setSearchParams: (urlSearchParams: URLSearchParams) => void;
+};
 
-  useEffect(() => {
-    if (!selection) {
-      setSelection(select(svgRef.current));
-      return;
-    }
+const BarChart: FC<BarChartProps> = ({ response, height, width }) => {
+  const [tooltipIdx, setTooltipIdx] = useState<Nullable<number>>(null);
+  const [tooltipPosition, setTooltipPosition] =
+    useState<Nullable<TooltipPosition>>(null);
 
-    if (!data) {
-      return;
-    }
+  const data = response.data;
+  if (!data) {
+    return <>TODO</>;
+  }
 
-    // X Scale
-    const xScale = scaleBand()
-      .domain(data.map((d) => d.category))
-      .range([0, width])
-      .padding(0.1);
+  const xScale = scaleBand()
+    .domain(data.map((d) => d.category))
+    .range([0, width])
+    .padding(0.4);
 
-    // Y scale
-    const yScale = scaleLinear()
-      .domain(extent(data, (d) => d.total) as [number, number])
-      .range([0, height]);
+  const yScale = scaleLinear()
+    .domain(extent(data, (d) => d.total) as [number, number])
+    .range([0, height - 100]);
 
-    // Create bars
-    selection
-      .selectAll("rect")
-      .data(data)
-      .join(
-        (enter) => enter.append("rect"),
-        (update) => update.attr("class", "updated"),
-        (exit) => exit.remove()
-      )
-      .attr("x", (d) => xScale(d.category)!)
-      .attr("width", xScale.bandwidth())
-      .attr("height", (d) => yScale(d.total))
-      .attr("fill", "black");
-  }, [selection, data]);
+  const onMouseOver = (idx: number, x: number, y: number) => {
+    setTooltipIdx(idx);
+    setTooltipPosition({
+      left: x,
+      top: y - 50,
+    });
+  };
 
-  return <svg ref={svgRef} height={height} width={width}></svg>;
+  return (
+    <div className="relative">
+      <svg height={height} width={width}>
+        <Bars
+          setTooltipIdx={setTooltipIdx}
+          onMouseOver={onMouseOver}
+          categoricalSpendings={data}
+          height={height}
+          xScale={xScale}
+          yScale={yScale}
+        />
+      </svg>
+
+      <CategoricalChartTooltip
+        enableDynamicTooltip={false}
+        category={
+          tooltipIdx || tooltipIdx === 0 ? data[tooltipIdx].category : ""
+        }
+        total={tooltipIdx || tooltipIdx === 0 ? data[tooltipIdx].total : NaN}
+        tooltipPosition={tooltipPosition}
+      />
+    </div>
+  );
 };
 
 export default BarChart;
