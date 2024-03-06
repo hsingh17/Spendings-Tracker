@@ -1,4 +1,5 @@
 import { useSearchParams } from "react-router-dom";
+import GraphEmptyState from "../../common/graph/GraphEmptyState";
 import GraphsContainer from "../../common/graph/GraphsContainer";
 import useSpendings from "../../hooks/useSpendings";
 import { GRANULARITY, GRAPH_TYPES } from "../../utils/constants";
@@ -13,7 +14,7 @@ const DEFAULT_URL_SEARCH_PARAMS = new URLSearchParams([
 
 export const Metrics = () => {
   const [searchParams, setSearchParams] = useSearchParams(
-    DEFAULT_URL_SEARCH_PARAMS
+    DEFAULT_URL_SEARCH_PARAMS,
   );
 
   const { data: response } = useSpendings<SpendingListRow>(searchParams);
@@ -48,22 +49,20 @@ export const Metrics = () => {
   };
 
   // TODO: Error handling
-  if (!response || !response.ok) {
+  if (!response || !response.ok || !response.data) {
     return <h1>Error!</h1>;
   }
-
-  if (!response.data) {
-    // TODO: Empty state
-    return <h1>No data to show</h1>;
-  }
-
   return (
     <div className="md:relative w-full h-full flex flex-col">
-      <GraphsContainer
-        graphType={getGraphType()}
-        response={response}
-        setSearchParams={setSearchParamsKeepPage}
-      />
+      {response.data.length ? (
+        <GraphsContainer
+          graphType={getGraphType()}
+          response={response}
+          setSearchParams={setSearchParamsKeepPage}
+        />
+      ) : (
+        <GraphEmptyState />
+      )}
 
       <GraphFilter
         granularity={getGranularity()}

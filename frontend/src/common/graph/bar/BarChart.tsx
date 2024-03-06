@@ -22,8 +22,10 @@ const BarChart: FC<BarChartProps> = ({ response, height, width }) => {
     useState<Nullable<TooltipPosition>>(null);
 
   const data = response.data;
-  if (!data) {
-    return <>TODO</>;
+  if (!data || !data.length) {
+    // This component won't get rendered if there's no data.
+    // So just doing this to satisfy Typescript.
+    return <></>;
   }
 
   const xScale = scaleBand()

@@ -134,9 +134,10 @@ const LineChart: FC<LineChartProps> = ({
   const xTicks = ArrayUtils.spreadEvenly<Date>(xScale.ticks(), xTicksToShow);
   const yTicks = yScale.ticks(yScale.ticks().length / 2);
 
-  if (!data) {
-    // TODO
-    return <>TODO</>;
+  if (!data || !data.length) {
+    // This component won't get rendered if there's no data.
+    // So just doing this to satisfy Typescript.
+    return <></>;
   }
 
   return (

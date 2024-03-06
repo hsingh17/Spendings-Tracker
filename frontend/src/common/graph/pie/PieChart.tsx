@@ -42,9 +42,10 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
   const [arcStyle, setArcStyle] = useState<string>();
 
   const data = response.data;
-  if (!data) {
-    // TODO
-    return <>TODO</>;
+  if (!data || !data.length) {
+    // This component won't get rendered if there's no data.
+    // So just doing this to satisfy Typescript.
+    return <></>;
   }
 
   const isMobile = useDetectMobile();
