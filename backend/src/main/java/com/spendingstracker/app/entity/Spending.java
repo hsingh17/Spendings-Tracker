@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 
+/**
+ * An entity class that maps to the table <code>APP.SPENDING</code>
+ */
 @Entity
 @Table(schema = "APP", name = "SPENDING")
 public class Spending {
@@ -26,8 +29,6 @@ public class Spending {
     private BigDecimal amount;
 
     @Transient private boolean delete = false;
-
-    public Spending() {}
 
     public long getSpendingId() {
         return spendingId;

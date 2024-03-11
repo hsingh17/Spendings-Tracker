@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/** An entity class that maps to the table <code>APP.USER</code> */
 @Entity
 @Table(schema = "APP", name = "USER")
 public class User {

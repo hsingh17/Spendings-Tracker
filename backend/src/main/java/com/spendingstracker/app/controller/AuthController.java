@@ -2,7 +2,7 @@ package com.spendingstracker.app.controller;
 
 import com.spendingstracker.app.constants.Constants;
 import com.spendingstracker.app.dto.CustomUserDetails;
-import com.spendingstracker.app.dto.LoginRequestBody;
+import com.spendingstracker.app.dto.request.LoginRequest;
 import com.spendingstracker.app.response.ApiResponse;
 import com.spendingstracker.app.util.JwtUtil;
 
@@ -49,20 +49,20 @@ public class AuthController {
     /**
      * Route for when a user attempts to log into the application
      *
-     * @param loginRequestBody a <code>LoginRequestBody</code> object that contains the username and
+     * @param loginRequest a <code>LoginRequestBody</code> object that contains the username and
      *     password the user attempted to login with.
      * @param response <code>HttpServletResponse</code> object for returning a cookie to the user
      *     that contains their JWT
      * @return <code>{@literal ResponseEntity<ApiResponse<CustomUserDetails>>}</code> that contains
      *     the user's details post login
      * @throws AuthenticationException if authentication fails
-     * @see LoginRequestBody
+     * @see LoginRequest
      * @see ApiResponse
      * @see CustomUserDetails
      */
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<CustomUserDetails>> postLogin(
-            @RequestBody LoginRequestBody loginRequestBody, HttpServletResponse response)
+            @RequestBody LoginRequest loginRequest, HttpServletResponse response)
             throws AuthenticationException {
         log.info("POST /login");
 
@@ -70,7 +70,7 @@ public class AuthController {
         Authentication auth =
                 authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(
-                                loginRequestBody.getUsername(), loginRequestBody.getPassword()));
+                                loginRequest.username(), loginRequest.password()));
 
         // User has valid credentials in at this point, need to create and return a JWT for the user
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();

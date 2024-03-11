@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+/** An entity class that maps to the table <code>APP.SPENDING_USER_AGGR</code> */
 @Entity
 @Table(schema = "APP", name = "SPENDING_USER_AGGR")
 public class SpendingUserAggr {

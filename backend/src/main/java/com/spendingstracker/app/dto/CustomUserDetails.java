@@ -5,6 +5,12 @@ import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
 
+/**
+ * An extension of the Spring <code>User</code> class the only reason for this is to add the <code>
+ * userId</code> member.
+ *
+ * @see User
+ */
 public class CustomUserDetails extends User {
     private long userId;
 
