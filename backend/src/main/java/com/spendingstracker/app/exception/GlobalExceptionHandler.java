@@ -13,13 +13,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler({UsernameNotFoundException.class, AuthenticationException.class})
-    public ResponseEntity<ApiResponse<Object>> handleNotFoundException(UsernameNotFoundException e) {
+    public ResponseEntity<ApiResponse<Object>> handleNotFoundException(
+            UsernameNotFoundException e) {
         return new ResponseEntity<>(
                 buildApiResponse(e.getMessage(), HttpStatus.NOT_FOUND), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler({IllegalArgumentException.class, ConversionFailedException.class})
-    public ResponseEntity<ApiResponse<Object>> handleBadRequestException(IllegalArgumentException e) {
+    public ResponseEntity<ApiResponse<Object>> handleBadRequestException(
+            IllegalArgumentException e) {
         return new ResponseEntity<>(
                 buildApiResponse(e.getMessage(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
     }

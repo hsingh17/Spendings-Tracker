@@ -1,4 +1,6 @@
 # Spendings Tracker API
+## Swagger UI and OpenAPI Documentation
+
 
 ## Prerequisite Knowledge
 - All dates are returned in the form `YYYY-MM-DD`

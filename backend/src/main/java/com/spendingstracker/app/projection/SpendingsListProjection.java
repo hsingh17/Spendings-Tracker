@@ -1,13 +1,14 @@
 package com.spendingstracker.app.projection;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public interface SpendingsListProjection {
     Long getSpendingUserAggrId();
 
     String getCategory();
 
-    String getDate();
+    LocalDate getDate();
 
     BigDecimal getTotal();
 }

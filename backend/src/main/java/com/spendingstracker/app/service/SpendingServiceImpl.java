@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,8 +32,8 @@ public class SpendingServiceImpl implements SpendingService {
 
     public Page<SpendingsListProjection> getSpendings(
             long userId,
-            Date startDate,
-            Date endDate,
+            LocalDate startDate,
+            LocalDate endDate,
             int page,
             int limit,
             Granularity granularity,
@@ -65,7 +66,7 @@ public class SpendingServiceImpl implements SpendingService {
         throw new RuntimeException("Could not get spendings!");
     }
 
-    public List<Spending> getSpendingDetails(Date spendingDate, long userId) {
+    public List<Spending> getSpendingDetails(LocalDate spendingDate, long userId) {
         User user = getUser(userId);
 
         Optional<SpendingUserAggr> spendingUserAggrOpt =
@@ -76,7 +77,7 @@ public class SpendingServiceImpl implements SpendingService {
                 .orElse(null);
     }
 
-    public void updateSpending(Set<Spending> spendings, Date spendingDate, long userId) {
+    public void updateSpending(Set<Spending> spendings, LocalDate spendingDate, long userId) {
         User user = getUser(userId);
 
         SpendingUserAggr spendingUserAggr =
@@ -103,7 +104,7 @@ public class SpendingServiceImpl implements SpendingService {
         spendingUserAggrRepository.save(spendingUserAggr);
     }
 
-    public void createSpending(Set<Spending> spendings, Date spendingDate, long userId) {
+    public void createSpending(Set<Spending> spendings, LocalDate spendingDate, long userId) {
         User user = getUser(userId);
 
         spendings = filterSpendings(spendings);

@@ -1,7 +1,7 @@
 package com.spendingstracker.app.controller;
 
-import com.spendingstracker.app.constants.GraphType;
 import com.spendingstracker.app.constants.Granularity;
+import com.spendingstracker.app.constants.GraphType;
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.entity.Spending;
 import com.spendingstracker.app.projection.SpendingsListProjection;
@@ -23,20 +23,33 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
+/** Controller class containing the routes for performing CRUD operations on a user's spendings. */
 @RestController
 @RequestMapping("/v1/api")
 @Slf4j
-public class RestApiController {
+public class SpendingsController {
     private final SpendingService spendingService;
 
-    public RestApiController(SpendingService spendingService) {
+    /**
+     * Instantiate the <code>SpendingsController</code> from a <code>SpendingService</code> object.
+     *
+     * @param spendingService <code>SpendingService</code> object
+     * @see SpendingService
+     */
+    public SpendingsController(SpendingService spendingService) {
         this.spendingService = spendingService;
     }
 
+    /**
+     * Route for returning the <bold>authenticated</bold> user's details.
+     *
+     * @return <code>{@literal ResponseEntity<ApiResponse<UserDetails>>}</code> the user's details
+     * @see UserDetails
+     */
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<UserDetails>> getMe() {
         log.info("GET /me");
@@ -52,10 +65,31 @@ public class RestApiController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    /**
+     * Route for returning the user's spendings based on the query params passed in.
+     *
+     * @param startDate date from which to begin looking for spendings.
+     * @param endDate date to end looking for spendings.
+     * @param granularity the granularity to which the spendings should be grouped by
+     * @param graphType the graph type being requested by the user.
+     * @param page the page which user is looking for spendings on
+     * @param limit the number of spendings to return
+     * @param request <code>HttpServletRequest</code> object, used to build the <code>ApiLinks
+     *     </code> object
+     * @return <code>{@literal ResponseEntity<ApiResponse<List<SpendingsListProjection>>>}</code>
+     * @throws IllegalArgumentException when one of the <code>RequestParam</code> passed in do not
+     *     pass validation.
+     * @see SpendingsListProjection
+     * @see Granularity
+     * @see GraphType
+     * @see ApiLinks
+     * @see ApiMetadata
+     * @see ApiResponse
+     */
     @GetMapping("/spendings")
     public ResponseEntity<ApiResponse<List<SpendingsListProjection>>> getSpendings(
-            @RequestParam(name = "start-date", defaultValue = "1000-01-01") Date startDate,
-            @RequestParam(name = "end-date", defaultValue = "9999-12-31") Date endDate,
+            @RequestParam(name = "start-date", defaultValue = "1000-01-01") LocalDate startDate,
+            @RequestParam(name = "end-date", defaultValue = "9999-12-31") LocalDate endDate,
             @RequestParam(name = "granularity", defaultValue = "Day") Granularity granularity,
             @RequestParam(name = "graph-type", defaultValue = "Line") GraphType graphType,
             @RequestParam(name = "page", defaultValue = "0") @Min(0) Integer page,
@@ -106,9 +140,17 @@ public class RestApiController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    /**
+     * Route to get the details of a particular spending on a certain <code>spendingDate</code>.
+     *
+     * @param spendingDate date of the spending for which the details were requested
+     * @return <code>{@literal ResponseEntity<ApiResponse<List<Spending>>>}</code> the list of
+     *     spendings that are associated to that date.
+     * @see ApiResponse
+     */
     @GetMapping("/spendings/{spending-date}")
     public ResponseEntity<ApiResponse<List<Spending>>> getSpendingDetails(
-            @PathVariable("spending-date") Date spendingDate) {
+            @PathVariable("spending-date") LocalDate spendingDate) {
         log.info("GET /spendings/" + spendingDate);
 
         List<Spending> spendings = spendingService.getSpendingDetails(spendingDate, getUserId());
@@ -122,15 +164,24 @@ public class RestApiController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    /**
+     * Route to create spendings for a certain date.
+     *
+     * @param spendings <code>{@literal Set<Spending>}</code> objects that user wants to create.
+     * @param spendingDate the date for which the <code>spendings</code> should be created for.
+     * @return <code>{@literal ResponseEntity<ApiResponse<Object>>}</code> an OK <code>ApiResponse
+     *     </code>
+     * @see ApiResponse
+     */
     @PostMapping("/spendings/{spending-date}")
-    public ResponseEntity<ApiResponse> createSpending(
+    public ResponseEntity<ApiResponse<Object>> createSpending(
             @RequestBody Set<Spending> spendings,
-            @PathVariable("spending-date") Date spendingDate) {
+            @PathVariable("spending-date") LocalDate spendingDate) {
         log.info("POST /spendings/" + spendingDate);
 
         spendingService.createSpending(spendings, spendingDate, getUserId());
-        ApiResponse apiResponse =
-                new ApiResponse.ApiResponseBuilder()
+        ApiResponse<Object> apiResponse =
+                new ApiResponse.ApiResponseBuilder<>()
                         .setHttpStatus(HttpStatus.OK.value())
                         .setMessage("Success")
                         .setOk(true)
@@ -139,15 +190,24 @@ public class RestApiController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    /**
+     * Route to update spendings for a certain day.
+     *
+     * @param spendings spendings to update
+     * @param spendingDate day for which spendings need to be updated for
+     * @return <code>{@literal ResponseEntity<ApiResponse<Object>>}</code> an OK <code>ApiResponse
+     *     </code>
+     * @see ApiResponse
+     */
     @PutMapping("/spendings/{spending-date}")
-    public ResponseEntity<ApiResponse> updateSpending(
+    public ResponseEntity<ApiResponse<Object>> updateSpending(
             @RequestBody Set<Spending> spendings,
-            @PathVariable("spending-date") Date spendingDate) {
+            @PathVariable("spending-date") LocalDate spendingDate) {
         log.info("PUT /spendings/" + spendingDate);
 
         spendingService.updateSpending(spendings, spendingDate, getUserId());
-        ApiResponse<List<Spending>> apiResponse =
-                new ApiResponse.ApiResponseBuilder<List<Spending>>()
+        ApiResponse<Object> apiResponse =
+                new ApiResponse.ApiResponseBuilder<>()
                         .setHttpStatus(HttpStatus.OK.value())
                         .setOk(true)
                         .setMessage("Updated spending for spending date: " + spendingDate)
@@ -156,14 +216,23 @@ public class RestApiController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    /**
+     * Route to delete an entire spending day
+     *
+     * @param spendingUserAggrId the primary key for the <code>SPENDING_USER_AGGR</code> table that
+     *     is associated to these spendings.
+     * @return <code>{@literal ResponseEntity<ApiResponse<Object>>}</code> an OK <code>ApiResponse
+     *     </code>
+     * @see ApiResponse
+     */
     @DeleteMapping("/spendings/{spending-user-aggr-id}")
-    public ResponseEntity<ApiResponse> deleteSpending(
+    public ResponseEntity<ApiResponse<Object>> deleteSpending(
             @PathVariable("spending-user-aggr-id") long spendingUserAggrId) {
         log.info("DELETE /spendings/" + spendingUserAggrId);
 
         spendingService.deleteSpending(spendingUserAggrId);
-        ApiResponse<List<Spending>> apiResponse =
-                new ApiResponse.ApiResponseBuilder<List<Spending>>()
+        ApiResponse<Object> apiResponse =
+                new ApiResponse.ApiResponseBuilder<>()
                         .setHttpStatus(HttpStatus.OK.value())
                         .setOk(true)
                         .setMessage("Delete spending for id: " + spendingUserAggrId)
@@ -172,6 +241,9 @@ public class RestApiController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    /**
+     * @return the user ID of the authenticated user
+     */
     private long getUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();

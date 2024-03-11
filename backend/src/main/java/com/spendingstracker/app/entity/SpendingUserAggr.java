@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,7 +23,7 @@ public class SpendingUserAggr {
     private User user;
 
     @Column(name = "DATE")
-    private Date date;
+    private LocalDate date;
 
     @OneToMany(
             mappedBy = "spendingUserAggr",
@@ -36,7 +36,7 @@ public class SpendingUserAggr {
 
     public SpendingUserAggr() {}
 
-    public SpendingUserAggr(User user, Date date, Set<Spending> spendings) {
+    public SpendingUserAggr(User user, LocalDate date, Set<Spending> spendings) {
         this.user = user;
         this.date = date;
         this.spendings = spendings;
@@ -59,11 +59,11 @@ public class SpendingUserAggr {
         this.user = user;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

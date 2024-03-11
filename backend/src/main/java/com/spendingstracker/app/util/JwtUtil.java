@@ -20,6 +20,7 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
     private final String secretKey;
+    private final static int TEN_HR_EXPIRE_TIME = 1000 * 60 * 60 * 10;
 
     public JwtUtil(@Qualifier("secretKey") String secretKey) {
         this.secretKey = secretKey;
@@ -57,12 +58,11 @@ public class JwtUtil {
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
-        int tenHourTime = 1000 * 60 * 60 * 10;
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + tenHourTime))
+                .setExpiration(new Date(System.currentTimeMillis() + TEN_HR_EXPIRE_TIME))
                 .signWith(getSecretKey())
                 .compact();
     }
