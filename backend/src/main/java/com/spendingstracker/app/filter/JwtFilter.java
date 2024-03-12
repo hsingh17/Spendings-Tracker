@@ -23,6 +23,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Arrays;
 
+/** Custom Spring Security filter that sets the authentication status of the user */
 @Component
 public class JwtFilter extends OncePerRequestFilter {
     private final ObjectMapper objectMapper;
@@ -30,6 +31,13 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final UserDetailsService userDetailsService;
 
+    /**
+     * Initialize the JwtFilter object with dependency injections
+     *
+     * @see UserDetailsService
+     * @see JwtUtil
+     * @see com.spendingstracker.app.config.ObjectMapperConfig
+     */
     public JwtFilter(
             ObjectMapper objectMapper, JwtUtil jwtUtil, UserDetailsService userDetailsService) {
         this.objectMapper = objectMapper;
@@ -37,6 +45,10 @@ public class JwtFilter extends OncePerRequestFilter {
         this.userDetailsService = userDetailsService;
     }
 
+    /**
+     * Function attempts to extract the JWT from the request cookie and set the authentication to
+     * the security context. If the JWT can not be extracted, then attempt to continue filtering.
+     */
     @Override
     protected void doFilterInternal(
             HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -72,23 +84,29 @@ public class JwtFilter extends OncePerRequestFilter {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(
                         userDetails, token, userDetails.getAuthorities());
+
         usernamePasswordAuthenticationToken.setDetails(
                 new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContextHolder.getContext()
-                .setAuthentication(
-                        usernamePasswordAuthenticationToken); // Set the context to use the
-        // UsernamePasswordAuthenticationToken
+
+        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+        // Set the context to use the UsernamePasswordAuthenticationToken
         doFilterWrapper(request, response, filterChain);
     }
 
+    /**
+     * Wrapper function around <code>doFilter</code> that when an exception occurs, return an HTTP
+     * 500 response
+     *
+     * @see ApiResponse
+     */
     private void doFilterWrapper(
             HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws IOException {
         try {
             filterChain.doFilter(request, response);
         } catch (Exception e) {
-            ApiResponse internalErrResponse =
-                    new ApiResponse.ApiResponseBuilder()
+            ApiResponse<Object> internalErrResponse =
+                    new ApiResponse.ApiResponseBuilder<>()
                             .setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
                             .setOk(false)
                             .setMessage(e.getMessage())

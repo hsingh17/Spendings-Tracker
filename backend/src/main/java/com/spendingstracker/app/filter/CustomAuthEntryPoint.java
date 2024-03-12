@@ -18,6 +18,7 @@ import java.io.IOException;
 /**
  * Implementation of <code>AuthenticationEntryPoint</code> interface for handling when a user fails
  * to be authenticated.
+ *
  * @see AuthenticationEntryPoint
  */
 @Component
@@ -32,13 +33,17 @@ public class CustomAuthEntryPoint implements AuthenticationEntryPoint {
                     .build();
 
     /**
-     * @param objectMapper <code>ObjectMapper</code> 
+     * @param objectMapper <code>ObjectMapper</code>
      * @see com.spendingstracker.app.config.ObjectMapperConfig
      */
     public CustomAuthEntryPoint(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
+    /**
+     * Overloaded function that writes the <code>authErrorResponse</code> object to the HTTP
+     * response
+     */
     @Override
     public void commence(
             HttpServletRequest request,

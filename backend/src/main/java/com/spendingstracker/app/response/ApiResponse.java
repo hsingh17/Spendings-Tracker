@@ -3,6 +3,11 @@ package com.spendingstracker.app.response;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
+/**
+ * Generic API response object.
+ *
+ * @param <T> type of the <code>data</code> field
+ */
 public class ApiResponse<T> {
     private ApiMetadata metadata;
     private ZonedDateTime timestamp = ZonedDateTime.now(ZoneId.of("Z"));

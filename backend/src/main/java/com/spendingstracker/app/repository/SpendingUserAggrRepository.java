@@ -14,6 +14,10 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.Optional;
 
+/**
+ * <code>JpaRepository</code> used to make queries to the <code>APP>.SPENDING_USER_AGGR</code>
+ * table.
+ */
 @Repository
 public interface SpendingUserAggrRepository extends JpaRepository<SpendingUserAggr, Long> {
 

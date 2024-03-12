@@ -2,6 +2,10 @@ package com.spendingstracker.app.response;
 
 import java.util.Optional;
 
+/**
+ * Object used for storing links to the first, previous, current, next and last page(s) of the API
+ * results.
+ */
 public class ApiLinks {
     private String first;
     private String prev;
