@@ -18,6 +18,11 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the SpendingService interface. Please see SpendingService for related JavaDocs.
+ *
+ * @see SpendingService
+ */
 @Service
 public class SpendingServiceImpl implements SpendingService {
     private final SpendingUserAggrRepository spendingUserAggrRepository;
