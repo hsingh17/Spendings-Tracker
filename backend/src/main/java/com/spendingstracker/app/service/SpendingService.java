@@ -69,6 +69,8 @@ public interface SpendingService {
     void updateSpending(Set<Spending> spendings, LocalDate spendingDate, long userId);
 
     /**
+     * Delete an entire spending day
+     *
      * @param spendingUserAggrId the primary key for the <code>SPENDING_USER_AGGR</code> table that
      *     is associated to these spendings.
      * @param spendingUserAggrId

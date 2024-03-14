@@ -8,5 +8,12 @@ import org.springframework.stereotype.Repository;
 /** <code>JpaRepository</code> used to make queries to the <code>APP>.USER</code> table. */
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
+    /**
+     * Find <code>User</code> by <code>username</code>
+     *
+     * @param username self-explantory
+     * @return <code>User</code> object for the <code>username</code>.
+     * @see User
+     */
     User findByUsername(String username);
 }
