@@ -45,7 +45,7 @@ public class SpendingsController {
     }
 
     /**
-     * Route for returning the <bold>authenticated</bold> user's details.
+     * Route for returning the <b>authenticated</b> user's details.
      *
      * @return <code>{@literal ResponseEntity<ApiResponse<UserDetails>>}</code> the user's details
      * @see UserDetails

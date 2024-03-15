@@ -67,7 +67,7 @@ public class JwtUtil {
     }
 
     /**
-     * Extracts <bold>all</bold> the claims from a JWT.
+     * Extracts <b>all</b> the claims from a JWT.
      *
      * @param token JWT token
      * @return <code>Claims</code> object that contains all the claims of the JWT.
