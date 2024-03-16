@@ -5,9 +5,10 @@ This repository holds the code for my spendings tracker app built with Java and 
 ## TODO
 
 - clean up backend api more
-  - add javadocs
   - clean up SpendingUserAggrRepository SQL to be more generic
   - clean up SpendingsController and SpendingService to not return DB Entity classes or Projections -> use response specific classes.
+  - use BigInteger instead of Long for DB Primary Keys in Java Entities
+  - make an authsvc class
   - add audit fields to db model (created on, created by, last modified on, last modified by)
   - add ability to create an account w/ code that sends to person's email
   - register account api

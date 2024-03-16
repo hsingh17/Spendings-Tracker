@@ -6,9 +6,7 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 
-/**
- * An entity class that maps to the table <code>APP.SPENDING</code>
- */
+/** An entity class that maps to the table <code>APP.SPENDING</code> */
 @Entity
 @Table(schema = "APP", name = "SPENDING")
 public class Spending {

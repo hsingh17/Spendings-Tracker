@@ -15,8 +15,10 @@ public class GranularityConvertor implements Converter<String, Granularity> {
 
     /**
      * Converts the coded value <code>source</code> to a <code>Granularity</code>
+     *
      * @param source coded values of the granularity
-     * @return a <code>Granularity</code> if there exists a <code>Granularity</code> with coded value <code>source</code>
+     * @return a <code>Granularity</code> if there exists a <code>Granularity</code> with coded
+     *     value <code>source</code>
      * @see Granularity
      */
     @Override

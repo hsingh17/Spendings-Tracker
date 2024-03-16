@@ -1,7 +1,7 @@
 package com.spendingstracker.app.config;
 
-import com.spendingstracker.app.convertor.GraphTypeConverter;
 import com.spendingstracker.app.convertor.GranularityConvertor;
+import com.spendingstracker.app.convertor.GraphTypeConverter;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -26,7 +26,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
      * @see GranularityConvertor
      * @see GraphTypeConverter
      */
-    public WebMvcConfig(GranularityConvertor granularityConvertor, GraphTypeConverter graphTypeConverter) {
+    public WebMvcConfig(
+            GranularityConvertor granularityConvertor, GraphTypeConverter graphTypeConverter) {
         this.granularityConvertor = granularityConvertor;
         this.graphTypeConverter = graphTypeConverter;
     }

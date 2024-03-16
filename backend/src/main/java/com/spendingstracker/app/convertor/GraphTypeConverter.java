@@ -15,8 +15,10 @@ public class GraphTypeConverter implements Converter<String, GraphType> {
 
     /**
      * Converts the coded value <code>source</code> to a <code>GraphType</code>
+     *
      * @param source coded values of the graph type
-     * @return a <code>GraphType</code> if there exists a <code>GraphType</code> with coded value <code>source</code>
+     * @return a <code>GraphType</code> if there exists a <code>GraphType</code> with coded value
+     *     <code>source</code>
      * @see GraphType
      */
     @Override

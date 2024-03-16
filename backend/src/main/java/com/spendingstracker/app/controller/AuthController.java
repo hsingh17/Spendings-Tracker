@@ -2,7 +2,7 @@ package com.spendingstracker.app.controller;
 
 import com.spendingstracker.app.constants.Constants;
 import com.spendingstracker.app.dto.CustomUserDetails;
-import com.spendingstracker.app.dto.request.LoginRequest;
+import com.spendingstracker.app.dto.requests.LoginRequest;
 import com.spendingstracker.app.response.ApiResponse;
 import com.spendingstracker.app.util.JwtUtil;
 
