@@ -3,6 +3,7 @@ package com.spendingstracker.app.controller;
 import com.spendingstracker.app.constants.Granularity;
 import com.spendingstracker.app.constants.GraphType;
 import com.spendingstracker.app.dto.CustomUserDetails;
+import com.spendingstracker.app.dto.response.SpendingDetailsResponse;
 import com.spendingstracker.app.entity.Spending;
 import com.spendingstracker.app.projection.SpendingsListProjection;
 import com.spendingstracker.app.response.ApiLinks;
@@ -149,16 +150,18 @@ public class SpendingsController {
      * @see ApiResponse
      */
     @GetMapping("/spendings/{spending-date}")
-    public ResponseEntity<ApiResponse<List<Spending>>> getSpendingDetails(
+    public ResponseEntity<ApiResponse<SpendingDetailsResponse>> getSpendingDetails(
             @PathVariable("spending-date") LocalDate spendingDate) {
         log.info("GET /spendings/" + spendingDate);
 
-        List<Spending> spendings = spendingService.getSpendingDetails(spendingDate, getUserId());
-        ApiResponse<List<Spending>> apiResponse =
-                new ApiResponse.ApiResponseBuilder<List<Spending>>()
+        SpendingDetailsResponse spendingsResponse =
+                spendingService.getSpendingDetails(spendingDate, getUserId());
+
+        ApiResponse<SpendingDetailsResponse> apiResponse =
+                new ApiResponse.ApiResponseBuilder<SpendingDetailsResponse>()
                         .setHttpStatus(HttpStatus.OK.value())
                         .setOk(true)
-                        .setData(spendings)
+                        .setData(spendingsResponse)
                         .build();
 
         return ResponseEntity.ok(apiResponse);

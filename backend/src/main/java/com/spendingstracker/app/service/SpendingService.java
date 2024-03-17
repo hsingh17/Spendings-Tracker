@@ -2,6 +2,7 @@ package com.spendingstracker.app.service;
 
 import com.spendingstracker.app.constants.Granularity;
 import com.spendingstracker.app.constants.GraphType;
+import com.spendingstracker.app.dto.response.SpendingDetailsResponse;
 import com.spendingstracker.app.entity.Spending;
 import com.spendingstracker.app.projection.SpendingsListProjection;
 import com.spendingstracker.app.response.ApiResponse;
@@ -42,10 +43,11 @@ public interface SpendingService {
      * Get details for a spending on that date.
      *
      * @param spendingDate date of the spending for which the details are requested
-     * @param userId primary key in <code>APP.USER</code>
-     * @return <code>{@literal List<Spending>}</code> spendings for the user on that day
+     * @param userId       primary key in <code>APP.USER</code>
+     * @return <code>{@literal SpendingDetailsResponse}</code> spendings for the user on that day
+     * @see SpendingDetailsResponse
      */
-    List<Spending> getSpendingDetails(LocalDate spendingDate, long userId);
+    SpendingDetailsResponse getSpendingDetails(LocalDate spendingDate, long userId);
 
     /**
      * Create <code>spendings</code> for user with ID <code>userId</code> for date <code>

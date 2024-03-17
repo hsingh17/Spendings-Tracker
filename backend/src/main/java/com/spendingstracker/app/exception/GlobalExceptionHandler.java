@@ -27,13 +27,18 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Handles <code>IllegalArgumentException, ConversionFailedException</code>. Returns an HTTP
-     * 400.
+     * Handles <code>IllegalArgumentException, ConversionFailedException, NoSuchGraphTypeException
+     * </code>. Returns an HTTP 400.
      *
      * @param e <code>Exception</code> object
      * @see ApiResponse
+     * @see NoSuchGraphTypeException
      */
-    @ExceptionHandler({IllegalArgumentException.class, ConversionFailedException.class})
+    @ExceptionHandler({
+        IllegalArgumentException.class,
+        ConversionFailedException.class,
+        NoSuchGraphTypeException.class
+    })
     public ResponseEntity<ApiResponse<Object>> handleBadRequestException(
             IllegalArgumentException e) {
         return new ResponseEntity<>(
