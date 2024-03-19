@@ -26,8 +26,6 @@ public class Spending {
     @Column(name = "AMOUNT")
     private BigDecimal amount;
 
-    @Transient private boolean delete = false;
-
     public long getSpendingId() {
         return spendingId;
     }
@@ -58,14 +56,6 @@ public class Spending {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
-    }
-
-    public boolean isDelete() {
-        return delete;
-    }
-
-    public void setDelete(boolean delete) {
-        this.delete = delete;
     }
 
     public void addAmount(BigDecimal amount) {

@@ -2,6 +2,7 @@ package com.spendingstracker.app.repository;
 
 import com.spendingstracker.app.entity.SpendingUserAggr;
 import com.spendingstracker.app.entity.User;
+import com.spendingstracker.app.projection.SpendingProjection;
 import com.spendingstracker.app.projection.SpendingsListProjection;
 
 import org.springframework.data.domain.Page;
@@ -12,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -27,6 +29,26 @@ public interface SpendingUserAggrRepository extends JpaRepository<SpendingUserAg
             value =
                     """
                     SELECT
+                        S.SPENDING_ID,
+                        S.CATEGORY,
+                        S.AMOUNT
+                    FROM
+                        APP.SPENDING_USER_AGGR SUA,
+                        APP.SPENDING S
+                    WHERE
+                            SUA.SPENDING_USER_AGGR_ID = S.SPENDING_USER_AGGR_ID
+                        AND SUA.USER_ID = :userId
+                        AND SUA.DATE = :date
+
+                """,
+            nativeQuery = true)
+    List<SpendingProjection> findSpendingDetailsByUserIdAndDate(
+            @Param("date") LocalDate date, @Param("userId") long userId);
+
+    @Query(
+            value =
+                    """
+                    SELECT
                         MAX(SUA.SPENDING_USER_AGGR_ID) AS spendingUserAggrId,
                         DATE_FORMAT (SUA.DATE, "%Y-%m-%d") AS date,
                         SUM(S.AMOUNT) AS total
@@ -34,7 +56,7 @@ public interface SpendingUserAggrRepository extends JpaRepository<SpendingUserAg
                         APP.SPENDING_USER_AGGR SUA,
                         APP.SPENDING S
                     WHERE
-                        SUA.SPENDING_USER_AGGR_ID = S.SPENDING_USER_AGGR_ID
+                            SUA.SPENDING_USER_AGGR_ID = S.SPENDING_USER_AGGR_ID
                         AND SUA.USER_ID = :userId
                         AND SUA.DATE >= :startDate
                         AND SUA.DATE <= :endDate
@@ -51,7 +73,7 @@ public interface SpendingUserAggrRepository extends JpaRepository<SpendingUserAg
                         APP.SPENDING_USER_AGGR SUA,
                         APP.SPENDING S
                     WHERE
-                        SUA.SPENDING_USER_AGGR_ID = S.SPENDING_USER_AGGR_ID
+                            SUA.SPENDING_USER_AGGR_ID = S.SPENDING_USER_AGGR_ID
                         AND SUA.USER_ID = :userId
                         AND SUA.DATE >= :startDate
                         AND SUA.DATE <= :endDate

@@ -2,13 +2,18 @@ package com.spendingstracker.app.service;
 
 import com.spendingstracker.app.constants.Granularity;
 import com.spendingstracker.app.constants.GraphType;
+import com.spendingstracker.app.dto.requests.SpendingRequest;
+import com.spendingstracker.app.dto.requests.SpendingsSaveRequest;
 import com.spendingstracker.app.dto.response.SpendingDetailsResponse;
 import com.spendingstracker.app.dto.response.SpendingResponse;
 import com.spendingstracker.app.entity.Spending;
 import com.spendingstracker.app.entity.SpendingUserAggr;
 import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.exception.NoSuchGraphTypeException;
+import com.spendingstracker.app.exception.SpendingNotFoundException;
+import com.spendingstracker.app.projection.SpendingProjection;
 import com.spendingstracker.app.projection.SpendingsListProjection;
+import com.spendingstracker.app.repository.SpendingRepository;
 import com.spendingstracker.app.repository.SpendingUserAggrRepository;
 import com.spendingstracker.app.repository.UserRepository;
 
@@ -33,11 +38,15 @@ import java.util.stream.Collectors;
 @Transactional
 @Slf4j
 public class SpendingServiceImpl implements SpendingService {
+    private final SpendingRepository spendingRepository;
     private final SpendingUserAggrRepository spendingUserAggrRepository;
     private final UserRepository userRepository;
 
     public SpendingServiceImpl(
-            SpendingUserAggrRepository spendingUserAggrRepository, UserRepository userRepository) {
+            SpendingRepository spendingRepository,
+            SpendingUserAggrRepository spendingUserAggrRepository,
+            UserRepository userRepository) {
+        this.spendingRepository = spendingRepository;
         this.spendingUserAggrRepository = spendingUserAggrRepository;
         this.userRepository = userRepository;
     }
@@ -84,27 +93,25 @@ public class SpendingServiceImpl implements SpendingService {
 
     @Transactional(readOnly = true)
     public SpendingDetailsResponse getSpendingDetails(LocalDate spendingDate, long userId) {
-        User user = getUser(userId);
+        List<SpendingProjection> spendings =
+                spendingUserAggrRepository.findSpendingDetailsByUserIdAndDate(spendingDate, userId);
 
-        Optional<SpendingUserAggr> spendingUserAggrOpt =
-                spendingUserAggrRepository.findSpendingUserAggrByUserAndDate(user, spendingDate);
-
-        if (spendingUserAggrOpt.isEmpty()) {
-            return null;
-        }
-
-        SpendingUserAggr spendingUserAggr = spendingUserAggrOpt.get();
-        Set<Spending> spendings = spendingUserAggr.getSpendings();
         List<SpendingResponse> spendingResponse = new ArrayList<>();
 
-        for (Spending spending : spendings) {
-            spendingResponse.add(buildSpendingResponseFromSpendingEntity(spending));
+        for (SpendingProjection spending : spendings) {
+            spendingResponse.add(buildSpendingResponseFromSpendingProj(spending));
         }
 
         return SpendingDetailsResponse.builder().spendings(spendingResponse).build();
     }
 
-    public void updateSpending(Set<Spending> spendings, LocalDate spendingDate, long userId) {
+    public void updateSpending(
+            SpendingsSaveRequest spendingsSaveRequest, LocalDate spendingDate, long userId) {
+        Set<SpendingRequest> spendingsToKeep =
+                filterSpendings(spendingsSaveRequest.spendingRequests());
+
+        Set<Spending> spendings = getSpendingEntitysFromSpendingRequests(spendingsToKeep);
+
         User user = getUser(userId);
 
         SpendingUserAggr spendingUserAggr =
@@ -116,8 +123,6 @@ public class SpendingServiceImpl implements SpendingService {
                                                 "Can't find spendingUserAggr for date: "
                                                         + spendingDate));
 
-        Set<Spending> spendingsToKeep = filterSpendings(spendings);
-
         // User decided to delete all the spendings, therefore, this is
         // effectively a delete operation
         if (spendingsToKeep.isEmpty()) {
@@ -126,15 +131,20 @@ public class SpendingServiceImpl implements SpendingService {
         }
 
         spendingUserAggr.emptySpendings(); // Remove all old spendings
-        spendingUserAggr.addSpendings(spendingsToKeep); // Add the spendings to this date
+        spendingUserAggr.addSpendings(spendings); // Add the spendings to this date
 
         spendingUserAggrRepository.save(spendingUserAggr);
     }
 
-    public void createSpending(Set<Spending> spendings, LocalDate spendingDate, long userId) {
+    public void createSpending(
+            SpendingsSaveRequest spendingsSaveRequest, LocalDate spendingDate, long userId) {
+        Set<SpendingRequest> spendingsToKeep =
+                filterSpendings(spendingsSaveRequest.spendingRequests());
+
+        Set<Spending> spendings = getSpendingEntitysFromSpendingRequests(spendingsToKeep);
+
         User user = getUser(userId);
 
-        spendings = filterSpendings(spendings);
         SpendingUserAggr spendingUserAggr = new SpendingUserAggr(user, spendingDate, spendings);
         user.addSpendingUserAggr(spendingUserAggr); // Add new spending date to the user
 
@@ -146,19 +156,21 @@ public class SpendingServiceImpl implements SpendingService {
         spendingUserAggrRepository.deleteById(spendingUserAggrId);
     }
 
-    private Set<Spending> filterSpendings(Set<Spending> spendings) {
-        Map<String, List<Spending>> mappedSpendings =
-                spendings.stream()
+    private Set<SpendingRequest> filterSpendings(Set<SpendingRequest> spendingsRequests) {
+        Map<String, List<SpendingRequest>> mappedSpendings =
+                spendingsRequests.stream()
                         .filter(spending -> !spending.isDelete())
-                        .collect(Collectors.groupingBy(Spending::getCategory));
+                        .collect(Collectors.groupingBy(SpendingRequest::getCategory));
         // Group by category in case there
         // are multiple spendings in the
         // same category
 
         // Combine the spendings in the same category to be a single object
-        Set<Spending> spendingsToKeep = new HashSet<>();
-        for (List<Spending> mergedSpendings : mappedSpendings.values()) {
-            Optional<Spending> mergedSpending = mergedSpendings.stream().reduce(Spending::merge);
+        Set<SpendingRequest> spendingsToKeep = new HashSet<>();
+        for (List<SpendingRequest> mergedSpendings : mappedSpendings.values()) {
+            Optional<SpendingRequest> mergedSpending =
+                    mergedSpendings.stream().reduce(SpendingRequest::merge);
+
             mergedSpending.ifPresent(spendingsToKeep::add);
         }
 
@@ -171,11 +183,36 @@ public class SpendingServiceImpl implements SpendingService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
     }
 
-    private SpendingResponse buildSpendingResponseFromSpendingEntity(Spending spending) {
+    private SpendingResponse buildSpendingResponseFromSpendingProj(
+            SpendingProjection spendingProj) {
         return SpendingResponse.builder()
-                .spendingId(spending.getSpendingId())
-                .category(spending.getCategory())
-                .amount(spending.getAmount())
+                .spendingId(spendingProj.getSpendingId())
+                .category(spendingProj.getCategory())
+                .amount(spendingProj.getAmount())
                 .build();
+    }
+
+    private Set<Spending> getSpendingEntitysFromSpendingRequests(
+            Set<SpendingRequest> spendingRequests) {
+        Set<Spending> spendings = new HashSet<>();
+
+        for (SpendingRequest spendingRequest : spendingRequests) {
+            spendings.add(getSpendingEntityFromSpendingRequest(spendingRequest));
+        }
+
+        return spendings;
+    }
+
+    private Spending getSpendingEntityFromSpendingRequest(SpendingRequest spendingRequest) {
+        long spendingId = spendingRequest.getSpendingId();
+        log.debug("Finding spending for SPENDING_ID {}", spendingId);
+        return spendingRepository
+                .findById(spendingId)
+                .orElseThrow(
+                        () -> {
+                            String errMsg = "No spending found with SPENDING_ID " + spendingId;
+                            log.error(errMsg);
+                            return new SpendingNotFoundException(errMsg);
+                        });
     }
 }

@@ -3,8 +3,8 @@ package com.spendingstracker.app.controller;
 import com.spendingstracker.app.constants.Granularity;
 import com.spendingstracker.app.constants.GraphType;
 import com.spendingstracker.app.dto.CustomUserDetails;
+import com.spendingstracker.app.dto.requests.SpendingsSaveRequest;
 import com.spendingstracker.app.dto.response.SpendingDetailsResponse;
-import com.spendingstracker.app.entity.Spending;
 import com.spendingstracker.app.projection.SpendingsListProjection;
 import com.spendingstracker.app.response.ApiLinks;
 import com.spendingstracker.app.response.ApiMetadata;
@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 /** Controller class containing the routes for performing CRUD operations on a user's spendings. */
 @RestController
@@ -170,7 +169,8 @@ public class SpendingsController {
     /**
      * Route to create spendings for a certain date.
      *
-     * @param spendings <code>{@literal Set<Spending>}</code> objects that user wants to create.
+     * @param spendingsSaveRequest <code>{@literal SpendingsSaveRequest}</code> objects that user
+     *     wants to create.
      * @param spendingDate the date for which the <code>spendings</code> should be created for.
      * @return <code>{@literal ResponseEntity<ApiResponse<Object>>}</code> an OK <code>ApiResponse
      *     </code>
@@ -178,11 +178,11 @@ public class SpendingsController {
      */
     @PostMapping("/spendings/{spending-date}")
     public ResponseEntity<ApiResponse<Object>> createSpending(
-            @RequestBody Set<Spending> spendings,
+            @RequestBody SpendingsSaveRequest spendingsSaveRequest,
             @PathVariable("spending-date") LocalDate spendingDate) {
         log.info("POST /spendings/" + spendingDate);
 
-        spendingService.createSpending(spendings, spendingDate, getUserId());
+        spendingService.createSpending(spendingsSaveRequest, spendingDate, getUserId());
         ApiResponse<Object> apiResponse =
                 new ApiResponse.ApiResponseBuilder<>()
                         .setHttpStatus(HttpStatus.OK.value())
@@ -196,7 +196,8 @@ public class SpendingsController {
     /**
      * Route to update spendings for a certain day.
      *
-     * @param spendings spendings to update
+     * @param spendingsSaveRequest <code>{@literal SpendingsSaveRequest}</code> objects that user
+     *     wants to create.
      * @param spendingDate day for which spendings need to be updated for
      * @return <code>{@literal ResponseEntity<ApiResponse<Object>>}</code> an OK <code>ApiResponse
      *     </code>
@@ -204,11 +205,11 @@ public class SpendingsController {
      */
     @PutMapping("/spendings/{spending-date}")
     public ResponseEntity<ApiResponse<Object>> updateSpending(
-            @RequestBody Set<Spending> spendings,
+            @RequestBody SpendingsSaveRequest spendingsSaveRequest,
             @PathVariable("spending-date") LocalDate spendingDate) {
         log.info("PUT /spendings/" + spendingDate);
 
-        spendingService.updateSpending(spendings, spendingDate, getUserId());
+        spendingService.updateSpending(spendingsSaveRequest, spendingDate, getUserId());
         ApiResponse<Object> apiResponse =
                 new ApiResponse.ApiResponseBuilder<>()
                         .setHttpStatus(HttpStatus.OK.value())
