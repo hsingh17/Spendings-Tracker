@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
+/**
+ * Object returned to client with relevant spending information
+ */
 @Builder
 @Data
 public class SpendingResponse {

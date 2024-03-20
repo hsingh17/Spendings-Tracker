@@ -9,6 +9,7 @@ import com.spendingstracker.app.dto.response.SpendingResponse;
 import com.spendingstracker.app.entity.Spending;
 import com.spendingstracker.app.entity.SpendingUserAggr;
 import com.spendingstracker.app.entity.User;
+import com.spendingstracker.app.exception.NoSuchGranularityException;
 import com.spendingstracker.app.exception.NoSuchGraphTypeException;
 import com.spendingstracker.app.exception.SpendingNotFoundException;
 import com.spendingstracker.app.projection.SpendingProjection;
@@ -61,34 +62,10 @@ public class SpendingServiceImpl implements SpendingService {
             Granularity granularity,
             GraphType type) {
         PageRequest pageRequest = PageRequest.of(page, limit);
-
-        switch (type) {
-            case BAR, PIE -> {
-                return spendingUserAggrRepository.findSpendingsCategorical(
-                        userId, startDate, endDate, pageRequest);
-            }
-            case LINE -> {
-                return switch (granularity) {
-                    case DAY ->
-                            spendingUserAggrRepository.findSpendingsNumericalGroupByDay(
-                                    userId, startDate, endDate, pageRequest);
-                    case WEEK ->
-                            spendingUserAggrRepository.findSpendingsNumericalGroupByWeek(
-                                    userId, startDate, endDate, pageRequest);
-                    case MONTH ->
-                            spendingUserAggrRepository.findSpendingsNumericalGroupByMonth(
-                                    userId, startDate, endDate, pageRequest);
-                    case YEAR ->
-                            spendingUserAggrRepository.findSpendingsNumericalGroupByYear(
-                                    userId, startDate, endDate, pageRequest);
-                };
-            }
-            default -> {
-                String errMsg = "No such graphType " + type;
-                log.error(errMsg);
-                throw new NoSuchGraphTypeException(errMsg);
-            }
-        }
+        Page<SpendingsListProjection> spendingsListProjs =
+                getSpendingListProj(userId, startDate, endDate, granularity, type, pageRequest);
+        
+        return spendingsListProjs;
     }
 
     @Transactional(readOnly = true)
@@ -114,14 +91,7 @@ public class SpendingServiceImpl implements SpendingService {
 
         User user = getUser(userId);
 
-        SpendingUserAggr spendingUserAggr =
-                spendingUserAggrRepository
-                        .findSpendingUserAggrByUserAndDate(user, spendingDate)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalArgumentException(
-                                                "Can't find spendingUserAggr for date: "
-                                                        + spendingDate));
+        SpendingUserAggr spendingUserAggr = findSpendingUserAggrByUserAndDate(user, spendingDate);
 
         // User decided to delete all the spendings, therefore, this is
         // effectively a delete operation
@@ -157,13 +127,11 @@ public class SpendingServiceImpl implements SpendingService {
     }
 
     private Set<SpendingRequest> filterSpendings(Set<SpendingRequest> spendingsRequests) {
+        // Group by category in case there are multiple spendings in the same category
         Map<String, List<SpendingRequest>> mappedSpendings =
                 spendingsRequests.stream()
                         .filter(spending -> !spending.isDelete())
                         .collect(Collectors.groupingBy(SpendingRequest::getCategory));
-        // Group by category in case there
-        // are multiple spendings in the
-        // same category
 
         // Combine the spendings in the same category to be a single object
         Set<SpendingRequest> spendingsToKeep = new HashSet<>();
@@ -214,5 +182,75 @@ public class SpendingServiceImpl implements SpendingService {
                             log.error(errMsg);
                             return new SpendingNotFoundException(errMsg);
                         });
+    }
+
+    private SpendingUserAggr findSpendingUserAggrByUserAndDate(User user, LocalDate spendingDate) {
+        return spendingUserAggrRepository
+                .findSpendingUserAggrByUserAndDate(user, spendingDate)
+                .orElseThrow(
+                        () ->
+                                new IllegalArgumentException(
+                                        "Can't find spendingUserAggr for date: " + spendingDate));
+    }
+
+    private Page<SpendingsListProjection> getSpendingListProj(
+            long userId,
+            LocalDate startDate,
+            LocalDate endDate,
+            Granularity granularity,
+            GraphType type,
+            PageRequest pageRequest) {
+        switch (type) {
+            case BAR, PIE -> {
+                return getSpendingListProjCategorical(userId, startDate, endDate, pageRequest);
+            }
+            case LINE -> {
+                return getSpendingListProjLine(
+                        userId, startDate, endDate, granularity, pageRequest);
+            }
+
+            default -> {
+                String errMsg = "No such graphType " + type;
+                log.error(errMsg);
+                throw new NoSuchGraphTypeException(errMsg);
+            }
+        }
+    }
+
+    private Page<SpendingsListProjection> getSpendingListProjLine(
+            long userId,
+            LocalDate startDate,
+            LocalDate endDate,
+            Granularity granularity,
+            PageRequest pageRequest) {
+        switch (granularity) {
+            case DAY -> {
+                return spendingUserAggrRepository.findSpendingsNumericalGroupByDay(
+                        userId, startDate, endDate, pageRequest);
+            }
+            case WEEK -> {
+                return spendingUserAggrRepository.findSpendingsNumericalGroupByWeek(
+                        userId, startDate, endDate, pageRequest);
+            }
+            case MONTH -> {
+                return spendingUserAggrRepository.findSpendingsNumericalGroupByMonth(
+                        userId, startDate, endDate, pageRequest);
+            }
+            case YEAR -> {
+                return spendingUserAggrRepository.findSpendingsNumericalGroupByYear(
+                        userId, startDate, endDate, pageRequest);
+            }
+            default -> {
+                String errMsg = "No such granularity " + granularity;
+                log.error(errMsg);
+                throw new NoSuchGranularityException(errMsg);
+            }
+        }
+    }
+
+    private Page<SpendingsListProjection> getSpendingListProjCategorical(
+            long userId, LocalDate startDate, LocalDate endDate, PageRequest pageRequest) {
+        return spendingUserAggrRepository.findSpendingsCategorical(
+                userId, startDate, endDate, pageRequest);
     }
 }

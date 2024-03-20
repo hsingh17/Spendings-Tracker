@@ -62,11 +62,11 @@ public class ApiLinks {
     }
 
     public static class ApiLinksBuilder {
-        private String first;
-        private String prev;
-        private String self;
-        private String next;
-        private String last;
+        private final String first;
+        private final String prev;
+        private final String self;
+        private final String next;
+        private final String last;
 
         public ApiLinksBuilder(String requestUri, String queryString, int curPage, int lastPage) {
             String pageQueryParam = "page=";

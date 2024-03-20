@@ -56,12 +56,7 @@ public class SpendingsController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
-        ApiResponse<UserDetails> apiResponse =
-                new ApiResponse.ApiResponseBuilder<UserDetails>()
-                        .setHttpStatus(HttpStatus.OK.value())
-                        .setData(userDetails)
-                        .setOk(true)
-                        .build();
+        ApiResponse<UserDetails> apiResponse = buildOkApiResponse(userDetails, null, null);
         return ResponseEntity.ok(apiResponse);
     }
 
@@ -110,32 +105,22 @@ public class SpendingsController {
                         getUserId(), startDate, endDate, page, limit, granularity, graphType);
 
         ApiLinks apiLinks =
-                new ApiLinks.ApiLinksBuilder(
-                                request.getRequestURI(),
-                                request.getQueryString(),
-                                page,
-                                spendingsPage.getTotalPages() - 1)
-                        .build();
+                buildApiLinks(
+                        request.getRequestURI(),
+                        request.getQueryString(),
+                        page,
+                        spendingsPage.getTotalPages() - 1);
 
         ApiMetadata apiMetadata =
-                new ApiMetadata.ApiMetadataBuilder()
-                        .setCurrentPage(page)
-                        .setLinks(apiLinks)
-                        .setTotalPages(spendingsPage.getTotalPages())
-                        .setPageSize(
-                                spendingsPage
-                                        .getNumberOfElements()) // How many elements were returned
-                        // in this page
-                        .setTotalCount(spendingsPage.getTotalElements())
-                        .build();
+                buildApiMetadata(
+                        page,
+                        apiLinks,
+                        spendingsPage.getTotalPages(),
+                        spendingsPage.getNumberOfElements(),
+                        spendingsPage.getTotalElements());
 
         ApiResponse<List<SpendingsListProjection>> apiResponse =
-                new ApiResponse.ApiResponseBuilder<List<SpendingsListProjection>>()
-                        .setHttpStatus(HttpStatus.OK.value())
-                        .setOk(true)
-                        .setMetadata(apiMetadata)
-                        .setData(spendingsPage.getContent())
-                        .build();
+                buildOkApiResponse(spendingsPage.getContent(), null, apiMetadata);
 
         return ResponseEntity.ok(apiResponse);
     }
@@ -157,11 +142,7 @@ public class SpendingsController {
                 spendingService.getSpendingDetails(spendingDate, getUserId());
 
         ApiResponse<SpendingDetailsResponse> apiResponse =
-                new ApiResponse.ApiResponseBuilder<SpendingDetailsResponse>()
-                        .setHttpStatus(HttpStatus.OK.value())
-                        .setOk(true)
-                        .setData(spendingsResponse)
-                        .build();
+                buildOkApiResponse(spendingsResponse, null, null);
 
         return ResponseEntity.ok(apiResponse);
     }
@@ -183,12 +164,11 @@ public class SpendingsController {
         log.info("POST /spendings/" + spendingDate);
 
         spendingService.createSpending(spendingsSaveRequest, spendingDate, getUserId());
+
+        int N = spendingsSaveRequest.spendingRequests().size();
         ApiResponse<Object> apiResponse =
-                new ApiResponse.ApiResponseBuilder<>()
-                        .setHttpStatus(HttpStatus.OK.value())
-                        .setMessage("Success")
-                        .setOk(true)
-                        .build();
+                buildOkApiResponse(
+                        null, "Created " + N + " spendings for date " + spendingDate, null);
 
         return ResponseEntity.ok(apiResponse);
     }
@@ -211,11 +191,8 @@ public class SpendingsController {
 
         spendingService.updateSpending(spendingsSaveRequest, spendingDate, getUserId());
         ApiResponse<Object> apiResponse =
-                new ApiResponse.ApiResponseBuilder<>()
-                        .setHttpStatus(HttpStatus.OK.value())
-                        .setOk(true)
-                        .setMessage("Updated spending for spending date: " + spendingDate)
-                        .build();
+                buildOkApiResponse(
+                        null, "Updated spending for spending date: " + spendingDate, null);
 
         return ResponseEntity.ok(apiResponse);
     }
@@ -236,11 +213,7 @@ public class SpendingsController {
 
         spendingService.deleteSpending(spendingUserAggrId);
         ApiResponse<Object> apiResponse =
-                new ApiResponse.ApiResponseBuilder<>()
-                        .setHttpStatus(HttpStatus.OK.value())
-                        .setOk(true)
-                        .setMessage("Delete spending for id: " + spendingUserAggrId)
-                        .build();
+                buildOkApiResponse(null, "Deleted spending for id: " + spendingUserAggrId, null);
 
         return ResponseEntity.ok(apiResponse);
     }
@@ -252,5 +225,32 @@ public class SpendingsController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
         return userDetails.getUserId();
+    }
+
+    private ApiMetadata buildApiMetadata(
+            int curPage, ApiLinks apiLinks, int totalPages, int pageSize, long totalCount) {
+        return new ApiMetadata.ApiMetadataBuilder()
+                .setCurrentPage(curPage)
+                .setLinks(apiLinks)
+                .setTotalPages(totalPages)
+                .setPageSize(pageSize) // How many elements were returned
+                // in this page
+                .setTotalCount(totalCount)
+                .build();
+    }
+
+    private ApiLinks buildApiLinks(
+            String requestUri, String queryString, int curPage, int lastPage) {
+        return new ApiLinks.ApiLinksBuilder(requestUri, queryString, curPage, lastPage).build();
+    }
+
+    private <T> ApiResponse<T> buildOkApiResponse(T data, String message, ApiMetadata metadata) {
+        return new ApiResponse.ApiResponseBuilder<T>()
+                .setHttpStatus(HttpStatus.OK.value())
+                .setOk(true)
+                .setData(data)
+                .setMessage(message)
+                .setMetadata(metadata)
+                .build();
     }
 }
