@@ -1,15 +1,17 @@
-package com.spendingstracker.app.controller;
+package com.spendingstracker.app.controller.spending;
 
 import com.spendingstracker.app.constants.Granularity;
 import com.spendingstracker.app.constants.GraphType;
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.requests.SpendingsSaveRequest;
 import com.spendingstracker.app.dto.response.SpendingDetailsResponse;
-import com.spendingstracker.app.projection.SpendingsListProjection;
+import com.spendingstracker.app.dto.response.SpendingPageItem;
+import com.spendingstracker.app.dto.response.SpendingPageResponse;
+import com.spendingstracker.app.projection.SpendingListProjection;
 import com.spendingstracker.app.response.ApiLinks;
 import com.spendingstracker.app.response.ApiMetadata;
 import com.spendingstracker.app.response.ApiResponse;
-import com.spendingstracker.app.service.SpendingService;
+import com.spendingstracker.app.service.spending.SpendingService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Min;
@@ -24,8 +26,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
-import java.util.List;
 
 /** Controller class containing the routes for performing CRUD operations on a user's spendings. */
 @RestController
@@ -74,7 +76,7 @@ public class SpendingsController {
      * @return <code>{@literal ResponseEntity<ApiResponse<List<SpendingsListProjection>>>}</code>
      * @throws IllegalArgumentException when one of the <code>RequestParam</code> passed in do not
      *     pass validation.
-     * @see SpendingsListProjection
+     * @see SpendingListProjection
      * @see Granularity
      * @see GraphType
      * @see ApiLinks
@@ -82,7 +84,7 @@ public class SpendingsController {
      * @see ApiResponse
      */
     @GetMapping("/spendings")
-    public ResponseEntity<ApiResponse<List<SpendingsListProjection>>> getSpendings(
+    public ResponseEntity<ApiResponse<SpendingPageResponse>> getSpendings(
             @RequestParam(name = "start-date", defaultValue = "1000-01-01") LocalDate startDate,
             @RequestParam(name = "end-date", defaultValue = "9999-12-31") LocalDate endDate,
             @RequestParam(name = "granularity", defaultValue = "Day") Granularity granularity,
@@ -100,9 +102,10 @@ public class SpendingsController {
                 page,
                 limit);
 
-        Page<SpendingsListProjection> spendingsPage =
+        SpendingPageResponse spendingPageResponse =
                 spendingService.getSpendings(
                         getUserId(), startDate, endDate, page, limit, granularity, graphType);
+        Page<SpendingPageItem> spendingsPage = spendingPageResponse.getSpendingPageItems();
 
         ApiLinks apiLinks =
                 buildApiLinks(
@@ -119,8 +122,8 @@ public class SpendingsController {
                         spendingsPage.getNumberOfElements(),
                         spendingsPage.getTotalElements());
 
-        ApiResponse<List<SpendingsListProjection>> apiResponse =
-                buildOkApiResponse(spendingsPage.getContent(), null, apiMetadata);
+        ApiResponse<SpendingPageResponse> apiResponse =
+                buildOkApiResponse(spendingPageResponse, null, apiMetadata);
 
         return ResponseEntity.ok(apiResponse);
     }
@@ -208,7 +211,7 @@ public class SpendingsController {
      */
     @DeleteMapping("/spendings/{spending-user-aggr-id}")
     public ResponseEntity<ApiResponse<Object>> deleteSpending(
-            @PathVariable("spending-user-aggr-id") long spendingUserAggrId) {
+            @PathVariable("spending-user-aggr-id") BigInteger spendingUserAggrId) {
         log.info("DELETE /spendings/" + spendingUserAggrId);
 
         spendingService.deleteSpending(spendingUserAggrId);
@@ -221,7 +224,7 @@ public class SpendingsController {
     /**
      * @return the user ID of the authenticated user
      */
-    private long getUserId() {
+    private BigInteger getUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
         return userDetails.getUserId();

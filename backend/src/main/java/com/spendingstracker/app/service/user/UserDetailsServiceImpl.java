@@ -1,4 +1,4 @@
-package com.spendingstracker.app.service;
+package com.spendingstracker.app.service.user;
 
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.entity.User;

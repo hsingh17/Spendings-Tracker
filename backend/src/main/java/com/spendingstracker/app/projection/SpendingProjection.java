@@ -1,9 +1,13 @@
 package com.spendingstracker.app.projection;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
+/**
+ * Projection class to store query results from queries to <code>APP.SPENDING</code>
+ */
 public interface SpendingProjection {
-    long getSpendingId();
+    BigInteger getSpendingId();
 
     String getCategory();
 

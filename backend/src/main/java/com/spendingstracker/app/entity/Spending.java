@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /** An entity class that maps to the table <code>APP.SPENDING</code> */
 @Entity
@@ -13,7 +14,7 @@ public class Spending {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "SPENDING_ID")
-    private long spendingId;
+    private BigInteger spendingId;
 
     @JoinColumn(name = "SPENDING_USER_AGGR_ID")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -26,11 +27,11 @@ public class Spending {
     @Column(name = "AMOUNT")
     private BigDecimal amount;
 
-    public long getSpendingId() {
+    public BigInteger getSpendingId() {
         return spendingId;
     }
 
-    public void setSpendingId(long spendingId) {
+    public void setSpendingId(BigInteger spendingId) {
         this.spendingId = spendingId;
     }
 

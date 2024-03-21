@@ -1,19 +1,15 @@
-package com.spendingstracker.app.service;
+package com.spendingstracker.app.service.spending;
 
 import com.spendingstracker.app.constants.Granularity;
 import com.spendingstracker.app.constants.GraphType;
 import com.spendingstracker.app.dto.requests.SpendingsSaveRequest;
 import com.spendingstracker.app.dto.response.SpendingDetailsResponse;
-import com.spendingstracker.app.entity.Spending;
-import com.spendingstracker.app.projection.SpendingsListProjection;
-import com.spendingstracker.app.response.ApiResponse;
+import com.spendingstracker.app.dto.response.SpendingPageResponse;
 
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
 
 /** Service class for performing CRUD operations on spendings */
 @Service
@@ -31,8 +27,8 @@ public interface SpendingService {
      * @return <code>{@literal Page<SpendingsListProjection>}</code> object that contains a page of
      *     <code>SpendingsListProjection</code>
      */
-    Page<SpendingsListProjection> getSpendings(
-            long userId,
+    SpendingPageResponse getSpendings(
+            BigInteger userId,
             LocalDate startDate,
             LocalDate endDate,
             int page,
@@ -44,33 +40,37 @@ public interface SpendingService {
      * Get details for a spending on that date.
      *
      * @param spendingDate date of the spending for which the details are requested
-     * @param userId       primary key in <code>APP.USER</code>
+     * @param userId primary key in <code>APP.USER</code>
      * @return <code>{@literal SpendingDetailsResponse}</code> spendings for the user on that day
      * @see SpendingDetailsResponse
      */
-    SpendingDetailsResponse getSpendingDetails(LocalDate spendingDate, long userId);
+    SpendingDetailsResponse getSpendingDetails(LocalDate spendingDate, BigInteger userId);
 
     /**
      * Create <code>spendings</code> for user with ID <code>userId</code> for date <code>
      * spendingDate</code>.
      *
-     * @param spendingsSaveRequest <code>{@literal SpendingsSaveRequest}</code> objects that user wants to create.
+     * @param spendingsSaveRequest <code>{@literal SpendingsSaveRequest}</code> objects that user
+     *     wants to create.
      * @param spendingDate the date for which the <code>spendings</code> should be created for.
      * @param userId primary key in <code>APP.USER</code>
      * @see SpendingsSaveRequest
      */
-    void createSpending(SpendingsSaveRequest spendingsSaveRequest, LocalDate spendingDate, long userId);
+    void createSpending(
+            SpendingsSaveRequest spendingsSaveRequest, LocalDate spendingDate, BigInteger userId);
 
     /**
      * Update <code>spendings</code> for user with ID <code>userId</code> for date <code>
      * spendingDate</code>.
      *
-     * @param spendingsSaveRequest <code>{@literal SpendingsSaveRequest}</code> objects that user wants to create.
+     * @param spendingsSaveRequest <code>{@literal SpendingsSaveRequest}</code> objects that user
+     *     wants to create.
      * @param spendingDate day for which spendings need to be updated for
      * @param userId primary key in <code>APP.USER</code>
      * @see SpendingsSaveRequest
      */
-    void updateSpending(SpendingsSaveRequest spendingsSaveRequest, LocalDate spendingDate, long userId);
+    void updateSpending(
+            SpendingsSaveRequest spendingsSaveRequest, LocalDate spendingDate, BigInteger userId);
 
     /**
      * Delete an entire spending day
@@ -78,5 +78,5 @@ public interface SpendingService {
      * @param spendingUserAggrId the primary key for the <code>SPENDING_USER_AGGR</code> table that
      *     is associated to these spendings.
      */
-    void deleteSpending(long spendingUserAggrId);
+    void deleteSpending(BigInteger spendingUserAggrId);
 }

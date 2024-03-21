@@ -2,8 +2,8 @@ package com.spendingstracker.app.repository;
 
 import com.spendingstracker.app.entity.SpendingUserAggr;
 import com.spendingstracker.app.entity.User;
+import com.spendingstracker.app.projection.SpendingListProjection;
 import com.spendingstracker.app.projection.SpendingProjection;
-import com.spendingstracker.app.projection.SpendingsListProjection;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +22,7 @@ import java.util.Optional;
  * table.
  */
 @Repository
-public interface SpendingUserAggrRepository extends JpaRepository<SpendingUserAggr, Long> {
+public interface SpendingUserAggrRepository extends JpaRepository<SpendingUserAggr, BigInteger> {
 
     Optional<SpendingUserAggr> findSpendingUserAggrByUserAndDate(User user, LocalDate date);
 
@@ -43,7 +44,7 @@ public interface SpendingUserAggrRepository extends JpaRepository<SpendingUserAg
                 """,
             nativeQuery = true)
     List<SpendingProjection> findSpendingDetailsByUserIdAndDate(
-            @Param("date") LocalDate date, @Param("userId") long userId);
+            @Param("date") LocalDate date, @Param("userId") BigInteger userId);
 
     @Query(
             value =
@@ -83,8 +84,8 @@ public interface SpendingUserAggrRepository extends JpaRepository<SpendingUserAg
                         DATE_FORMAT (SUA.DATE, "%Y-%m-%d") DESC
                     """,
             nativeQuery = true)
-    Page<SpendingsListProjection> findSpendingsNumericalGroupByDay(
-            @Param("userId") long userId,
+    Page<SpendingListProjection> findSpendingsNumericalGroupByDay(
+            @Param("userId") BigInteger userId,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate,
             Pageable pageable);
@@ -142,8 +143,8 @@ public interface SpendingUserAggrRepository extends JpaRepository<SpendingUserAg
                         ) DESC
                     """,
             nativeQuery = true)
-    Page<SpendingsListProjection> findSpendingsNumericalGroupByWeek(
-            @Param("userId") long userId,
+    Page<SpendingListProjection> findSpendingsNumericalGroupByWeek(
+            @Param("userId") BigInteger userId,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate,
             Pageable pageable);
@@ -186,8 +187,8 @@ public interface SpendingUserAggrRepository extends JpaRepository<SpendingUserAg
                         DATE_FORMAT(SUA.DATE, "%Y-%m-01") DESC
                     """,
             nativeQuery = true)
-    Page<SpendingsListProjection> findSpendingsNumericalGroupByMonth(
-            @Param("userId") long userId,
+    Page<SpendingListProjection> findSpendingsNumericalGroupByMonth(
+            @Param("userId") BigInteger userId,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate,
             Pageable pageable);
@@ -230,8 +231,8 @@ public interface SpendingUserAggrRepository extends JpaRepository<SpendingUserAg
                         DATE_FORMAT(SUA.DATE, "%Y-01-01") DESC
                     """,
             nativeQuery = true)
-    Page<SpendingsListProjection> findSpendingsNumericalGroupByYear(
-            @Param("userId") long userId,
+    Page<SpendingListProjection> findSpendingsNumericalGroupByYear(
+            @Param("userId") BigInteger userId,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate,
             Pageable pageable);
@@ -274,8 +275,8 @@ public interface SpendingUserAggrRepository extends JpaRepository<SpendingUserAg
 
                     """,
             nativeQuery = true)
-    Page<SpendingsListProjection> findSpendingsCategorical(
-            @Param("userId") long userId,
+    Page<SpendingListProjection> findSpendingsCategorical(
+            @Param("userId") BigInteger userId,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate,
             Pageable pageable);

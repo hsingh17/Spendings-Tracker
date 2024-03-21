@@ -1,7 +1,9 @@
 package com.spendingstracker.app.config;
 
+import com.spendingstracker.app.controller.auth.AuthController;
 import com.spendingstracker.app.filter.JwtFilter;
 
+import com.spendingstracker.app.service.user.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,7 +46,7 @@ public class SecurityConfig {
      * @param jwtFilter <code>JwtFilter</code> Spring bean.
      * @see UserDetailsService
      * @see JwtFilter
-     * @see com.spendingstracker.app.service.UserDetailsServiceImpl
+     * @see UserDetailsServiceImpl
      */
     public SecurityConfig(UserDetailsService userDetailsService, JwtFilter jwtFilter) {
         this.userDetailsService = userDetailsService;
@@ -129,7 +131,7 @@ public class SecurityConfig {
      * @param authenticationConfiguration
      * @return <code>AuthenticationManager</code> object
      * @throws Exception
-     * @see com.spendingstracker.app.controller.AuthController
+     * @see AuthController
      */
     @Bean
     public AuthenticationManager authenticationManager(

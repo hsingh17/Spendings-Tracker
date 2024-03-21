@@ -1,10 +1,12 @@
-package com.spendingstracker.app.service;
+package com.spendingstracker.app.service.spending;
 
 import com.spendingstracker.app.constants.Granularity;
 import com.spendingstracker.app.constants.GraphType;
 import com.spendingstracker.app.dto.requests.SpendingRequest;
 import com.spendingstracker.app.dto.requests.SpendingsSaveRequest;
 import com.spendingstracker.app.dto.response.SpendingDetailsResponse;
+import com.spendingstracker.app.dto.response.SpendingPageItem;
+import com.spendingstracker.app.dto.response.SpendingPageResponse;
 import com.spendingstracker.app.dto.response.SpendingResponse;
 import com.spendingstracker.app.entity.Spending;
 import com.spendingstracker.app.entity.SpendingUserAggr;
@@ -12,8 +14,8 @@ import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.exception.NoSuchGranularityException;
 import com.spendingstracker.app.exception.NoSuchGraphTypeException;
 import com.spendingstracker.app.exception.SpendingNotFoundException;
+import com.spendingstracker.app.projection.SpendingListProjection;
 import com.spendingstracker.app.projection.SpendingProjection;
-import com.spendingstracker.app.projection.SpendingsListProjection;
 import com.spendingstracker.app.repository.SpendingRepository;
 import com.spendingstracker.app.repository.SpendingUserAggrRepository;
 import com.spendingstracker.app.repository.UserRepository;
@@ -21,11 +23,13 @@ import com.spendingstracker.app.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -53,8 +57,8 @@ public class SpendingServiceImpl implements SpendingService {
     }
 
     @Transactional(readOnly = true)
-    public Page<SpendingsListProjection> getSpendings(
-            long userId,
+    public SpendingPageResponse getSpendings(
+            BigInteger userId,
             LocalDate startDate,
             LocalDate endDate,
             int page,
@@ -62,14 +66,30 @@ public class SpendingServiceImpl implements SpendingService {
             Granularity granularity,
             GraphType type) {
         PageRequest pageRequest = PageRequest.of(page, limit);
-        Page<SpendingsListProjection> spendingsListProjs =
+        Page<SpendingListProjection> spendingsListProjs =
                 getSpendingListProj(userId, startDate, endDate, granularity, type, pageRequest);
-        
-        return spendingsListProjs;
+
+        // No spendings
+        if (!spendingsListProjs.hasContent()) {
+            return SpendingPageResponse.builder()
+                    .spendingPageItems(new PageImpl<>(Collections.emptyList(), pageRequest, 0))
+                    .build();
+        }
+
+        List<SpendingPageItem> spendingPageItemList = new ArrayList<>();
+
+        for (SpendingListProjection spendingListProj : spendingsListProjs.getContent()) {
+            spendingPageItemList.add(buildSpendingPageItemFromSpendingListProj(spendingListProj));
+        }
+
+        Page<SpendingPageItem> spendingPageItemPage =
+                new PageImpl<>(spendingPageItemList, pageRequest, spendingPageItemList.size());
+
+        return SpendingPageResponse.builder().spendingPageItems(spendingPageItemPage).build();
     }
 
     @Transactional(readOnly = true)
-    public SpendingDetailsResponse getSpendingDetails(LocalDate spendingDate, long userId) {
+    public SpendingDetailsResponse getSpendingDetails(LocalDate spendingDate, BigInteger userId) {
         List<SpendingProjection> spendings =
                 spendingUserAggrRepository.findSpendingDetailsByUserIdAndDate(spendingDate, userId);
 
@@ -83,7 +103,7 @@ public class SpendingServiceImpl implements SpendingService {
     }
 
     public void updateSpending(
-            SpendingsSaveRequest spendingsSaveRequest, LocalDate spendingDate, long userId) {
+            SpendingsSaveRequest spendingsSaveRequest, LocalDate spendingDate, BigInteger userId) {
         Set<SpendingRequest> spendingsToKeep =
                 filterSpendings(spendingsSaveRequest.spendingRequests());
 
@@ -107,7 +127,7 @@ public class SpendingServiceImpl implements SpendingService {
     }
 
     public void createSpending(
-            SpendingsSaveRequest spendingsSaveRequest, LocalDate spendingDate, long userId) {
+            SpendingsSaveRequest spendingsSaveRequest, LocalDate spendingDate, BigInteger userId) {
         Set<SpendingRequest> spendingsToKeep =
                 filterSpendings(spendingsSaveRequest.spendingRequests());
 
@@ -122,7 +142,7 @@ public class SpendingServiceImpl implements SpendingService {
         userRepository.save(user);
     }
 
-    public void deleteSpending(long spendingUserAggrId) {
+    public void deleteSpending(BigInteger spendingUserAggrId) {
         spendingUserAggrRepository.deleteById(spendingUserAggrId);
     }
 
@@ -145,7 +165,7 @@ public class SpendingServiceImpl implements SpendingService {
         return spendingsToKeep;
     }
 
-    private User getUser(long userId) {
+    private User getUser(BigInteger userId) {
         return userRepository
                 .findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
@@ -172,7 +192,7 @@ public class SpendingServiceImpl implements SpendingService {
     }
 
     private Spending getSpendingEntityFromSpendingRequest(SpendingRequest spendingRequest) {
-        long spendingId = spendingRequest.getSpendingId();
+        BigInteger spendingId = spendingRequest.getSpendingId();
         log.debug("Finding spending for SPENDING_ID {}", spendingId);
         return spendingRepository
                 .findById(spendingId)
@@ -193,8 +213,8 @@ public class SpendingServiceImpl implements SpendingService {
                                         "Can't find spendingUserAggr for date: " + spendingDate));
     }
 
-    private Page<SpendingsListProjection> getSpendingListProj(
-            long userId,
+    private Page<SpendingListProjection> getSpendingListProj(
+            BigInteger userId,
             LocalDate startDate,
             LocalDate endDate,
             Granularity granularity,
@@ -217,8 +237,8 @@ public class SpendingServiceImpl implements SpendingService {
         }
     }
 
-    private Page<SpendingsListProjection> getSpendingListProjLine(
-            long userId,
+    private Page<SpendingListProjection> getSpendingListProjLine(
+            BigInteger userId,
             LocalDate startDate,
             LocalDate endDate,
             Granularity granularity,
@@ -248,9 +268,19 @@ public class SpendingServiceImpl implements SpendingService {
         }
     }
 
-    private Page<SpendingsListProjection> getSpendingListProjCategorical(
-            long userId, LocalDate startDate, LocalDate endDate, PageRequest pageRequest) {
+    private Page<SpendingListProjection> getSpendingListProjCategorical(
+            BigInteger userId, LocalDate startDate, LocalDate endDate, PageRequest pageRequest) {
         return spendingUserAggrRepository.findSpendingsCategorical(
                 userId, startDate, endDate, pageRequest);
+    }
+
+    private SpendingPageItem buildSpendingPageItemFromSpendingListProj(
+            SpendingListProjection spendingListProj) {
+        return SpendingPageItem.builder()
+                .spendingUserAggrId(spendingListProj.getSpendingUserAggrId())
+                .date(spendingListProj.getDate())
+                .category(spendingListProj.getCategory())
+                .total(spendingListProj.getTotal())
+                .build();
     }
 }

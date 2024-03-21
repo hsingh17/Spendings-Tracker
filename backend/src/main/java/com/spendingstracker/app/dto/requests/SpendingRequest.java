@@ -3,11 +3,12 @@ package com.spendingstracker.app.dto.requests;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /** DTO for requests on performing CRUD operations on spendings */
 @Data
 public class SpendingRequest {
-    private long spendingId;
+    private BigInteger spendingId;
     private String category;
     private BigDecimal amount;
     private boolean delete;

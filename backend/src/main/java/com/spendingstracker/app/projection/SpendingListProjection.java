@@ -1,6 +1,7 @@
 package com.spendingstracker.app.projection;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDate;
 
 /**
@@ -8,8 +9,8 @@ import java.time.LocalDate;
  *
  * @see com.spendingstracker.app.repository.SpendingUserAggrRepository
  */
-public interface SpendingsListProjection {
-    Long getSpendingUserAggrId();
+public interface SpendingListProjection {
+    BigInteger getSpendingUserAggrId();
 
     String getCategory();
 

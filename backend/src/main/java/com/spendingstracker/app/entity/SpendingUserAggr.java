@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,7 +17,7 @@ public class SpendingUserAggr {
     @Id
     @Column(name = "SPENDING_USER_AGGR_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long spendingUserAggrId;
+    private BigInteger spendingUserAggrId;
 
     @JoinColumn(name = "USER_ID")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -44,11 +45,11 @@ public class SpendingUserAggr {
         spendings.forEach(spending -> spending.setSpendingUserAggr(this));
     }
 
-    public long getSpendingUserAggrId() {
+    public BigInteger getSpendingUserAggrId() {
         return spendingUserAggrId;
     }
 
-    public void setSpendingUserAggrId(long spendingUserAggrId) {
+    public void setSpendingUserAggrId(BigInteger spendingUserAggrId) {
         this.spendingUserAggrId = spendingUserAggrId;
     }
 

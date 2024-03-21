@@ -3,6 +3,7 @@ package com.spendingstracker.app.dto;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
+import java.math.BigInteger;
 import java.util.Collection;
 
 /**
@@ -12,13 +13,13 @@ import java.util.Collection;
  * @see User
  */
 public class CustomUserDetails extends User {
-    private long userId;
+    private BigInteger userId;
 
     public CustomUserDetails(
             String username,
             String password,
             Collection<? extends GrantedAuthority> authorities,
-            long userId) {
+            BigInteger userId) {
         super(username, password, authorities);
         this.userId = userId;
     }
@@ -31,7 +32,7 @@ public class CustomUserDetails extends User {
             boolean credentialsNonExpired,
             boolean accountNonLocked,
             Collection<? extends GrantedAuthority> authorities,
-            int userId) {
+            BigInteger userId) {
         super(
                 username,
                 password,
@@ -43,11 +44,11 @@ public class CustomUserDetails extends User {
         this.userId = userId;
     }
 
-    public long getUserId() {
+    public BigInteger getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(BigInteger userId) {
         this.userId = userId;
     }
 
