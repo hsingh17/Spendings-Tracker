@@ -4,7 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,7 +38,25 @@ public class User {
     @JsonIgnore
     private Set<SpendingUserAggr> spendingUserAggrs = new HashSet<>();
 
-    public User() {}
+    @CreatedBy
+    @Column(name = "CREATED_BY")
+    private BigInteger createdBy;
+
+    @CreatedDate
+    @Column(name = "CREATED_ON")
+    private LocalDateTime createdOn;
+
+    @LastModifiedBy
+    @Column(name = "LAST_MODIFIED_BY")
+    private BigInteger lastModifiedBy;
+
+    @LastModifiedDate
+    @Column(name = "LAST_MODIFIED_ON")
+    private LocalDateTime lastModifiedOn;
+
+    @Version
+    @Column(name = "OPTIMISTIC_LOCK")
+    private Long optimisticLock;
 
     public BigInteger getUserId() {
         return userId;
@@ -64,6 +88,46 @@ public class User {
 
     public void setSpendingUserAggrs(Set<SpendingUserAggr> spendingUserAggrs) {
         this.spendingUserAggrs = spendingUserAggrs;
+    }
+
+    public BigInteger getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(BigInteger createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public LocalDateTime getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(LocalDateTime createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public BigInteger getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(BigInteger lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public LocalDateTime getLastModifiedOn() {
+        return lastModifiedOn;
+    }
+
+    public void setLastModifiedOn(LocalDateTime lastModifiedOn) {
+        this.lastModifiedOn = lastModifiedOn;
+    }
+
+    public Long getOptimisticLock() {
+        return optimisticLock;
+    }
+
+    public void setOptimisticLock(Long optimisticLock) {
+        this.optimisticLock = optimisticLock;
     }
 
     public void addSpendingUserAggr(SpendingUserAggr spendingUserAggr) {

@@ -1,11 +1,14 @@
-CREATE TABLE IF NOT EXISTS APP.USER (
-    USER_ID         BIGINT              NOT NULL            AUTO_INCREMENT,     
-    USERNAME        VARCHAR(100)        NOT NULL                          ,
-    PASSWORD        VARCHAR(255)        NOT NULL                          ,
-
-    PRIMARY KEY ( USER_ID ),
-    INDEX IDX_USERNAME ( USERNAME ),
-    INDEX IDX_USERNAME_PASSWORD ( USERNAME, PASSWORD )
-)
-    ENGINE=InnoDB
-;
+CREATE TABLE
+    IF NOT EXISTS APP.USER (
+        USER_ID UNSIGNED BIGINT NOT NULL AUTO_INCREMENT COMMENT "Primary Key for user in this table",
+        USERNAME VARCHAR(100) NOT NULL COMMENT "User's name",
+        PASSWORD VARCHAR(255) NOT NULL COMMENT "User's password",
+        CREATED_BY UNSIGNED BIGINT DEFAULT 1 COMMENT "ID of who/what created this record",
+        CREATED_ON DATETIME (0) DEFAULT CURRENT_TIMESTAMP COMMENT "Datetime of creation",
+        LAST_MODIFIED_BY UNSIGNED BIGINT DEFAULT 1 COMMENT "ID of who/what updated this record",
+        LAST_MODIFIED_ON DATETIME (0) DEFAULT CURRENT_TIMESTAMP COMMENT "Datetime of last time the record was updated",
+        OPTIMISTIC_LOCK UNSIGNED BIGINT DEFAULT 0 COMMENT "Optimistic lock for the record",
+        PRIMARY KEY (USER_ID),
+        INDEX IDX_USERNAME (USERNAME),
+        INDEX IDX_USERNAME_PASSWORD (USERNAME, PASSWORD)
+    ) ENGINE = InnoDB;
