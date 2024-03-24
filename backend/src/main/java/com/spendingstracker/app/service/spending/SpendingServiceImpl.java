@@ -28,10 +28,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Implementation of the SpendingService interface. Please see SpendingService for related JavaDocs.
@@ -103,36 +103,21 @@ public class SpendingServiceImpl implements SpendingService {
 
     public void updateSpending(
             SpendingsSaveRequest spendingsSaveRequest, LocalDate spendingDate, BigInteger userId) {
-        Set<SpendingRequest> spendingsToKeep =
-                filterSpendings(spendingsSaveRequest.spendingRequests());
-
-        Set<Spending> spendings = getSpendingEntitysFromSpendingRequests(spendingsToKeep);
-
         User user = userService.getUserById(userId);
-
         SpendingUserAggr spendingUserAggr = findSpendingUserAggrByUserAndDate(user, spendingDate);
-
-        // User decided to delete all the spendings, therefore, this is
-        // effectively a delete operation
-        if (spendingsToKeep.isEmpty()) {
-            deleteSpending(spendingUserAggr.getSpendingUserAggrId());
-            return;
-        }
-
-        spendingUserAggr.emptySpendings(); // Remove all old spendings
-        spendingUserAggr.addSpendings(spendings); // Add the spendings to this date
-
+        mergeExistingSpendingsWithRequest(
+                spendingUserAggr, spendingsSaveRequest.spendingRequests());
         spendingUserAggrRepository.save(spendingUserAggr);
     }
 
     public void createSpending(
             SpendingsSaveRequest spendingsSaveRequest, LocalDate spendingDate, BigInteger userId) {
-        Set<SpendingRequest> spendingsToKeep =
-                filterSpendings(spendingsSaveRequest.spendingRequests());
+        User user = userService.getUserById(userId);
 
-        Set<Spending> spendings = getSpendingEntitysFromSpendingRequests(spendingsToKeep);
-
-       User user = userService.getUserById(userId);
+        Set<Spending> spendings = new HashSet<>();
+        for (SpendingRequest spendingReq : spendingsSaveRequest.spendingRequests()) {
+            spendings.add(new Spending(spendingReq.getCategory(), spendingReq.getAmount()));
+        }
 
         SpendingUserAggr spendingUserAggr = new SpendingUserAggr(user, spendingDate, spendings);
         spendingUserAggrRepository.save(spendingUserAggr);
@@ -142,23 +127,28 @@ public class SpendingServiceImpl implements SpendingService {
         spendingUserAggrRepository.deleteById(spendingUserAggrId);
     }
 
-    private Set<SpendingRequest> filterSpendings(Set<SpendingRequest> spendingsRequests) {
-        // Group by category in case there are multiple spendings in the same category
-        Map<String, List<SpendingRequest>> mappedSpendings =
-                spendingsRequests.stream()
-                        .filter(spending -> !spending.isDelete())
-                        .collect(Collectors.groupingBy(SpendingRequest::getCategory));
+    private void mergeExistingSpendingsWithRequest(
+            SpendingUserAggr spendingUserAggr, Set<SpendingRequest> spendingReqs) {
+        for (SpendingRequest spendingRequest : spendingReqs) {
+            String category = spendingRequest.getCategory();
+            BigDecimal amount = spendingRequest.getAmount();
 
-        // Combine the spendings in the same category to be a single object
-        Set<SpendingRequest> spendingsToKeep = new HashSet<>();
-        for (List<SpendingRequest> mergedSpendings : mappedSpendings.values()) {
-            Optional<SpendingRequest> mergedSpending =
-                    mergedSpendings.stream().reduce(SpendingRequest::merge);
+            // Brand new spending added
+            if (spendingRequest.getSpendingId() == null) {
+                spendingUserAggr.addSpending(new Spending(category, amount));
+                continue;
+            }
 
-            mergedSpending.ifPresent(spendingsToKeep::add);
+            // Update/Delete existing spending
+            Spending spending = getSpendingFromId(spendingRequest.getSpendingId());
+            if (spendingRequest.isDelete()) {
+                spendingUserAggr.removeSpending(spending);
+            } else {
+                spending.setCategory(category);
+                spending.setAmount(amount);
+                spendingUserAggr.addSpending(spending);
+            }
         }
-
-        return spendingsToKeep;
     }
 
     private SpendingResponse buildSpendingResponseFromSpendingProj(
@@ -170,24 +160,7 @@ public class SpendingServiceImpl implements SpendingService {
                 .build();
     }
 
-    private Set<Spending> getSpendingEntitysFromSpendingRequests(
-            Set<SpendingRequest> spendingRequests) {
-        Set<Spending> spendings = new HashSet<>();
-
-        for (SpendingRequest spendingRequest : spendingRequests) {
-            if (spendingRequest.getSpendingId() == null) {
-                spendings.add(
-                        new Spending(spendingRequest.getCategory(), spendingRequest.getAmount()));
-            } else {
-                spendings.add(getSpendingEntityFromSpendingRequest(spendingRequest));
-            }
-        }
-
-        return spendings;
-    }
-
-    private Spending getSpendingEntityFromSpendingRequest(SpendingRequest spendingRequest) {
-        BigInteger spendingId = spendingRequest.getSpendingId();
+    private Spending getSpendingFromId(BigInteger spendingId) {
         log.debug("Finding spending for SPENDING_ID {}", spendingId);
         return spendingRepository
                 .findById(spendingId)

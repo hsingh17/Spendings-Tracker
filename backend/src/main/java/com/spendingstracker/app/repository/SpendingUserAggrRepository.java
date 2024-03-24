@@ -30,9 +30,9 @@ public interface SpendingUserAggrRepository extends JpaRepository<SpendingUserAg
             value =
                     """
                     SELECT
-                        S.SPENDING_ID,
-                        S.CATEGORY,
-                        S.AMOUNT
+                        S.SPENDING_ID AS spendingId,
+                        S.CATEGORY AS category,
+                        S.AMOUNT AS amount
                     FROM
                         APP.SPENDING_USER_AGGR SUA,
                         APP.SPENDING S

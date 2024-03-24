@@ -76,9 +76,12 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
   const handleSubmit = (e: React.MouseEvent) => {
     const isValidFormInput = (): boolean => {
       let isValid: boolean = true;
-      const newSpendings: Array<SpendingFormInput> = spendings.map(
+      const validatedSpendings: Array<SpendingFormInput> = spendings.map(
         (spending) => {
           const newSpending: SpendingFormInput = { ...spending };
+          newSpending.categoryError = null;
+          newSpending.amountError = null;
+
           if (
             !newSpending.category ||
             newSpending.category.trim().length === 0
@@ -86,16 +89,12 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
             newSpending.categoryError = FormInputError.EMPTY_CATEGORY;
           } else if (newSpending.category.length > MAX_CATEGORY_LENGTH) {
             newSpending.categoryError = FormInputError.MAX_CATEGORY_LENGTH;
-          } else {
-            newSpending.categoryError = null;
           }
 
           if (!newSpending.amount || newSpending.amount === 0) {
             newSpending.amountError = FormInputError.ZERO_AMOUNT;
           } else if (newSpending.amount >= MAX_AMOUNT) {
             newSpending.amountError = FormInputError.MAX_AMOUNT;
-          } else {
-            newSpending.amountError = null;
           }
 
           if (newSpending.categoryError || newSpending.amountError) {
@@ -106,8 +105,38 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
         }
       );
 
+      // Make sure no duplicate category names
+      const map: Map<string, SpendingFormInput[]> = new Map();
+      validatedSpendings.forEach((value) => {
+        const category = value.category;
+        if (!category) {
+          return;
+        }
+
+        const mapList: SpendingFormInput[] | undefined = map.get(category);
+
+        if (!mapList) {
+          map.set(category, [value]);
+        } else {
+          mapList.push(value);
+        }
+      });
+
+      for (const [, spendingList] of map.entries()) {
+        if (spendingList.length === 1) {
+          continue;
+        }
+
+        // Duplicated categories. Iterate through all the offending ones and mark
+        for (const spendingFormInput of spendingList) {
+          spendingFormInput.categoryError = FormInputError.DUPLICATE_CATEGORY;
+        }
+
+        isValid = false;
+      }
+
       if (!isValid) {
-        setSpendings(newSpendings);
+        setSpendings(validatedSpendings);
       }
 
       return isValid;
