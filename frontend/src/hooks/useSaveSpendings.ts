@@ -2,17 +2,17 @@ import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { POST, PUT, SPENDINGS_API_ROUTE } from "../utils/constants";
 import fetchRequestWrapper from "../utils/fetch-utils";
-import { Spending } from "../utils/types";
+import { SpendingSaveRequest } from "../utils/types";
 
 async function postOrPutSpendings(
-  spendings: Array<Spending>,
+  spendingSaveRequest: SpendingSaveRequest,
   spendingDate: string,
   isCreate: boolean,
 ) {
   return await fetchRequestWrapper(
     `${SPENDINGS_API_ROUTE}/${spendingDate}`,
     isCreate ? POST : PUT,
-    JSON.stringify(spendings),
+    JSON.stringify(spendingSaveRequest),
   );
 }
 
@@ -22,7 +22,7 @@ export default function useSaveSpendings(
   onSuccess: () => void,
 ) {
   return useMutation({
-    mutationFn: (spendings: Array<Spending>) => {
+    mutationFn: (spendings: SpendingSaveRequest) => {
       const promise = postOrPutSpendings(spendings, date, isCreate);
       toast.promise(promise, {
         loading: `${isCreate ? "Creating" : "Updating"} spendings...`,

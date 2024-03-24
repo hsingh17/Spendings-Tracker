@@ -39,3 +39,6 @@ jwt:
   secret-key-path: classpath:/keys/secret-key.key
 cors:
   allowed-origins: http://localhost:5173, http://127.0.0.1:5173
+logging:
+  level:
+    com.spendingstracker: DEBUG

@@ -2,8 +2,8 @@ package com.spendingstracker.app.config;
 
 import com.spendingstracker.app.controller.auth.AuthController;
 import com.spendingstracker.app.filter.JwtFilter;
-
 import com.spendingstracker.app.service.user.UserServiceImpl;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

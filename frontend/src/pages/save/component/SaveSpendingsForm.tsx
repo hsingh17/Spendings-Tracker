@@ -125,7 +125,9 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
       delete: spending.delete,
     }));
 
-    mutate(mappedSpendings);
+    mutate({
+      spendingRequests: mappedSpendings,
+    });
   };
 
   const handleAddNewRow = (e: React.MouseEvent) => {

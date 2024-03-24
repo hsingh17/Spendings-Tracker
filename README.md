@@ -22,3 +22,4 @@ This repository holds the code for my spendings tracker app built with Java and 
 ## Known issues
 
 - on SaveSpendingsForm highlighting the entire amount and pressing any key results in "NaN"
+- If >2 spendings are created with same category and same exact amount, they don't combine because of Set -> must use List

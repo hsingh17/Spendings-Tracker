@@ -3,7 +3,6 @@ import GraphEmptyState from "../../common/graph/GraphEmptyState";
 import GraphsContainer from "../../common/graph/GraphsContainer";
 import useSpendings from "../../hooks/useSpendings";
 import { GRANULARITY, GRAPH_TYPES } from "../../utils/constants";
-import { SpendingListRow } from "../../utils/types";
 import GraphFilter from "./GraphFilter";
 
 const DEFAULT_URL_SEARCH_PARAMS = new URLSearchParams([
@@ -14,10 +13,11 @@ const DEFAULT_URL_SEARCH_PARAMS = new URLSearchParams([
 
 export const Metrics = () => {
   const [searchParams, setSearchParams] = useSearchParams(
-    DEFAULT_URL_SEARCH_PARAMS,
+    DEFAULT_URL_SEARCH_PARAMS
   );
 
-  const { data: response } = useSpendings<SpendingListRow>(searchParams);
+  const { data: response } = useSpendings(searchParams);
+  const spendings = response?.data?.spendingPage.content;
 
   const setSearchParamsResetPage = (urlSearchParams: URLSearchParams) => {
     urlSearchParams.delete("page"); // Reset page
@@ -54,7 +54,7 @@ export const Metrics = () => {
   }
   return (
     <div className="md:relative w-full h-full flex flex-col">
-      {response.data.length ? (
+      {spendings?.length ? (
         <GraphsContainer
           graphType={getGraphType()}
           response={response}

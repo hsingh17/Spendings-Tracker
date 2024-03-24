@@ -5,7 +5,6 @@ import com.spendingstracker.app.dto.CustomUserDetails;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
 import java.util.Optional;
@@ -17,7 +16,6 @@ import java.util.Optional;
  *
  * @see AuditorAware
  */
-@Component
 public class SecurityAuditorAware implements AuditorAware<BigInteger> {
 
     /**

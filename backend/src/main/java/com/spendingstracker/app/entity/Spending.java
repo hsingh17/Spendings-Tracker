@@ -27,6 +27,13 @@ public class Spending extends AuditableEntity {
     @Column(name = "AMOUNT")
     private BigDecimal amount;
 
+    public Spending() {}
+
+    public Spending(String category, BigDecimal amount) {
+        this.category = category;
+        this.amount = amount;
+    }
+
     public BigInteger getSpendingId() {
         return spendingId;
     }

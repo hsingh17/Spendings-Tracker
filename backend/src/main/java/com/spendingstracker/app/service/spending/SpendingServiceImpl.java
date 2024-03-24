@@ -71,7 +71,7 @@ public class SpendingServiceImpl implements SpendingService {
         // No spendings
         if (!spendingsListProjs.hasContent()) {
             return SpendingPageResponse.builder()
-                    .spendingPageItems(new PageImpl<>(Collections.emptyList(), pageRequest, 0))
+                    .spendingPage(new PageImpl<>(Collections.emptyList(), pageRequest, 0))
                     .build();
         }
 
@@ -84,7 +84,7 @@ public class SpendingServiceImpl implements SpendingService {
         Page<SpendingPageItem> spendingPageItemPage =
                 new PageImpl<>(spendingPageItemList, pageRequest, spendingPageItemList.size());
 
-        return SpendingPageResponse.builder().spendingPageItems(spendingPageItemPage).build();
+        return SpendingPageResponse.builder().spendingPage(spendingPageItemPage).build();
     }
 
     @Transactional(readOnly = true)
@@ -132,7 +132,7 @@ public class SpendingServiceImpl implements SpendingService {
 
         Set<Spending> spendings = getSpendingEntitysFromSpendingRequests(spendingsToKeep);
 
-        User user = userService.getUserById(userId);
+       User user = userService.getUserById(userId);
 
         SpendingUserAggr spendingUserAggr = new SpendingUserAggr(user, spendingDate, spendings);
         spendingUserAggrRepository.save(spendingUserAggr);
@@ -175,7 +175,12 @@ public class SpendingServiceImpl implements SpendingService {
         Set<Spending> spendings = new HashSet<>();
 
         for (SpendingRequest spendingRequest : spendingRequests) {
-            spendings.add(getSpendingEntityFromSpendingRequest(spendingRequest));
+            if (spendingRequest.getSpendingId() == null) {
+                spendings.add(
+                        new Spending(spendingRequest.getCategory(), spendingRequest.getAmount()));
+            } else {
+                spendings.add(getSpendingEntityFromSpendingRequest(spendingRequest));
+            }
         }
 
         return spendings;

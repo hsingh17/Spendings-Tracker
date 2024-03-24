@@ -13,5 +13,5 @@ import org.springframework.data.domain.Page;
 @Data
 @Builder
 public class SpendingPageResponse {
-    private final Page<SpendingPageItem> spendingPageItems;
+    private final Page<SpendingPageItem> spendingPage;
 }

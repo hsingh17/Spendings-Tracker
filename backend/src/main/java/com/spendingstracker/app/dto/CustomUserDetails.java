@@ -1,5 +1,7 @@
 package com.spendingstracker.app.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
@@ -53,57 +55,8 @@ public class CustomUserDetails extends User {
     }
 
     @Override
-    public Collection<GrantedAuthority> getAuthorities() {
-        return super.getAuthorities();
-    }
-
-    @Override
+    @JsonIgnore
     public String getPassword() {
         return super.getPassword();
-    }
-
-    @Override
-    public String getUsername() {
-        return super.getUsername();
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return super.isEnabled();
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return super.isAccountNonExpired();
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return super.isAccountNonLocked();
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return super.isCredentialsNonExpired();
-    }
-
-    @Override
-    public void eraseCredentials() {
-        super.eraseCredentials();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
     }
 }

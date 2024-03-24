@@ -1,6 +1,7 @@
 package com.spendingstracker.app.entity;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Version;
 
@@ -8,18 +9,20 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 public abstract class AuditableEntity {
     @CreatedBy
-    @Column(name = "CREATED_BY")
+    @Column(name = "CREATED_BY", updatable = false)
     private BigInteger createdBy;
 
     @CreatedDate
-    @Column(name = "CREATED_ON")
+    @Column(name = "CREATED_ON", updatable = false)
     private LocalDateTime createdOn;
 
     @LastModifiedBy
@@ -32,7 +35,7 @@ public abstract class AuditableEntity {
 
     @Version
     @Column(name = "OPTIMISTIC_LOCK")
-    private Long optimisticLock;
+    private Long optimisticLock = 0L;
 
     public BigInteger getCreatedBy() {
         return createdBy;

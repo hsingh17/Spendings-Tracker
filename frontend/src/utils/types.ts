@@ -47,6 +47,14 @@ export type ApiResponse<T> = {
   data: Nullable<T>;
 };
 
+export type SpendingDetailResponse = {
+  spendings: Spending[];
+};
+
+export type SpendingSaveRequest = {
+  spendingRequests: Spending[];
+};
+
 export type Spending = {
   spendingId: Nullable<number>;
   category: Nullable<string>;
@@ -64,9 +72,16 @@ export type CategoricalSpendings = {
   total: number;
 };
 
+export type SpendingsPage = {
+  spendingPage: {
+    content: SpendingListRow[];
+  };
+};
+
 export type SpendingListRow = {
   spendingUserAggrId: number;
   date: string;
+  category: string;
   total: number;
 };
 
