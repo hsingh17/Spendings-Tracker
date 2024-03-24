@@ -3,15 +3,20 @@ package com.spendingstracker.app.service.auth;
 import com.spendingstracker.app.constants.Constants;
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.requests.LoginRequest;
+import com.spendingstracker.app.exception.NoAuthenticatedUserException;
 import com.spendingstracker.app.util.JwtUtil;
 
 import jakarta.servlet.http.HttpServletResponse;
+
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
+@Slf4j
 public class AuthServiceImpl implements AuthService {
     private static final long MAX_AGE_SECONDS_DEFAULT = 3600L;
     private final JwtUtil jwtUtil;
@@ -33,8 +39,20 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    public CustomUserDetails getUserDetailsForAuthenticatedUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) {
+            String errMsg = "No authenticated user in the context!";
+            log.error(errMsg);
+            throw new NoAuthenticatedUserException(errMsg);
+        }
+
+        return (CustomUserDetails) auth.getPrincipal();
+    }
+
+    @Override
     @Transactional(readOnly = true)
-    public CustomUserDetails loginUser(LoginRequest loginRequest, HttpServletResponse response) {
+    public UserDetails loginUser(LoginRequest loginRequest, HttpServletResponse response) {
         // Attempt authentication with the sent login and password
         Authentication auth =
                 authManager.authenticate(
@@ -45,16 +63,18 @@ public class AuthServiceImpl implements AuthService {
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
         String token = jwtUtil.generateToken(userDetails);
 
-        // Add jwt token in an HTTP only cookie
-        ResponseCookie cookie = buildResponseCookie(token, MAX_AGE_SECONDS_DEFAULT);
-        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString()); // Set "token" to be null
-
+        setCookie(response, token, MAX_AGE_SECONDS_DEFAULT);
         return userDetails;
     }
 
     @Override
     public void logoutUser(HttpServletResponse response) {
-        ResponseCookie cookie = buildResponseCookie(null, 0);
+        setCookie(response, null, 0);
+    }
+
+    private void setCookie(HttpServletResponse response, String token, long maxAge) {
+        // Add JWT token in an HTTP only cookie
+        ResponseCookie cookie = buildResponseCookie(token, maxAge);
         response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString()); // Set "token" to be null
     }
 

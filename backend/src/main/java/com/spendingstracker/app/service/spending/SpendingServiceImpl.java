@@ -18,14 +18,13 @@ import com.spendingstracker.app.projection.SpendingListProjection;
 import com.spendingstracker.app.projection.SpendingProjection;
 import com.spendingstracker.app.repository.SpendingRepository;
 import com.spendingstracker.app.repository.SpendingUserAggrRepository;
-import com.spendingstracker.app.repository.UserRepository;
+import com.spendingstracker.app.service.user.UserService;
 
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,15 +44,15 @@ import java.util.stream.Collectors;
 public class SpendingServiceImpl implements SpendingService {
     private final SpendingRepository spendingRepository;
     private final SpendingUserAggrRepository spendingUserAggrRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     public SpendingServiceImpl(
             SpendingRepository spendingRepository,
             SpendingUserAggrRepository spendingUserAggrRepository,
-            UserRepository userRepository) {
+            UserService userService) {
         this.spendingRepository = spendingRepository;
         this.spendingUserAggrRepository = spendingUserAggrRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @Transactional(readOnly = true)
@@ -109,7 +108,7 @@ public class SpendingServiceImpl implements SpendingService {
 
         Set<Spending> spendings = getSpendingEntitysFromSpendingRequests(spendingsToKeep);
 
-        User user = getUser(userId);
+        User user = userService.getUserById(userId);
 
         SpendingUserAggr spendingUserAggr = findSpendingUserAggrByUserAndDate(user, spendingDate);
 
@@ -133,13 +132,10 @@ public class SpendingServiceImpl implements SpendingService {
 
         Set<Spending> spendings = getSpendingEntitysFromSpendingRequests(spendingsToKeep);
 
-        User user = getUser(userId);
+        User user = userService.getUserById(userId);
 
         SpendingUserAggr spendingUserAggr = new SpendingUserAggr(user, spendingDate, spendings);
-        user.addSpendingUserAggr(spendingUserAggr); // Add new spending date to the user
-
-        // We save the user (won't create a new user) and all the new spendings will cascade
-        userRepository.save(user);
+        spendingUserAggrRepository.save(spendingUserAggr);
     }
 
     public void deleteSpending(BigInteger spendingUserAggrId) {
@@ -163,12 +159,6 @@ public class SpendingServiceImpl implements SpendingService {
         }
 
         return spendingsToKeep;
-    }
-
-    private User getUser(BigInteger userId) {
-        return userRepository
-                .findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
     }
 
     private SpendingResponse buildSpendingResponseFromSpendingProj(

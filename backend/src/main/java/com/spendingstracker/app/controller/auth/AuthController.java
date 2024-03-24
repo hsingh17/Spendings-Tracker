@@ -13,10 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
 /** Controller class that contains routes related to user authentication and authorization */
 @RestController
@@ -36,6 +34,20 @@ public class AuthController {
     }
 
     /**
+     * Route for returning the <b>authenticated</b> user's details.
+     *
+     * @return <code>{@literal ResponseEntity<ApiResponse<UserDetails>>}</code> the user's details
+     * @see UserDetails
+     */
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<UserDetails>> getMe() {
+        log.info("GET /me");
+        UserDetails userDetails = authService.getUserDetailsForAuthenticatedUser();
+        ApiResponse<UserDetails> apiResponse = buildOkAuthApiResponse(userDetails, null);
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    /**
      * Route for when a user attempts to log into the application
      *
      * @param loginRequest a <code>LoginRequestBody</code> object that contains the username and
@@ -47,15 +59,16 @@ public class AuthController {
      * @throws AuthenticationException if authentication fails
      * @see LoginRequest
      * @see ApiResponse
+     * @see UserDetails
      * @see CustomUserDetails
      */
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<CustomUserDetails>> postLogin(
+    public ResponseEntity<ApiResponse<UserDetails>> postLogin(
             @RequestBody LoginRequest loginRequest, HttpServletResponse response)
             throws AuthenticationException {
         log.info("POST /login");
-        CustomUserDetails userDetails = authService.loginUser(loginRequest, response);
-        ApiResponse<CustomUserDetails> apiResponse = buildOkAuthApiResponse(userDetails, null);
+        UserDetails userDetails = authService.loginUser(loginRequest, response);
+        ApiResponse<UserDetails> apiResponse = buildOkAuthApiResponse(userDetails, null);
         return ResponseEntity.ok(apiResponse);
     }
 

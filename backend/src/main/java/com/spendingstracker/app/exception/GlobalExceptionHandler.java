@@ -27,20 +27,20 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Handles <code>
-     * IllegalArgumentException, ConversionFailedException, NoSuchGraphTypeException, SpendingNotFoundException
-     * </code>. Returns an HTTP 400.
+     * Handles exceptions related to bad requests. Returns an HTTP 400.
      *
      * @param e <code>Exception</code> object
      * @see ApiResponse
      * @see NoSuchGraphTypeException
      * @see SpendingNotFoundException
+     * @see NoAuthenticatedUserException
      */
     @ExceptionHandler({
         IllegalArgumentException.class,
         ConversionFailedException.class,
         NoSuchGraphTypeException.class,
-        SpendingNotFoundException.class
+        SpendingNotFoundException.class,
+        NoAuthenticatedUserException.class
     })
     public ResponseEntity<ApiResponse<Object>> handleBadRequestException(
             IllegalArgumentException e) {

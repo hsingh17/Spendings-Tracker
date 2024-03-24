@@ -23,7 +23,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
@@ -44,22 +43,6 @@ public class SpendingsController {
      */
     public SpendingsController(SpendingService spendingService) {
         this.spendingService = spendingService;
-    }
-
-    /**
-     * Route for returning the <b>authenticated</b> user's details.
-     *
-     * @return <code>{@literal ResponseEntity<ApiResponse<UserDetails>>}</code> the user's details
-     * @see UserDetails
-     */
-    @GetMapping("/me")
-    public ResponseEntity<ApiResponse<UserDetails>> getMe() {
-        log.info("GET /me");
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
-        ApiResponse<UserDetails> apiResponse = buildOkApiResponse(userDetails, null, null);
-        return ResponseEntity.ok(apiResponse);
     }
 
     /**

@@ -4,20 +4,28 @@ import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.repository.UserRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.Collections;
 
 /**
- * Custom implementation of the <code>UserDetailsService</code> interface.
+ * Custom implementation of the <code>UserDetailsService</code> and <code>UserService</code>
+ * interfaces.
  *
  * @see UserDetailsService
+ * @see UserService
  */
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+@Slf4j
+@Transactional
+public class UserServiceImpl implements UserDetailsService, UserService {
     private final UserRepository userRepository;
 
     /**
@@ -26,8 +34,21 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * @param userRepository <code>UserRepository</code> bean
      * @see UserRepository
      */
-    public UserDetailsServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public User getUserById(BigInteger userId) {
+        return userRepository
+                .findById(userId)
+                .orElseThrow(
+                        () -> {
+                            String errMsg = "User not found for USER_ID " + userId;
+                            log.error(errMsg);
+                            return new UsernameNotFoundException(errMsg);
+                        });
     }
 
     /**
@@ -40,10 +61,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * @see UserDetails
      */
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
         if (user == null) {
-            throw new UsernameNotFoundException("User not found!");
+            String errMsg = "No user found with USERNAME " + username;
+            log.error(errMsg);
+            throw new UsernameNotFoundException(errMsg);
         }
 
         // A CustomUserDetails object since userId must be saved
