@@ -5,6 +5,7 @@ import {
   ApiResponse,
   CategoricalSpendings,
   Nullable,
+  SpendingsPage,
   TooltipPosition,
 } from "../../../utils/types";
 import CategoricalChartTooltip from "../CategoricalChartTooltip";
@@ -17,7 +18,7 @@ const ANIMATION_DISTANCE = 50;
 type PieChartProps = {
   width: number;
   height: number;
-  response: ApiResponse<CategoricalSpendings[]>;
+  response: ApiResponse<SpendingsPage>;
   setSearchParams: (urlSearchParams: URLSearchParams) => void;
 };
 
@@ -41,7 +42,7 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
     useState<Nullable<TooltipPosition>>(null);
   const [arcStyle, setArcStyle] = useState<string>();
 
-  const data = response.data;
+  const data = response.data?.spendingPage.content;
   if (!data || !data.length) {
     // This component won't get rendered if there's no data.
     // So just doing this to satisfy Typescript.
@@ -67,7 +68,7 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
     const domPoint = new DOMPointReadOnly(e.clientX, e.clientY);
     const svgNode = e.currentTarget as SVGGraphicsElement;
     const svgPoint = domPoint.matrixTransform(
-      svgNode.getScreenCTM()?.inverse(),
+      svgNode.getScreenCTM()?.inverse()
     );
     const [x, y] = calculateDisplacedCoords(curAngle);
 

@@ -47,6 +47,14 @@ export type ApiResponse<T> = {
   data: Nullable<T>;
 };
 
+export type SpendingDetailResponse = {
+  spendings: Spending[];
+};
+
+export type SpendingSaveRequest = {
+  spendingRequests: Spending[];
+};
+
 export type Spending = {
   spendingId: Nullable<number>;
   category: Nullable<string>;
@@ -64,9 +72,16 @@ export type CategoricalSpendings = {
   total: number;
 };
 
+export type SpendingsPage = {
+  spendingPage: {
+    content: SpendingListRow[];
+  };
+};
+
 export type SpendingListRow = {
   spendingUserAggrId: number;
   date: string;
+  category: string;
   total: number;
 };
 
@@ -84,13 +99,6 @@ export type SaveSpendingsTitleProps = {
 
 export type FormInputColumnsProps = {
   spendings: Array<SpendingFormInput>;
-  parentHandleDeleteRow: (idx: number) => void;
-  parentHandleChange: (idx: number, newSpending: SpendingFormInput) => void;
-};
-
-export type FormRowProps = {
-  idx: number;
-  spending: SpendingFormInput;
   parentHandleDeleteRow: (idx: number) => void;
   parentHandleChange: (idx: number, newSpending: SpendingFormInput) => void;
 };
@@ -273,6 +281,7 @@ export enum FormInputError {
   ZERO_AMOUNT = "Must be greater than 0!",
   MAX_AMOUNT = "Must be less than 99,999,999!",
   MAX_CATEGORY_LENGTH = "Must be less than 100 characters!",
+  DUPLICATE_CATEGORY = "No duplicate categories allowed!",
 }
 
 export type TooltipPosition = {

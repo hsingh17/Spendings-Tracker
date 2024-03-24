@@ -1,18 +1,27 @@
 package com.spendingstracker.app.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
+import java.math.BigInteger;
 import java.util.Collection;
 
+/**
+ * An extension of the Spring <code>User</code> class the only reason for this is to add the <code>
+ * userId</code> member.
+ *
+ * @see User
+ */
 public class CustomUserDetails extends User {
-    private long userId;
+    private BigInteger userId;
 
     public CustomUserDetails(
             String username,
             String password,
             Collection<? extends GrantedAuthority> authorities,
-            long userId) {
+            BigInteger userId) {
         super(username, password, authorities);
         this.userId = userId;
     }
@@ -25,7 +34,7 @@ public class CustomUserDetails extends User {
             boolean credentialsNonExpired,
             boolean accountNonLocked,
             Collection<? extends GrantedAuthority> authorities,
-            int userId) {
+            BigInteger userId) {
         super(
                 username,
                 password,
@@ -37,66 +46,17 @@ public class CustomUserDetails extends User {
         this.userId = userId;
     }
 
-    public long getUserId() {
+    public BigInteger getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(BigInteger userId) {
         this.userId = userId;
     }
 
     @Override
-    public Collection<GrantedAuthority> getAuthorities() {
-        return super.getAuthorities();
-    }
-
-    @Override
+    @JsonIgnore
     public String getPassword() {
         return super.getPassword();
-    }
-
-    @Override
-    public String getUsername() {
-        return super.getUsername();
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return super.isEnabled();
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return super.isAccountNonExpired();
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return super.isAccountNonLocked();
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return super.isCredentialsNonExpired();
-    }
-
-    @Override
-    public void eraseCredentials() {
-        super.eraseCredentials();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
     }
 }

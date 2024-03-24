@@ -2,8 +2,8 @@ import { extent, scaleBand, scaleLinear } from "d3";
 import { FC, useState } from "react";
 import {
   ApiResponse,
-  CategoricalSpendings,
   Nullable,
+  SpendingsPage,
   TooltipPosition,
 } from "../../../utils/types";
 import CategoricalChartTooltip from "../CategoricalChartTooltip";
@@ -12,7 +12,7 @@ import Bars from "./Bars";
 type BarChartProps = {
   width: number;
   height: number;
-  response: ApiResponse<CategoricalSpendings[]>;
+  response: ApiResponse<SpendingsPage>;
   setSearchParams: (urlSearchParams: URLSearchParams) => void;
 };
 
@@ -21,7 +21,7 @@ const BarChart: FC<BarChartProps> = ({ response, height, width }) => {
   const [tooltipPosition, setTooltipPosition] =
     useState<Nullable<TooltipPosition>>(null);
 
-  const data = response.data;
+  const data = response.data?.spendingPage.content;
   if (!data || !data.length) {
     // This component won't get rendered if there's no data.
     // So just doing this to satisfy Typescript.

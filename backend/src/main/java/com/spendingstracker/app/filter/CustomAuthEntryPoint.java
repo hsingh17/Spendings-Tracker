@@ -15,20 +15,35 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+/**
+ * Implementation of <code>AuthenticationEntryPoint</code> interface for handling when a user fails
+ * to be authenticated.
+ *
+ * @see AuthenticationEntryPoint
+ */
 @Component
 @Slf4j
 public class CustomAuthEntryPoint implements AuthenticationEntryPoint {
     private final ObjectMapper objectMapper;
-    private final ApiResponse<Object> authErrorResponse = new ApiResponse.ApiResponseBuilder<>()
-            .setHttpStatus(HttpStatus.UNAUTHORIZED.value())
-            .setOk(false)
-            .setMessage("Failed to authenticate user")
-            .build();
+    private final ApiResponse<Object> authErrorResponse =
+            new ApiResponse.ApiResponseBuilder<>()
+                    .setHttpStatus(HttpStatus.UNAUTHORIZED.value())
+                    .setOk(false)
+                    .setMessage("Failed to authenticate user")
+                    .build();
 
+    /**
+     * @param objectMapper <code>ObjectMapper</code>
+     * @see com.spendingstracker.app.config.ObjectMapperConfig
+     */
     public CustomAuthEntryPoint(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
+    /**
+     * Overloaded function that writes the <code>authErrorResponse</code> object to the HTTP
+     * response
+     */
     @Override
     public void commence(
             HttpServletRequest request,

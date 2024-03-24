@@ -6,6 +6,7 @@ import {
   ApiResponse,
   Nullable,
   SpendingListRow,
+  SpendingsPage,
   TooltipPosition,
 } from "../../../utils/types";
 import Line from "./Line";
@@ -22,7 +23,7 @@ export const POINT_RADIUS = 7;
 type LineChartProps = {
   width: number;
   height: number;
-  response: ApiResponse<SpendingListRow[]>;
+  response: ApiResponse<SpendingsPage>;
   setSearchParams: (urlSearchParams: URLSearchParams) => void;
 };
 
@@ -41,7 +42,7 @@ const LineChart: FC<LineChartProps> = ({
   width,
   setSearchParams,
 }) => {
-  const data = response.data;
+  const data = response.data?.spendingPage.content;
   const prev = response.metadata?.links.prev;
   const next = response.metadata?.links.next;
   const parser = timeParse(ISO_FORMAT);
@@ -63,12 +64,12 @@ const LineChart: FC<LineChartProps> = ({
   const moveTracer = (
     clientX: number,
     clientY: number,
-    currentTarget: EventTarget,
+    currentTarget: EventTarget
   ) => {
     const domPoint = new DOMPointReadOnly(clientX, clientY);
     const svgNode = currentTarget as SVGGraphicsElement;
     const svgPoint = domPoint.matrixTransform(
-      svgNode.getScreenCTM()?.inverse(),
+      svgNode.getScreenCTM()?.inverse()
     );
     setTracerX(svgPoint.x);
 
@@ -102,7 +103,7 @@ const LineChart: FC<LineChartProps> = ({
     }
 
     const queryParams = new URLSearchParams(
-      link.substring(link.indexOf("?") + 1),
+      link.substring(link.indexOf("?") + 1)
     );
 
     setSearchParams(queryParams);
@@ -110,7 +111,7 @@ const LineChart: FC<LineChartProps> = ({
 
   const xScale = scaleTime()
     .domain(
-      extent(data!, (d: SpendingListRow) => parser(d.date)) as [Date, Date],
+      extent(data!, (d: SpendingListRow) => parser(d.date)) as [Date, Date]
     )
     .range([margins.left, width - margins.right]);
 
@@ -128,7 +129,7 @@ const LineChart: FC<LineChartProps> = ({
   // Display at least 2
   const xTicksToShow = Math.max(
     2,
-    Math.floor(xScale.ticks().length * Math.min(width / 2000, 1)),
+    Math.floor(xScale.ticks().length * Math.min(width / 2000, 1))
   );
 
   const xTicks = ArrayUtils.spreadEvenly<Date>(xScale.ticks(), xTicksToShow);

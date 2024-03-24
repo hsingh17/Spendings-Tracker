@@ -1,13 +1,13 @@
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import Card from "../../common/Card";
+import useSpendings from "../../hooks/useSpendings";
+import { ApiMetadata, Nullable, SpendingListRow } from "../../utils/types";
+import DeleteModal from "./component/DeleteModal";
 import SpendingsTable from "./component/SpendingsTable";
 import TableFilter from "./component/TableFilter";
 import TableFooterContainer from "./component/TableFooterContainer";
 import TableTitle from "./component/TableTitle";
-import useSpendings from "../../hooks/useSpendings";
-import { ApiMetadata, Nullable, SpendingListRow } from "../../utils/types";
-import DeleteModal from "./component/DeleteModal";
-import { useState } from "react";
-import Card from "../../common/Card";
 
 const DUMMY_SPENDINGS: Array<SpendingListRow> = Array(25).fill({});
 
@@ -15,11 +15,7 @@ const ViewSpendings = () => {
   const [spendingId, setSpendingId] = useState<Nullable<number>>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  const {
-    data: response,
-    refetch,
-    isLoading,
-  } = useSpendings<SpendingListRow>(searchParams);
+  const { data: response, refetch, isLoading } = useSpendings(searchParams);
   const metadata: Nullable<ApiMetadata> | undefined = response?.metadata;
 
   const setSearchParamsWrapper = (urlSearchParams: URLSearchParams) => {
@@ -55,7 +51,9 @@ const ViewSpendings = () => {
         <SpendingsTable
           isLoading={isLoading}
           key={response?.timestamp}
-          spendings={isLoading ? DUMMY_SPENDINGS : response?.data}
+          spendings={
+            isLoading ? DUMMY_SPENDINGS : response?.data?.spendingPage.content
+          }
           parentRefetch={refetchWrapper}
           parentSetSpendingId={setSpendingIdWrapper}
         />

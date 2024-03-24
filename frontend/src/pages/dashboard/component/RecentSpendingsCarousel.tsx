@@ -10,7 +10,8 @@ const SEARCH_PARAMS = new URLSearchParams([["limit", "7"]]);
 
 const RecentSpendingsCarousel = () => {
   const navigate = useNavigate();
-  const { data: response } = useSpendings<SpendingListRow>(SEARCH_PARAMS);
+  const { data: response } = useSpendings(SEARCH_PARAMS);
+  const spendings = response?.data?.spendingPage.content;
 
   if (!response || !response.ok) {
     return (
@@ -20,13 +21,14 @@ const RecentSpendingsCarousel = () => {
     );
   }
 
-  if (!response.data || response.data.length === 0) {
+  if (!response.data || !spendings || spendings.length === 0) {
     return <NoSpendingActivity />;
   }
 
+  console.log(response);
   return (
     <Carousel>
-      {response.data.map((spendingListRow: SpendingListRow) => {
+      {spendings.map((spendingListRow: SpendingListRow) => {
         return (
           <RecentSpendingsCard
             key={spendingListRow.date}

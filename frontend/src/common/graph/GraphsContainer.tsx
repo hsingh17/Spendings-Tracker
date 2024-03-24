@@ -1,18 +1,14 @@
 import { FC, useEffect, useRef, useState } from "react";
 import useDetectMobile from "../../hooks/useDetectMobile";
 import { GRAPH_TYPES } from "../../utils/constants";
-import {
-  ApiResponse,
-  CategoricalSpendings,
-  SpendingListRow,
-} from "../../utils/types";
+import { ApiResponse, SpendingsPage } from "../../utils/types";
 import BarChart from "./bar/BarChart";
 import LineChart from "./line/LineChart";
 import PieChart from "./pie/PieChart";
 
 type MetricsGraphContainerProps = {
   graphType: GRAPH_TYPES;
-  response: ApiResponse<SpendingListRow[] | CategoricalSpendings[]>;
+  response: ApiResponse<SpendingsPage>;
   setSearchParams: (urlSearchParams: URLSearchParams) => void;
 };
 
@@ -42,7 +38,7 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({
       case GRAPH_TYPES.Line:
         return (
           <LineChart
-            response={response as ApiResponse<SpendingListRow[]>} // Hacky but I gave up trying to fight Typescript
+            response={response}
             height={height}
             width={width}
             setSearchParams={setSearchParams}
@@ -51,7 +47,7 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({
       case GRAPH_TYPES.Pie:
         return (
           <PieChart
-            response={response as ApiResponse<CategoricalSpendings[]>}
+            response={response}
             height={height}
             width={width}
             setSearchParams={setSearchParams}
@@ -60,7 +56,7 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({
       case GRAPH_TYPES.Bar:
         return (
           <BarChart
-            response={response as ApiResponse<CategoricalSpendings[]>}
+            response={response}
             height={height}
             width={width}
             setSearchParams={setSearchParams}

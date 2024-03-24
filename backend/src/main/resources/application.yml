@@ -11,6 +11,10 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     generate-ddl: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+springdoc.api-docs.enabled: false
 --- # Local Profile
 spring:
   config:
@@ -30,7 +34,11 @@ spring:
       poll-interval: 2s
       quiet-period: 1s
       enabled: true
+springdoc.api-docs.enabled: true
 jwt:
   secret-key-path: classpath:/keys/secret-key.key
 cors:
   allowed-origins: http://localhost:5173, http://127.0.0.1:5173
+logging:
+  level:
+    com.spendingstracker: DEBUG

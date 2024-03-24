@@ -1,8 +1,8 @@
 package com.spendingstracker.app.config;
 
-import com.spendingstracker.app.filter.CustomAuthEntryPoint;
+import com.spendingstracker.app.controller.auth.AuthController;
 import com.spendingstracker.app.filter.JwtFilter;
-import com.spendingstracker.app.service.UserDetailsServiceImpl;
+import com.spendingstracker.app.service.user.UserServiceImpl;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +18,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
@@ -29,18 +30,41 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
+/** Configuration class that configures Spring Security */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private final UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsService userDetailsService;
 
     private final JwtFilter jwtFilter;
 
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService, JwtFilter jwtFilter) {
+    /**
+     * Constructor to set class variables <code>userDetailsService</code> and <code>jwtFilter</code>
+     * .
+     *
+     * @param userDetailsService <code>UserDetailsServiceImpl</code> Spring bean.
+     * @param jwtFilter <code>JwtFilter</code> Spring bean.
+     * @see UserDetailsService
+     * @see JwtFilter
+     * @see UserServiceImpl
+     */
+    public SecurityConfig(UserDetailsService userDetailsService, JwtFilter jwtFilter) {
         this.userDetailsService = userDetailsService;
         this.jwtFilter = jwtFilter;
     }
 
+    /**
+     * Build <code>SecurityFilterChain</code> for application specific Spring security needs.
+     *
+     * @param httpSecurity <code>HttpSecurity</code> bean to configure Spring security requirements.
+     * @param authProvider <code>AuthenticationProvider</code> bean which is injected from the
+     *     function <code>authenticationProvider()</code>
+     * @param authEntryPoint <code>AuthenticationEntryPoint</code> bean that is defined in <code>
+     *     CustomAuthEntryPoint</code> for returning a custom error response if user is not
+     *     authenticated.
+     * @return <code>SecurityFilterChain</code> the filter chain that is built
+     * @see com.spendingstracker.app.filter.CustomAuthEntryPoint
+     */
     @Bean
     public SecurityFilterChain filterChain(
             HttpSecurity httpSecurity,
@@ -61,7 +85,19 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorizationManagerRequestMatcherRegistry ->
                                 authorizationManagerRequestMatcherRegistry
-                                        .requestMatchers("/v1/auth/login")
+                                        .requestMatchers(
+                                                "/v1/auth/login",
+                                                // -- Swagger UI v2
+                                                "/v2/api-docs",
+                                                "/swagger-resources",
+                                                "/swagger-resources/**",
+                                                "/configuration/ui",
+                                                "/configuration/security",
+                                                "/swagger-ui.html",
+                                                "/webjars/**",
+                                                // -- Swagger UI v3 (OpenAPI)
+                                                "/v3/api-docs/**",
+                                                "/swagger-ui/**")
                                         .permitAll()
                                         .anyRequest()
                                         .authenticated())
@@ -74,20 +110,43 @@ public class SecurityConfig {
                 .build();
     }
 
+    /**
+     * @return <code>AuthenticationProvider</code> object that provides authentication via the
+     *     custom <code>UserDetailsService</code> and uses a <code>BCryptPasswordEncoder</code>
+     * @see UserDetailsService
+     * @see BCryptPasswordEncoder
+     */
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setPasswordEncoder(new BCryptPasswordEncoder());
         return authProvider;
     }
 
+    /**
+     * Create a Spring bean for the <code>AuthenticationManager</code> object. Used in the <code>
+     * AuthController</code> to attempt authentication when users logs in.
+     *
+     * @param authenticationConfiguration
+     * @return <code>AuthenticationManager</code> object
+     * @throws Exception
+     * @see AuthController
+     */
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    /**
+     * Configure application specific CORS settings.
+     *
+     * @param allowedOrigins <code>List</code> of <code>String</code> of the allowed origins that
+     *     can call this API. Set in the <code>application.yml</code>.
+     * @return <code>CorsConfigurationSource</code> object that stores the CORS configuration for
+     *     this application
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource(
             @Value("${cors.allowed-origins}") List<String> allowedOrigins) {
@@ -102,12 +161,9 @@ public class SecurityConfig {
                         HttpMethod.PUT.toString()));
         corsConfiguration.setAllowCredentials(true); // Need for cookies
         corsConfiguration.setAllowedHeaders(List.of(HttpHeaders.CONTENT_TYPE));
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
         return source;
-    }
-
-    private BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 }

@@ -5,14 +5,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
+/** An entity class that maps to the table <code>APP.SPENDING</code> */
 @Entity
 @Table(schema = "APP", name = "SPENDING")
-public class Spending {
+public class Spending extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "SPENDING_ID")
-    private long spendingId;
+    private BigInteger spendingId;
 
     @JoinColumn(name = "SPENDING_USER_AGGR_ID")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -25,15 +27,18 @@ public class Spending {
     @Column(name = "AMOUNT")
     private BigDecimal amount;
 
-    @Transient private boolean delete = false;
-
     public Spending() {}
 
-    public long getSpendingId() {
+    public Spending(String category, BigDecimal amount) {
+        this.category = category;
+        this.amount = amount;
+    }
+
+    public BigInteger getSpendingId() {
         return spendingId;
     }
 
-    public void setSpendingId(long spendingId) {
+    public void setSpendingId(BigInteger spendingId) {
         this.spendingId = spendingId;
     }
 
@@ -59,14 +64,6 @@ public class Spending {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
-    }
-
-    public boolean isDelete() {
-        return delete;
-    }
-
-    public void setDelete(boolean delete) {
-        this.delete = delete;
     }
 
     public void addAmount(BigDecimal amount) {

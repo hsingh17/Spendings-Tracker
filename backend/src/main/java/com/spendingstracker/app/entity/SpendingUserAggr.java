@@ -4,18 +4,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 
-import java.math.BigDecimal;
-import java.util.Date;
+import java.math.BigInteger;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+/** An entity class that maps to the table <code>APP.SPENDING_USER_AGGR</code> */
 @Entity
 @Table(schema = "APP", name = "SPENDING_USER_AGGR")
-public class SpendingUserAggr {
+public class SpendingUserAggr extends AuditableEntity {
     @Id
     @Column(name = "SPENDING_USER_AGGR_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long spendingUserAggrId;
+    private BigInteger spendingUserAggrId;
 
     @JoinColumn(name = "USER_ID")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -23,7 +24,7 @@ public class SpendingUserAggr {
     private User user;
 
     @Column(name = "DATE")
-    private Date date;
+    private LocalDate date;
 
     @OneToMany(
             mappedBy = "spendingUserAggr",
@@ -32,22 +33,20 @@ public class SpendingUserAggr {
             orphanRemoval = true)
     private Set<Spending> spendings = new HashSet<>();
 
-    @Transient private BigDecimal total;
-
     public SpendingUserAggr() {}
 
-    public SpendingUserAggr(User user, Date date, Set<Spending> spendings) {
+    public SpendingUserAggr(User user, LocalDate date, Set<Spending> spendings) {
         this.user = user;
         this.date = date;
         this.spendings = spendings;
         spendings.forEach(spending -> spending.setSpendingUserAggr(this));
     }
 
-    public long getSpendingUserAggrId() {
+    public BigInteger getSpendingUserAggrId() {
         return spendingUserAggrId;
     }
 
-    public void setSpendingUserAggrId(long spendingUserAggrId) {
+    public void setSpendingUserAggrId(BigInteger spendingUserAggrId) {
         this.spendingUserAggrId = spendingUserAggrId;
     }
 
@@ -59,24 +58,16 @@ public class SpendingUserAggr {
         this.user = user;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
     public Set<Spending> getSpendings() {
         return spendings;
-    }
-
-    public BigDecimal getTotal() {
-        return total;
-    }
-
-    public void setTotal(BigDecimal total) {
-        this.total = total;
     }
 
     public void setSpendings(Set<Spending> spendings) {

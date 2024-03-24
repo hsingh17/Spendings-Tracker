@@ -4,16 +4,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 
+import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 
+/** An entity class that maps to the table <code>APP.USER</code> */
 @Entity
 @Table(schema = "APP", name = "USER")
-public class User {
+public class User extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_ID")
-    private long userId;
+    private BigInteger userId;
 
     @Column(name = "USERNAME")
     private String username;
@@ -30,13 +32,11 @@ public class User {
     @JsonIgnore
     private Set<SpendingUserAggr> spendingUserAggrs = new HashSet<>();
 
-    public User() {}
-
-    public long getUserId() {
+    public BigInteger getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(BigInteger userId) {
         this.userId = userId;
     }
 

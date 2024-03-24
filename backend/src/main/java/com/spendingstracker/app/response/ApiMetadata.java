@@ -1,5 +1,12 @@
 package com.spendingstracker.app.response;
 
+/**
+ * Object used to store relevant metadata about the API response such as the current page number,
+ * size of the page, total number of results that can be retrieved, total number of pages that can
+ * be checked, and any API links.
+ *
+ * @see ApiLinks
+ */
 public class ApiMetadata {
     private int currentPage;
     private int pageSize;
