@@ -105,4 +105,15 @@ public class AuthController {
                 .setHttpStatus(HttpStatus.OK.value())
                 .build();
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<> register() {
+
+    }
+
+    @PutMapping("/link-acct")
+    public ResponseEntity<> linkAccount() {
+
+    }
+
 }
