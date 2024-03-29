@@ -1,6 +1,7 @@
 package com.spendingstracker.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.spendingstracker.app.util.YesNoIndToBooleanConverter;
 
 import jakarta.persistence.*;
 
@@ -19,6 +20,13 @@ public class User extends AuditableEntity {
 
     @Column(name = "USERNAME")
     private String username;
+
+    @Column(name = "EMAIL")
+    private String email;
+
+    @Column(name = "IS_VERIFIED")
+    @Convert(converter = YesNoIndToBooleanConverter.class)
+    private boolean isVerified;
 
     @Column(name = "PASSWORD")
     @JsonIgnore // Don't want to send password (even if it's encrypted)
@@ -62,6 +70,14 @@ public class User extends AuditableEntity {
 
     public void setSpendingUserAggrs(Set<SpendingUserAggr> spendingUserAggrs) {
         this.spendingUserAggrs = spendingUserAggrs;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public void addSpendingUserAggr(SpendingUserAggr spendingUserAggr) {

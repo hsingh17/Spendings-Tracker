@@ -1,8 +1,10 @@
 CREATE TABLE
     IF NOT EXISTS APP.USER (
         USER_ID BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT "Primary Key for user in this table",
+        EMAIL VARCHAR(100) NOT NULL COMMENT "User's email",
         USERNAME VARCHAR(100) NOT NULL COMMENT "User's name",
         PASSWORD VARCHAR(255) NOT NULL COMMENT "User's password",
+        IS_VERIFIED CHAR(1) NOT NULL DEFAULT "N" COMMENT "Indicates if user has verified their account. N is No, Y is Yes",
         CREATED_BY BIGINT UNSIGNED NOT NULL DEFAULT 1 COMMENT "ID of who/what created this record",
         CREATED_ON DATETIME (0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "Datetime of creation",
         LAST_MODIFIED_BY BIGINT UNSIGNED NOT NULL DEFAULT 1 COMMENT "ID of who/what updated this record",

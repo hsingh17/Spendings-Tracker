@@ -7,6 +7,7 @@ This repository holds the code for my spendings tracker app built with Java and 
 - register account api
 - google oauth2 login -> maybe need separate table to store oauth tokens (idk why u would need to but maybe?) -> will need to check to see if user is already created in APP.USER
 - remove group by for bar and pie charts
+- update ERD 
   - add junit tests for repo layer at minimum
 - dashboard -> graphs
 - home page -> cool parallax effect

@@ -2,6 +2,7 @@ package com.spendingstracker.app.controller.auth;
 
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.requests.LoginRequest;
+import com.spendingstracker.app.dto.requests.RegisterAccountRequest;
 import com.spendingstracker.app.response.ApiResponse;
 import com.spendingstracker.app.service.auth.AuthService;
 import com.spendingstracker.app.util.JwtUtil;
@@ -107,7 +108,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<> register() {
+    public ResponseEntity<> register(RegisterAccountRequest registerAcctReq) {
 
     }
 
@@ -115,5 +116,4 @@ public class AuthController {
     public ResponseEntity<> linkAccount() {
 
     }
-
 }
