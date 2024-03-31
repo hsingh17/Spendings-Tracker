@@ -1,3 +1,5 @@
 package com.spendingstracker.app.service.email;
 
-public interface EmailService {}
+public interface EmailService {
+    void sendEmail(String username);
+}

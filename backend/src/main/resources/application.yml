@@ -36,7 +36,9 @@ spring:
       enabled: true
 springdoc.api-docs.enabled: true
 jwt:
-  secret-key-path: classpath:/keys/secret-key.key
+  secret-key-path: classpath:/secrets/secret-key.key
+gmail:
+  credentials-path: classpath:/secrets/credentials.json
 cors:
   allowed-origins: http://localhost:5173, http://127.0.0.1:5173
 logging:

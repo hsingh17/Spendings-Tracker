@@ -89,6 +89,17 @@ public class AuthController {
         return ResponseEntity.ok(apiResponse);
     }
 
+
+    @PostMapping("/register")
+    public ResponseEntity<> register(RegisterAccountRequest registerAcctReq) {
+        authService.registerUser(registerAcctReq);
+    }
+
+    @PutMapping("/link-acct")
+    public ResponseEntity<> linkAccount() {
+
+    }
+
     /**
      * Build an <code>OK</code> <code>ApiResponse</code> object from <code>data</code> and <code>
      * message</code>.
@@ -105,15 +116,5 @@ public class AuthController {
                 .setMessage(message)
                 .setHttpStatus(HttpStatus.OK.value())
                 .build();
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<> register(RegisterAccountRequest registerAcctReq) {
-
-    }
-
-    @PutMapping("/link-acct")
-    public ResponseEntity<> linkAccount() {
-
     }
 }

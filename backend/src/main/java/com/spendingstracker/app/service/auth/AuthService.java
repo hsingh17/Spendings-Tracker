@@ -2,6 +2,7 @@ package com.spendingstracker.app.service.auth;
 
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.requests.LoginRequest;
+import com.spendingstracker.app.dto.requests.RegisterAccountRequest;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -44,4 +45,13 @@ public interface AuthService {
      * @param response <code>HttpServletResponse</code> object for setting cookie
      */
     void logoutUser(HttpServletResponse response);
+
+    /**
+     * Registers/creates a user's account
+     *
+     * @param registerAcctReq <code>RegisterAccountRequest</code> object containing relevant user
+     *     info to create their account
+     * @see RegisterAccountRequest
+     */
+    void registerUser(RegisterAccountRequest registerAcctReq);
 }

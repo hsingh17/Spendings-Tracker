@@ -14,12 +14,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Configuration class to get the secret key that will be used by the <code>JwtUtil</code> class
+ * Configuration class to get secrets used by the backend
  *
  * @see com.spendingstracker.app.util.JwtUtil
  */
 @Configuration
-public class SecretKeyConfig {
+public class SecretsConfig {
     /**
      * Function that loads the secret key and injects as a <code>String</code> bean with name <code>
      * secretKey</code>.

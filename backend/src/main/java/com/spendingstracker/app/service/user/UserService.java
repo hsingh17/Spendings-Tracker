@@ -11,4 +11,16 @@ import java.math.BigInteger;
  */
 public interface UserService {
     User getUserById(BigInteger userId);
+
+    /**
+     * Create and save a <code>User</code> object to store into the database
+     *
+     * @param username
+     * @param email
+     * @param password
+     * @return <code>BigInteger</code> of user's <code>USER_ID</code> after saving into the
+     *     database.
+     * @see User
+     */
+    BigInteger createUser(String username, String email, String password);
 }

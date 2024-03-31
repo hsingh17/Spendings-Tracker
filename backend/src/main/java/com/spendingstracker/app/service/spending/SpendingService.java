@@ -6,13 +6,10 @@ import com.spendingstracker.app.dto.requests.SpendingsSaveRequest;
 import com.spendingstracker.app.dto.response.SpendingDetailsResponse;
 import com.spendingstracker.app.dto.response.SpendingPageResponse;
 
-import org.springframework.stereotype.Service;
-
 import java.math.BigInteger;
 import java.time.LocalDate;
 
 /** Service class for performing CRUD operations on spendings */
-@Service
 public interface SpendingService {
     /**
      * Get's all of a user's spendings that fit the criteria of the parameters passed in.

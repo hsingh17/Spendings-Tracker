@@ -3,7 +3,10 @@ package com.spendingstracker.app.service.auth;
 import com.spendingstracker.app.constants.Constants;
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.requests.LoginRequest;
+import com.spendingstracker.app.dto.requests.RegisterAccountRequest;
 import com.spendingstracker.app.exception.NoAuthenticatedUserException;
+import com.spendingstracker.app.service.email.EmailService;
+import com.spendingstracker.app.service.user.UserService;
 import com.spendingstracker.app.util.JwtUtil;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,6 +23,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
+
 /**
  * Implementation of the <code>AuthService</code> interface
  *
@@ -32,10 +37,18 @@ public class AuthServiceImpl implements AuthService {
     private static final long MAX_AGE_SECONDS_DEFAULT = 3600L;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authManager;
+    private final UserService userService;
+    private final EmailService emailService;
 
-    public AuthServiceImpl(JwtUtil jwtUtil, AuthenticationManager authManager) {
+    public AuthServiceImpl(
+            JwtUtil jwtUtil,
+            AuthenticationManager authManager,
+            UserService userService,
+            EmailService emailService) {
         this.jwtUtil = jwtUtil;
         this.authManager = authManager;
+        this.userService = userService;
+        this.emailService = emailService;
     }
 
     @Override
@@ -70,6 +83,18 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void logoutUser(HttpServletResponse response) {
         setCookie(response, null, 0);
+    }
+
+    @Override
+    public void registerUser(RegisterAccountRequest registerAcctReq) {
+        String username = registerAcctReq.username();
+        BigInteger userId =
+                userService.createUser(
+                        username,
+                        registerAcctReq.email(),
+                        registerAcctReq.password());
+        
+        emailService.sendEmail(username);
     }
 
     private void setCookie(HttpServletResponse response, String token, long maxAge) {

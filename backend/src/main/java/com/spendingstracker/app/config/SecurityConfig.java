@@ -87,14 +87,8 @@ public class SecurityConfig {
                                 authorizationManagerRequestMatcherRegistry
                                         .requestMatchers(
                                                 "/v1/auth/login",
-                                                // -- Swagger UI v2
-                                                "/v2/api-docs",
-                                                "/swagger-resources",
-                                                "/swagger-resources/**",
-                                                "/configuration/ui",
-                                                "/configuration/security",
-                                                "/swagger-ui.html",
-                                                "/webjars/**",
+                                                "/v1/auth/register",
+                                                "/v1/auth/link-acct",
                                                 // -- Swagger UI v3 (OpenAPI)
                                                 "/v3/api-docs/**",
                                                 "/swagger-ui/**")
