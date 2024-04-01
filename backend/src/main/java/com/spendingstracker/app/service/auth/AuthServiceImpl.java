@@ -4,6 +4,7 @@ import com.spendingstracker.app.constants.Constants;
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.requests.LoginRequest;
 import com.spendingstracker.app.dto.requests.RegisterAccountRequest;
+import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.exception.NoAuthenticatedUserException;
 import com.spendingstracker.app.service.email.EmailService;
 import com.spendingstracker.app.service.user.UserService;
@@ -22,8 +23,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigInteger;
 
 /**
  * Implementation of the <code>AuthService</code> interface
@@ -87,14 +86,14 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void registerUser(RegisterAccountRequest registerAcctReq) {
-        String username = registerAcctReq.username();
-        BigInteger userId =
+        String email = registerAcctReq.email();
+        User user =
                 userService.createUser(
-                        username,
-                        registerAcctReq.email(),
+                        registerAcctReq.username(),
+                        email,
                         registerAcctReq.password());
-        
-        emailService.sendEmail(username);
+
+        emailService.sendEmail(user);
     }
 
     private void setCookie(HttpServletResponse response, String token, long maxAge) {

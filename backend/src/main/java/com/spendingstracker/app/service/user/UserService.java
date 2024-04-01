@@ -19,8 +19,8 @@ public interface UserService {
      * @param email
      * @param password
      * @return <code>BigInteger</code> of user's <code>USER_ID</code> after saving into the
-     *     database.
+     * database.
      * @see User
      */
-    BigInteger createUser(String username, String email, String password);
+    User createUser(String username, String email, String password);
 }

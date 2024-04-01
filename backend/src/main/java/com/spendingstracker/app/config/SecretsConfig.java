@@ -1,5 +1,8 @@
 package com.spendingstracker.app.config;
 
+import lombok.extern.slf4j.Slf4j;
+
+import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +22,7 @@ import java.util.stream.Stream;
  * @see com.spendingstracker.app.util.JwtUtil
  */
 @Configuration
+@Slf4j
 public class SecretsConfig {
     /**
      * Function that loads the secret key and injects as a <code>String</code> bean with name <code>
@@ -31,6 +35,12 @@ public class SecretsConfig {
     @Bean
     @Qualifier("secretKey")
     public String getJwtSecretKey(@Value("${jwt.secret-key-path}") Resource jwtSecretKeyResource) {
+        if (jwtSecretKeyResource == null || !jwtSecretKeyResource.exists()) {
+            String errMsg = "JWT Secret Key not found!";
+            log.error(errMsg);
+            throw new ResourceNotFoundException(errMsg);
+        }
+
         try {
             File jwtFile = jwtSecretKeyResource.getFile();
             Path jwtFilePath = jwtFile.toPath();

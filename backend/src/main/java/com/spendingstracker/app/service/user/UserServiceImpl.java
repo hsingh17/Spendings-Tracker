@@ -52,10 +52,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public BigInteger createUser(String username, String email, String password) {
+    public User createUser(String username, String email, String password) {
         User user = new User(username, email, password);
-        user = userRepository.save(user);
-        return user.getUserId();
+        return userRepository.save(user);
     }
 
     /**
