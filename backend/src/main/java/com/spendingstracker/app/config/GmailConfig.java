@@ -1,4 +1,4 @@
-package com.spendingstracker.app;
+package com.spendingstracker.app.config;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -20,20 +20,36 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.util.List;
 
+/**
+ * Configuration to create a <code>Gmail</code> object that can be used to interact with the Gmail
+ * API
+ *
+ * @see Gmail
+ */
 @Configuration
 @Slf4j
 public class GmailConfig {
     public static final List<String> SCOPES =
             List.of(GmailScopes.GMAIL_SEND, GmailScopes.GMAIL_COMPOSE);
 
+    /**
+     * @param gmailCredentials <code>Resource</code> object that contains the <code>credentials.json
+     *     </code> file containing Gmail API credentials
+     * @param port port the server runs on
+     * @return <code>Gmail</code> object to interact with the Gmail API
+     * @throws IOException
+     * @throws GeneralSecurityException
+     */
     @Bean
     public Gmail getGmailServiceClient(
             @Value("${gmail.credentials-path}") Resource gmailCredentials,
+            @Value("${gmail.tokens-directory}") String tokensPath,
             @Value("${server.port}") Integer port)
             throws IOException, GeneralSecurityException {
         if (gmailCredentials == null || !gmailCredentials.exists()) {
@@ -53,7 +69,7 @@ public class GmailConfig {
                                 jsonFactory,
                                 clientSecrets,
                                 SCOPES)
-                        .setDataStoreFactory(new FileDataStoreFactory(gmailCredentials.getFile()))
+                        .setDataStoreFactory(new FileDataStoreFactory(new File(tokensPath)))
                         .setAccessType("offline")
                         .build();
 

@@ -11,9 +11,6 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     generate-ddl: false
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
 springdoc.api-docs.enabled: false
 server:
   port: 8080
@@ -41,6 +38,7 @@ jwt:
   secret-key-path: classpath:/secrets/secret-key.key
 gmail:
   credentials-path: classpath:/secrets/credentials.json
+  tokens-directory: /tmp/
 cors:
   allowed-origins: http://localhost:5173, http://127.0.0.1:5173
 logging:

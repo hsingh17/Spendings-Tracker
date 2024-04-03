@@ -91,12 +91,12 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<> register(RegisterAccountRequest registerAcctReq) {
+    public void register(RegisterAccountRequest registerAcctReq) {
         authService.registerUser(registerAcctReq);
     }
 
     @PutMapping("/link-acct")
-    public ResponseEntity<> linkAccount() {
+    public void linkAccount() {
 
     }
 

@@ -40,6 +40,9 @@ public class User extends AuditableEntity {
     @JsonIgnore
     private Set<SpendingUserAggr> spendingUserAggrs = new HashSet<>();
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private UserRegistration userRegistration;
+
     public User() {}
 
     public User(String username, String email, String password) {
@@ -86,6 +89,22 @@ public class User extends AuditableEntity {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(boolean verified) {
+        isVerified = verified;
+    }
+
+    public UserRegistration getUserRegistration() {
+        return userRegistration;
+    }
+
+    public void setUserRegistration(UserRegistration userRegistration) {
+        this.userRegistration = userRegistration;
     }
 
     public void addSpendingUserAggr(SpendingUserAggr spendingUserAggr) {
