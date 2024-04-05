@@ -11,9 +11,11 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     generate-ddl: false
+    open-in-view: true
 springdoc.api-docs.enabled: false
 server:
   port: 8080
+gmail.from: spendingstracker.no.reply@gmail.com
 --- # Local Profile
 spring:
   config:

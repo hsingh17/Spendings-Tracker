@@ -89,16 +89,13 @@ public class AuthController {
         return ResponseEntity.ok(apiResponse);
     }
 
-
     @PostMapping("/register")
-    public void register(RegisterAccountRequest registerAcctReq) {
+    public void register(@RequestBody RegisterAccountRequest registerAcctReq) {
         authService.registerUser(registerAcctReq);
     }
 
-    @PutMapping("/link-acct")
-    public void linkAccount() {
-
-    }
+    @PutMapping("/verify-acct")
+    public void verifyAcct() {}
 
     /**
      * Build an <code>OK</code> <code>ApiResponse</code> object from <code>data</code> and <code>

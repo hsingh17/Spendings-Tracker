@@ -111,11 +111,20 @@ public class SecurityConfig {
      * @see BCryptPasswordEncoder
      */
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider authenticationProvider(
+            BCryptPasswordEncoder bCryptPasswordEncoder) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(new BCryptPasswordEncoder());
+        authProvider.setPasswordEncoder(bCryptPasswordEncoder);
         return authProvider;
+    }
+
+    /**
+     * @return <code>BCryptPasswordEncoder</code> for encrypting passwords
+     */
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     /**

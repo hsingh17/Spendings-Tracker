@@ -86,11 +86,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void registerUser(RegisterAccountRequest registerAcctReq) {
-        String email = registerAcctReq.email();
         User user =
                 userService.createUser(
                         registerAcctReq.username(),
-                        email,
+                        registerAcctReq.email(),
                         registerAcctReq.password());
 
         emailService.sendEmail(user);

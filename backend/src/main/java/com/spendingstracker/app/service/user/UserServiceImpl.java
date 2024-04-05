@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,15 +28,19 @@ import java.util.Collections;
 @Transactional
 public class UserServiceImpl implements UserDetailsService, UserService {
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /**
      * Initialize <code>UserDetailsServiceImpl</code>
      *
      * @param userRepository <code>UserRepository</code> bean
+     * @param bCryptPasswordEncoder
      * @see UserRepository
      */
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(
+            UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -53,7 +58,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public User createUser(String username, String email, String password) {
-        User user = new User(username, email, password);
+        // TODO: Encrypt password before saving stupid
+        String encryptedPassword = bCryptPasswordEncoder.encode(password);
+        User user = new User(username, email, encryptedPassword);
         return userRepository.save(user);
     }
 

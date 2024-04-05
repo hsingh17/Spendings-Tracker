@@ -13,7 +13,7 @@ public interface UserRepository extends CrudRepository<User, BigInteger> {
     /**
      * Find <code>User</code> by <code>username</code>
      *
-     * @param username self-explantory
+     * @param username self-explanatory
      * @return <code>User</code> object for the <code>username</code>.
      * @see User
      */

@@ -35,8 +35,7 @@ import java.util.List;
 @Configuration
 @Slf4j
 public class GmailConfig {
-    public static final List<String> SCOPES =
-            List.of(GmailScopes.GMAIL_SEND, GmailScopes.GMAIL_COMPOSE);
+    public static final List<String> SCOPES = List.of(GmailScopes.GMAIL_SEND);
 
     /**
      * @param gmailCredentials <code>Resource</code> object that contains the <code>credentials.json
@@ -47,7 +46,7 @@ public class GmailConfig {
      * @throws GeneralSecurityException
      */
     @Bean
-    public Gmail getGmailServiceClient(
+    public Gmail gmailServiceClient(
             @Value("${gmail.credentials-path}") Resource gmailCredentials,
             @Value("${gmail.tokens-directory}") String tokensPath,
             @Value("${server.port}") Integer port)
@@ -77,6 +76,7 @@ public class GmailConfig {
         Credential credential = new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
         return new Gmail.Builder(
                         GoogleNetHttpTransport.newTrustedTransport(), jsonFactory, credential)
+                .setApplicationName("Spendings Tracker")
                 .build();
     }
 }
