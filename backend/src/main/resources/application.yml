@@ -15,7 +15,6 @@ spring:
 springdoc.api-docs.enabled: false
 server:
   port: 8080
-gmail.from: spendingstracker.no.reply@gmail.com
 --- # Local Profile
 spring:
   config:
@@ -38,9 +37,6 @@ spring:
 springdoc.api-docs.enabled: true
 jwt:
   secret-key-path: classpath:/secrets/secret-key.key
-gmail:
-  credentials-path: classpath:/secrets/credentials.json
-  tokens-directory: /tmp/
 cors:
   allowed-origins: http://localhost:5173, http://127.0.0.1:5173
 logging:
