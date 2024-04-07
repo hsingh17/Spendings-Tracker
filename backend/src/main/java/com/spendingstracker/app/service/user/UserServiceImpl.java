@@ -2,6 +2,7 @@ package com.spendingstracker.app.service.user;
 
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.entity.User;
+import com.spendingstracker.app.exception.UserNotVerified;
 import com.spendingstracker.app.repository.UserRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +59,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public User createUser(String username, String email, String password) {
-        // TODO: Encrypt password before saving stupid
+        // TODO: Check if user already exists with username
         String encryptedPassword = bCryptPasswordEncoder.encode(password);
         User user = new User(username, email, encryptedPassword);
         return userRepository.save(user);
@@ -75,12 +76,22 @@ public class UserServiceImpl implements UserDetailsService, UserService {
      */
     @Override
     @Transactional(readOnly = true)
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
-        if (user == null) {
-            String errMsg = "No user found with USERNAME " + username;
+    public UserDetails loadUserByUsername(String username)
+            throws UsernameNotFoundException, UserNotVerified {
+        User user =
+                userRepository
+                        .findByUsername(username)
+                        .orElseThrow(
+                                () -> {
+                                    String errMsg = "No user found with USERNAME " + username;
+                                    log.error(errMsg);
+                                    return new UsernameNotFoundException(errMsg);
+                                });
+
+        if (!user.isVerified()) {
+            String errMsg = "User with USERNAME " + username + " is not yet verified!";
             log.error(errMsg);
-            throw new UsernameNotFoundException(errMsg);
+            throw new UserNotVerified(errMsg);
         }
 
         // A CustomUserDetails object since userId must be saved

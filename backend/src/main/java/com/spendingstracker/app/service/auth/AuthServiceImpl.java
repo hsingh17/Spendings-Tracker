@@ -92,7 +92,7 @@ public class AuthServiceImpl implements AuthService {
                         registerAcctReq.email(),
                         registerAcctReq.password());
 
-        emailService.sendEmail(user);
+        emailService.sendRegistrationEmail(user);
     }
 
     private void setCookie(HttpServletResponse response, String token, long maxAge) {

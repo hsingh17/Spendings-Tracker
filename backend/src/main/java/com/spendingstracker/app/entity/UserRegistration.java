@@ -27,12 +27,12 @@ public class UserRegistration extends AuditableEntity {
     @Column(name = "PIN")
     private String pin;
 
-    @Column(name = "GMAIL_MESSAGE_ID")
-    private String gmailMessageId;
+    @Column(name = "MESSAGE_ID")
+    private String messageId;
 
-    public UserRegistration(User user, String pin, String gmailMessageId) {
+    public UserRegistration(User user, String pin, String messageId) {
         this.user = user;
         this.pin = pin;
-        this.gmailMessageId = gmailMessageId;
+        this.messageId = messageId;
     }
 }

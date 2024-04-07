@@ -10,6 +10,12 @@ import java.math.BigInteger;
  * @see UserServiceImpl
  */
 public interface UserService {
+    /**
+     * Return <code>User</code> by looking up via its <code>userId</code>
+     *
+     * @param userId
+     * @return the found <code>User</code> object.
+     */
     User getUserById(BigInteger userId);
 
     /**
@@ -19,7 +25,7 @@ public interface UserService {
      * @param email
      * @param password
      * @return <code>BigInteger</code> of user's <code>USER_ID</code> after saving into the
-     * database.
+     *     database.
      * @see User
      */
     User createUser(String username, String email, String password);

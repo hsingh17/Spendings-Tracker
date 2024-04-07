@@ -3,7 +3,7 @@ CREATE TABLE
         USER_REGISTRATION_ID BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT "Primary key of this USER_REGISTRATION record",
         USER_ID BIGINT UNSIGNED NOT NULL COMMENT "Foreign key to the USER that is associated with this USER_REGISTRATION record",
         PIN VARCHAR(5) NOT NULL COMMENT "Randomly generated PIN for the user to register their account with",
-        GMAIL_MESSAGE_ID BIGINT UNSIGNED NOT NULL COMMENT "Message ID returned by GMAIL API for this sent email",
+        MESSAGE_ID BIGINT UNSIGNED NOT NULL COMMENT "Message ID returned by Mail API for this sent email",
         CREATED_BY BIGINT UNSIGNED NOT NULL DEFAULT 1 COMMENT "ID of who/what created this record",
         CREATED_ON DATETIME (0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "Datetime of creation",
         LAST_MODIFIED_BY BIGINT UNSIGNED NOT NULL DEFAULT 1 COMMENT "ID of who/what updated this record",

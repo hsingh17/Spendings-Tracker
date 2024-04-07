@@ -15,6 +15,10 @@ spring:
 springdoc.api-docs.enabled: false
 server:
   port: 8080
+ses:
+  template:
+    registration-email: RegistrationEmail
+  from-email: spendingstracker.no.reply@gmail.com
 --- # Local Profile
 spring:
   config:
@@ -42,3 +46,5 @@ cors:
 logging:
   level:
     com.spendingstracker: DEBUG
+ses:
+  website-url: http://localhost:5173/verify-acct?

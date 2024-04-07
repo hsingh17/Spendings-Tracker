@@ -9,10 +9,10 @@ import com.spendingstracker.app.entity.User;
  */
 public interface EmailService {
     /**
-     * Send email to a <code>User</code>
+     * Send a registration email to a <code>User</code>
      *
      * @param user <code>User</code> object for the user to send email to
      * @see User
      */
-    void sendEmail(User user);
+    void sendRegistrationEmail(User user);
 }
