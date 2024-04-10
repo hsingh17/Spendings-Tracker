@@ -35,6 +35,7 @@ public class GlobalExceptionHandler {
      * @see SpendingNotFoundException
      * @see NoAuthenticatedUserException
      * @see UserNotVerified
+     * @see UsernameAlreadyExists
      */
     @ExceptionHandler({
         IllegalArgumentException.class,
@@ -42,7 +43,8 @@ public class GlobalExceptionHandler {
         NoSuchGraphTypeException.class,
         SpendingNotFoundException.class,
         NoAuthenticatedUserException.class,
-        UserNotVerified.class
+        UserNotVerified.class,
+        UsernameAlreadyExists.class
     })
     public ResponseEntity<ApiResponse<Object>> handleBadRequestException(
             IllegalArgumentException e) {

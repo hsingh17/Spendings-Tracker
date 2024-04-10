@@ -4,6 +4,7 @@ import com.spendingstracker.app.constants.Constants;
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.requests.LoginRequest;
 import com.spendingstracker.app.dto.requests.RegisterAccountRequest;
+import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
 import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.exception.NoAuthenticatedUserException;
 import com.spendingstracker.app.service.email.EmailService;
@@ -93,6 +94,11 @@ public class AuthServiceImpl implements AuthService {
                         registerAcctReq.password());
 
         emailService.sendRegistrationEmail(user);
+    }
+
+    @Override
+    public void verifyUser(VerifyAcctRequest verifyAcctReq, String username) {
+        userService.verifyUser(verifyAcctReq, username);
     }
 
     private void setCookie(HttpServletResponse response, String token, long maxAge) {

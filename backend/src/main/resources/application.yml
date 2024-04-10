@@ -17,7 +17,8 @@ server:
   port: 8080
 ses:
   template:
-    registration-email: RegistrationEmail
+    name:
+      registration-email: RegistrationEmail
   from-email: spendingstracker.no.reply@gmail.com
 --- # Local Profile
 spring:

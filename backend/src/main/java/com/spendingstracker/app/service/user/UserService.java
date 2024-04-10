@@ -1,5 +1,6 @@
 package com.spendingstracker.app.service.user;
 
+import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
 import com.spendingstracker.app.entity.User;
 
 import java.math.BigInteger;
@@ -29,4 +30,13 @@ public interface UserService {
      * @see User
      */
     User createUser(String username, String email, String password);
+
+    /**
+     * Attempt to verify the username with pin they entered.
+     *
+     * @param verifyAcctReq object containing the pin they entered
+     * @param username the username's username who is attempting verification
+     * @see VerifyAcctRequest
+     */
+    void verifyUser(VerifyAcctRequest verifyAcctReq, String username);
 }

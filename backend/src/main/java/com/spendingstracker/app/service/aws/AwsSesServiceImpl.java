@@ -45,6 +45,11 @@ public class AwsSesServiceImpl implements AwsSesService {
                         .fromEmailAddress(fromEmail)
                         .build();
 
+        log.info(
+                "Sending templated email. TEMPLATE NAME {}. TO EMAIL {}. FROM EMAIL {}",
+                templateName,
+                toEmail,
+                fromEmail);
         SendEmailResponse response = sesClient.sendEmail(sendEmailRequest);
         return response.messageId();
     }

@@ -3,18 +3,17 @@ package com.spendingstracker.app.service.auth;
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.requests.LoginRequest;
 import com.spendingstracker.app.dto.requests.RegisterAccountRequest;
+import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
 
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
 
 /**
  * Service class for implementing logic related to authentication and authorization
  *
  * @see AuthServiceImpl
  */
-@Service
 public interface AuthService {
     /**
      * Return <code><code>UserDetails</code></code> object for the currently authenticated user's
@@ -54,4 +53,13 @@ public interface AuthService {
      * @see RegisterAccountRequest
      */
     void registerUser(RegisterAccountRequest registerAcctReq);
+
+    /**
+     * Attempt to verify the user with pin they entered.
+     *
+     * @param verifyAcctReq object containing the pin they entered
+     * @param username the user's username who is attempting verification
+     * @see VerifyAcctRequest
+     */
+    void verifyUser(VerifyAcctRequest verifyAcctReq, String username);
 }

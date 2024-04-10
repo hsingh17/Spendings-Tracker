@@ -3,6 +3,7 @@ package com.spendingstracker.app.controller.auth;
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.requests.LoginRequest;
 import com.spendingstracker.app.dto.requests.RegisterAccountRequest;
+import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
 import com.spendingstracker.app.response.ApiResponse;
 import com.spendingstracker.app.service.auth.AuthService;
 import com.spendingstracker.app.util.JwtUtil;
@@ -89,13 +90,18 @@ public class AuthController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    
     @PostMapping("/register")
-    public void register(@RequestBody RegisterAccountRequest registerAcctReq) {
+    public ResponseEntity<> register(@RequestBody RegisterAccountRequest registerAcctReq) {
         authService.registerUser(registerAcctReq);
     }
 
-    @PutMapping("/verify-acct")
-    public void verifyAcct() {}
+    @PutMapping("/verify-acct/{username}")
+    public ResponseEntity<> verifyAcct(
+            @RequestBody VerifyAcctRequest verifyAcctReq,
+            @PathVariable("username") String username) {
+        authService.verifyUser(verifyAcctReq, username);
+    }
 
     /**
      * Build an <code>OK</code> <code>ApiResponse</code> object from <code>data</code> and <code>

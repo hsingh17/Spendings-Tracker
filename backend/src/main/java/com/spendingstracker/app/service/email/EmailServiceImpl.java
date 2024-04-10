@@ -1,5 +1,6 @@
 package com.spendingstracker.app.service.email;
 
+import com.spendingstracker.app.constants.SesTemplateNames;
 import com.spendingstracker.app.dto.requests.RegistrationEmailSesTemplateData;
 import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.entity.UserRegistration;
@@ -40,7 +41,12 @@ public class EmailServiceImpl implements EmailService {
         RegistrationEmailSesTemplateData templateData =
                 new RegistrationEmailSesTemplateData(pin, createUserRegisterRedirectUrl(user));
 
-        String messageId = awsSesService.sendTemplatedEmail("", user.getEmail(), templateData);
+
+        String messageId =
+                awsSesService.sendTemplatedEmail(
+                        SesTemplateNames.REGISTRATION_EMAIL_TEMPLATE,
+                        user.getEmail(),
+                        templateData);
 
         saveUserRegistration(user, pin, messageId);
     }
