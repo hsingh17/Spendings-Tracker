@@ -2,8 +2,10 @@ package com.spendingstracker.app.controller.auth;
 
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.requests.LoginRequest;
-import com.spendingstracker.app.dto.requests.RegisterAccountRequest;
+import com.spendingstracker.app.dto.requests.RegisterAcctRequest;
 import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
+import com.spendingstracker.app.dto.response.RegisterAcctResponse;
+import com.spendingstracker.app.dto.response.VerifyAcctResponse;
 import com.spendingstracker.app.response.ApiResponse;
 import com.spendingstracker.app.service.auth.AuthService;
 import com.spendingstracker.app.util.JwtUtil;
@@ -44,6 +46,7 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<UserDetails>> getMe() {
         log.info("GET /me");
+
         UserDetails userDetails = authService.getUserDetailsForAuthenticatedUser();
         ApiResponse<UserDetails> apiResponse = buildOkAuthApiResponse(userDetails, null);
         return ResponseEntity.ok(apiResponse);
@@ -69,6 +72,7 @@ public class AuthController {
             @RequestBody LoginRequest loginRequest, HttpServletResponse response)
             throws AuthenticationException {
         log.info("POST /login");
+
         UserDetails userDetails = authService.loginUser(loginRequest, response);
         ApiResponse<UserDetails> apiResponse = buildOkAuthApiResponse(userDetails, null);
         return ResponseEntity.ok(apiResponse);
@@ -85,22 +89,54 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<ApiResponse<Object>> postLogout(HttpServletResponse response) {
         log.info("POST /logout");
+
         authService.logoutUser(response);
         ApiResponse<Object> apiResponse = buildOkAuthApiResponse(null, "Successfully logged out");
         return ResponseEntity.ok(apiResponse);
     }
 
-    
+    /**
+     * Controller endpoint for registering a user
+     *
+     * @param registerAcctReq object containing user data for account registration
+     * @return
+     * @see ApiResponse
+     * @see RegisterAcctRequest
+     * @see RegisterAcctResponse
+     */
     @PostMapping("/register")
-    public ResponseEntity<> register(@RequestBody RegisterAccountRequest registerAcctReq) {
-        authService.registerUser(registerAcctReq);
+    public ResponseEntity<ApiResponse<RegisterAcctResponse>> register(
+            @RequestBody RegisterAcctRequest registerAcctReq) {
+        log.info("POST /register");
+
+        RegisterAcctResponse registerAcctResponse = authService.registerUser(registerAcctReq);
+        ApiResponse<RegisterAcctResponse> apiResponse =
+                buildOkAuthApiResponse(registerAcctResponse, registerAcctResponse.message());
+
+        return ResponseEntity.ok(apiResponse);
     }
 
+    /**
+     * Controller endpoint for verifying a user with their input pin
+     *
+     * @param verifyAcctReq object containing user info for verification process
+     * @param username
+     * @return
+     * @see ApiResponse
+     * @see VerifyAcctRequest
+     * @see VerifyAcctResponse
+     */
     @PutMapping("/verify-acct/{username}")
-    public ResponseEntity<> verifyAcct(
+    public ResponseEntity<ApiResponse<VerifyAcctResponse>> verifyAcct(
             @RequestBody VerifyAcctRequest verifyAcctReq,
             @PathVariable("username") String username) {
-        authService.verifyUser(verifyAcctReq, username);
+        log.info("/verify-acct/{}", username);
+
+        VerifyAcctResponse verifyAcctResponse = authService.verifyUser(verifyAcctReq, username);
+        ApiResponse<VerifyAcctResponse> apiResponse =
+                buildOkAuthApiResponse(verifyAcctResponse, verifyAcctResponse.message());
+
+        return ResponseEntity.ok(apiResponse);
     }
 
     /**

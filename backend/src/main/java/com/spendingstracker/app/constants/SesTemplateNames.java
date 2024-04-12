@@ -1,12 +1,15 @@
 package com.spendingstracker.app.constants;
 
-import org.springframework.beans.factory.annotation.Value;
+import lombok.Getter;
+import lombok.Setter;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
+@Getter
+@Setter
+@ConfigurationProperties(prefix = "ses.template.name")
+@Component
 public class SesTemplateNames {
-    public static String REGISTRATION_EMAIL_TEMPLATE;
-
-    @Value("${ses.template.name.registration-email}")
-    public void setRegistrationEmailTemplate(String registrationEmailTemplate) {
-        REGISTRATION_EMAIL_TEMPLATE = registrationEmailTemplate;
-    }
+    private String registrationEmail;
 }

@@ -3,8 +3,10 @@ package com.spendingstracker.app.service.auth;
 import com.spendingstracker.app.constants.Constants;
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.requests.LoginRequest;
-import com.spendingstracker.app.dto.requests.RegisterAccountRequest;
+import com.spendingstracker.app.dto.requests.RegisterAcctRequest;
 import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
+import com.spendingstracker.app.dto.response.RegisterAcctResponse;
+import com.spendingstracker.app.dto.response.VerifyAcctResponse;
 import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.exception.NoAuthenticatedUserException;
 import com.spendingstracker.app.service.email.EmailService;
@@ -23,7 +25,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of the <code>AuthService</code> interface
@@ -31,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
  * @see AuthService
  */
 @Service
-@Transactional
 @Slf4j
 public class AuthServiceImpl implements AuthService {
     private static final long MAX_AGE_SECONDS_DEFAULT = 3600L;
@@ -64,7 +64,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public UserDetails loginUser(LoginRequest loginRequest, HttpServletResponse response) {
         // Attempt authentication with the sent login and password
         Authentication auth =
@@ -86,19 +85,26 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void registerUser(RegisterAccountRequest registerAcctReq) {
-        User user =
-                userService.createUser(
-                        registerAcctReq.username(),
-                        registerAcctReq.email(),
-                        registerAcctReq.password());
+    public RegisterAcctResponse registerUser(RegisterAcctRequest registerAcctReq) {
+        String username = registerAcctReq.username();
+        String email = registerAcctReq.email();
+        User user = userService.createUser(username, email, registerAcctReq.password());
 
         emailService.sendRegistrationEmail(user);
+
+        String message = "Successfully sent user " + username + " a registration email to " + email;
+        log.info(message);
+        return new RegisterAcctResponse(username, email, message);
     }
 
     @Override
-    public void verifyUser(VerifyAcctRequest verifyAcctReq, String username) {
+    public VerifyAcctResponse verifyUser(VerifyAcctRequest verifyAcctReq, String username) {
         userService.verifyUser(verifyAcctReq, username);
+
+        String message = "Successfully verified account for user " + username;
+        log.info(message);
+        // TODO: Need to setCookie so frontend can redirect to dashboard
+        return new VerifyAcctResponse(username, message);
     }
 
     private void setCookie(HttpServletResponse response, String token, long maxAge) {

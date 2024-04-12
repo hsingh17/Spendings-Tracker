@@ -51,7 +51,9 @@ public class AwsSesServiceImpl implements AwsSesService {
                 toEmail,
                 fromEmail);
         SendEmailResponse response = sesClient.sendEmail(sendEmailRequest);
-        return response.messageId();
+        String messageId = response.messageId();
+        log.info("Sent templated email to {}. Message ID: {} ", toEmail, messageId);
+        return messageId;
     }
 
     /**

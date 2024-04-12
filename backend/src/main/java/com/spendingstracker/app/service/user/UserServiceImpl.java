@@ -31,7 +31,6 @@ import java.util.Optional;
  */
 @Service
 @Slf4j
-@Transactional
 public class UserServiceImpl implements UserDetailsService, UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -50,7 +49,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public User getUserById(BigInteger userId) {
         return userRepository
                 .findById(userId)

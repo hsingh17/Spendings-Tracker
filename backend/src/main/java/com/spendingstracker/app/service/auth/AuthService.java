@@ -2,18 +2,22 @@ package com.spendingstracker.app.service.auth;
 
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.requests.LoginRequest;
-import com.spendingstracker.app.dto.requests.RegisterAccountRequest;
+import com.spendingstracker.app.dto.requests.RegisterAcctRequest;
 import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
+import com.spendingstracker.app.dto.response.RegisterAcctResponse;
+import com.spendingstracker.app.dto.response.VerifyAcctResponse;
 
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service class for implementing logic related to authentication and authorization
  *
  * @see AuthServiceImpl
  */
+@Transactional
 public interface AuthService {
     /**
      * Return <code><code>UserDetails</code></code> object for the currently authenticated user's
@@ -36,6 +40,7 @@ public interface AuthService {
      * @see CustomUserDetails
      * @see LoginRequest
      */
+    @Transactional(readOnly = true)
     UserDetails loginUser(LoginRequest loginRequest, HttpServletResponse response);
 
     /**
@@ -49,17 +54,21 @@ public interface AuthService {
      * Registers/creates a user's account
      *
      * @param registerAcctReq <code>RegisterAccountRequest</code> object containing relevant user
-     *     info to create their account
-     * @see RegisterAccountRequest
+     *                        info to create their account
+     * @return <code>RegisterAccountResponse/code> object containing info on user account registration
+     * @see RegisterAcctRequest
+     * @see RegisterAcctResponse
      */
-    void registerUser(RegisterAccountRequest registerAcctReq);
+    RegisterAcctResponse registerUser(RegisterAcctRequest registerAcctReq);
 
     /**
      * Attempt to verify the user with pin they entered.
      *
      * @param verifyAcctReq object containing the pin they entered
      * @param username the user's username who is attempting verification
+     * @return <code>VerifyAcctResponse</code> object containing info about account verification.
      * @see VerifyAcctRequest
+     * @see VerifyAcctResponse
      */
-    void verifyUser(VerifyAcctRequest verifyAcctReq, String username);
+    VerifyAcctResponse verifyUser(VerifyAcctRequest verifyAcctReq, String username);
 }

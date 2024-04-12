@@ -2,7 +2,6 @@ package com.spendingstracker.app.config;
 
 import com.spendingstracker.app.controller.auth.AuthController;
 import com.spendingstracker.app.filter.JwtFilter;
-import com.spendingstracker.app.service.user.UserServiceImpl;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -34,25 +33,6 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private final UserDetailsService userDetailsService;
-
-    private final JwtFilter jwtFilter;
-
-    /**
-     * Constructor to set class variables <code>userDetailsService</code> and <code>jwtFilter</code>
-     * .
-     *
-     * @param userDetailsService <code>UserDetailsServiceImpl</code> Spring bean.
-     * @param jwtFilter <code>JwtFilter</code> Spring bean.
-     * @see UserDetailsService
-     * @see JwtFilter
-     * @see UserServiceImpl
-     */
-    public SecurityConfig(UserDetailsService userDetailsService, JwtFilter jwtFilter) {
-        this.userDetailsService = userDetailsService;
-        this.jwtFilter = jwtFilter;
-    }
-
     /**
      * Build <code>SecurityFilterChain</code> for application specific Spring security needs.
      *
@@ -67,6 +47,7 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain filterChain(
+            JwtFilter jwtFilter,
             HttpSecurity httpSecurity,
             AuthenticationProvider authProvider,
             AuthenticationEntryPoint authEntryPoint)
@@ -88,7 +69,7 @@ public class SecurityConfig {
                                         .requestMatchers(
                                                 "/v1/auth/login",
                                                 "/v1/auth/register",
-                                                "/v1/auth/link-acct",
+                                                "/v1/auth/verify-acct/**",
                                                 // -- Swagger UI v3 (OpenAPI)
                                                 "/v3/api-docs/**",
                                                 "/swagger-ui/**")
@@ -112,7 +93,7 @@ public class SecurityConfig {
      */
     @Bean
     public AuthenticationProvider authenticationProvider(
-            BCryptPasswordEncoder bCryptPasswordEncoder) {
+            UserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(bCryptPasswordEncoder);

@@ -7,7 +7,6 @@ This repository holds the code for my spendings tracker app built with Java and 
 - register account api
 - register account screens
 - clean up backend to use lombok instead of explicit getters and setters
-- move @Transactional to the interface rather than the class
 - google oauth2 login -> maybe need separate table to store oauth tokens (idk why u would need to but maybe?) -> will need to check to see if user is already created in APP.USER
 - remove group by for bar and pie charts
 - update ERD 

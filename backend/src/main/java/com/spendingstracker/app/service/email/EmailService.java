@@ -2,11 +2,14 @@ package com.spendingstracker.app.service.email;
 
 import com.spendingstracker.app.entity.User;
 
+import org.springframework.transaction.annotation.Transactional;
+
 /**
  * Service for sending emails to users
  *
  * @see EmailServiceImpl
  */
+@Transactional
 public interface EmailService {
     /**
      * Send a registration email to a <code>User</code>

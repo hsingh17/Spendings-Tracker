@@ -3,6 +3,8 @@ package com.spendingstracker.app.service.user;
 import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
 import com.spendingstracker.app.entity.User;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.math.BigInteger;
 
 /**
@@ -10,6 +12,7 @@ import java.math.BigInteger;
  *
  * @see UserServiceImpl
  */
+@Transactional
 public interface UserService {
     /**
      * Return <code>User</code> by looking up via its <code>userId</code>
@@ -17,6 +20,7 @@ public interface UserService {
      * @param userId
      * @return the found <code>User</code> object.
      */
+    @Transactional(readOnly = true)
     User getUserById(BigInteger userId);
 
     /**

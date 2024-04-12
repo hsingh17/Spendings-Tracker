@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of the <code>EmailService</code>
@@ -20,16 +19,18 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Slf4j
-@Transactional
 public class EmailServiceImpl implements EmailService {
+    private final SesTemplateNames sesTemplateNames;
     private final UserRegistrationRepository userRegistrationRepository;
     private final AwsSesService awsSesService;
     private final String websiteURL;
 
     public EmailServiceImpl(
+            SesTemplateNames sesTemplateNames,
             UserRegistrationRepository userRegistrationRepository,
             AwsSesService awsSesService,
             @Value("${ses.website-url}") String websiteURL) {
+        this.sesTemplateNames = sesTemplateNames;
         this.userRegistrationRepository = userRegistrationRepository;
         this.awsSesService = awsSesService;
         this.websiteURL = websiteURL;
@@ -41,12 +42,9 @@ public class EmailServiceImpl implements EmailService {
         RegistrationEmailSesTemplateData templateData =
                 new RegistrationEmailSesTemplateData(pin, createUserRegisterRedirectUrl(user));
 
-
         String messageId =
                 awsSesService.sendTemplatedEmail(
-                        SesTemplateNames.REGISTRATION_EMAIL_TEMPLATE,
-                        user.getEmail(),
-                        templateData);
+                        sesTemplateNames.getRegistrationEmail(), user.getEmail(), templateData);
 
         saveUserRegistration(user, pin, messageId);
     }
@@ -79,6 +77,6 @@ public class EmailServiceImpl implements EmailService {
      * @return 5 digit random pin for registration
      */
     private String generateRandomPin() {
-        return String.valueOf(Math.floor((Math.random() * (99999 - 10000))) + 10000);
+        return String.valueOf((int) (Math.floor((Math.random() * (99999 - 10000))) + 10000));
     }
 }
