@@ -31,7 +31,7 @@ import java.util.Optional;
  */
 @Service
 @Slf4j
-public class UserServiceImpl implements UserDetailsService, UserService {
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public void verifyUser(VerifyAcctRequest verifyAcctReq, String username) {
-        User user = findUserByUsername(username);
+        User user = findUserByUsernameOrThrow(username);
         UserRegistration userRegistration = user.getUserRegistration();
 
         String actualPin = verifyAcctReq.pin();
@@ -95,6 +95,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public User findUserByUsername(String username) {
+        return findUserByUsernameOrThrow(username);
+    }
+
     /**
      * Finds user's <code>UserDetails</code> object by their <code>username</code>.
      *
@@ -108,7 +113,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException, UserNotVerified {
-        User user = findUserByUsername(username);
+        User user = findUserByUsernameOrThrow(username);
 
         if (!user.isVerified()) {
             String errMsg = "User with USERNAME " + username + " is not yet verified!";
@@ -125,7 +130,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return userRepository.findByUsername(username);
     }
 
-    private User findUserByUsername(String username) {
+    private User findUserByUsernameOrThrow(String username) {
         Optional<User> userOpt = maybeFindUserByUsername(username);
         if (userOpt.isEmpty()) {
             String errMsg = "No username found with USERNAME " + username;

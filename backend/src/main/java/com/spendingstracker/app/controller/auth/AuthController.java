@@ -3,8 +3,10 @@ package com.spendingstracker.app.controller.auth;
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.requests.LoginRequest;
 import com.spendingstracker.app.dto.requests.RegisterAcctRequest;
+import com.spendingstracker.app.dto.requests.ResetPasswordRequest;
 import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
 import com.spendingstracker.app.dto.response.RegisterAcctResponse;
+import com.spendingstracker.app.dto.response.ResendRegistrationEmailResponse;
 import com.spendingstracker.app.dto.response.VerifyAcctResponse;
 import com.spendingstracker.app.response.ApiResponse;
 import com.spendingstracker.app.service.auth.AuthService;
@@ -129,14 +131,46 @@ public class AuthController {
     @PutMapping("/verify-acct/{username}")
     public ResponseEntity<ApiResponse<VerifyAcctResponse>> verifyAcct(
             @RequestBody VerifyAcctRequest verifyAcctReq,
-            @PathVariable("username") String username) {
-        log.info("/verify-acct/{}", username);
+            @PathVariable("username") String username,
+            HttpServletResponse response) {
+        log.info("PUT /verify-acct/{}", username);
 
-        VerifyAcctResponse verifyAcctResponse = authService.verifyUser(verifyAcctReq, username);
+        VerifyAcctResponse verifyAcctResponse =
+                authService.verifyUser(verifyAcctReq, username, response);
         ApiResponse<VerifyAcctResponse> apiResponse =
                 buildOkAuthApiResponse(verifyAcctResponse, verifyAcctResponse.message());
 
         return ResponseEntity.ok(apiResponse);
+    }
+
+    /**
+     * Controller endpoint for resending the registration email.
+     *
+     * @param username user to resend registration email to
+     * @return
+     * @see ApiResponse
+     * @see ResendRegistrationEmailResponse
+     */
+    @PostMapping("/resend-registration-email/{username}")
+    public ResponseEntity<ApiResponse<ResendRegistrationEmailResponse>> resendRegistrationEmail(
+            @PathVariable("username") String username) {
+        ResendRegistrationEmailResponse response = authService.resendRegistrationEmail(username);
+        ApiResponse<ResendRegistrationEmailResponse> apiResponse =
+                buildOkAuthApiResponse(response, response.message());
+
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @PostMapping("/send-password-reset-email/{username}")
+    public ResponseEntity<ApiResponse<Object>> sendPasswordResetEmail(
+            @PathVariable("username") String username) {
+
+    }
+
+    @PatchMapping("/reset-password/")
+    public ResponseEntity<ApiResponse<Object>> resetPassword(
+            @RequestBody ResetPasswordRequest resetPasswordReq) {
+
     }
 
     /**

@@ -35,6 +35,7 @@ public class GlobalExceptionHandler {
      * @see NoAuthenticatedUserException
      * @see UserNotVerified
      * @see UsernameAlreadyExists
+     * @see IncorrectPinException
      */
     @ExceptionHandler({
         IllegalArgumentException.class,
@@ -43,7 +44,8 @@ public class GlobalExceptionHandler {
         SpendingNotFoundException.class,
         NoAuthenticatedUserException.class,
         UserNotVerified.class,
-        UsernameAlreadyExists.class
+        UsernameAlreadyExists.class,
+        IncorrectPinException.class
     })
     public ResponseEntity<ApiResponse<Object>> handleBadRequestException(Exception e) {
         return new ResponseEntity<>(

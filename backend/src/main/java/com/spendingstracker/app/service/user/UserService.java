@@ -3,6 +3,7 @@ package com.spendingstracker.app.service.user;
 import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
 import com.spendingstracker.app.entity.User;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
@@ -13,7 +14,7 @@ import java.math.BigInteger;
  * @see UserServiceImpl
  */
 @Transactional
-public interface UserService {
+public interface UserService extends UserDetailsService {
     /**
      * Return <code>User</code> by looking up via its <code>userId</code>
      *
@@ -43,4 +44,11 @@ public interface UserService {
      * @see VerifyAcctRequest
      */
     void verifyUser(VerifyAcctRequest verifyAcctReq, String username);
+
+    /**
+     * @throws org.springframework.security.core.userdetails.UsernameNotFoundException if a user
+     *     with username <code>username</code> is not found
+     * @return <code>User</code> object for <code>username</code>
+     */
+    User findUserByUsername(String username);
 }

@@ -4,9 +4,9 @@ import com.spendingstracker.app.constants.Constants;
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.requests.LoginRequest;
 import com.spendingstracker.app.dto.requests.RegisterAcctRequest;
+import com.spendingstracker.app.dto.requests.ResetPasswordRequest;
 import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
-import com.spendingstracker.app.dto.response.RegisterAcctResponse;
-import com.spendingstracker.app.dto.response.VerifyAcctResponse;
+import com.spendingstracker.app.dto.response.*;
 import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.exception.NoAuthenticatedUserException;
 import com.spendingstracker.app.service.email.EmailService;
@@ -73,9 +73,8 @@ public class AuthServiceImpl implements AuthService {
 
         // User has valid credentials in at this point, need to create and return a JWT for the user
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
-        String token = jwtUtil.generateToken(userDetails);
+        setAuthenticatedCookie(response, userDetails);
 
-        setCookie(response, token, MAX_AGE_SECONDS_DEFAULT);
         return userDetails;
     }
 
@@ -98,19 +97,61 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public VerifyAcctResponse verifyUser(VerifyAcctRequest verifyAcctReq, String username) {
-        userService.verifyUser(verifyAcctReq, username);
+    public VerifyAcctResponse verifyUser(
+            VerifyAcctRequest verifyAcctReq, String username, HttpServletResponse response) {
+        log.info("Attempting verification for user {}", username);
 
+        userService.verifyUser(verifyAcctReq, username);
         String message = "Successfully verified account for user " + username;
+
         log.info(message);
-        // TODO: Need to setCookie so frontend can redirect to dashboard
+        CustomUserDetails userDetails =
+                (CustomUserDetails) userService.loadUserByUsername(username);
+
+        log.info("Setting cookie for newly verified user {}", username);
+        setAuthenticatedCookie(response, userDetails);
+
         return new VerifyAcctResponse(username, message);
     }
 
+    @Override
+    public ResendRegistrationEmailResponse resendRegistrationEmail(String username) {
+        User user = userService.findUserByUsername(username);
+        emailService.sendRegistrationEmail(user);
+
+        String message = "Resent registration email to " + username;
+        log.info(message);
+
+        return new ResendRegistrationEmailResponse(message);
+    }
+
+    @Override
+    public SendPasswordResetEmailResponse sendPasswordResetEmail(String username) {
+        return null;
+    }
+
+    @Override
+    public ResetPasswordResponse resetPassword(ResetPasswordRequest resetPasswordReq) {
+        return null;
+    }
+
+    private void setAuthenticatedCookie(
+            HttpServletResponse response, CustomUserDetails userDetails) {
+        String token = jwtUtil.generateToken(userDetails);
+        setCookie(response, token, MAX_AGE_SECONDS_DEFAULT);
+    }
+
+    /**
+     * Helper function for setting cookie in response
+     *
+     * @param response
+     * @param token
+     * @param maxAge
+     */
     private void setCookie(HttpServletResponse response, String token, long maxAge) {
         // Add JWT token in an HTTP only cookie
         ResponseCookie cookie = buildResponseCookie(token, maxAge);
-        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString()); // Set "token" to be null
+        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 
     /**

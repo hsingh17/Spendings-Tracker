@@ -70,6 +70,8 @@ public class SecurityConfig {
                                                 "/v1/auth/login",
                                                 "/v1/auth/register",
                                                 "/v1/auth/verify-acct/**",
+                                                "/v1/auth/resend-registration-email/**",
+                                                "/v1/auth//reset-password/**",
                                                 // -- Swagger UI v3 (OpenAPI)
                                                 "/v3/api-docs/**",
                                                 "/swagger-ui/**")
