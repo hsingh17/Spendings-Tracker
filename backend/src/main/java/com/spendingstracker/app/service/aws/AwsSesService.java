@@ -1,5 +1,7 @@
 package com.spendingstracker.app.service.aws;
 
+import com.spendingstracker.app.entity.Email;
+
 /** Interface that defines a service for sending emails with SES. */
 public interface AwsSesService {
     /**
@@ -8,7 +10,8 @@ public interface AwsSesService {
      * @param templateName name of the template to use
      * @param toEmail who the email is going to
      * @param templateData data that goes in the template
-     * @return SES message ID
+     * @return <code>Email</code> entity containing SES templated email information
+     * @see Email
      */
-    String sendTemplatedEmail(String templateName, String toEmail, Object templateData);
+    Email sendTemplatedEmail(String templateName, String toEmail, Object templateData);
 }

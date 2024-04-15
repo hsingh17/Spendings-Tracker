@@ -9,6 +9,8 @@ import java.math.BigInteger;
 
 /**
  * <code>JpaRepository</code> used to make queries to the <code>APP>.USER_REGISTRATION</code> table.
+ *
+ * @see UserRegistration
  */
 @Repository
 public interface UserRegistrationRepository extends CrudRepository<UserRegistration, BigInteger> {}

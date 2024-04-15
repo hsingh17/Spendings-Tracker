@@ -24,15 +24,15 @@ public class UserRegistration extends AuditableEntity {
     @JoinColumn(name = "USER_ID")
     private User user;
 
+    @OneToOne
+    @JoinColumn(name = "EMAIL_ID")
+    private Email email;
+
     @Column(name = "PIN")
     private String pin;
 
-    @Column(name = "MESSAGE_ID")
-    private String messageId;
-
-    public UserRegistration(User user, String pin, String messageId) {
+    public UserRegistration(User user, String pin, Email email) {
         this.user = user;
         this.pin = pin;
-        this.messageId = messageId;
     }
 }

@@ -2,7 +2,7 @@ CREATE TABLE
     IF NOT EXISTS APP.SPENDING (
         SPENDING_ID BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT "Primary key of this SPENDING record",
         SPENDING_USER_AGGR_ID BIGINT UNSIGNED NOT NULL COMMENT "Foreign key to the SPENDING_USER_AGGR that is associated with this SPENDING record",
-        CATEGORY VARCHAR(100) NOT NULL COMMENT "Category of the spending",
+        CATEGORY VARCHAR(127) NOT NULL COMMENT "Category of the spending",
         AMOUNT DECIMAL(10, 2) NOT NULL COMMENT "Spending amount",
         CREATED_BY BIGINT UNSIGNED NOT NULL DEFAULT 1 COMMENT "ID of who/what created this record",
         CREATED_ON DATETIME (0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "Datetime of creation",

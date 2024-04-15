@@ -1,5 +1,6 @@
 package com.spendingstracker.app.service.registration;
 
+import com.spendingstracker.app.entity.Email;
 import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.entity.UserRegistration;
 
@@ -28,8 +29,9 @@ public interface UserRegistrationService {
      *
      * @param user the user who is registering
      * @param pin Pin the user was sent
-     * @param messageId SES Message ID
+     * @param email <code>Email</code> object containing information about the registration email
+     *     sent to <code>user</code>
      * @see UserRegistration
      */
-    void attemptSaveUserRegistration(User user, String pin, String messageId);
+    void saveUserRegistration(User user, String pin, Email email);
 }

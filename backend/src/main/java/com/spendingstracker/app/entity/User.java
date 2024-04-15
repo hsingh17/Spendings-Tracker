@@ -43,6 +43,9 @@ public class User extends AuditableEntity {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private UserRegistration userRegistration;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<UserPasswordReset> userPasswordReset;
+
     public User() {}
 
     public User(String username, String email, String password) {
@@ -107,6 +110,14 @@ public class User extends AuditableEntity {
         this.userRegistration = userRegistration;
     }
 
+    public Set<UserPasswordReset> getUserPasswordReset() {
+        return userPasswordReset;
+    }
+
+    public void setUserPasswordReset(Set<UserPasswordReset> userPasswordReset) {
+        this.userPasswordReset = userPasswordReset;
+    }
+
     public void addSpendingUserAggr(SpendingUserAggr spendingUserAggr) {
         spendingUserAggrs.add(spendingUserAggr);
         spendingUserAggr.setUser(this);
@@ -121,4 +132,29 @@ public class User extends AuditableEntity {
         removeSpendingUserAggr(spendingUserAggr);
         addSpendingUserAggr(spendingUserAggr);
     }
+
+    public Email getRegistrationEmail() {
+        return userRegistration == null ? null : userRegistration.getEmail();
+    }
+
+    public Email getPasswordResetEmail() {
+        UserPasswordReset pwReset = getLatestPasswordReset();
+        return pwReset == null ? null : pwReset.getEmail();
+    }
+
+    public UserPasswordReset getLatestPasswordReset() {
+        if (userPasswordReset == null) {
+            return null;
+        }
+
+        // Look for the Email object that has value IS_USED = N
+        for (UserPasswordReset pwReset : userPasswordReset) {
+            if (!pwReset.isUsed()) {
+                return pwReset;
+            }
+        }
+
+        return null;
+    }
+
 }

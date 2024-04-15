@@ -1,5 +1,7 @@
 package com.spendingstracker.app.dto.requests;
 
+import java.util.UUID;
+
 /**
  * Request object for resetting password
  *
@@ -8,4 +10,4 @@ package com.spendingstracker.app.dto.requests;
  * @param uuid UUID for the password request, the valid UUID is only accessible to the user with the
  *     email
  */
-public record ResetPasswordRequest(String username, String password, String uuid) {}
+public record ResetPasswordRequest(String username, String password, UUID uuid) {}

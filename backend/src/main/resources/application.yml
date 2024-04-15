@@ -19,6 +19,7 @@ ses:
   template:
     name:
       registration-email: RegistrationEmail
+      reset-password-email: PasswordResetEmail
   from-email: spendingstracker.no.reply@gmail.com
 --- # Local Profile
 spring:
@@ -47,5 +48,6 @@ cors:
 logging:
   level:
     com.spendingstracker: DEBUG
-ses:
-  website-url: http://localhost:5173/verify-acct?
+redirects:
+  verify-acct: http://localhost:5173/verify-acct?
+  password-reset: http://localhost:5173/password-reset?

@@ -10,7 +10,11 @@ import org.springframework.stereotype.Repository;
 import java.math.BigInteger;
 import java.util.Optional;
 
-/** <code>JpaRepository</code> used to make queries to the <code>APP>.USER</code> table. */
+/**
+ * <code>JpaRepository</code> used to make queries to the <code>APP.USER</code> table.
+ *
+ * @see User
+ */
 @Repository
 public interface UserRepository extends CrudRepository<User, BigInteger> {
     /**

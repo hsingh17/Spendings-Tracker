@@ -1,13 +1,17 @@
 package com.spendingstracker.app.service.user;
 
 import com.spendingstracker.app.dto.CustomUserDetails;
+import com.spendingstracker.app.dto.requests.ResetPasswordRequest;
 import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
 import com.spendingstracker.app.entity.User;
+import com.spendingstracker.app.entity.UserPasswordReset;
 import com.spendingstracker.app.entity.UserRegistration;
 import com.spendingstracker.app.exception.IncorrectPinException;
+import com.spendingstracker.app.exception.InvalidPasswordResetRequest;
 import com.spendingstracker.app.exception.UserNotVerified;
 import com.spendingstracker.app.exception.UsernameAlreadyExists;
 import com.spendingstracker.app.repository.UserRepository;
+import com.spendingstracker.app.service.password.UserPasswordResetService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigInteger;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Custom implementation of the <code>UserDetailsService</code> and <code>UserService</code>
@@ -33,18 +38,23 @@ import java.util.Optional;
 @Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final UserPasswordResetService userPasswordResetService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /**
      * Initialize <code>UserDetailsServiceImpl</code>
      *
      * @param userRepository <code>UserRepository</code> bean
+     * @param userPasswordResetService
      * @param bCryptPasswordEncoder
      * @see UserRepository
      */
     public UserServiceImpl(
-            UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+            UserRepository userRepository,
+            UserPasswordResetService userPasswordResetService,
+            BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
+        this.userPasswordResetService = userPasswordResetService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
@@ -98,6 +108,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findUserByUsername(String username) {
         return findUserByUsernameOrThrow(username);
+    }
+
+    @Override
+    public void changePassword(ResetPasswordRequest resetPasswordReq) {
+        String username = resetPasswordReq.username();
+        UUID actualUUID = resetPasswordReq.uuid();
+        User user = findUserByUsernameOrThrow(username);
+        UserPasswordReset passwordReset = user.getLatestPasswordReset();
+
+        // Invalid password reset request
+        if (passwordReset == null || passwordReset.getUuid().equals(actualUUID)) {
+            String errMsg = "Invalid password reset request for " + username;
+            log.error(errMsg);
+            throw new InvalidPasswordResetRequest(errMsg);
+        }
+
+        // Valid password reset request, so change user's password
+        user.setPassword(bCryptPasswordEncoder.encode(resetPasswordReq.password()));
+        passwordReset.setUsed(true);
+        userRepository.save(user);
     }
 
     /**

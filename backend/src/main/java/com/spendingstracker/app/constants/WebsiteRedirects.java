@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "ses.template.name")
+@ConfigurationProperties(prefix = "redirects")
 @Component
-public class SesTemplateNames {
-    private String registrationEmail;
-    private String passwordResetEmail;
+public class WebsiteRedirects {
+    private String verifyAcct;
+    private String passwordReset;
 }

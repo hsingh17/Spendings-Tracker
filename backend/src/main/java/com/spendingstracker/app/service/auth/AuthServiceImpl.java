@@ -127,7 +127,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public SendPasswordResetEmailResponse sendPasswordResetEmail(String username) {
-        return null;
+        User user = userService.findUserByUsername(username);
+        emailService.sendPasswordResetEmail(user);
+
+        String message = "Sent password reset email to " + username;
+        log.info(message);
+        return new SendPasswordResetEmailResponse(message);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.spendingstracker.app.service.registration;
 
+import com.spendingstracker.app.entity.Email;
 import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.entity.UserRegistration;
 import com.spendingstracker.app.repository.UserRegistrationRepository;
@@ -32,7 +33,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     }
 
     @Override
-    public void attemptSaveUserRegistration(User user, String pin, String messageId) {
+    public void saveUserRegistration(User user, String pin, Email email) {
         String username = user.getUsername();
         UserRegistration userRegistration = user.getUserRegistration();
 
@@ -41,7 +42,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
             return;
         }
 
-        userRegistration = new UserRegistration(user, pin, messageId);
+        userRegistration = new UserRegistration(user, pin, email);
         userRegistrationRepository.save(userRegistration);
     }
 
