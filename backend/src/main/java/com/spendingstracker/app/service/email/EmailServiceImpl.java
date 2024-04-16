@@ -1,5 +1,6 @@
 package com.spendingstracker.app.service.email;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spendingstracker.app.constants.SesTemplateNames;
 import com.spendingstracker.app.constants.WebsiteRedirects;
 import com.spendingstracker.app.dto.requests.PasswordResetSesTemplateData;
@@ -29,6 +30,7 @@ import java.util.UUID;
 @Service
 @Slf4j
 public class EmailServiceImpl implements EmailService {
+    private final ObjectMapper objectMapper;
     private final SesTemplateNames sesTemplateNames;
     private final UserRegistrationService userRegistrationService;
     private final UserPasswordResetService userPasswordResetService;
@@ -36,11 +38,13 @@ public class EmailServiceImpl implements EmailService {
     private final WebsiteRedirects websiteRedirects;
 
     public EmailServiceImpl(
+            ObjectMapper objectMapper,
             SesTemplateNames sesTemplateNames,
             UserRegistrationService userRegistrationService,
             UserPasswordResetService userPasswordResetService,
             AwsSesService awsSesService,
             WebsiteRedirects websiteRedirects) {
+        this.objectMapper = objectMapper;
         this.sesTemplateNames = sesTemplateNames;
         this.userRegistrationService = userRegistrationService;
         this.userPasswordResetService = userPasswordResetService;
@@ -52,7 +56,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendRegistrationEmail(User user) {
         // Check if user was already sent a registration email
         Email userRegEmail = user.getRegistrationEmail();
-        if (resendEmail(userRegEmail)) {
+        if (resendEmail(userRegEmail, RegistrationEmailSesTemplateData.class)) {
             return;
         }
 
@@ -77,7 +81,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendPasswordResetEmail(User user) {
         // Check if we can just simply resend a password reset email
         Email passwordResetEmail = user.getPasswordResetEmail();
-        if (resendEmail(passwordResetEmail)) {
+        if (resendEmail(passwordResetEmail, PasswordResetSesTemplateData.class)) {
             return;
         }
 
@@ -106,15 +110,16 @@ public class EmailServiceImpl implements EmailService {
      * @param email email to resend
      * @return boolean value indicating if user was successfully <b>resent</b> an email
      */
-    private boolean resendEmail(Email email) {
+    private <T> boolean resendEmail(Email email, Class<T> clazz) {
         if (email == null) {
             return false;
         }
 
         // Use the previously sent email information to resend the registration email
         log.info("Resending email to {}", email.getToEmail());
+
         awsSesService.sendTemplatedEmail(
-                email.getTemplateName(), email.getToEmail(), email.getTemplateData());
+                email.getTemplateName(), email.getToEmail(), email.getTemplateData(), clazz);
         return true;
     }
 

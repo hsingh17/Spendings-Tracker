@@ -5,9 +5,7 @@ import com.spendingstracker.app.dto.requests.LoginRequest;
 import com.spendingstracker.app.dto.requests.RegisterAcctRequest;
 import com.spendingstracker.app.dto.requests.ResetPasswordRequest;
 import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
-import com.spendingstracker.app.dto.response.RegisterAcctResponse;
-import com.spendingstracker.app.dto.response.ResendRegistrationEmailResponse;
-import com.spendingstracker.app.dto.response.VerifyAcctResponse;
+import com.spendingstracker.app.dto.response.*;
 import com.spendingstracker.app.response.ApiResponse;
 import com.spendingstracker.app.service.auth.AuthService;
 import com.spendingstracker.app.util.JwtUtil;
@@ -161,16 +159,42 @@ public class AuthController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    /**
+     * Controller endpoint for sending a password reset email to <code>username</code>
+     *
+     * @param username
+     * @return
+     * @see ApiResponse
+     * @see SendPasswordResetEmailResponse
+     */
     @PostMapping("/send-password-reset-email/{username}")
-    public ResponseEntity<ApiResponse<Object>> sendPasswordResetEmail(
+    public ResponseEntity<ApiResponse<SendPasswordResetEmailResponse>> sendPasswordResetEmail(
             @PathVariable("username") String username) {
+        SendPasswordResetEmailResponse response = authService.sendPasswordResetEmail(username);
+        ApiResponse<SendPasswordResetEmailResponse> apiResponse =
+                buildOkAuthApiResponse(response, response.message());
 
+        return ResponseEntity.ok(apiResponse);
     }
 
-    @PatchMapping("/reset-password/")
-    public ResponseEntity<ApiResponse<Object>> resetPassword(
+    /**
+     * Controller endpoint for resetting user's password
+     *
+     * @param resetPasswordReq
+     * @return
+     * @see ApiResponse
+     * @see ResetPasswordRequest
+     * @see ResetPasswordResponse
+     */
+    @PatchMapping("/reset-password/{username}")
+    public ResponseEntity<ApiResponse<ResetPasswordResponse>> resetPassword(
+            @PathVariable("username") String username,
             @RequestBody ResetPasswordRequest resetPasswordReq) {
+        ResetPasswordResponse response = authService.resetPassword(resetPasswordReq, username);
+        ApiResponse<ResetPasswordResponse> apiResponse =
+                buildOkAuthApiResponse(response, response.message());
 
+        return ResponseEntity.ok(apiResponse);
     }
 
     /**

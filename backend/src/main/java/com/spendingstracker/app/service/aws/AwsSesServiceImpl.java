@@ -3,6 +3,7 @@ package com.spendingstracker.app.service.aws;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spendingstracker.app.entity.Email;
+import com.spendingstracker.app.exception.DeserializationException;
 import com.spendingstracker.app.exception.SerializationException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sesv2.SesV2Client;
 import software.amazon.awssdk.services.sesv2.model.*;
 
-import java.util.UUID;
+import java.io.IOException;
 
 @Service
 @Slf4j
@@ -29,6 +30,13 @@ public class AwsSesServiceImpl implements AwsSesService {
         this.sesClient = sesClient;
         this.fromEmail = fromEmail;
         this.objectMapper = objectMapper;
+    }
+
+    @Override
+    public <T> Email sendTemplatedEmail(
+            String templateName, String toEmail, byte[] templateData, Class<T> clazz) {
+        return sendTemplatedEmail(
+                templateName, toEmail, deserializeBytesToObj(templateData, clazz));
     }
 
     @Override
@@ -58,11 +66,7 @@ public class AwsSesServiceImpl implements AwsSesService {
         log.info("Sent templated email to {}. Message ID: {} ", toEmail, messageId);
 
         return new Email(
-                fromEmail,
-                toEmail,
-                templateName,
-                serializeObjToBytes(templateData),
-                UUID.fromString(messageId));
+                fromEmail, toEmail, templateName, serializeObjToBytes(templateData), messageId);
     }
 
     /**
@@ -98,6 +102,20 @@ public class AwsSesServiceImpl implements AwsSesService {
                             + e.getMessage();
             log.error(errMsg);
             throw new SerializationException(errMsg);
+        }
+    }
+
+    private <T> T deserializeBytesToObj(byte[] templateData, Class<T> clazz) {
+        try {
+            return objectMapper.readValue(templateData, clazz);
+        } catch (IOException e) {
+            String errMsg =
+                    "Could not deserialize object to "
+                            + clazz.getName()
+                            + ". Received exception message: "
+                            + e.getMessage();
+            log.error(errMsg);
+            throw new DeserializationException(errMsg);
         }
     }
 }

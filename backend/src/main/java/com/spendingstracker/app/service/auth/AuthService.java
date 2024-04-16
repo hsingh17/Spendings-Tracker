@@ -93,8 +93,9 @@ public interface AuthService {
      * Reset's a user's password
      *
      * @param resetPasswordReq request object containing data needed to reset password.
+     * @param username
      * @see ResetPasswordRequest
      * @see ResetPasswordResponse
      */
-    ResetPasswordResponse resetPassword(ResetPasswordRequest resetPasswordReq);
+    ResetPasswordResponse resetPassword(ResetPasswordRequest resetPasswordReq, String username);
 }

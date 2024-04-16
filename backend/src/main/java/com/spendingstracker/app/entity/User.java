@@ -156,5 +156,4 @@ public class User extends AuditableEntity {
 
         return null;
     }
-
 }

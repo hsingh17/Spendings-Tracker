@@ -57,7 +57,8 @@ public interface UserService extends UserDetailsService {
      * Reset's a user's password if criteria is met
      *
      * @param resetPasswordReq
+     * @param username
      * @see ResetPasswordRequest
      */
-    void changePassword(ResetPasswordRequest resetPasswordReq);
+    void resetPassword(ResetPasswordRequest resetPasswordReq, String username);
 }

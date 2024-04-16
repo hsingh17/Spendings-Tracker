@@ -34,14 +34,14 @@ public class Email extends AuditableEntity {
     private byte[] templateData;
 
     @Column(name = "SES_MESSAGE_ID")
-    private UUID sesMessageId;
+    private String sesMessageId;
 
     public Email(
             String fromEmail,
             String toEmail,
             String templateName,
             byte[] templateData,
-            UUID sesMessageId) {
+            String sesMessageId) {
         this.fromEmail = fromEmail;
         this.toEmail = toEmail;
         this.templateName = templateName;

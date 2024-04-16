@@ -136,8 +136,13 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ResetPasswordResponse resetPassword(ResetPasswordRequest resetPasswordReq) {
-        return null;
+    public ResetPasswordResponse resetPassword(
+            ResetPasswordRequest resetPasswordReq, String username) {
+        userService.resetPassword(resetPasswordReq, username);
+
+        String message = "Successfully reset password for " + username;
+        log.info(message);
+        return new ResetPasswordResponse(message);
     }
 
     private void setAuthenticatedCookie(

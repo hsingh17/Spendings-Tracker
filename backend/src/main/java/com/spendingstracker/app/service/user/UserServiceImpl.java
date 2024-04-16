@@ -111,14 +111,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePassword(ResetPasswordRequest resetPasswordReq) {
-        String username = resetPasswordReq.username();
+    public void resetPassword(ResetPasswordRequest resetPasswordReq, String username) {
         UUID actualUUID = resetPasswordReq.uuid();
         User user = findUserByUsernameOrThrow(username);
         UserPasswordReset passwordReset = user.getLatestPasswordReset();
 
         // Invalid password reset request
-        if (passwordReset == null || passwordReset.getUuid().equals(actualUUID)) {
+        if (passwordReset == null || !passwordReset.getUuid().equals(actualUUID)) {
             String errMsg = "Invalid password reset request for " + username;
             log.error(errMsg);
             throw new InvalidPasswordResetRequest(errMsg);

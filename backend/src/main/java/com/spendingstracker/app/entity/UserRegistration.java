@@ -24,7 +24,7 @@ public class UserRegistration extends AuditableEntity {
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "EMAIL_ID")
     private Email email;
 
@@ -34,5 +34,6 @@ public class UserRegistration extends AuditableEntity {
     public UserRegistration(User user, String pin, Email email) {
         this.user = user;
         this.pin = pin;
+        this.email = email;
     }
 }
