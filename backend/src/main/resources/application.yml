@@ -19,7 +19,7 @@ ses:
   template:
     name:
       registration-email: RegistrationEmail
-      reset-password-email: PasswordResetEmail
+      password-reset-email: PasswordResetEmail
   from-email: spendingstracker.no.reply@gmail.com
 --- # Local Profile
 spring:

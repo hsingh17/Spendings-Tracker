@@ -11,6 +11,9 @@ import lombok.Setter;
 import java.math.BigInteger;
 import java.util.UUID;
 
+/**
+ * An entity class for <code>APP.USER_PASSWORD_RESET</code>
+ */
 @Entity
 @Table(schema = "APP", name = "USER_PASSWORD_RESET")
 @Getter
@@ -26,7 +29,7 @@ public class UserPasswordReset extends AuditableEntity {
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "EMAIL_ID")
     private Email email;
 

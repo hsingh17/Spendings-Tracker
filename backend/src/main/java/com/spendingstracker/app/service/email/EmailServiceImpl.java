@@ -1,6 +1,5 @@
 package com.spendingstracker.app.service.email;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spendingstracker.app.constants.SesTemplateNames;
 import com.spendingstracker.app.constants.WebsiteRedirects;
 import com.spendingstracker.app.dto.requests.PasswordResetSesTemplateData;
@@ -30,7 +29,6 @@ import java.util.UUID;
 @Service
 @Slf4j
 public class EmailServiceImpl implements EmailService {
-    private final ObjectMapper objectMapper;
     private final SesTemplateNames sesTemplateNames;
     private final UserRegistrationService userRegistrationService;
     private final UserPasswordResetService userPasswordResetService;
@@ -38,13 +36,11 @@ public class EmailServiceImpl implements EmailService {
     private final WebsiteRedirects websiteRedirects;
 
     public EmailServiceImpl(
-            ObjectMapper objectMapper,
             SesTemplateNames sesTemplateNames,
             UserRegistrationService userRegistrationService,
             UserPasswordResetService userPasswordResetService,
             AwsSesService awsSesService,
             WebsiteRedirects websiteRedirects) {
-        this.objectMapper = objectMapper;
         this.sesTemplateNames = sesTemplateNames;
         this.userRegistrationService = userRegistrationService;
         this.userPasswordResetService = userPasswordResetService;

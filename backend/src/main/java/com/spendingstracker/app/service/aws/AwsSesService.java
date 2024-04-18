@@ -9,7 +9,7 @@ public interface AwsSesService {
      * </code>.
      *
      * @param templateName name of the template to use
-     * @param toEmail      who the email is going to
+     * @param toEmail who the email is going to
      * @param templateData data that goes in the template
      * @param clazz
      * @return <code>Email</code> entity containing SES templated email information

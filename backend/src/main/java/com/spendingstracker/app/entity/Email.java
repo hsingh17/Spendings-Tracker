@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigInteger;
-import java.util.UUID;
 
 @Entity
 @Table(schema = "APP", name = "EMAIL")
