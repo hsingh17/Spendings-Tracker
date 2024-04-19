@@ -6,7 +6,11 @@ import { ReactComponent as ShowEye } from "../../../assets/raw/eye-show.svg";
 import Card from "../../../common/Card";
 import QueryClientConfig from "../../../config/QueryClientConfig";
 import useLogin from "../../../hooks/useLogin";
-import { DASHBOARD_PAGE } from "../../../utils/constants";
+import {
+  CREATE_ACCT_PAGE,
+  DASHBOARD_PAGE,
+  SEND_PASSWORD_RESET_EMAIL_PAGE,
+} from "../../../utils/constants";
 import { UserFormData } from "../../../utils/types";
 
 const LoginForm: FC = () => {
@@ -22,7 +26,7 @@ const LoginForm: FC = () => {
       toast.error("Invalid login credentials!", {
         position: "bottom-center",
       });
-    }
+    },
   );
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -62,7 +66,7 @@ const LoginForm: FC = () => {
               <p>Password</p>
               <p
                 className="ml-auto text-slate-500 hover:cursor-pointer"
-                onClick={() => alert("TODO")}
+                onClick={() => navigate(SEND_PASSWORD_RESET_EMAIL_PAGE)}
               >
                 Forgot password
               </p>
@@ -96,7 +100,7 @@ const LoginForm: FC = () => {
         </form>
         <p
           className="mr-auto mt-5 underline hover:cursor-pointer hover:text-theme-cta font-semibold"
-          onClick={() => alert("TODO")}
+          onClick={() => alert(CREATE_ACCT_PAGE)}
         >
           Create an account
         </p>
