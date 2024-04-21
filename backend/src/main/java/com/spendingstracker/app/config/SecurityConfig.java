@@ -145,6 +145,7 @@ public class SecurityConfig {
                         HttpMethod.GET.toString(),
                         HttpMethod.POST.toString(),
                         HttpMethod.DELETE.toString(),
+                        HttpMethod.PATCH.toString(),
                         HttpMethod.PUT.toString()));
         corsConfiguration.setAllowCredentials(true); // Need for cookies
         corsConfiguration.setAllowedHeaders(List.of(HttpHeaders.CONTENT_TYPE));

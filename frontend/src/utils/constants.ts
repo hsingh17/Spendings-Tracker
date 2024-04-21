@@ -47,6 +47,7 @@ export const AUTH_LOGIN_ROUTE: string = `${BASE_API_URL}${API_VERSION}/auth/logi
 export const AUTH_LOGOUT_ROUTE: string = `${BASE_API_URL}${API_VERSION}/auth/logout`;
 export const ME_API_ROUTE: string = `${BASE_API_URL}${API_VERSION}/auth/me`;
 export const SEND_PASSWORD_RESET_EMAIL_ROUTE: string = `${BASE_API_URL}${API_VERSION}/auth/send-password-reset-email`;
+export const PASSWORD_RESET_ROUTE: string = `${BASE_API_URL}${API_VERSION}/auth/reset-password`;
 export const SPENDINGS_API_ROUTE: string = `${BASE_API_URL}${API_VERSION}/api/spendings`;
 
 // #######################################################################################

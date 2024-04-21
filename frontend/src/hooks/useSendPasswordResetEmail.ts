@@ -14,12 +14,18 @@ export default function useSendPasswordResetEmail() {
   return useMutation({
     mutationFn: (username: string) => {
       const promise = postSendPasswordResetEmail(username);
-      toast.promise(promise, {
-        loading: "Sending you password reset instructions",
-        error:
-          "We couldn't send you an email. Make sure the username is correct!",
-        success: `Succesfully sent an email associated to your username ${username}. Please check your email.`,
-      });
+      toast.promise(
+        promise,
+        {
+          loading: "Sending you password reset instructions",
+          error:
+            "We couldn't send you an email. Make sure the username is correct!",
+          success: `Succesfully sent an email associated to your username ${username}. Please check your email.`,
+        },
+        {
+          position: "bottom-center",
+        },
+      );
 
       return promise;
     },

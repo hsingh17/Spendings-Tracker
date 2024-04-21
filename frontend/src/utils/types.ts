@@ -288,3 +288,8 @@ export type TooltipPosition = {
   top: number;
   left: number;
 };
+
+export type ResetPasswordRequest = {
+  password: string;
+  uuid: string;
+};
