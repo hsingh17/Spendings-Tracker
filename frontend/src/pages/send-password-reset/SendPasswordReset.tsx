@@ -1,9 +1,9 @@
 import React from "react";
+import BackToLoginPage from "../../common/form/BackToLoginPage";
 import GenericForm from "../../common/form/GenericForm";
 import GenericFormButton from "../../common/form/GenericFormButton";
 import UsernameInput from "../../common/form/UsernameInput";
 import useSendPasswordResetEmail from "../../hooks/useSendPasswordResetEmail";
-import BackToLoginPage from "./component/BackToLoginPage";
 import ResetPasswordHeader from "./component/ResetPasswordHeader";
 
 const SendPasswordReset = () => {

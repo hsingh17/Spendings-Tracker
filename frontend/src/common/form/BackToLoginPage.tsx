@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import FullLeftArrow from "../../../assets/components/FullLeftArrow";
-import { LOGIN_PAGE } from "../../../utils/constants";
+import FullLeftArrow from "../../assets/components/FullLeftArrow";
+import { LOGIN_PAGE } from "../../utils/constants";
 
 const BackToLoginPage = () => {
   const navigate = useNavigate();

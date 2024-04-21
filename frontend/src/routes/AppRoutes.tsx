@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router-dom";
+import CreateAccount from "../pages/create-acct/CreateAccount";
 import Dashboard from "../pages/dashboard/Dashboard";
 import NotFound from "../pages/error/NotFound";
 import Home from "../pages/home/Home";
@@ -9,6 +10,7 @@ import SaveSpendings from "../pages/save/SaveSpendings";
 import SendPasswordReset from "../pages/send-password-reset/SendPasswordReset";
 import ViewSpendings from "../pages/view/ViewSpendings";
 import {
+  CREATE_ACCT_PAGE,
   DASHBOARD_PAGE,
   HOME_PAGE,
   LOGIN_PAGE,
@@ -43,6 +45,8 @@ const AppRoutes = () => {
       />
 
       <Route path={PASSWORD_RESET_PAGE} element={<PasswordReset />} />
+
+      <Route path={CREATE_ACCT_PAGE} element={<CreateAccount />} />
 
       <Route path="*" element={<NotFound />} />
     </Routes>

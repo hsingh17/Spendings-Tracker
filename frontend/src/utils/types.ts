@@ -293,3 +293,9 @@ export type ResetPasswordRequest = {
   password: string;
   uuid: string;
 };
+
+export type CreateAccountRequest = {
+  username: string;
+  password: string;
+  email: string;
+};

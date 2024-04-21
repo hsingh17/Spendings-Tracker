@@ -1,12 +1,13 @@
 import { FC, useState } from "react";
+import GenericInputField from "./GenericInputField";
 import PasswordInputLabel from "./PasswordInputLabel";
 import ShowPasswordIcon from "./ShowPasswordIcon";
 
 type PasswordInputProps = {
   title?: string;
   name?: string;
-  showForgotPassword: boolean;
   customStyles?: string;
+  showForgotPassword?: boolean;
 };
 
 const PasswordInput: FC<PasswordInputProps> = ({
@@ -22,10 +23,10 @@ const PasswordInput: FC<PasswordInputProps> = ({
         title={title}
         showForgotPassword={showForgotPassword}
       />
-      <input
-        type={showPassword ? "text" : "password"}
+
+      <GenericInputField
         name={name}
-        className="font-semibold relative mt-1 p-1 border-2 border-slate-500 focus:outline-none focus:border-theme-cta rounded-lg w-full"
+        type={showPassword ? "text" : "password"}
       />
 
       <ShowPasswordIcon

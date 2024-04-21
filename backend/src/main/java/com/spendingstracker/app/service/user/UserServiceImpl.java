@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> userOpt = maybeFindUserByUsername(username);
 
         if (userOpt.isPresent()) {
-            String errMsg = "There is already an account with USERNAME " + username;
+            String errMsg = "Username " + username + " is already taken.";
             log.error(errMsg);
             throw new UsernameAlreadyExists(errMsg);
         }
