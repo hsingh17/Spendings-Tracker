@@ -26,7 +26,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -39,7 +38,6 @@ import java.util.*;
  * @see SpendingService
  */
 @Service
-@Transactional
 @Slf4j
 public class SpendingServiceImpl implements SpendingService {
     private final SpendingRepository spendingRepository;
@@ -55,7 +53,6 @@ public class SpendingServiceImpl implements SpendingService {
         this.userService = userService;
     }
 
-    @Transactional(readOnly = true)
     public SpendingPageResponse getSpendings(
             BigInteger userId,
             LocalDate startDate,
@@ -87,7 +84,6 @@ public class SpendingServiceImpl implements SpendingService {
         return SpendingPageResponse.builder().spendingPage(spendingPageItemPage).build();
     }
 
-    @Transactional(readOnly = true)
     public SpendingDetailsResponse getSpendingDetails(LocalDate spendingDate, BigInteger userId) {
         List<SpendingProjection> spendings =
                 spendingUserAggrRepository.findSpendingDetailsByUserIdAndDate(spendingDate, userId);

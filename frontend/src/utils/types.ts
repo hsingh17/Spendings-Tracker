@@ -288,3 +288,18 @@ export type TooltipPosition = {
   top: number;
   left: number;
 };
+
+export type ResetPasswordRequest = {
+  password: string;
+  uuid: string;
+};
+
+export type CreateAccountRequest = {
+  username: string;
+  password: string;
+  email: string;
+};
+
+export type VerifyAcctRequest = {
+  pin: string;
+};

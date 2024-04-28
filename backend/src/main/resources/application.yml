@@ -11,10 +11,16 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     generate-ddl: false
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
+    open-in-view: true
 springdoc.api-docs.enabled: false
+server:
+  port: 8080
+ses:
+  template:
+    name:
+      registration-email: RegistrationEmail
+      password-reset-email: PasswordResetEmail
+  from-email: spendingstracker.no.reply@gmail.com
 --- # Local Profile
 spring:
   config:
@@ -36,9 +42,12 @@ spring:
       enabled: true
 springdoc.api-docs.enabled: true
 jwt:
-  secret-key-path: classpath:/keys/secret-key.key
+  secret-key-path: classpath:/secrets/secret-key.key
 cors:
   allowed-origins: http://localhost:5173, http://127.0.0.1:5173
 logging:
   level:
     com.spendingstracker: DEBUG
+redirects:
+  verify-acct: http://localhost:5173/verify-acct?
+  password-reset: http://localhost:5173/password-reset?

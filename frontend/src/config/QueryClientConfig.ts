@@ -1,6 +1,6 @@
 import { QueryCache, QueryClient } from "@tanstack/react-query";
 import HttpError from "../error/HttpError";
-import { LOGIN_PAGE } from "../utils/constants";
+import { LOGIN_PAGE, UNAUTHENTICATED_PAGES } from "../utils/constants";
 
 const QueryClientConfig = new QueryClient({
   queryCache: new QueryCache({
@@ -10,7 +10,7 @@ const QueryClientConfig = new QueryClient({
       }
 
       const curPath: string = window.location.pathname;
-      if (!curPath.includes(LOGIN_PAGE) && error.status === 401) {
+      if (!UNAUTHENTICATED_PAGES.includes(curPath) && error.status === 401) {
         // 401 -> Redirect back to login page if not already there
         window.location.replace(LOGIN_PAGE);
       }

@@ -2,6 +2,8 @@ package com.spendingstracker.app.util;
 
 import com.spendingstracker.app.dto.CustomUserDetails;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +18,7 @@ import java.util.Optional;
  *
  * @see AuditorAware
  */
+@Slf4j
 public class SecurityAuditorAware implements AuditorAware<BigInteger> {
 
     /**
@@ -28,11 +31,15 @@ public class SecurityAuditorAware implements AuditorAware<BigInteger> {
     public Optional<BigInteger> getCurrentAuditor() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated()) {
-            return Optional.empty();
+            return Optional.of(BigInteger.ONE);
         }
 
-        CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
-
-        return Optional.of(userDetails.getUserId());
+        try {
+            CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+            return Optional.of(userDetails.getUserId());
+        } catch (ClassCastException e) {
+            log.error("Could not cast principal to CustomUserDetails object. Defaulting to 1");
+            return Optional.of(BigInteger.ONE);
+        }
     }
 }

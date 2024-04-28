@@ -1,19 +1,31 @@
 package com.spendingstracker.app.service.user;
 
 import com.spendingstracker.app.dto.CustomUserDetails;
+import com.spendingstracker.app.dto.requests.ResetPasswordRequest;
+import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
 import com.spendingstracker.app.entity.User;
+import com.spendingstracker.app.entity.UserPasswordReset;
+import com.spendingstracker.app.entity.UserRegistration;
+import com.spendingstracker.app.exception.IncorrectPinException;
+import com.spendingstracker.app.exception.InvalidPasswordResetRequest;
+import com.spendingstracker.app.exception.UserNotVerified;
+import com.spendingstracker.app.exception.UsernameAlreadyExists;
 import com.spendingstracker.app.repository.UserRepository;
+import com.spendingstracker.app.service.password.UserPasswordResetService;
 
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.Collections;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Custom implementation of the <code>UserDetailsService</code> and <code>UserService</code>
@@ -24,22 +36,29 @@ import java.util.Collections;
  */
 @Service
 @Slf4j
-@Transactional
-public class UserServiceImpl implements UserDetailsService, UserService {
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final UserPasswordResetService userPasswordResetService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /**
      * Initialize <code>UserDetailsServiceImpl</code>
      *
      * @param userRepository <code>UserRepository</code> bean
+     * @param userPasswordResetService
+     * @param bCryptPasswordEncoder
      * @see UserRepository
      */
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(
+            UserRepository userRepository,
+            UserPasswordResetService userPasswordResetService,
+            BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
+        this.userPasswordResetService = userPasswordResetService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
-    @Transactional(readOnly = true)
     public User getUserById(BigInteger userId) {
         return userRepository
                 .findById(userId)
@@ -49,6 +68,65 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                             log.error(errMsg);
                             return new UsernameNotFoundException(errMsg);
                         });
+    }
+
+    @Override
+    public User createUser(String username, String email, String password) {
+        // Check if user already exists
+        Optional<User> userOpt = maybeFindUserByUsername(username);
+
+        if (userOpt.isPresent()) {
+            String errMsg = "Username " + username + " is already taken.";
+            log.error(errMsg);
+            throw new UsernameAlreadyExists(errMsg);
+        }
+
+        log.info("Creating user for {} with USERNAME {}", email, username);
+        String encryptedPassword = bCryptPasswordEncoder.encode(password);
+        User user = new User(username, email, encryptedPassword);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public void verifyUser(VerifyAcctRequest verifyAcctReq, String username) {
+        User user = findUserByUsernameOrThrow(username);
+        UserRegistration userRegistration = user.getUserRegistration();
+
+        String actualPin = verifyAcctReq.pin();
+        String expectedPin = userRegistration.getPin();
+        if (!actualPin.equals(expectedPin)) {
+            String errMsg = actualPin + " is not the correct pin for user " + username;
+            log.error(errMsg);
+            throw new IncorrectPinException(errMsg);
+        }
+
+        // Pins match. User is verified now.
+        user.setVerified(true);
+        userRepository.save(user);
+    }
+
+    @Override
+    public User findUserByUsername(String username) {
+        return findUserByUsernameOrThrow(username);
+    }
+
+    @Override
+    public void resetPassword(ResetPasswordRequest resetPasswordReq, String username) {
+        UUID actualUUID = resetPasswordReq.uuid();
+        User user = findUserByUsernameOrThrow(username);
+        UserPasswordReset passwordReset = user.getLatestPasswordReset();
+
+        // Invalid password reset request
+        if (passwordReset == null || !passwordReset.getUuid().equals(actualUUID)) {
+            String errMsg = "Invalid password reset request for " + username;
+            log.error(errMsg);
+            throw new InvalidPasswordResetRequest(errMsg);
+        }
+
+        // Valid password reset request, so change user's password
+        user.setPassword(bCryptPasswordEncoder.encode(resetPasswordReq.password()));
+        passwordReset.setUsed(true);
+        userRepository.save(user);
     }
 
     /**
@@ -62,16 +140,33 @@ public class UserServiceImpl implements UserDetailsService, UserService {
      */
     @Override
     @Transactional(readOnly = true)
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
-        if (user == null) {
-            String errMsg = "No user found with USERNAME " + username;
+    public UserDetails loadUserByUsername(String username)
+            throws UsernameNotFoundException, UserNotVerified {
+        User user = findUserByUsernameOrThrow(username);
+
+        if (!user.isVerified()) {
+            String errMsg = "User with USERNAME " + username + " is not yet verified!";
             log.error(errMsg);
-            throw new UsernameNotFoundException(errMsg);
+            throw new UserNotVerified(errMsg);
         }
 
         // A CustomUserDetails object since userId must be saved
         return new CustomUserDetails(
                 username, user.getPassword(), Collections.emptyList(), user.getUserId());
+    }
+
+    private Optional<User> maybeFindUserByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    private User findUserByUsernameOrThrow(String username) {
+        Optional<User> userOpt = maybeFindUserByUsername(username);
+        if (userOpt.isEmpty()) {
+            String errMsg = "No username found with USERNAME " + username;
+            log.error(errMsg);
+            throw new UsernameNotFoundException(errMsg);
+        }
+
+        return userOpt.get();
     }
 }

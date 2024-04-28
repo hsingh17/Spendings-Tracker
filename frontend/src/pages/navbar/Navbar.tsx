@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import QueryClientConfig from "../../config/QueryClientConfig";
 import useDetectMobile from "../../hooks/useDetectMobile";
 import useLogout from "../../hooks/useLogout";
@@ -11,6 +11,7 @@ import {
   LOGIN_PAGE,
   METRICS_PAGE,
   SETTINGS_PAGE,
+  UNAUTHENTICATED_PAGES,
   VIEW_SPENDINGS_PAGE,
 } from "../../utils/constants";
 import { NavbarAction, NavbarListItem, NavbarState } from "../../utils/types";
@@ -39,29 +40,32 @@ function transitionState(action: NavbarAction): NavbarState {
 }
 
 const Navbar = () => {
+  const location = useLocation();
   const { data: response } = useUser();
   const navigate = useNavigate();
   const { mutate: logout } = useLogout(
     () => {
       navigate(LOGIN_PAGE);
-      QueryClientConfig.removeQueries(["user"]); // Invalidate the user key from cache so we don't keep any cached user data
+      // Invalidate the user key from cache so we don't keep any cached user data
+      QueryClientConfig.removeQueries(["user"]);
     },
     () => {
       toast.error("An unexpected error occurred while logging out!", {
         position: "bottom-center",
       });
-    }
+    },
   );
 
   const isMobile = useDetectMobile();
   const [state, setState] = useState<NavbarState>(
-    isMobile ? NavbarState.MOBILE_MENU_HIDDEN : NavbarState.NON_MOBILE_EXPANDED
+    isMobile ? NavbarState.MOBILE_MENU_HIDDEN : NavbarState.NON_MOBILE_EXPANDED,
   );
 
   const transitionStateWrapper = (action: NavbarAction) => {
     setState(transitionState(action));
   };
 
+  // TODO: Somehow get this out of this component
   const getNavList = (): Array<NavbarListItem> => {
     const navigateToPage = (page: string) => {
       navigate(page);
@@ -114,28 +118,30 @@ const Navbar = () => {
     ];
   };
 
+  const doNotRender = (): boolean => {
+    const path = location.pathname.substring(1); // Have to ignore the '/'
+    const onUnauthenticatedPage = UNAUTHENTICATED_PAGES.indexOf(path) !== -1;
+    return !response || !response.data || !response.ok || onUnauthenticatedPage;
+  };
+
   useEffect(
     () =>
       transitionStateWrapper(
         isMobile
           ? NavbarAction.RESIZE_TO_MOBILE
-          : NavbarAction.RESIZE_TO_NON_MOBILE
+          : NavbarAction.RESIZE_TO_NON_MOBILE,
       ),
-    [isMobile]
+    [isMobile],
   );
 
-  if (!response || !response.data || !response.ok) {
+  if (doNotRender()) {
     return <></>;
   }
 
   return (
     <div className={isMobile ? MOBILE_STYLE : NON_MOBILE_STYLE}>
       <NavbarHeader state={state} transitionState={transitionStateWrapper} />
-      <NavbarList
-        state={state}
-        items={getNavList()}
-        transitionState={transitionStateWrapper}
-      />
+      <NavbarList state={state} items={getNavList()} />
     </div>
   );
 };

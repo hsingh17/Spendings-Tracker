@@ -1,5 +1,6 @@
 package com.spendingstracker.app.util;
 
+import com.spendingstracker.app.config.SecretsConfig;
 import com.spendingstracker.app.dto.CustomUserDetails;
 
 import io.jsonwebtoken.Claims;
@@ -27,7 +28,7 @@ public class JwtUtil {
      * Load the <code>secretKey</code> from the Spring Bean.
      *
      * @param secretKey
-     * @see com.spendingstracker.app.config.SecretKeyConfig
+     * @see SecretsConfig
      */
     public JwtUtil(@Qualifier("secretKey") String secretKey) {
         this.secretKey = secretKey;

@@ -2,7 +2,6 @@ package com.spendingstracker.app.config;
 
 import com.spendingstracker.app.controller.auth.AuthController;
 import com.spendingstracker.app.filter.JwtFilter;
-import com.spendingstracker.app.service.user.UserServiceImpl;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -34,25 +33,6 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private final UserDetailsService userDetailsService;
-
-    private final JwtFilter jwtFilter;
-
-    /**
-     * Constructor to set class variables <code>userDetailsService</code> and <code>jwtFilter</code>
-     * .
-     *
-     * @param userDetailsService <code>UserDetailsServiceImpl</code> Spring bean.
-     * @param jwtFilter <code>JwtFilter</code> Spring bean.
-     * @see UserDetailsService
-     * @see JwtFilter
-     * @see UserServiceImpl
-     */
-    public SecurityConfig(UserDetailsService userDetailsService, JwtFilter jwtFilter) {
-        this.userDetailsService = userDetailsService;
-        this.jwtFilter = jwtFilter;
-    }
-
     /**
      * Build <code>SecurityFilterChain</code> for application specific Spring security needs.
      *
@@ -67,6 +47,7 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain filterChain(
+            JwtFilter jwtFilter,
             HttpSecurity httpSecurity,
             AuthenticationProvider authProvider,
             AuthenticationEntryPoint authEntryPoint)
@@ -87,14 +68,11 @@ public class SecurityConfig {
                                 authorizationManagerRequestMatcherRegistry
                                         .requestMatchers(
                                                 "/v1/auth/login",
-                                                // -- Swagger UI v2
-                                                "/v2/api-docs",
-                                                "/swagger-resources",
-                                                "/swagger-resources/**",
-                                                "/configuration/ui",
-                                                "/configuration/security",
-                                                "/swagger-ui.html",
-                                                "/webjars/**",
+                                                "/v1/auth/register",
+                                                "/v1/auth/verify-acct/**",
+                                                "/v1/auth/resend-registration-email/**",
+                                                "/v1/auth/reset-password/**",
+                                                "/v1/auth/send-password-reset-email/**",
                                                 // -- Swagger UI v3 (OpenAPI)
                                                 "/v3/api-docs/**",
                                                 "/swagger-ui/**")
@@ -117,11 +95,20 @@ public class SecurityConfig {
      * @see BCryptPasswordEncoder
      */
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider authenticationProvider(
+            UserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(new BCryptPasswordEncoder());
+        authProvider.setPasswordEncoder(bCryptPasswordEncoder);
         return authProvider;
+    }
+
+    /**
+     * @return <code>BCryptPasswordEncoder</code> for encrypting passwords
+     */
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     /**
@@ -158,6 +145,7 @@ public class SecurityConfig {
                         HttpMethod.GET.toString(),
                         HttpMethod.POST.toString(),
                         HttpMethod.DELETE.toString(),
+                        HttpMethod.PATCH.toString(),
                         HttpMethod.PUT.toString()));
         corsConfiguration.setAllowCredentials(true); // Need for cookies
         corsConfiguration.setAllowedHeaders(List.of(HttpHeaders.CONTENT_TYPE));

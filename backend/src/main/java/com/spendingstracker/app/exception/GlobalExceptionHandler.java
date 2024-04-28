@@ -20,8 +20,7 @@ public class GlobalExceptionHandler {
      * @see ApiResponse
      */
     @ExceptionHandler({UsernameNotFoundException.class, AuthenticationException.class})
-    public ResponseEntity<ApiResponse<Object>> handleNotFoundException(
-            UsernameNotFoundException e) {
+    public ResponseEntity<ApiResponse<Object>> handleNotFoundException(Exception e) {
         return new ResponseEntity<>(
                 buildApiResponse(e.getMessage(), HttpStatus.NOT_FOUND), HttpStatus.NOT_FOUND);
     }
@@ -34,16 +33,21 @@ public class GlobalExceptionHandler {
      * @see NoSuchGraphTypeException
      * @see SpendingNotFoundException
      * @see NoAuthenticatedUserException
+     * @see UserNotVerified
+     * @see UsernameAlreadyExists
+     * @see IncorrectPinException
      */
     @ExceptionHandler({
         IllegalArgumentException.class,
         ConversionFailedException.class,
         NoSuchGraphTypeException.class,
         SpendingNotFoundException.class,
-        NoAuthenticatedUserException.class
+        NoAuthenticatedUserException.class,
+        UserNotVerified.class,
+        UsernameAlreadyExists.class,
+        IncorrectPinException.class
     })
-    public ResponseEntity<ApiResponse<Object>> handleBadRequestException(
-            IllegalArgumentException e) {
+    public ResponseEntity<ApiResponse<Object>> handleBadRequestException(Exception e) {
         return new ResponseEntity<>(
                 buildApiResponse(e.getMessage(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
     }

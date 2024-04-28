@@ -2,6 +2,10 @@ package com.spendingstracker.app.controller.auth;
 
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.requests.LoginRequest;
+import com.spendingstracker.app.dto.requests.RegisterAcctRequest;
+import com.spendingstracker.app.dto.requests.ResetPasswordRequest;
+import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
+import com.spendingstracker.app.dto.response.*;
 import com.spendingstracker.app.response.ApiResponse;
 import com.spendingstracker.app.service.auth.AuthService;
 import com.spendingstracker.app.util.JwtUtil;
@@ -42,6 +46,7 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<UserDetails>> getMe() {
         log.info("GET /me");
+
         UserDetails userDetails = authService.getUserDetailsForAuthenticatedUser();
         ApiResponse<UserDetails> apiResponse = buildOkAuthApiResponse(userDetails, null);
         return ResponseEntity.ok(apiResponse);
@@ -67,6 +72,7 @@ public class AuthController {
             @RequestBody LoginRequest loginRequest, HttpServletResponse response)
             throws AuthenticationException {
         log.info("POST /login");
+
         UserDetails userDetails = authService.loginUser(loginRequest, response);
         ApiResponse<UserDetails> apiResponse = buildOkAuthApiResponse(userDetails, null);
         return ResponseEntity.ok(apiResponse);
@@ -83,8 +89,111 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<ApiResponse<Object>> postLogout(HttpServletResponse response) {
         log.info("POST /logout");
+
         authService.logoutUser(response);
         ApiResponse<Object> apiResponse = buildOkAuthApiResponse(null, "Successfully logged out");
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    /**
+     * Controller endpoint for registering a user
+     *
+     * @param registerAcctReq object containing user data for account registration
+     * @return
+     * @see ApiResponse
+     * @see RegisterAcctRequest
+     * @see RegisterAcctResponse
+     */
+    @PostMapping("/register")
+    public ResponseEntity<ApiResponse<RegisterAcctResponse>> register(
+            @RequestBody RegisterAcctRequest registerAcctReq) {
+        log.info("POST /register");
+
+        RegisterAcctResponse registerAcctResponse = authService.registerUser(registerAcctReq);
+        ApiResponse<RegisterAcctResponse> apiResponse =
+                buildOkAuthApiResponse(registerAcctResponse, registerAcctResponse.message());
+
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    /**
+     * Controller endpoint for verifying a user with their input pin
+     *
+     * @param verifyAcctReq object containing user info for verification process
+     * @param username
+     * @return
+     * @see ApiResponse
+     * @see VerifyAcctRequest
+     * @see VerifyAcctResponse
+     */
+    @PutMapping("/verify-acct/{username}")
+    public ResponseEntity<ApiResponse<VerifyAcctResponse>> verifyAcct(
+            @RequestBody VerifyAcctRequest verifyAcctReq,
+            @PathVariable("username") String username,
+            HttpServletResponse response) {
+        log.info("PUT /verify-acct/{}", username);
+
+        VerifyAcctResponse verifyAcctResponse =
+                authService.verifyUser(verifyAcctReq, username, response);
+        ApiResponse<VerifyAcctResponse> apiResponse =
+                buildOkAuthApiResponse(verifyAcctResponse, verifyAcctResponse.message());
+
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    /**
+     * Controller endpoint for resending the registration email.
+     *
+     * @param username user to resend registration email to
+     * @return
+     * @see ApiResponse
+     * @see ResendRegistrationEmailResponse
+     */
+    @PostMapping("/resend-registration-email/{username}")
+    public ResponseEntity<ApiResponse<ResendRegistrationEmailResponse>> resendRegistrationEmail(
+            @PathVariable("username") String username) {
+        ResendRegistrationEmailResponse response = authService.resendRegistrationEmail(username);
+        ApiResponse<ResendRegistrationEmailResponse> apiResponse =
+                buildOkAuthApiResponse(response, response.message());
+
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    /**
+     * Controller endpoint for sending a password reset email to <code>username</code>
+     *
+     * @param username
+     * @return
+     * @see ApiResponse
+     * @see SendPasswordResetEmailResponse
+     */
+    @PostMapping("/send-password-reset-email/{username}")
+    public ResponseEntity<ApiResponse<SendPasswordResetEmailResponse>> sendPasswordResetEmail(
+            @PathVariable("username") String username) {
+        SendPasswordResetEmailResponse response = authService.sendPasswordResetEmail(username);
+        ApiResponse<SendPasswordResetEmailResponse> apiResponse =
+                buildOkAuthApiResponse(response, response.message());
+
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    /**
+     * Controller endpoint for resetting user's password
+     *
+     * @param resetPasswordReq
+     * @return
+     * @see ApiResponse
+     * @see ResetPasswordRequest
+     * @see ResetPasswordResponse
+     */
+    @PatchMapping("/reset-password/{username}")
+    public ResponseEntity<ApiResponse<ResetPasswordResponse>> resetPassword(
+            @PathVariable("username") String username,
+            @RequestBody ResetPasswordRequest resetPasswordReq) {
+        ResetPasswordResponse response = authService.resetPassword(resetPasswordReq, username);
+        ApiResponse<ResetPasswordResponse> apiResponse =
+                buildOkAuthApiResponse(response, response.message());
+
         return ResponseEntity.ok(apiResponse);
     }
 

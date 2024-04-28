@@ -6,13 +6,13 @@ import com.spendingstracker.app.dto.requests.SpendingsSaveRequest;
 import com.spendingstracker.app.dto.response.SpendingDetailsResponse;
 import com.spendingstracker.app.dto.response.SpendingPageResponse;
 
-import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
 
 /** Service class for performing CRUD operations on spendings */
-@Service
+@Transactional
 public interface SpendingService {
     /**
      * Get's all of a user's spendings that fit the criteria of the parameters passed in.
@@ -27,6 +27,7 @@ public interface SpendingService {
      * @return <code>{@literal Page<SpendingsListProjection>}</code> object that contains a page of
      *     <code>SpendingsListProjection</code>
      */
+    @Transactional(readOnly = true)
     SpendingPageResponse getSpendings(
             BigInteger userId,
             LocalDate startDate,
@@ -44,6 +45,7 @@ public interface SpendingService {
      * @return <code>{@literal SpendingDetailsResponse}</code> spendings for the user on that day
      * @see SpendingDetailsResponse
      */
+    @Transactional(readOnly = true)
     SpendingDetailsResponse getSpendingDetails(LocalDate spendingDate, BigInteger userId);
 
     /**

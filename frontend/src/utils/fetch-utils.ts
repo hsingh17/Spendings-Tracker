@@ -1,5 +1,5 @@
 import HttpError from "../error/HttpError";
-import { DELETE, GET, POST, PUT } from "./constants";
+import { DELETE, GET, PATCH, POST, PUT } from "./constants";
 import { ApiResponse } from "./types";
 
 async function fetchRequestWrapper<T>(
@@ -12,6 +12,7 @@ async function fetchRequestWrapper<T>(
     case POST:
     case DELETE:
     case PUT:
+    case PATCH:
       return makeRequest(apiUrl, method, body);
     default:
       return {
