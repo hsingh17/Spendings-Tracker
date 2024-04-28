@@ -20,7 +20,7 @@ import FormInputColumns from "./FormInputColumns";
 
 function spendingComparator(
   a: SpendingFormInput,
-  b: SpendingFormInput
+  b: SpendingFormInput,
 ): number {
   const aCategory: Nullable<string> = a.category;
   const bCategory: Nullable<string> = b.category;
@@ -59,12 +59,14 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
     }));
 
   const [spendings, setSpendings] = useState<Array<SpendingFormInput>>(
-    mappedSpendings ? mappedSpendings.sort(spendingComparator) : []
+    mappedSpendings ? mappedSpendings.sort(spendingComparator) : [],
   );
 
   const cardRef = useRef<HTMLDivElement>();
   const navigate = useNavigate();
-  const { mutate } = useSaveSpendings(date, isCreateMode, () => navigate(-1));
+  const { mutate: saveSpendings } = useSaveSpendings(date, isCreateMode, () =>
+    navigate(-1),
+  );
 
   useEffect(() => {
     setSpendings(mappedSpendings ? mappedSpendings : []);
@@ -102,7 +104,7 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
           }
 
           return newSpending;
-        }
+        },
       );
 
       // Make sure no duplicate category names
@@ -154,7 +156,7 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
       delete: spending.delete,
     }));
 
-    mutate({
+    saveSpendings({
       spendingRequests: mappedSpendings,
     });
   };

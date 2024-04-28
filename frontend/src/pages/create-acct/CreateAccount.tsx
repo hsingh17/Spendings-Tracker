@@ -1,4 +1,3 @@
-import React from "react";
 import BackToLoginPage from "../../common/form/BackToLoginPage";
 import EmailInput from "../../common/form/EmailInput";
 import GenericForm from "../../common/form/GenericForm";
@@ -8,32 +7,26 @@ import UsernameInput from "../../common/form/UsernameInput";
 import useCreateAccount from "../../hooks/useCreateAccount";
 
 const CreateAccount = () => {
-  const { mutate } = useCreateAccount();
+  const { mutate: createAccount } = useCreateAccount();
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const target = e.target as typeof e.target & {
-      email: { value: string };
-      username: { value: string };
-      password: { value: string };
-      "confirm-password": { value: string };
-    };
-
-    const newPassword = target["password"].value;
-    const confirmPassword = target["confirm-password"].value;
-
+  const onSubmit = (inputMap: Map<string, string>) => {
+    const email = inputMap.get("email");
+    const username = inputMap.get("username");
+    const newPassword = inputMap.get("password");
+    const confirmPassword = inputMap.get("confirm-password");
     if (newPassword !== confirmPassword) {
       // TODO: Error
       alert("Passwords must match!");
       return;
     }
 
-    mutate({
-      email: target["email"].value,
-      username: target["username"].value,
-      password: newPassword,
-    });
+    if (email && username && newPassword) {
+      createAccount({
+        email: email,
+        username: username,
+        password: newPassword,
+      });
+    }
   };
 
   return (

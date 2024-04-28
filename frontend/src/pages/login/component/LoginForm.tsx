@@ -8,7 +8,6 @@ import UsernameInput from "../../../common/form/UsernameInput";
 import QueryClientConfig from "../../../config/QueryClientConfig";
 import useLogin from "../../../hooks/useLogin";
 import { DASHBOARD_PAGE } from "../../../utils/constants";
-import { UserFormData } from "../../../utils/types";
 import CreateAccountRedirect from "./CreateAccountRedirect";
 
 const LoginForm: FC = () => {
@@ -17,7 +16,8 @@ const LoginForm: FC = () => {
   const { mutate: login } = useLogin(
     () => {
       navigate(DASHBOARD_PAGE);
-      QueryClientConfig.removeQueries(["user"]); // Invalidate the user key from cache so we get the new logged in user
+      // Invalidate the user key from cache so we get the new logged in user
+      QueryClientConfig.removeQueries(["user"]);
     },
     () => {
       toast.error("Invalid login credentials!", {
@@ -26,19 +26,15 @@ const LoginForm: FC = () => {
     },
   );
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const target = e.target as typeof e.target & {
-      username: { value: string };
-      password: { value: string };
-    };
-
-    const formData: UserFormData = {
-      username: target.username.value,
-      password: target.password.value,
-    };
-
-    login(formData);
+  const onSubmit = (inputMap: Map<string, string>) => {
+    const username = inputMap.get("username");
+    const password = inputMap.get("password");
+    if (username && password) {
+      login({
+        username: username,
+        password: password,
+      });
+    }
   };
 
   return (

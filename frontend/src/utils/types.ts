@@ -299,3 +299,7 @@ export type CreateAccountRequest = {
   password: string;
   email: string;
 };
+
+export type VerifyAcctRequest = {
+  pin: string;
+};

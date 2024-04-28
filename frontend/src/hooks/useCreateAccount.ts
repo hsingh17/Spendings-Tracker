@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import HttpError from "../error/HttpError";
-import { CREATE_ACCT_ROUTE, POST, VERIFY_ACCT_ROUTE } from "../utils/constants";
+import { CREATE_ACCT_ROUTE, POST, VERIFY_ACCT_PAGE } from "../utils/constants";
 import fetchRequestWrapper from "../utils/fetch-utils";
 import { CreateAccountRequest } from "../utils/types";
 
@@ -30,7 +30,12 @@ export default function useCreateAccount() {
 
             return err.message;
           },
-          success: "Created your account! Redirecting to dashboard.",
+          success: () => {
+            navigate(
+              `${VERIFY_ACCT_PAGE}?username=${createAccountRequest.username}`,
+            );
+            return "Please check your email to complete the registration process.";
+          },
         },
         {
           position: "bottom-center",
@@ -39,6 +44,5 @@ export default function useCreateAccount() {
 
       return promise;
     },
-    onSuccess: () => navigate(`${VERIFY_ACCT_ROUTE}/`),
   });
 }

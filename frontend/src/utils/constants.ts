@@ -15,12 +15,14 @@ export const VIEW_SPENDINGS_PAGE: string = "/view";
 export const SAVE_SPENDINGS_PAGE: string = "/save";
 export const METRICS_PAGE: string = "/metrics";
 export const SETTINGS_PAGE: string = "/settings";
+export const VERIFY_ACCT_PAGE: string = "/verify-acct";
 export const UNAUTHENTICATED_PAGES: string[] = [
   HOME_PAGE,
   LOGIN_PAGE,
   CREATE_ACCT_PAGE,
   PASSWORD_RESET_PAGE,
   SEND_PASSWORD_RESET_EMAIL_PAGE,
+  VERIFY_ACCT_PAGE,
 ];
 
 // #######################################################################################
@@ -47,6 +49,7 @@ export const AUTH_LOGIN_ROUTE: string = `${BASE_API_URL}${API_VERSION}/auth/logi
 export const AUTH_LOGOUT_ROUTE: string = `${BASE_API_URL}${API_VERSION}/auth/logout`;
 export const ME_API_ROUTE: string = `${BASE_API_URL}${API_VERSION}/auth/me`;
 export const SEND_PASSWORD_RESET_EMAIL_ROUTE: string = `${BASE_API_URL}${API_VERSION}/auth/send-password-reset-email`;
+export const RESEND_ACCT_REG_EMAIL_ROUTE: string = `${BASE_API_URL}${API_VERSION}/auth/resend-registration-email`;
 export const PASSWORD_RESET_ROUTE: string = `${BASE_API_URL}${API_VERSION}/auth/reset-password`;
 export const CREATE_ACCT_ROUTE: string = `${BASE_API_URL}${API_VERSION}/auth/register`;
 export const VERIFY_ACCT_ROUTE: string = `${BASE_API_URL}${API_VERSION}/auth/verify-acct`;

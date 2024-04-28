@@ -13,7 +13,7 @@ const DEFAULT_URL_SEARCH_PARAMS = new URLSearchParams([
 
 export const Metrics = () => {
   const [searchParams, setSearchParams] = useSearchParams(
-    DEFAULT_URL_SEARCH_PARAMS
+    DEFAULT_URL_SEARCH_PARAMS,
   );
 
   const { data: response } = useSpendings(searchParams);
@@ -55,22 +55,23 @@ export const Metrics = () => {
   return (
     <div className="md:relative w-full h-full flex flex-col">
       {spendings?.length ? (
-        <GraphsContainer
-          graphType={getGraphType()}
-          response={response}
-          setSearchParams={setSearchParamsKeepPage}
-        />
+        <>
+          <GraphsContainer
+            graphType={getGraphType()}
+            response={response}
+            setSearchParams={setSearchParamsKeepPage}
+          />
+          <GraphFilter
+            granularity={getGranularity()}
+            graphType={getGraphType()}
+            searchParams={searchParams}
+            defaultUrlSearchParams={DEFAULT_URL_SEARCH_PARAMS}
+            setSearchParams={setSearchParamsResetPage}
+          />
+        </>
       ) : (
         <GraphEmptyState />
       )}
-
-      <GraphFilter
-        granularity={getGranularity()}
-        graphType={getGraphType()}
-        searchParams={searchParams}
-        defaultUrlSearchParams={DEFAULT_URL_SEARCH_PARAMS}
-        setSearchParams={setSearchParamsResetPage}
-      />
     </div>
   );
 };

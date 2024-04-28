@@ -1,4 +1,3 @@
-import React from "react";
 import BackToLoginPage from "../../common/form/BackToLoginPage";
 import GenericForm from "../../common/form/GenericForm";
 import GenericFormButton from "../../common/form/GenericFormButton";
@@ -7,23 +6,17 @@ import useSendPasswordResetEmail from "../../hooks/useSendPasswordResetEmail";
 import ResetPasswordHeader from "./component/ResetPasswordHeader";
 
 const SendPasswordReset = () => {
-  const { mutate } = useSendPasswordResetEmail();
+  const { mutate: sendPasswordResetEmail } = useSendPasswordResetEmail();
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const target = e.target as typeof e.target & {
-      username: { value: string };
-    };
-
-    const username: string = target.username.value;
+  const onSubmit = (inputMap: Map<string, string>) => {
+    const username = inputMap.get("username");
     if (!username || username.length == 0) {
       // TODO: Error
       alert("Username can't be empty");
       return;
     }
 
-    mutate(target.username.value);
+    sendPasswordResetEmail(username);
   };
 
   return (

@@ -8,6 +8,7 @@ import Metrics from "../pages/metrics-page/Metrics";
 import PasswordReset from "../pages/password-reset/PasswordReset";
 import SaveSpendings from "../pages/save/SaveSpendings";
 import SendPasswordReset from "../pages/send-password-reset/SendPasswordReset";
+import VerifyAccount from "../pages/verify-acct/VerifyAccount";
 import ViewSpendings from "../pages/view/ViewSpendings";
 import {
   CREATE_ACCT_PAGE,
@@ -18,6 +19,7 @@ import {
   PASSWORD_RESET_PAGE,
   SAVE_SPENDINGS_PAGE,
   SEND_PASSWORD_RESET_EMAIL_PAGE,
+  VERIFY_ACCT_PAGE,
   VIEW_SPENDINGS_PAGE,
 } from "../utils/constants";
 
@@ -47,6 +49,8 @@ const AppRoutes = () => {
       <Route path={PASSWORD_RESET_PAGE} element={<PasswordReset />} />
 
       <Route path={CREATE_ACCT_PAGE} element={<CreateAccount />} />
+
+      <Route path={VERIFY_ACCT_PAGE} element={<VerifyAccount />} />
 
       <Route path="*" element={<NotFound />} />
     </Routes>

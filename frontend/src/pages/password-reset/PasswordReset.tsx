@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import GenericForm from "../../common/form/GenericForm";
 import GenericFormButton from "../../common/form/GenericFormButton";
@@ -13,37 +13,33 @@ const PasswordReset = () => {
   const username = searchParams.get("username");
   const uuid = searchParams.get("uuid");
 
-  // Can't attempt a password reset without these
-  if (!username || !uuid) {
-    navigate(LOGIN_PAGE);
-    return;
-  }
+  const { mutate: resetPassword } = useResetPassword(username!, () =>
+    navigate(LOGIN_PAGE),
+  );
 
-  const { mutate } = useResetPassword(username, () => navigate(LOGIN_PAGE));
+  const onSubmit = (inputMap: Map<string, string>) => {
+    const newPassword = inputMap.get("new-password");
+    const confirmPassword = inputMap.get("confirm-password");
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const target = e.target as typeof e.target & {
-      "new-password": { value: string };
-      "confirm-password": { value: string };
-    };
-
-    const newPassword = target["new-password"].value;
-    const confirmPassword = target["confirm-password"].value;
-
-    if (newPassword !== confirmPassword) {
+    if (!newPassword || newPassword !== confirmPassword) {
       // TODO: Error
       alert("Passwords must match!");
       return;
     }
 
-    mutate({
+    resetPassword({
       password: newPassword,
-      uuid: uuid,
+      uuid: uuid!,
     });
   };
 
+  useEffect(() => {
+    // Can't attempt a password reset without these
+    if (!username || !uuid) {
+      navigate(LOGIN_PAGE);
+      return;
+    }
+  }, []);
   return (
     <GenericForm
       title="Reset Password"
