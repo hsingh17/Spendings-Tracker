@@ -38,7 +38,7 @@ public class SecurityAuditorAware implements AuditorAware<BigInteger> {
             CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
             return Optional.of(userDetails.getUserId());
         } catch (ClassCastException e) {
-            log.error("Could not cast principal to CustomUserDetails object. Defaulting to 1");
+            log.warn("Could not cast principal to CustomUserDetails object. Defaulting to 1");
             return Optional.of(BigInteger.ONE);
         }
     }

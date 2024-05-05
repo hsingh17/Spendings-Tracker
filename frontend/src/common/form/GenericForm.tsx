@@ -31,7 +31,6 @@ const GenericForm: FC<GenericFormProps> = ({
       inputMap.set(element.getAttribute("name"), input.value);
     }
 
-    console.log(inputMap);
     onSubmit(inputMap);
   };
 

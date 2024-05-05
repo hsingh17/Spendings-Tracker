@@ -1,7 +1,7 @@
 package com.spendingstracker.app.config;
 
-import com.spendingstracker.app.convertor.GranularityConvertor;
-import com.spendingstracker.app.convertor.GraphTypeConverter;
+import com.spendingstracker.app.converter.web.GranularityConverter;
+import com.spendingstracker.app.converter.web.GraphTypeConverter;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -14,21 +14,21 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-    private final GranularityConvertor granularityConvertor;
+    private final GranularityConverter granularityConverter;
 
     private final GraphTypeConverter graphTypeConverter;
 
     /**
      * Constructor to initialize class variables
      *
-     * @param granularityConvertor see <code>GroupByConvertor</code> for more info
+     * @param granularityConverter see <code>GroupByConvertor</code> for more info
      * @param graphTypeConverter see <code>GraphTypeConverter</code> for more info
-     * @see GranularityConvertor
+     * @see GranularityConverter
      * @see GraphTypeConverter
      */
     public WebMvcConfig(
-            GranularityConvertor granularityConvertor, GraphTypeConverter graphTypeConverter) {
-        this.granularityConvertor = granularityConvertor;
+            GranularityConverter granularityConverter, GraphTypeConverter graphTypeConverter) {
+        this.granularityConverter = granularityConverter;
         this.graphTypeConverter = graphTypeConverter;
     }
 
@@ -43,7 +43,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         WebMvcConfigurer.super.addFormatters(registry);
-        registry.addConverter(granularityConvertor);
+        registry.addConverter(granularityConverter);
         registry.addConverter(graphTypeConverter);
     }
 }

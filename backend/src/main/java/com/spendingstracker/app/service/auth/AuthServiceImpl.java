@@ -64,7 +64,12 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public UserDetails loginUser(LoginRequest loginRequest, HttpServletResponse response) {
+    public UserDetails loginUser(
+            LoginRequest loginRequest, HttpServletResponse response, boolean withGoogle) {
+        if (withGoogle) {
+            attemptGoogleLoginFlow(loginRequest.googleCredential());
+        }
+
         // Attempt authentication with the sent login and password
         Authentication auth =
                 authManager.authenticate(
@@ -143,6 +148,17 @@ public class AuthServiceImpl implements AuthService {
         String message = "Successfully reset password for " + username;
         log.info(message);
         return new ResetPasswordResponse(message);
+    }
+
+    private void attemptGoogleLoginFlow(String googleCredential) {
+        // 1. Verify if legit JWT. If legit return all relevant fields. If not then throw
+        // exception.
+        // 3. Check if external user already exists by doing lookup on EMAIL, USERNAME,
+        // EXTERNAL_IDENTIF in USER, EXTERNAL_USER
+        // 4. If
+        // 4a.  Not exists: Create USER and EXTERNAL_USER records. Generate
+        // 5: Generate JWT and set as cookie.
+        // https://developers.google.com/identity/sign-in/web/backend-auth#using-a-google-api-client-library
     }
 
     private void setAuthenticatedCookie(

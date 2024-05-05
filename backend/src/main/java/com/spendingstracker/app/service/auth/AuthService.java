@@ -35,13 +35,15 @@ public interface AuthService {
      * @param loginRequest <code>LoginRequest</code> object containing username and password for
      *     user attempting to login
      * @param response <code>HttpServletResponse</code> object for setting cookie
+     * @param withGoogle indicates whether user is logging in use Google
      * @return <code>CustomUserDetails</code> object that contains detailed user information
      * @see UserDetails
      * @see CustomUserDetails
      * @see LoginRequest
      */
     @Transactional(readOnly = true)
-    UserDetails loginUser(LoginRequest loginRequest, HttpServletResponse response);
+    UserDetails loginUser(
+            LoginRequest loginRequest, HttpServletResponse response, boolean withGoogle);
 
     /**
      * Logs a user out.

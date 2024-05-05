@@ -1,9 +1,9 @@
-package com.spendingstracker.app.service.aws;
+package com.spendingstracker.app.proxy.aws;
 
 import com.spendingstracker.app.entity.Email;
 
 /** Interface that defines a service for sending emails with SES. */
-public interface AwsSesService {
+public interface AwsSesProxyService {
     /**
      * Sends a templated email with AWS SES where the <code>templateData</code> is a <code>byte[]
      * </code>.

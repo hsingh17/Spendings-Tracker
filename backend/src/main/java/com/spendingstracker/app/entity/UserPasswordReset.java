@@ -1,7 +1,5 @@
 package com.spendingstracker.app.entity;
 
-import com.spendingstracker.app.util.YesNoIndToBooleanConverter;
-
 import jakarta.persistence.*;
 
 import lombok.Getter;
@@ -37,7 +35,6 @@ public class UserPasswordReset extends AuditableEntity {
     private UUID uuid;
 
     @Column(name = "IS_USED")
-    @Convert(converter = YesNoIndToBooleanConverter.class)
     private boolean isUsed;
 
     public UserPasswordReset(UUID uuid, Email email, User user) {

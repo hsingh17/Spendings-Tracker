@@ -59,6 +59,7 @@ public class AuthController {
      *     password the user attempted to login with.
      * @param response <code>HttpServletResponse</code> object for returning a cookie to the user
      *     that contains their JWT
+     * @param withGoogle determines if the user is attempting to login with Google
      * @return <code>{@literal ResponseEntity<ApiResponse<CustomUserDetails>>}</code> that contains
      *     the user's details post login
      * @throws AuthenticationException if authentication fails
@@ -69,11 +70,13 @@ public class AuthController {
      */
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<UserDetails>> postLogin(
-            @RequestBody LoginRequest loginRequest, HttpServletResponse response)
+            @RequestBody LoginRequest loginRequest,
+            HttpServletResponse response,
+            @RequestParam("with-google") boolean withGoogle)
             throws AuthenticationException {
         log.info("POST /login");
 
-        UserDetails userDetails = authService.loginUser(loginRequest, response);
+        UserDetails userDetails = authService.loginUser(loginRequest, response, withGoogle);
         ApiResponse<UserDetails> apiResponse = buildOkAuthApiResponse(userDetails, null);
         return ResponseEntity.ok(apiResponse);
     }

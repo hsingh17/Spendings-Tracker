@@ -9,6 +9,7 @@ import QueryClientConfig from "../../../config/QueryClientConfig";
 import useLogin from "../../../hooks/useLogin";
 import { DASHBOARD_PAGE } from "../../../utils/constants";
 import CreateAccountRedirect from "./CreateAccountRedirect";
+import GoogleSignInButton from "./GoogleSignInButton";
 
 const LoginForm: FC = () => {
   const navigate = useNavigate();
@@ -48,6 +49,7 @@ const LoginForm: FC = () => {
             <div className="mt-5">
               <PasswordInput />
               <GenericFormButton value="Log in" />
+              <GoogleSignInButton />
             </div>
           </>
         }
