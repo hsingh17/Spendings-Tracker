@@ -36,6 +36,7 @@ public class GlobalExceptionHandler {
      * @see UserNotVerified
      * @see UsernameAlreadyExists
      * @see IncorrectPinException
+     * @see InvalidGoogleOAuthToken
      */
     @ExceptionHandler({
         IllegalArgumentException.class,
@@ -45,7 +46,8 @@ public class GlobalExceptionHandler {
         NoAuthenticatedUserException.class,
         UserNotVerified.class,
         UsernameAlreadyExists.class,
-        IncorrectPinException.class
+        IncorrectPinException.class,
+        InvalidGoogleOAuthToken.class
     })
     public ResponseEntity<ApiResponse<Object>> handleBadRequestException(Exception e) {
         return new ResponseEntity<>(

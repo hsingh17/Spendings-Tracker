@@ -2,6 +2,7 @@ package com.spendingstracker.app.service.auth;
 
 import com.spendingstracker.app.constants.Constants;
 import com.spendingstracker.app.dto.CustomUserDetails;
+import com.spendingstracker.app.dto.GoogleOAuthPayload;
 import com.spendingstracker.app.dto.requests.LoginRequest;
 import com.spendingstracker.app.dto.requests.RegisterAcctRequest;
 import com.spendingstracker.app.dto.requests.ResetPasswordRequest;
@@ -9,6 +10,7 @@ import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
 import com.spendingstracker.app.dto.response.*;
 import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.exception.NoAuthenticatedUserException;
+import com.spendingstracker.app.proxy.google.GoogleOAuthProxyServiceImpl;
 import com.spendingstracker.app.service.email.EmailService;
 import com.spendingstracker.app.service.user.UserService;
 import com.spendingstracker.app.util.JwtUtil;
@@ -39,16 +41,19 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authManager;
     private final UserService userService;
     private final EmailService emailService;
+    private final GoogleOAuthProxyServiceImpl googleOAuthProxyService;
 
     public AuthServiceImpl(
             JwtUtil jwtUtil,
             AuthenticationManager authManager,
             UserService userService,
-            EmailService emailService) {
+            EmailService emailService,
+            GoogleOAuthProxyServiceImpl googleOAuthProxyService) {
         this.jwtUtil = jwtUtil;
         this.authManager = authManager;
         this.userService = userService;
         this.emailService = emailService;
+        this.googleOAuthProxyService = googleOAuthProxyService;
     }
 
     @Override
@@ -152,8 +157,11 @@ public class AuthServiceImpl implements AuthService {
 
     private void attemptGoogleLoginFlow(String googleCredential) {
         // 1. Verify if legit JWT. If legit return all relevant fields. If not then throw
-        // exception.
+        GoogleOAuthPayload googleOAuthPayload =
+                googleOAuthProxyService.extractPayload(googleCredential);
+
         // 3. Check if external user already exists by doing lookup on EMAIL, USERNAME,
+
         // EXTERNAL_IDENTIF in USER, EXTERNAL_USER
         // 4. If
         // 4a.  Not exists: Create USER and EXTERNAL_USER records. Generate
