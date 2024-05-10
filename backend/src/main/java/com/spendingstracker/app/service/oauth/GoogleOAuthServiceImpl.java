@@ -1,10 +1,11 @@
-package com.spendingstracker.app.proxy.google;
+package com.spendingstracker.app.service.oauth;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
-import com.spendingstracker.app.dto.GoogleOAuthPayload;
+import com.spendingstracker.app.constants.ExternalUserType;
+import com.spendingstracker.app.dto.oauth.OAuthPayload;
 import com.spendingstracker.app.exception.InvalidGoogleOAuthToken;
 
 import lombok.extern.slf4j.Slf4j;
@@ -18,10 +19,10 @@ import java.util.Collections;
 
 @Service
 @Slf4j
-public class GoogleOAuthProxyServiceImpl implements GoogleOAuthProxyService {
+public class GoogleOAuthServiceImpl implements OAuthPayloadService {
     private final GoogleIdTokenVerifier tokenVerifier;
 
-    public GoogleOAuthProxyServiceImpl(@Value("${google.client-id}") String clientId) {
+    public GoogleOAuthServiceImpl(@Value("${google.client-id}") String clientId) {
         tokenVerifier =
                 new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
                         .setAudience(Collections.singleton(clientId))
@@ -29,11 +30,16 @@ public class GoogleOAuthProxyServiceImpl implements GoogleOAuthProxyService {
     }
 
     @Override
-    public GoogleOAuthPayload extractPayload(String googleCredential) {
-        GoogleIdToken token = verifyToken(googleCredential);
+    public OAuthPayload extractPayload(String oAuthCredential) {
+        GoogleIdToken token = verifyToken(oAuthCredential);
         GoogleIdToken.Payload payload = token.getPayload();
         String email = payload.getEmail();
-        return new GoogleOAuthPayload(extractUsernameFromEmail(email), email, payload.getSubject());
+        return new OAuthPayload(extractUsernameFromEmail(email), email, payload.getSubject());
+    }
+
+    @Override
+    public boolean handles(ExternalUserType externalUserType) {
+        return externalUserType == ExternalUserType.GOOGLE;
     }
 
     /**

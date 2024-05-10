@@ -1,8 +1,9 @@
 package com.spendingstracker.app.service.auth;
 
 import com.spendingstracker.app.constants.Constants;
+import com.spendingstracker.app.constants.ExternalUserType;
 import com.spendingstracker.app.dto.CustomUserDetails;
-import com.spendingstracker.app.dto.GoogleOAuthPayload;
+import com.spendingstracker.app.dto.oauth.OAuthPayload;
 import com.spendingstracker.app.dto.requests.LoginRequest;
 import com.spendingstracker.app.dto.requests.RegisterAcctRequest;
 import com.spendingstracker.app.dto.requests.ResetPasswordRequest;
@@ -10,8 +11,9 @@ import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
 import com.spendingstracker.app.dto.response.*;
 import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.exception.NoAuthenticatedUserException;
-import com.spendingstracker.app.proxy.google.GoogleOAuthProxyServiceImpl;
 import com.spendingstracker.app.service.email.EmailService;
+import com.spendingstracker.app.service.oauth.OAuthService;
+import com.spendingstracker.app.service.user.ExternalUserService;
 import com.spendingstracker.app.service.user.UserService;
 import com.spendingstracker.app.util.JwtUtil;
 
@@ -41,19 +43,22 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authManager;
     private final UserService userService;
     private final EmailService emailService;
-    private final GoogleOAuthProxyServiceImpl googleOAuthProxyService;
+    private final OAuthService oAuthService;
+    private final ExternalUserService externalUserService;
 
     public AuthServiceImpl(
             JwtUtil jwtUtil,
             AuthenticationManager authManager,
             UserService userService,
             EmailService emailService,
-            GoogleOAuthProxyServiceImpl googleOAuthProxyService) {
+            OAuthService oAuthService,
+            ExternalUserService externalUserService) {
         this.jwtUtil = jwtUtil;
         this.authManager = authManager;
         this.userService = userService;
         this.emailService = emailService;
-        this.googleOAuthProxyService = googleOAuthProxyService;
+        this.oAuthService = oAuthService;
+        this.externalUserService = externalUserService;
     }
 
     @Override
@@ -70,9 +75,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public UserDetails loginUser(
-            LoginRequest loginRequest, HttpServletResponse response, boolean withGoogle) {
-        if (withGoogle) {
-            attemptGoogleLoginFlow(loginRequest.googleCredential());
+            LoginRequest loginRequest,
+            HttpServletResponse response,
+            ExternalUserType externalUserType) {
+
+        if (externalUserType != null) {
+            attemptOAuthLoginFlow(loginRequest.googleCredential(), externalUserType);
         }
 
         // Attempt authentication with the sent login and password
@@ -155,18 +163,14 @@ public class AuthServiceImpl implements AuthService {
         return new ResetPasswordResponse(message);
     }
 
-    private void attemptGoogleLoginFlow(String googleCredential) {
-        // 1. Verify if legit JWT. If legit return all relevant fields. If not then throw
-        GoogleOAuthPayload googleOAuthPayload =
-                googleOAuthProxyService.extractPayload(googleCredential);
+    private void attemptOAuthLoginFlow(
+            String oAuthLoginCrential, ExternalUserType externalUserType) {
+        OAuthPayload oAuthPayload =
+                oAuthService.extractPayload(oAuthLoginCrential, externalUserType);
 
-        // 3. Check if external user already exists by doing lookup on EMAIL, USERNAME,
-
-        // EXTERNAL_IDENTIF in USER, EXTERNAL_USER
-        // 4. If
-        // 4a.  Not exists: Create USER and EXTERNAL_USER records. Generate
-        // 5: Generate JWT and set as cookie.
-        // https://developers.google.com/identity/sign-in/web/backend-auth#using-a-google-api-client-library
+        if (!externalUserService.existsUser(oAuthPayload)) {
+            externalUserService.createUser(oAuthPayload, externalUserType);
+        }
     }
 
     private void setAuthenticatedCookie(

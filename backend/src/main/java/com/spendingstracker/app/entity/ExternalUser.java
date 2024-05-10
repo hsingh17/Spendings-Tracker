@@ -22,7 +22,7 @@ public class ExternalUser extends AuditableEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BigInteger userRegistrationId;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "USER_ID")
     private User user;
 

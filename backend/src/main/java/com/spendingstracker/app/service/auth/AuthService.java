@@ -1,5 +1,6 @@
 package com.spendingstracker.app.service.auth;
 
+import com.spendingstracker.app.constants.ExternalUserType;
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.requests.LoginRequest;
 import com.spendingstracker.app.dto.requests.RegisterAcctRequest;
@@ -35,7 +36,7 @@ public interface AuthService {
      * @param loginRequest <code>LoginRequest</code> object containing username and password for
      *     user attempting to login
      * @param response <code>HttpServletResponse</code> object for setting cookie
-     * @param withGoogle indicates whether user is logging in use Google
+     * @param externalUserType type of external user
      * @return <code>CustomUserDetails</code> object that contains detailed user information
      * @see UserDetails
      * @see CustomUserDetails
@@ -43,7 +44,7 @@ public interface AuthService {
      */
     @Transactional(readOnly = true)
     UserDetails loginUser(
-            LoginRequest loginRequest, HttpServletResponse response, boolean withGoogle);
+            LoginRequest loginRequest, HttpServletResponse response, ExternalUserType externalUserType);
 
     /**
      * Logs a user out.

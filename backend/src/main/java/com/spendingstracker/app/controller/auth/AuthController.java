@@ -1,5 +1,6 @@
 package com.spendingstracker.app.controller.auth;
 
+import com.spendingstracker.app.constants.ExternalUserType;
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.requests.LoginRequest;
 import com.spendingstracker.app.dto.requests.RegisterAcctRequest;
@@ -72,11 +73,12 @@ public class AuthController {
     public ResponseEntity<ApiResponse<UserDetails>> postLogin(
             @RequestBody LoginRequest loginRequest,
             HttpServletResponse response,
-            @RequestParam("with-google") boolean withGoogle)
+            @RequestParam(value = "external-user-type", required = false)
+                    ExternalUserType externalUserType)
             throws AuthenticationException {
         log.info("POST /login");
 
-        UserDetails userDetails = authService.loginUser(loginRequest, response, withGoogle);
+        UserDetails userDetails = authService.loginUser(loginRequest, response, externalUserType);
         ApiResponse<UserDetails> apiResponse = buildOkAuthApiResponse(userDetails, null);
         return ResponseEntity.ok(apiResponse);
     }
