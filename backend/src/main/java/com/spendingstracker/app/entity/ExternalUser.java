@@ -31,4 +31,10 @@ public class ExternalUser extends AuditableEntity {
 
     @Column(name = "EXTERNAL_IDENTIF")
     private String externalIdentif;
+
+    public ExternalUser(User user, ExternalUserType externalUserType, String externalIdentif) {
+        this.user = user;
+        this.externalUserType = externalUserType;
+        this.externalIdentif = externalIdentif;
+    }
 }

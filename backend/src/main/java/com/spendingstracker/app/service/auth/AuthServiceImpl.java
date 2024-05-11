@@ -79,15 +79,21 @@ public class AuthServiceImpl implements AuthService {
             HttpServletResponse response,
             ExternalUserType externalUserType) {
 
+        String username = loginRequest.username();
+        String password = loginRequest.password();
+
+        // Need to verify 3rd party payload and grab username from payload before continuing for 3rd
+        // party authentication
         if (externalUserType != null) {
-            attemptOAuthLoginFlow(loginRequest.googleCredential(), externalUserType);
+            OAuthPayload payload =
+                    attemptOAuthLoginFlow(loginRequest.googleCredential(), externalUserType);
+            username = payload.username();
         }
 
-        // Attempt authentication with the sent login and password
+        // Attempt authentication with the login and password
         Authentication auth =
                 authManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(
-                                loginRequest.username(), loginRequest.password()));
+                        new UsernamePasswordAuthenticationToken(username, password));
 
         // User has valid credentials in at this point, need to create and return a JWT for the user
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
@@ -163,14 +169,15 @@ public class AuthServiceImpl implements AuthService {
         return new ResetPasswordResponse(message);
     }
 
-    private void attemptOAuthLoginFlow(
+    private OAuthPayload attemptOAuthLoginFlow(
             String oAuthLoginCrential, ExternalUserType externalUserType) {
         OAuthPayload oAuthPayload =
                 oAuthService.extractPayload(oAuthLoginCrential, externalUserType);
 
-        if (!externalUserService.existsUser(oAuthPayload)) {
+        if (!externalUserService.exists(oAuthPayload, externalUserType)) {
             externalUserService.createUser(oAuthPayload, externalUserType);
         }
+        return oAuthPayload;
     }
 
     private void setAuthenticatedCookie(

@@ -14,12 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ExternalUserService {
     /**
      * @param oAuthPayload object containing data after extracting fields from the OAuth JWT
+     * @param externalUserType the type of external user
      * @return if an external user already exists or not
      * @see ExternalUserType
      * @see OAuthPayload
      */
     @Transactional(readOnly = true)
-    boolean existsUser(OAuthPayload oAuthPayload);
+    boolean exists(OAuthPayload oAuthPayload, ExternalUserType externalUserType);
 
     /**
      * @param oAuthPayload object containing data after extracting fields from the OAuth JWT
