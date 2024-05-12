@@ -58,7 +58,7 @@ public class GoogleOAuthServiceImpl implements OAuthPayloadService {
     }
 
     /**
-     * Verifies that <code>googleCredential</code> is a valid Google JWT.
+     * Verifies that <code>oAuthCredential</code> is a valid Google JWT.
      *
      * @param googleCredential Google JWT
      * @return <code>GoogleIdToken</code> object for a valid Google JWT

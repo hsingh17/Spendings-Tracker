@@ -171,9 +171,10 @@ export type SaveSpendingProps = {
   date: string;
 };
 
-export type UserFormData = {
-  username: string;
-  password: string;
+export type LoginRequest = {
+  username?: string;
+  password?: string;
+  oAuthCredential?: string;
 };
 
 export type TableFilterProps = {
@@ -303,3 +304,7 @@ export type CreateAccountRequest = {
 export type VerifyAcctRequest = {
   pin: string;
 };
+
+export enum ExternalUserType {
+  GOOGLE = "GGL",
+}

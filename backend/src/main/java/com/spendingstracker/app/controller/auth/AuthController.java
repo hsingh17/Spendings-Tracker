@@ -60,7 +60,7 @@ public class AuthController {
      *     password the user attempted to login with.
      * @param response <code>HttpServletResponse</code> object for returning a cookie to the user
      *     that contains their JWT
-     * @param withGoogle determines if the user is attempting to login with Google
+     * @param externalUserType type of external user
      * @return <code>{@literal ResponseEntity<ApiResponse<CustomUserDetails>>}</code> that contains
      *     the user's details post login
      * @throws AuthenticationException if authentication fails
@@ -68,6 +68,7 @@ public class AuthController {
      * @see ApiResponse
      * @see UserDetails
      * @see CustomUserDetails
+     * @see ExternalUserType
      */
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<UserDetails>> postLogin(

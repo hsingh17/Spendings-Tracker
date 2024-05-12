@@ -86,7 +86,7 @@ public class AuthServiceImpl implements AuthService {
         // party authentication
         if (externalUserType != null) {
             OAuthPayload payload =
-                    attemptOAuthLoginFlow(loginRequest.googleCredential(), externalUserType);
+                    attemptOAuthLoginFlow(loginRequest.oAuthCredential(), externalUserType);
             username = payload.username();
         }
 
@@ -170,9 +170,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private OAuthPayload attemptOAuthLoginFlow(
-            String oAuthLoginCrential, ExternalUserType externalUserType) {
+            String oAuthLoginCredential, ExternalUserType externalUserType) {
         OAuthPayload oAuthPayload =
-                oAuthService.extractPayload(oAuthLoginCrential, externalUserType);
+                oAuthService.extractPayload(oAuthLoginCredential, externalUserType);
 
         if (!externalUserService.exists(oAuthPayload, externalUserType)) {
             externalUserService.createUser(oAuthPayload, externalUserType);
