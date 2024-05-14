@@ -42,7 +42,6 @@ public interface AuthService {
      * @see CustomUserDetails
      * @see LoginRequest
      */
-    @Transactional(readOnly = true)
     UserDetails loginUser(
             LoginRequest loginRequest, HttpServletResponse response, ExternalUserType externalUserType);
 

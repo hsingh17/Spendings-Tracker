@@ -29,13 +29,14 @@ public class ExternalUserServiceImpl implements ExternalUserService {
                         oAuthPayload.email(),
                         oAuthPayload.externalIdentif(),
                         externalUserType)
-                > 1;
+                >= 1;
     }
 
     @Override
     public void createUser(OAuthPayload oAuthPayload, ExternalUserType externalUserType) {
         // External users don't have a password
         User user = userService.createUser(oAuthPayload.username(), oAuthPayload.email(), "");
+        user.setVerified(true); // Set as verified by default
         ExternalUser externalUser =
                 new ExternalUser(user, externalUserType, oAuthPayload.externalIdentif());
         externalUserRepository.save(externalUser);

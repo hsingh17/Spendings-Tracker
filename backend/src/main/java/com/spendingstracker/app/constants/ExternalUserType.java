@@ -1,5 +1,7 @@
 package com.spendingstracker.app.constants;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.util.Arrays;
 
 /** Enum to coded values for external users */
@@ -15,6 +17,7 @@ public enum ExternalUserType {
     /**
      * @return <code>code</code> value for the <code>ExternalUserType</code>
      */
+    @JsonValue
     public String getCode() {
         return code;
     }

@@ -88,6 +88,7 @@ public class AuthServiceImpl implements AuthService {
             OAuthPayload payload =
                     attemptOAuthLoginFlow(loginRequest.oAuthCredential(), externalUserType);
             username = payload.username();
+            password = "";
         }
 
         // Attempt authentication with the login and password

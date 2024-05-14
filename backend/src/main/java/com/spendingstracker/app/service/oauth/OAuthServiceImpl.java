@@ -23,7 +23,7 @@ public class OAuthServiceImpl implements OAuthService {
     public OAuthPayload extractPayload(String oAuthCredential, ExternalUserType externalUserType) {
         for (OAuthPayloadService oAuthPayloadService : oAuthPayloadServices) {
             if (oAuthPayloadService.handles(externalUserType)) {
-                oAuthPayloadService.extractPayload(oAuthCredential);
+                return oAuthPayloadService.extractPayload(oAuthCredential);
             }
         }
 

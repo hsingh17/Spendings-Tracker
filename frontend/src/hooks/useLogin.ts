@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import QueryClientConfig from "../config/QueryClientConfig";
-import { AUTH_LOGOUT_ROUTE, DASHBOARD_PAGE, POST } from "../utils/constants";
+import { AUTH_LOGIN_ROUTE, DASHBOARD_PAGE, POST } from "../utils/constants";
 import fetchRequestWrapper from "../utils/fetch-utils";
 import { ExternalUserType, LoginRequest, User } from "../utils/types";
 
@@ -9,7 +9,7 @@ async function postLogin(
   formData: LoginRequest,
   externalUserType?: ExternalUserType,
 ) {
-  let url = AUTH_LOGOUT_ROUTE;
+  let url = AUTH_LOGIN_ROUTE;
   if (externalUserType !== undefined) {
     url += `?external-user-type=${externalUserType}`;
   }
