@@ -6,7 +6,7 @@ import com.spendingstracker.app.dto.requests.PasswordResetSesTemplateData;
 import com.spendingstracker.app.dto.requests.RegistrationEmailSesTemplateData;
 import com.spendingstracker.app.entity.Email;
 import com.spendingstracker.app.entity.User;
-import com.spendingstracker.app.service.aws.AwsSesService;
+import com.spendingstracker.app.proxy.aws.AwsSesProxyService;
 import com.spendingstracker.app.service.password.UserPasswordResetService;
 import com.spendingstracker.app.service.registration.UserRegistrationService;
 
@@ -32,19 +32,19 @@ public class EmailServiceImpl implements EmailService {
     private final SesTemplateNames sesTemplateNames;
     private final UserRegistrationService userRegistrationService;
     private final UserPasswordResetService userPasswordResetService;
-    private final AwsSesService awsSesService;
+    private final AwsSesProxyService awsSesProxyService;
     private final WebsiteRedirects websiteRedirects;
 
     public EmailServiceImpl(
             SesTemplateNames sesTemplateNames,
             UserRegistrationService userRegistrationService,
             UserPasswordResetService userPasswordResetService,
-            AwsSesService awsSesService,
+            AwsSesProxyService awsSesProxyService,
             WebsiteRedirects websiteRedirects) {
         this.sesTemplateNames = sesTemplateNames;
         this.userRegistrationService = userRegistrationService;
         this.userPasswordResetService = userPasswordResetService;
-        this.awsSesService = awsSesService;
+        this.awsSesProxyService = awsSesProxyService;
         this.websiteRedirects = websiteRedirects;
     }
 
@@ -67,7 +67,7 @@ public class EmailServiceImpl implements EmailService {
                 new RegistrationEmailSesTemplateData(pin, redirectUrl);
 
         Email email =
-                awsSesService.sendTemplatedEmail(
+                awsSesProxyService.sendTemplatedEmail(
                         sesTemplateNames.getRegistrationEmail(), user.getEmail(), templateData);
 
         userRegistrationService.saveUserRegistration(user, pin, email);
@@ -94,7 +94,7 @@ public class EmailServiceImpl implements EmailService {
                 new PasswordResetSesTemplateData(username, redirectUrl);
 
         Email email =
-                awsSesService.sendTemplatedEmail(
+                awsSesProxyService.sendTemplatedEmail(
                         sesTemplateNames.getPasswordResetEmail(), user.getEmail(), templateData);
 
         userPasswordResetService.saveUserPasswordResetService(uuid, email, user);
@@ -114,7 +114,7 @@ public class EmailServiceImpl implements EmailService {
         // Use the previously sent email information to resend the registration email
         log.info("Resending email to {}", email.getToEmail());
 
-        awsSesService.sendTemplatedEmail(
+        awsSesProxyService.sendTemplatedEmail(
                 email.getTemplateName(), email.getToEmail(), email.getTemplateData(), clazz);
         return true;
     }

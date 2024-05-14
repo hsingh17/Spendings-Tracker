@@ -1,4 +1,4 @@
-package com.spendingstracker.app.convertor;
+package com.spendingstracker.app.converter.web;
 
 import com.spendingstracker.app.constants.Granularity;
 
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @see Granularity
  */
 @Component
-public class GranularityConvertor implements Converter<String, Granularity> {
+public class GranularityConverter implements Converter<String, Granularity> {
 
     /**
      * Converts the coded value <code>source</code> to a <code>Granularity</code>

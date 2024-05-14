@@ -1,4 +1,4 @@
-package com.spendingstracker.app.convertor;
+package com.spendingstracker.app.converter.web;
 
 import com.spendingstracker.app.constants.GraphType;
 

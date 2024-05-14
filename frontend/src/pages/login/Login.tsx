@@ -3,6 +3,7 @@ import useUser from "../../hooks/useUser";
 import { DASHBOARD_PAGE } from "../../utils/constants";
 import LoginForm from "./component/LoginForm";
 
+// TODO: Think of something better than this
 const Login = () => {
   const { data: response } = useUser();
 

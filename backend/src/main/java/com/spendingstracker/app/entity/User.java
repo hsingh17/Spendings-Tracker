@@ -1,7 +1,6 @@
 package com.spendingstracker.app.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.spendingstracker.app.util.YesNoIndToBooleanConverter;
 
 import jakarta.persistence.*;
 
@@ -25,7 +24,6 @@ public class User extends AuditableEntity {
     private String email;
 
     @Column(name = "IS_VERIFIED")
-    @Convert(converter = YesNoIndToBooleanConverter.class)
     private boolean isVerified;
 
     @Column(name = "PASSWORD")
@@ -45,6 +43,9 @@ public class User extends AuditableEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<UserPasswordReset> userPasswordReset;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private ExternalUser externalUser;
 
     public User() {}
 
@@ -116,6 +117,14 @@ public class User extends AuditableEntity {
 
     public void setUserPasswordReset(Set<UserPasswordReset> userPasswordReset) {
         this.userPasswordReset = userPasswordReset;
+    }
+
+    public ExternalUser getExternalUser() {
+        return externalUser;
+    }
+
+    public void setExternalUser(ExternalUser externalUser) {
+        this.externalUser = externalUser;
     }
 
     public void addSpendingUserAggr(SpendingUserAggr spendingUserAggr) {

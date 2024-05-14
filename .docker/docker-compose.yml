@@ -17,7 +17,7 @@ services:
       start_period: 30s
   backend:
     container_name: Spring-Backend
-    build: 
+    build:
       context: ../backend/
     volumes:
       - ../backend:/backend:rw
@@ -25,8 +25,9 @@ services:
       - MYSQL_HOST=database
       - ENV=${MODE}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - AWS_ACCESS_KEY_ID
-      - AWS_SECRET_ACCESS_KEY
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
     ports:
       - "8080:8080"
       - "5005:5005"

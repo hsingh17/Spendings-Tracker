@@ -2,7 +2,7 @@ package com.spendingstracker.app.repository;
 
 import com.spendingstracker.app.entity.Spending;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
@@ -13,4 +13,4 @@ import java.math.BigInteger;
  * @see Spending
  */
 @Repository
-public interface SpendingRepository extends JpaRepository<Spending, BigInteger> {}
+public interface SpendingRepository extends CrudRepository<Spending, BigInteger> {}

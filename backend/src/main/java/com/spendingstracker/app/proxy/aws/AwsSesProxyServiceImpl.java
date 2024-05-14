@@ -1,4 +1,4 @@
-package com.spendingstracker.app.service.aws;
+package com.spendingstracker.app.proxy.aws;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,12 +18,12 @@ import java.io.IOException;
 
 @Service
 @Slf4j
-public class AwsSesServiceImpl implements AwsSesService {
+public class AwsSesProxyServiceImpl implements AwsSesProxyService {
     private final SesV2Client sesClient;
     private final String fromEmail;
     private final ObjectMapper objectMapper;
 
-    public AwsSesServiceImpl(
+    public AwsSesProxyServiceImpl(
             SesV2Client sesClient,
             @Value("${ses.from-email}") String fromEmail,
             ObjectMapper objectMapper) {

@@ -8,7 +8,7 @@ import lombok.Setter;
 
 import java.math.BigInteger;
 
-/** An entity class that maps to the table <code>APP.SPENDING_USER_AGGR</code> */
+/** An entity class that maps to the table <code>APP.USER_REGISTRATION</code> */
 @Entity
 @Table(schema = "APP", name = "USER_REGISTRATION")
 @Getter

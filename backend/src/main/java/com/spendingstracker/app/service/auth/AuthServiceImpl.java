@@ -1,7 +1,9 @@
 package com.spendingstracker.app.service.auth;
 
 import com.spendingstracker.app.constants.Constants;
+import com.spendingstracker.app.constants.ExternalUserType;
 import com.spendingstracker.app.dto.CustomUserDetails;
+import com.spendingstracker.app.dto.oauth.OAuthPayload;
 import com.spendingstracker.app.dto.requests.LoginRequest;
 import com.spendingstracker.app.dto.requests.RegisterAcctRequest;
 import com.spendingstracker.app.dto.requests.ResetPasswordRequest;
@@ -10,6 +12,8 @@ import com.spendingstracker.app.dto.response.*;
 import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.exception.NoAuthenticatedUserException;
 import com.spendingstracker.app.service.email.EmailService;
+import com.spendingstracker.app.service.oauth.OAuthService;
+import com.spendingstracker.app.service.user.ExternalUserService;
 import com.spendingstracker.app.service.user.UserService;
 import com.spendingstracker.app.util.JwtUtil;
 
@@ -39,16 +43,22 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authManager;
     private final UserService userService;
     private final EmailService emailService;
+    private final OAuthService oAuthService;
+    private final ExternalUserService externalUserService;
 
     public AuthServiceImpl(
             JwtUtil jwtUtil,
             AuthenticationManager authManager,
             UserService userService,
-            EmailService emailService) {
+            EmailService emailService,
+            OAuthService oAuthService,
+            ExternalUserService externalUserService) {
         this.jwtUtil = jwtUtil;
         this.authManager = authManager;
         this.userService = userService;
         this.emailService = emailService;
+        this.oAuthService = oAuthService;
+        this.externalUserService = externalUserService;
     }
 
     @Override
@@ -64,12 +74,27 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public UserDetails loginUser(LoginRequest loginRequest, HttpServletResponse response) {
-        // Attempt authentication with the sent login and password
+    public UserDetails loginUser(
+            LoginRequest loginRequest,
+            HttpServletResponse response,
+            ExternalUserType externalUserType) {
+
+        String username = loginRequest.username();
+        String password = loginRequest.password();
+
+        // Need to verify 3rd party payload and grab username from payload before continuing for 3rd
+        // party authentication
+        if (externalUserType != null) {
+            OAuthPayload payload =
+                    attemptOAuthLoginFlow(loginRequest.oAuthCredential(), externalUserType);
+            username = payload.username();
+            password = "";
+        }
+
+        // Attempt authentication with the login and password
         Authentication auth =
                 authManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(
-                                loginRequest.username(), loginRequest.password()));
+                        new UsernamePasswordAuthenticationToken(username, password));
 
         // User has valid credentials in at this point, need to create and return a JWT for the user
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
@@ -143,6 +168,17 @@ public class AuthServiceImpl implements AuthService {
         String message = "Successfully reset password for " + username;
         log.info(message);
         return new ResetPasswordResponse(message);
+    }
+
+    private OAuthPayload attemptOAuthLoginFlow(
+            String oAuthLoginCredential, ExternalUserType externalUserType) {
+        OAuthPayload oAuthPayload =
+                oAuthService.extractPayload(oAuthLoginCredential, externalUserType);
+
+        if (!externalUserService.exists(oAuthPayload, externalUserType)) {
+            externalUserService.createUser(oAuthPayload, externalUserType);
+        }
+        return oAuthPayload;
     }
 
     private void setAuthenticatedCookie(

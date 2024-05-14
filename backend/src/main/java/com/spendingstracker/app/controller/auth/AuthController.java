@@ -1,5 +1,6 @@
 package com.spendingstracker.app.controller.auth;
 
+import com.spendingstracker.app.constants.ExternalUserType;
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.requests.LoginRequest;
 import com.spendingstracker.app.dto.requests.RegisterAcctRequest;
@@ -59,6 +60,7 @@ public class AuthController {
      *     password the user attempted to login with.
      * @param response <code>HttpServletResponse</code> object for returning a cookie to the user
      *     that contains their JWT
+     * @param externalUserType type of external user
      * @return <code>{@literal ResponseEntity<ApiResponse<CustomUserDetails>>}</code> that contains
      *     the user's details post login
      * @throws AuthenticationException if authentication fails
@@ -66,14 +68,18 @@ public class AuthController {
      * @see ApiResponse
      * @see UserDetails
      * @see CustomUserDetails
+     * @see ExternalUserType
      */
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<UserDetails>> postLogin(
-            @RequestBody LoginRequest loginRequest, HttpServletResponse response)
+            @RequestBody LoginRequest loginRequest,
+            HttpServletResponse response,
+            @RequestParam(value = "external-user-type", required = false)
+                    ExternalUserType externalUserType)
             throws AuthenticationException {
         log.info("POST /login");
 
-        UserDetails userDetails = authService.loginUser(loginRequest, response);
+        UserDetails userDetails = authService.loginUser(loginRequest, response, externalUserType);
         ApiResponse<UserDetails> apiResponse = buildOkAuthApiResponse(userDetails, null);
         return ResponseEntity.ok(apiResponse);
     }
