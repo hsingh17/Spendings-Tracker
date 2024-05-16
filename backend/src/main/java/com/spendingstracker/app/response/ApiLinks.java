@@ -1,11 +1,16 @@
 package com.spendingstracker.app.response;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Optional;
 
 /**
  * Object used for storing links to the first, previous, current, next and last page(s) of the API
  * results.
  */
+@Getter
+@Setter
 public class ApiLinks {
     private String first;
     private String prev;
@@ -19,46 +24,6 @@ public class ApiLinks {
         this.self = apiLinksBuilder.self;
         this.next = apiLinksBuilder.next;
         this.last = apiLinksBuilder.last;
-    }
-
-    public String getFirst() {
-        return first;
-    }
-
-    public void setFirst(String first) {
-        this.first = first;
-    }
-
-    public String getPrev() {
-        return prev;
-    }
-
-    public void setPrev(String prev) {
-        this.prev = prev;
-    }
-
-    public String getSelf() {
-        return self;
-    }
-
-    public void setSelf(String self) {
-        this.self = self;
-    }
-
-    public String getNext() {
-        return next;
-    }
-
-    public void setNext(String next) {
-        this.next = next;
-    }
-
-    public String getLast() {
-        return last;
-    }
-
-    public void setLast(String last) {
-        this.last = last;
     }
 
     public static class ApiLinksBuilder {

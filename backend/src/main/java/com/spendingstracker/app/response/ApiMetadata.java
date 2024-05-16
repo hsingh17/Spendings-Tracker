@@ -1,5 +1,8 @@
 package com.spendingstracker.app.response;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Object used to store relevant metadata about the API response such as the current page number,
  * size of the page, total number of results that can be retrieved, total number of pages that can
@@ -7,6 +10,8 @@ package com.spendingstracker.app.response;
  *
  * @see ApiLinks
  */
+@Getter
+@Setter
 public class ApiMetadata {
     private int currentPage;
     private int pageSize;
@@ -20,46 +25,6 @@ public class ApiMetadata {
         this.totalCount = apiMetadataBuilder.totalCount;
         this.totalPages = apiMetadataBuilder.totalPages;
         this.links = apiMetadataBuilder.links;
-    }
-
-    public int getCurrentPage() {
-        return currentPage;
-    }
-
-    public void setCurrentPage(int currentPage) {
-        this.currentPage = currentPage;
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public long getTotalCount() {
-        return totalCount;
-    }
-
-    public void setTotalCount(long totalCount) {
-        this.totalCount = totalCount;
-    }
-
-    public int getTotalPages() {
-        return totalPages;
-    }
-
-    public void setTotalPages(int totalPages) {
-        this.totalPages = totalPages;
-    }
-
-    public ApiLinks getLinks() {
-        return links;
-    }
-
-    public void setLinks(ApiLinks links) {
-        this.links = links;
     }
 
     public static class ApiMetadataBuilder {
