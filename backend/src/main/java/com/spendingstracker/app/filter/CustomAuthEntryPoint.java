@@ -1,7 +1,7 @@
 package com.spendingstracker.app.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.spendingstracker.app.response.ApiResponse;
+import com.spendingstracker.app.dto.response.ApiResponse;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

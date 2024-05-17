@@ -2,7 +2,7 @@ package com.spendingstracker.app.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spendingstracker.app.constants.Constants;
-import com.spendingstracker.app.response.ApiResponse;
+import com.spendingstracker.app.dto.response.ApiResponse;
 import com.spendingstracker.app.util.JwtUtil;
 
 import jakarta.servlet.FilterChain;

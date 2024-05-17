@@ -4,11 +4,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 
 /** An entity class that maps to the table <code>APP.USER</code> */
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(schema = "APP", name = "USER")
 public class User extends AuditableEntity {
@@ -47,99 +54,10 @@ public class User extends AuditableEntity {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private ExternalUser externalUser;
 
-    public User() {}
-
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
-    }
-
-    public BigInteger getUserId() {
-        return userId;
-    }
-
-    public void setUserId(BigInteger userId) {
-        this.userId = userId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Set<SpendingUserAggr> getSpendingUserAggrs() {
-        return spendingUserAggrs;
-    }
-
-    public void setSpendingUserAggrs(Set<SpendingUserAggr> spendingUserAggrs) {
-        this.spendingUserAggrs = spendingUserAggrs;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public boolean isVerified() {
-        return isVerified;
-    }
-
-    public void setVerified(boolean verified) {
-        isVerified = verified;
-    }
-
-    public UserRegistration getUserRegistration() {
-        return userRegistration;
-    }
-
-    public void setUserRegistration(UserRegistration userRegistration) {
-        this.userRegistration = userRegistration;
-    }
-
-    public Set<UserPasswordReset> getUserPasswordReset() {
-        return userPasswordReset;
-    }
-
-    public void setUserPasswordReset(Set<UserPasswordReset> userPasswordReset) {
-        this.userPasswordReset = userPasswordReset;
-    }
-
-    public ExternalUser getExternalUser() {
-        return externalUser;
-    }
-
-    public void setExternalUser(ExternalUser externalUser) {
-        this.externalUser = externalUser;
-    }
-
-    public void addSpendingUserAggr(SpendingUserAggr spendingUserAggr) {
-        spendingUserAggrs.add(spendingUserAggr);
-        spendingUserAggr.setUser(this);
-    }
-
-    public void removeSpendingUserAggr(SpendingUserAggr spendingUserAggr) {
-        spendingUserAggrs.remove(spendingUserAggr);
-        spendingUserAggr.setUser(null);
-    }
-
-    public void updateSpendingUserAggr(SpendingUserAggr spendingUserAggr) {
-        removeSpendingUserAggr(spendingUserAggr);
-        addSpendingUserAggr(spendingUserAggr);
     }
 
     public Email getRegistrationEmail() {

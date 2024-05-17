@@ -9,14 +9,12 @@ import lombok.Setter;
 import java.math.BigInteger;
 import java.util.UUID;
 
-/**
- * An entity class for <code>APP.USER_PASSWORD_RESET</code>
- */
-@Entity
-@Table(schema = "APP", name = "USER_PASSWORD_RESET")
+/** An entity class for <code>APP.USER_PASSWORD_RESET</code> */
 @Getter
 @Setter
 @NoArgsConstructor
+@Entity
+@Table(schema = "APP", name = "USER_PASSWORD_RESET")
 public class UserPasswordReset extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

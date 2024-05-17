@@ -9,11 +9,11 @@ import lombok.Setter;
 import java.math.BigInteger;
 
 /** An entity class that maps to the table <code>APP.USER_REGISTRATION</code> */
-@Entity
-@Table(schema = "APP", name = "USER_REGISTRATION")
 @Getter
 @Setter
 @NoArgsConstructor
+@Entity
+@Table(schema = "APP", name = "USER_REGISTRATION")
 public class UserRegistration extends AuditableEntity {
     @Id
     @Column(name = "USER_REGISTRATION_ID")

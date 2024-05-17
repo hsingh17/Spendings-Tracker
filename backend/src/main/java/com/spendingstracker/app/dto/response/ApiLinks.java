@@ -1,4 +1,4 @@
-package com.spendingstracker.app.response;
+package com.spendingstracker.app.dto.response;
 
 import lombok.Getter;
 import lombok.Setter;

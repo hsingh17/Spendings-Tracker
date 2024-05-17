@@ -8,11 +8,11 @@ import lombok.Setter;
 
 import java.math.BigInteger;
 
-@Entity
-@Table(schema = "APP", name = "EMAIL")
 @Getter
 @Setter
 @NoArgsConstructor
+@Entity
+@Table(schema = "APP", name = "EMAIL")
 public class Email extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

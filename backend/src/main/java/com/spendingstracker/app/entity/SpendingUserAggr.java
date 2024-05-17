@@ -3,6 +3,9 @@ package com.spendingstracker.app.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
@@ -10,6 +13,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 /** An entity class that maps to the table <code>APP.SPENDING_USER_AGGR</code> */
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(schema = "APP", name = "SPENDING_USER_AGGR")
 public class SpendingUserAggr extends AuditableEntity {
@@ -33,7 +39,6 @@ public class SpendingUserAggr extends AuditableEntity {
             orphanRemoval = true)
     private Set<Spending> spendings = new HashSet<>();
 
-    public SpendingUserAggr() {}
 
     public SpendingUserAggr(User user, LocalDate date, Set<Spending> spendings) {
         this.user = user;
