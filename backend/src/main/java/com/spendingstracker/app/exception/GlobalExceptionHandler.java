@@ -1,6 +1,6 @@
 package com.spendingstracker.app.exception;
 
-import com.spendingstracker.app.response.ApiResponse;
+import com.spendingstracker.app.dto.response.ApiResponse;
 
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;

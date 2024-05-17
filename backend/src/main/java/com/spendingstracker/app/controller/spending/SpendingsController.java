@@ -8,9 +8,9 @@ import com.spendingstracker.app.dto.response.SpendingDetailsResponse;
 import com.spendingstracker.app.dto.response.SpendingPageItem;
 import com.spendingstracker.app.dto.response.SpendingPageResponse;
 import com.spendingstracker.app.projection.SpendingListProjection;
-import com.spendingstracker.app.response.ApiLinks;
-import com.spendingstracker.app.response.ApiMetadata;
-import com.spendingstracker.app.response.ApiResponse;
+import com.spendingstracker.app.dto.response.ApiLinks;
+import com.spendingstracker.app.dto.response.ApiMetadata;
+import com.spendingstracker.app.dto.response.ApiResponse;
 import com.spendingstracker.app.service.spending.SpendingService;
 
 import jakarta.servlet.http.HttpServletRequest;

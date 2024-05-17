@@ -29,7 +29,7 @@ public class ExternalUserServiceImpl implements ExternalUserService {
                         oAuthPayload.email(),
                         oAuthPayload.externalIdentif(),
                         externalUserType)
-                >= 1;
+                > 0;
     }
 
     @Override

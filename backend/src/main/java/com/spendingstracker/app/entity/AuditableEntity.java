@@ -5,6 +5,8 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Version;
 
+import lombok.Data;
+import lombok.Getter;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -15,6 +17,7 @@ import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
+@Data
 @EntityListeners(AuditingEntityListener.class)
 public abstract class AuditableEntity {
     @CreatedBy
@@ -36,44 +39,4 @@ public abstract class AuditableEntity {
     @Version
     @Column(name = "OPTIMISTIC_LOCK")
     private Long optimisticLock = 0L;
-
-    public BigInteger getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(BigInteger createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public LocalDateTime getCreatedOn() {
-        return createdOn;
-    }
-
-    public void setCreatedOn(LocalDateTime createdOn) {
-        this.createdOn = createdOn;
-    }
-
-    public BigInteger getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(BigInteger lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public LocalDateTime getLastModifiedOn() {
-        return lastModifiedOn;
-    }
-
-    public void setLastModifiedOn(LocalDateTime lastModifiedOn) {
-        this.lastModifiedOn = lastModifiedOn;
-    }
-
-    public Long getOptimisticLock() {
-        return optimisticLock;
-    }
-
-    public void setOptimisticLock(Long optimisticLock) {
-        this.optimisticLock = optimisticLock;
-    }
 }

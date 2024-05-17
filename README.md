@@ -11,9 +11,12 @@ This repository holds the code for my spendings tracker app built with Java and 
 	- Contains at least 1 lowercase letter
 - clean up add/edit spending UI -> make category a set of predfined options dropdown -> can change datamodel to no longer store a string and just use some enum
 - remove group by for bar and pie charts
+- password reset functionality
+- delete account functionality
 - dashboard -> graphs
 - home page -> cool parallax effect
 - update ERD -> export from dbeaver
+- dark/light mode
 - regenerate javadocs
   - add junit tests for repo layer at minimum
 - add empty state and error states everywhere
@@ -22,3 +25,4 @@ This repository holds the code for my spendings tracker app built with Java and 
 
 ## Known issues
 - when adding or updating amount of spending and it's fully highlighted, pressing any key will result in NaN
+- google sign in button randomly resizes

@@ -1,4 +1,7 @@
-package com.spendingstracker.app.response;
+package com.spendingstracker.app.dto.response;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -8,6 +11,8 @@ import java.time.ZonedDateTime;
  *
  * @param <T> type of the <code>data</code> field
  */
+@Getter
+@Setter
 public class ApiResponse<T> {
     private ApiMetadata metadata;
     private ZonedDateTime timestamp = ZonedDateTime.now(ZoneId.of("Z"));
@@ -24,52 +29,8 @@ public class ApiResponse<T> {
         this.data = apiResponseBuilder.data;
     }
 
-    public ApiMetadata getMetadata() {
-        return metadata;
-    }
-
-    public void setMetadata(ApiMetadata metadata) {
-        this.metadata = metadata;
-    }
-
     public ZonedDateTime getTimestamp() {
         return ZonedDateTime.now(ZoneId.of("Z"));
-    }
-
-    public void setTimestamp(ZonedDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public boolean isOk() {
-        return ok;
-    }
-
-    public void setOk(boolean ok) {
-        this.ok = ok;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Integer getHttpStatus() {
-        return httpStatus;
-    }
-
-    public void setHttpStatus(Integer httpStatus) {
-        this.httpStatus = httpStatus;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
     }
 
     public static class ApiResponseBuilder<T> {
