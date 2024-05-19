@@ -25,7 +25,6 @@ const RecentSpendingsCarousel = () => {
     return <NoSpendingActivity />;
   }
 
-  console.log(response);
   return (
     <Carousel>
       {spendings.map((spendingListRow: SpendingListRow) => {

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import BackToLoginPage from "../../common/form/BackToLoginPage";
 import EmailInput from "../../common/form/EmailInput";
 import GenericForm from "../../common/form/GenericForm";
@@ -5,8 +6,10 @@ import GenericFormButton from "../../common/form/GenericFormButton";
 import PasswordInput from "../../common/form/PasswordInput";
 import UsernameInput from "../../common/form/UsernameInput";
 import useCreateAccount from "../../hooks/useCreateAccount";
+import PasswordRequirements from "./component/PasswordRequirements";
 
 const CreateAccount = () => {
+  const [, setIsValidPassword] = useState<boolean>(false);
   const { mutate: createAccount } = useCreateAccount();
 
   const onSubmit = (inputMap: Map<string, string>) => {
@@ -38,18 +41,20 @@ const CreateAccount = () => {
           <UsernameInput />
 
           <PasswordInput customStyles="mt-3 mb-2" showForgotPassword={false} />
+          <PasswordRequirements
+            password={"TODO"}
+            setIsValid={setIsValidPassword}
+          />
           <PasswordInput
             name="confirm-password"
             title="Confirm Password"
             customStyles="mt-3 mb-2"
             showForgotPassword={false}
           />
-
           <GenericFormButton value="Create Account" />
-
-          <BackToLoginPage />
         </>
       }
+      afterFormChildren={<BackToLoginPage />}
     />
   );
 };
