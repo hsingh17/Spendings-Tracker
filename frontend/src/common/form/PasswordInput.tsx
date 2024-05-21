@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 import GenericInputField from "./GenericInputField";
 import PasswordInputLabel from "./PasswordInputLabel";
 import ShowPasswordIcon from "./ShowPasswordIcon";
@@ -8,6 +8,7 @@ type PasswordInputProps = {
   name?: string;
   customStyles?: string;
   showForgotPassword?: boolean;
+  setPassword?: Dispatch<SetStateAction<string>>;
 };
 
 const PasswordInput: FC<PasswordInputProps> = ({
@@ -15,6 +16,7 @@ const PasswordInput: FC<PasswordInputProps> = ({
   name = "password",
   showForgotPassword = true,
   customStyles = "",
+  setPassword,
 }) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   return (
@@ -27,6 +29,7 @@ const PasswordInput: FC<PasswordInputProps> = ({
       <GenericInputField
         name={name}
         type={showPassword ? "text" : "password"}
+        setPassword={setPassword}
       />
 
       <ShowPasswordIcon

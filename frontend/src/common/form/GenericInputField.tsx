@@ -1,9 +1,10 @@
-import { FC } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 
 type GenericInputFieldProps = {
   type: string;
   name: string;
   className?: string;
+  setPassword?: Dispatch<SetStateAction<string>>;
 };
 
 const DEFAULT_CLASS_NAME =
@@ -12,12 +13,14 @@ const GenericInputField: FC<GenericInputFieldProps> = ({
   className,
   name,
   type,
+  setPassword,
 }) => {
   return (
     <input
       type={type}
       name={name}
       className={className || DEFAULT_CLASS_NAME}
+      onChange={(e) => setPassword && setPassword(e.target.value)}
     />
   );
 };

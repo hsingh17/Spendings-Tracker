@@ -9,7 +9,8 @@ import useCreateAccount from "../../hooks/useCreateAccount";
 import PasswordRequirements from "./component/PasswordRequirements";
 
 const CreateAccount = () => {
-  const [, setIsValidPassword] = useState<boolean>(false);
+  const [password, setPassword] = useState<string>("");
+  const [isValidPassword, setIsValidPassword] = useState<boolean>(false);
   const { mutate: createAccount } = useCreateAccount();
 
   const onSubmit = (inputMap: Map<string, string>) => {
@@ -31,6 +32,8 @@ const CreateAccount = () => {
     }
   };
 
+  console.log(isValidPassword); // TODO: Remove
+
   return (
     <GenericForm
       onSubmit={onSubmit}
@@ -40,17 +43,24 @@ const CreateAccount = () => {
           <EmailInput />
           <UsernameInput />
 
-          <PasswordInput customStyles="mt-3 mb-2" showForgotPassword={false} />
+          <PasswordInput
+            setPassword={setPassword}
+            customStyles="mt-3 mb-2"
+            showForgotPassword={false}
+          />
+
           <PasswordRequirements
-            password={"TODO"}
+            password={password}
             setIsValid={setIsValidPassword}
           />
+
           <PasswordInput
             name="confirm-password"
             title="Confirm Password"
             customStyles="mt-3 mb-2"
             showForgotPassword={false}
           />
+
           <GenericFormButton value="Create Account" />
         </>
       }

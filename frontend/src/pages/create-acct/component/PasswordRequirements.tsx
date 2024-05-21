@@ -1,8 +1,6 @@
 import { Dispatch, FC, SetStateAction } from "react";
-import CheckmarkIcon from "../../../assets/components/CheckmarkIcon";
-import FailIcon from "../../../assets/components/FailIcon";
-import HorizontalDotsIcon from "../../../assets/components/HorizontalDots";
 import { REQ_PASSWORD_LENGTH } from "../../../utils/constants";
+import GenericRequirement from "./GenericRequirement";
 
 type PasswordValidator = {
   msg: string;
@@ -33,40 +31,6 @@ const PASSWORD_VALIDATORS: PasswordValidator[] = [
       /[~`! @#$%^&*()_\-+={[}]|\\:;"'<,>.?]/.test(password),
   },
 ];
-
-type GenericRequirementProps = {
-  msg?: string;
-  isReqMet?: boolean;
-};
-
-const GenericRequirement: FC<GenericRequirementProps> = ({ msg, isReqMet }) => {
-  const getColorStyle = () => {
-    if (isReqMet === null || isReqMet === undefined) {
-      return "gray-600";
-    }
-    return isReqMet ? "green-600" : "red-600";
-  };
-
-  const renderIcon = () => {
-    const className = `w-5 h-5 fill-${getColorStyle()}`;
-    if (isReqMet === null || isReqMet === undefined) {
-      return <HorizontalDotsIcon className={`${className} scale-125`} />;
-    }
-
-    return isReqMet ? (
-      <CheckmarkIcon className={className} />
-    ) : (
-      <FailIcon className={className} />
-    );
-  };
-
-  return (
-    <div className="flex flex-row items-center">
-      {renderIcon()}
-      <p className={`ml-2 text-${getColorStyle()}`}>{msg}</p>
-    </div>
-  );
-};
 
 type PasswordRequirementsProps = {
   password: string;
