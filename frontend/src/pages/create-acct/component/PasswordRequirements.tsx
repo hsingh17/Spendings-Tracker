@@ -34,11 +34,13 @@ const PASSWORD_VALIDATORS: PasswordValidator[] = [
 
 type PasswordRequirementsProps = {
   password: string;
+  showPasswordReq: boolean;
   setIsValid: Dispatch<SetStateAction<boolean>>;
 };
 
 const PasswordRequirements: FC<PasswordRequirementsProps> = ({
   password,
+  showPasswordReq,
   setIsValid,
 }) => {
   const renderReqs = () => {
@@ -73,7 +75,7 @@ const PasswordRequirements: FC<PasswordRequirementsProps> = ({
     return ret;
   };
 
-  return renderReqs();
+  return showPasswordReq && renderReqs();
 };
 
 export default PasswordRequirements;

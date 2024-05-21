@@ -47,16 +47,11 @@ const PasswordReset = () => {
       beforeFormChildren={<PasswordResetHeader />}
       formChildren={
         <>
-          <PasswordInput
-            name="new-password"
-            title="New Password"
-            showForgotPassword={false}
-          />
+          <PasswordInput name="new-password" title="New Password" />
           <PasswordInput
             name="confirm-password"
             title="Confirm Password"
             customStyles="mt-3 mb-2"
-            showForgotPassword={false}
           />
           <GenericFormButton value="Reset Password" />
         </>
