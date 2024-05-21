@@ -1,10 +1,10 @@
-import { Dispatch, FC, SetStateAction } from "react";
+import React, { Dispatch, FC, SetStateAction } from "react";
 
 type GenericInputFieldProps = {
   type: string;
   name: string;
   className?: string;
-  setPassword?: Dispatch<SetStateAction<string>>;
+  onChange?: Dispatch<SetStateAction<string>>;
 };
 
 const DEFAULT_CLASS_NAME =
@@ -13,14 +13,29 @@ const GenericInputField: FC<GenericInputFieldProps> = ({
   className,
   name,
   type,
-  setPassword,
+  onChange,
 }) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // No spaces!
+    if (e.code === "Space") {
+      e.preventDefault();
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    if (onChange) {
+      onChange(val);
+    }
+  };
+
   return (
     <input
       type={type}
       name={name}
       className={className || DEFAULT_CLASS_NAME}
-      onChange={(e) => setPassword && setPassword(e.target.value)}
+      onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => handleKeyDown(e)}
+      onChange={(e) => handleChange(e)}
     />
   );
 };

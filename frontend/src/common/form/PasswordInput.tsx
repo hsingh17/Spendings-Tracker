@@ -29,7 +29,7 @@ const PasswordInput: FC<PasswordInputProps> = ({
       <GenericInputField
         name={name}
         type={showPassword ? "text" : "password"}
-        setPassword={setPassword}
+        onChange={setPassword}
       />
 
       <ShowPasswordIcon

@@ -28,7 +28,7 @@ const PASSWORD_VALIDATORS: PasswordValidator[] = [
   {
     msg: "A special character",
     validationFunc: (password): boolean =>
-      /[~`! @#$%^&*()_\-+={[}]|\\:;"'<,>.?]/.test(password),
+      /[~`!@#$%^&*()_\-+={[}]|\\:;"'<,>.?]/.test(password),
   },
 ];
 
