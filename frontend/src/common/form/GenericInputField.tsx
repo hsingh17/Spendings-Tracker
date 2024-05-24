@@ -4,7 +4,8 @@ type GenericInputFieldProps = {
   type: string;
   name: string;
   className?: string;
-  onChange?: Dispatch<SetStateAction<string>>;
+  errMsg?: string;
+  onChange?: Dispatch<SetStateAction<string>> | ((val: string) => void);
 };
 
 const DEFAULT_CLASS_NAME =
@@ -13,6 +14,7 @@ const GenericInputField: FC<GenericInputFieldProps> = ({
   className,
   name,
   type,
+  errMsg,
   onChange,
 }) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -30,13 +32,18 @@ const GenericInputField: FC<GenericInputFieldProps> = ({
   };
 
   return (
-    <input
-      type={type}
-      name={name}
-      className={className || DEFAULT_CLASS_NAME}
-      onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => handleKeyDown(e)}
-      onChange={(e) => handleChange(e)}
-    />
+    <>
+      <input
+        type={type}
+        name={name}
+        className={className || DEFAULT_CLASS_NAME}
+        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) =>
+          handleKeyDown(e)
+        }
+        onChange={(e) => handleChange(e)}
+      />
+      <span className="text-red-600">{errMsg}</span>
+    </>
   );
 };
 

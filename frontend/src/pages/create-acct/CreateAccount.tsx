@@ -1,3 +1,4 @@
+import { useState } from "react";
 import BackToLoginPage from "../../common/form/BackToLoginPage";
 import EmailInput from "../../common/form/EmailInput";
 import GenericForm from "../../common/form/GenericForm";
@@ -7,6 +8,7 @@ import UsernameInput from "../../common/form/UsernameInput";
 import useCreateAccount from "../../hooks/useCreateAccount";
 
 const CreateAccount = () => {
+  const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const { mutate: createAccount } = useCreateAccount();
 
   const onSubmit = (inputMap: Map<string, string>) => {
@@ -19,13 +21,18 @@ const CreateAccount = () => {
       return;
     }
 
-    if (email && username && newPassword) {
+    if (isFormValid) {
+      // Using '!' because isFormValid can only be true if all conditions are met
       createAccount({
-        email: email,
-        username: username,
-        password: newPassword,
+        email: email!,
+        username: username!,
+        password: newPassword!,
       });
     }
+  };
+
+  const setIsFormValidWrapper = (valid: boolean) => {
+    setIsFormValid((prev) => prev && valid);
   };
 
   return (
@@ -34,7 +41,7 @@ const CreateAccount = () => {
       title="Create an Account"
       formChildren={
         <>
-          <EmailInput />
+          <EmailInput setIsFormValid={setIsFormValidWrapper} />
           <UsernameInput />
           <PasswordInput showPasswordReq={true} customStyles="mt-3 mb-2" />
           <PasswordInput
