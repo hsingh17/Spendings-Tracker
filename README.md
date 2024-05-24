@@ -16,6 +16,7 @@ This repository holds the code for my spendings tracker app built with Java and 
 - delete account functionality
 - home page -> cool parallax effect
 - dark/light mode
+- make custom logo
 - regenerate javadocs
 - update ERD -> export from dbeaver
   - add junit tests for repo layer at minimum
