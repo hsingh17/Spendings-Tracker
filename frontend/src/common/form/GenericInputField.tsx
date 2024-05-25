@@ -1,10 +1,11 @@
 import React, { Dispatch, FC, SetStateAction } from "react";
+import { Nullable } from "../../utils/types";
 
 type GenericInputFieldProps = {
   type: string;
   name: string;
   className?: string;
-  errMsg?: string;
+  errMsg?: Nullable<string>;
   onChange?: Dispatch<SetStateAction<string>> | ((val: string) => void);
 };
 
@@ -42,7 +43,7 @@ const GenericInputField: FC<GenericInputFieldProps> = ({
         }
         onChange={(e) => handleChange(e)}
       />
-      <span className="text-red-600">{errMsg}</span>
+      <span className="text-red-600 font-semibold">{errMsg}</span>
     </>
   );
 };

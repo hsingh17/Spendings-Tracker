@@ -308,3 +308,15 @@ export type VerifyAcctRequest = {
 export enum ExternalUserType {
   GOOGLE = "GGL",
 }
+
+export type FormValidator = {
+  msg: string;
+  validate: (val: string) => boolean;
+};
+
+export type GenericFormInputProps = {
+  title?: string;
+  name?: string;
+  customStyles?: string;
+  addFormValidators?: (formFieldName: string, validate: () => boolean) => void;
+};

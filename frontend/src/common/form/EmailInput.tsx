@@ -1,56 +1,40 @@
-import { Dispatch, FC, SetStateAction, useState } from "react";
-import { MAX_USERNAME_LENGTH } from "../../utils/constants";
+import { FC } from "react";
+import useFormValidate from "../../hooks/useFormValidate";
+import { MAX_EMAIL_LENGTH } from "../../utils/constants";
+import { FormValidator, GenericFormInputProps } from "../../utils/types";
 import GenericInputField from "./GenericInputField";
 
-type EmailValidator = {
-  msg: string;
-  validationFunc: (email: string) => boolean;
-};
-
-const EMAIL_VALIDATORS: EmailValidator[] = [
+const EMAIL_VALIDATORS: FormValidator[] = [
   {
-    msg: "No special characters",
-    validationFunc: (password): boolean =>
-      !/[~`!@#$%^&*()_\-+={[}]|\\:;"'<,>.?]/.test(password),
+    msg: `Email must not exceed ${MAX_EMAIL_LENGTH} characters`,
+    validate: (email: string): boolean => email.length <= MAX_EMAIL_LENGTH,
   },
   {
-    msg: `Username must not exceed ${MAX_USERNAME_LENGTH} characters long`,
-    validationFunc: (email): boolean => email.length <= MAX_USERNAME_LENGTH,
+    msg: `Enter an email`,
+    validate: (email: string): boolean => email.length > 0,
   },
 ];
 
-type EmailInputProps = {
-  setIsFormValid?:
-    | Dispatch<SetStateAction<boolean>>
-    | ((valid: boolean) => void);
-};
-
-const EmailInput: FC<EmailInputProps> = ({ setIsFormValid }) => {
-  const [errMsg, setErrMsg] = useState<string>();
-
-  const onChange = (val: string) => {
-    const valid = true;
-
-    for (const emailValidator of EMAIL_VALIDATORS) {
-      if (!emailValidator.validationFunc(val)) {
-        setErrMsg(emailValidator.msg);
-        break;
-      }
-    }
-
-    if (setIsFormValid) {
-      setIsFormValid(valid);
-    }
-  };
+const EmailInput: FC<GenericFormInputProps> = ({
+  title = "Email",
+  name = "email",
+  customStyles,
+  addFormValidators,
+}) => {
+  const { setVal, errMsg } = useFormValidate(
+    name,
+    EMAIL_VALIDATORS,
+    addFormValidators,
+  );
 
   return (
-    <div className="mt-5">
-      <label className="font-semibold text-slate-500">Email</label>
+    <div className={`mt-5 ${customStyles}`}>
+      <label className="font-semibold text-slate-500">{title}</label>
       <GenericInputField
         type="text"
-        name="email"
+        name={name}
         errMsg={errMsg}
-        onChange={onChange}
+        onChange={setVal}
       />
     </div>
   );

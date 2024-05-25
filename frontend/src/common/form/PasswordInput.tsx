@@ -1,13 +1,11 @@
 import { FC, useState } from "react";
 import PasswordRequirements from "../../pages/create-acct/component/PasswordRequirements";
+import { GenericFormInputProps } from "../../utils/types";
 import GenericInputField from "./GenericInputField";
 import PasswordInputLabel from "./PasswordInputLabel";
 import ShowPasswordIcon from "./ShowPasswordIcon";
 
-type PasswordInputProps = {
-  title?: string;
-  name?: string;
-  customStyles?: string;
+type PasswordInputProps = GenericFormInputProps & {
   showForgotPassword?: boolean;
   showPasswordReq?: boolean;
 };
@@ -15,15 +13,15 @@ type PasswordInputProps = {
 const PasswordInput: FC<PasswordInputProps> = ({
   title = "Password",
   name = "password",
+  customStyles = "",
   showForgotPassword = false,
   showPasswordReq = false,
-  customStyles = "",
 }) => {
   const [password, setPassword] = useState<string>("");
-  const [isValidPassword, setIsValidPassword] = useState<boolean>(false);
+  const [, setIsValidPassword] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  console.log(isValidPassword); // TODO: Remove
+  // console.log(isValidPassword); // TODO: Remove
 
   return (
     <>
