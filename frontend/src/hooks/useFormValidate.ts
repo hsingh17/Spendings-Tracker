@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { FormValidator, Nullable } from "../utils/types";
+import { useCallback, useEffect, useState } from "react";
+import { FormError, FormValidator } from "../utils/types";
 
 export default function useFormValidate(
   formFieldName: string,
@@ -7,35 +7,42 @@ export default function useFormValidate(
   addFormValidators?: (formFieldName: string, validate: () => boolean) => void,
 ) {
   const [val, setVal] = useState<string>("");
-  const [errMsg, setErrMsg] = useState<Nullable<string>>();
+  const [errs, setErrs] = useState<FormError[]>([]);
 
-  useEffect(() => {
-    const validate = () => {
+  // TODO: This kind of hacky. The only reason this is needed
+  // is because PasswordInput needs realtime validation
+  const validate = useCallback(
+    (newVal?: string) => {
+      const validateVal = newVal === undefined ? val : newVal;
       let valid = true;
+      const newErrs: FormError[] = [];
 
       for (const validator of validators) {
-        if (!validator.validate(val)) {
-          valid = false;
-          setErrMsg(validator.msg);
-          break;
-        }
+        const formErr: FormError = {
+          errMsg: validator.msg,
+          valid: validator.validate(validateVal),
+        };
+
+        valid &&= formErr.valid;
+
+        newErrs.push(formErr);
       }
 
-      if (valid) {
-        // Reset error messages
-        setErrMsg(null);
-      }
-
+      setErrs(newErrs);
       return valid;
-    };
+    },
+    [val, validators, setErrs],
+  );
 
+  useEffect(() => {
     if (addFormValidators) {
       addFormValidators(formFieldName, validate);
     }
   }, [val]);
 
   return {
+    errs: errs,
     setVal: setVal,
-    errMsg: errMsg,
+    validate: validate,
   };
 }

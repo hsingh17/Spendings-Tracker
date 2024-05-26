@@ -10,7 +10,7 @@ type GenericFormProps = {
 };
 
 type FormInputFunctionalComponentProps = {
-  addFormValidators: (formFieldName: string, validate: () => boolean) => void;
+  addformvalidators: (formFieldName: string, validate: () => boolean) => void;
 };
 
 const GenericForm: FC<GenericFormProps> = ({
@@ -47,11 +47,11 @@ const GenericForm: FC<GenericFormProps> = ({
         continue;
       }
 
-      console.log(formFieldName, validate, validators);
-
-      // TODO: Figure out why validate() needs to be called twice for it to work properly.
-      // validate();
-      isFormValid &&= validate();
+      // Can't do inline (e.g: isFormValid &&= validate()) because of short-circuting.
+      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_AND_assignment
+      // Basically if LHS is false, it will never evaluate the right
+      const valid = validate();
+      isFormValid &&= valid;
     }
 
     if (isFormValid) {
@@ -82,7 +82,7 @@ const GenericForm: FC<GenericFormProps> = ({
       ) => {
         return React.cloneElement(formInput, {
           key: idx,
-          addFormValidators: addFormValidators,
+          addformvalidators: addFormValidators,
         });
       },
     );

@@ -73,6 +73,7 @@ export const MAX_SPENDINGS_FOR_A_DAY: number = 15;
 export const MAX_CATEGORY_LENGTH: number = 100;
 export const MAX_AMOUNT: number = 100000000;
 export const REQ_PASSWORD_LENGTH: number = 8;
+export const MAX_PASSWORD_LENGTH: number = 64;
 export const MAX_USERNAME_LENGTH: number = 128;
 export const MAX_EMAIL_LENGTH: number = 255;
 

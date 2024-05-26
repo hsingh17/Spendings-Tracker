@@ -20,9 +20,9 @@ const UsernameInput: FC<GenericFormInputProps> = ({
   title = "Username",
   name = "username",
   customStyles,
-  addFormValidators,
+  addformvalidators: addFormValidators,
 }) => {
-  const { setVal, errMsg } = useFormValidate(
+  const { setVal, errs } = useFormValidate(
     name,
     USERNAME_VALIDATORS,
     addFormValidators,
@@ -34,7 +34,7 @@ const UsernameInput: FC<GenericFormInputProps> = ({
       <GenericInputField
         type="text"
         name={name}
-        errMsg={errMsg}
+        errs={errs}
         onChange={setVal}
       />
     </div>

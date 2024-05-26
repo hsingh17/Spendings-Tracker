@@ -1,21 +1,23 @@
 import React, { Dispatch, FC, SetStateAction } from "react";
-import { Nullable } from "../../utils/types";
+import { FormError } from "../../utils/types";
+import GenericInputFieldError from "./GenericInputFieldError";
 
 type GenericInputFieldProps = {
   type: string;
   name: string;
   className?: string;
-  errMsg?: Nullable<string>;
+  errs?: FormError[];
   onChange?: Dispatch<SetStateAction<string>> | ((val: string) => void);
 };
 
 const DEFAULT_CLASS_NAME =
-  "font-semibold mt-1 p-1 border-2 border-slate-500 focus:outline-none focus:border-theme-cta rounded-lg w-full";
+  "font-semibold mt-1 p-1 border-2 focus:outline-none focus:border-theme-cta rounded-lg w-full";
+
 const GenericInputField: FC<GenericInputFieldProps> = ({
   className,
   name,
   type,
-  errMsg,
+  errs,
   onChange,
 }) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -32,6 +34,8 @@ const GenericInputField: FC<GenericInputFieldProps> = ({
     }
   };
 
+  console.log(errs);
+
   return (
     <>
       <input
@@ -43,7 +47,12 @@ const GenericInputField: FC<GenericInputFieldProps> = ({
         }
         onChange={(e) => handleChange(e)}
       />
-      <span className="text-red-600 font-semibold">{errMsg}</span>
+
+      <ol>
+        {errs?.map((err, idx) => {
+          return <GenericInputFieldError key={idx + err.errMsg} err={err} />;
+        })}
+      </ol>
     </>
   );
 };

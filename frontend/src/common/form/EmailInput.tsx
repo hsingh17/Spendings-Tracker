@@ -19,9 +19,9 @@ const EmailInput: FC<GenericFormInputProps> = ({
   title = "Email",
   name = "email",
   customStyles,
-  addFormValidators,
+  addformvalidators: addFormValidators,
 }) => {
-  const { setVal, errMsg } = useFormValidate(
+  const { setVal, errs } = useFormValidate(
     name,
     EMAIL_VALIDATORS,
     addFormValidators,
@@ -33,7 +33,7 @@ const EmailInput: FC<GenericFormInputProps> = ({
       <GenericInputField
         type="text"
         name={name}
-        errMsg={errMsg}
+        errs={errs}
         onChange={setVal}
       />
     </div>

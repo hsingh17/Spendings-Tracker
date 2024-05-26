@@ -318,5 +318,10 @@ export type GenericFormInputProps = {
   title?: string;
   name?: string;
   customStyles?: string;
-  addFormValidators?: (formFieldName: string, validate: () => boolean) => void;
+  addformvalidators?: (formFieldName: string, validate: () => boolean) => void;
+};
+
+export type FormError = {
+  errMsg: string;
+  valid: boolean;
 };
