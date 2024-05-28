@@ -3,19 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { SEND_PASSWORD_RESET_EMAIL_PAGE } from "../../utils/constants";
 
 type PasswordInputLabelProps = {
-  showForgotPassword: boolean;
+  show: boolean;
   title: string;
 };
 
-const PasswordInputLabel: FC<PasswordInputLabelProps> = ({
-  showForgotPassword,
-  title,
-}) => {
+const PasswordInputLabel: FC<PasswordInputLabelProps> = ({ show, title }) => {
   const navigate = useNavigate();
   return (
     <label className="flex flex-row font-semibold text-slate-500">
       <p>{title}</p>
-      {showForgotPassword && (
+      {show && (
         <p
           className="ml-auto text-slate-500 hover:cursor-pointer"
           onClick={() => navigate(SEND_PASSWORD_RESET_EMAIL_PAGE)}

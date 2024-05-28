@@ -35,11 +35,10 @@ const CreateAccount = () => {
         <>
           <EmailInput />
           <UsernameInput />
-          <PasswordInput showPasswordReq={true} customStyles="mt-3 mb-2" />
           <PasswordInput
-            name="confirm-password"
-            title="Confirm Password"
             customStyles="mt-3 mb-2"
+            showPasswordReq={true}
+            showConfirmPassword={true}
           />
           <GenericFormButton value="Create Account" />
         </>

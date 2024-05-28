@@ -6,6 +6,7 @@ import {
   REQ_PASSWORD_LENGTH,
 } from "../../utils/constants";
 import { FormValidator, GenericFormInputProps } from "../../utils/types";
+import ConfirmPasswordInput from "./ConfirmPasswordInput";
 import GenericInputField from "./GenericInputField";
 import PasswordInputLabel from "./PasswordInputLabel";
 import ShowPasswordIcon from "./ShowPasswordIcon";
@@ -45,20 +46,21 @@ type PasswordInputProps = GenericFormInputProps & {
 };
 
 const PasswordInput: FC<PasswordInputProps> = ({
-  title = "Password",
   name = "password",
+  title = "Password",
   customStyles = "",
   showForgotPassword = false,
   showPasswordReq = false,
-  // showConfirmPassword = false,
+  showConfirmPassword = false,
   addformvalidators: addFormValidators,
 }) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const { errs, setVal, validate } = useFormValidate(
-    name,
-    PASSWORD_VALIDATORS,
-    addFormValidators,
-  );
+  const {
+    val: password,
+    errs,
+    setVal,
+    validate,
+  } = useFormValidate(name, PASSWORD_VALIDATORS, addFormValidators);
 
   const onChange = (val: string) => {
     setVal(val);
@@ -68,10 +70,7 @@ const PasswordInput: FC<PasswordInputProps> = ({
   return (
     <>
       <div className={`relative ${customStyles}`}>
-        <PasswordInputLabel
-          title={title}
-          showForgotPassword={showForgotPassword}
-        />
+        <PasswordInputLabel title={title} show={showForgotPassword} />
 
         <GenericInputField
           name={name}
@@ -86,6 +85,13 @@ const PasswordInput: FC<PasswordInputProps> = ({
       </div>
 
       <PasswordRequirements errs={errs} showPasswordReq={showPasswordReq} />
+
+      <ConfirmPasswordInput
+        customStyles={customStyles}
+        show={showConfirmPassword}
+        password={password}
+        addformvalidators={addFormValidators}
+      />
     </>
   );
 };
