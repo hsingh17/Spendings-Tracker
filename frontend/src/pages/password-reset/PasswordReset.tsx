@@ -19,16 +19,9 @@ const PasswordReset = () => {
 
   const onSubmit = (inputMap: Map<string, string>) => {
     const newPassword = inputMap.get("new-password");
-    const confirmPassword = inputMap.get("confirm-password");
-
-    if (!newPassword || newPassword !== confirmPassword) {
-      // TODO: Error
-      alert("Passwords must match!");
-      return;
-    }
-
+    // Validation ensures we won't get here unless password is valid
     resetPassword({
-      password: newPassword,
+      password: newPassword!,
       uuid: uuid!,
     });
   };
@@ -40,6 +33,7 @@ const PasswordReset = () => {
       return;
     }
   }, []);
+
   return (
     <GenericForm
       title="Reset Password"
@@ -47,11 +41,11 @@ const PasswordReset = () => {
       beforeFormChildren={<PasswordResetHeader />}
       formChildren={
         <>
-          <PasswordInput name="new-password" title="New Password" />
           <PasswordInput
-            name="confirm-password"
-            title="Confirm Password"
-            customStyles="mt-3 mb-2"
+            name="new-password"
+            title="New Password"
+            showPasswordReq={true}
+            showConfirmPassword={true}
           />
           <GenericFormButton value="Reset Password" />
         </>
