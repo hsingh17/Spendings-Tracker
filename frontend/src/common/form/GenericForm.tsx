@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from "react";
+import React, { FC, ReactNode, useState } from "react";
 import Card from "../Card";
 
 type GenericFormProps = {
@@ -9,6 +9,10 @@ type GenericFormProps = {
   onSubmit: (inputMap: Map<string, string>) => void;
 };
 
+type FormInputFunctionalComponentProps = {
+  addformvalidators: (formFieldName: string, validate: () => boolean) => void;
+};
+
 const GenericForm: FC<GenericFormProps> = ({
   beforeFormChildren,
   formChildren,
@@ -16,22 +20,72 @@ const GenericForm: FC<GenericFormProps> = ({
   onSubmit,
   title,
 }) => {
+  const [validators, setValidators] = useState<Map<string, () => boolean>>(
+    new Map(),
+  );
+
   const preOnSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const formElement = e.currentTarget as HTMLFormElement;
     const elements = formElement.elements;
-
     const inputMap = new Map();
+    let isFormValid = true;
+
     for (const element of elements) {
       if (!element.hasAttribute("name")) {
         continue;
       }
 
       const input = element as HTMLInputElement;
-      inputMap.set(element.getAttribute("name"), input.value);
+      // ! because TS saying can be null but check is done above
+      const formFieldName = element.getAttribute("name")!;
+      const validate = validators.get(formFieldName);
+      inputMap.set(formFieldName, input.value);
+
+      // Nothing to validate... continue on
+      if (!validate) {
+        continue;
+      }
+
+      // Can't do inline (e.g: isFormValid &&= validate()) because of short-circuting.
+      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_AND_assignment
+      // Basically if LHS is false, it will never evaluate the right
+      const valid = validate();
+      isFormValid &&= valid;
     }
 
-    onSubmit(inputMap);
+    if (isFormValid) {
+      onSubmit(inputMap);
+    }
+  };
+
+  const addFormValidators = (
+    formFieldName: string,
+    validate: () => boolean,
+  ) => {
+    setValidators((prev) => prev.set(formFieldName, validate));
+  };
+
+  const renderFormChildren = () => {
+    if (!React.isValidElement(formChildren)) {
+      return formChildren;
+    }
+
+    const formInputs: React.FunctionComponentElement<FormInputFunctionalComponentProps>[] =
+      formChildren.props?.children;
+
+    // Inject addValidator function as props to all formChildren
+    return formInputs.map(
+      (
+        formInput: React.FunctionComponentElement<FormInputFunctionalComponentProps>,
+        idx,
+      ) => {
+        return React.cloneElement(formInput, {
+          key: idx,
+          addformvalidators: addFormValidators,
+        });
+      },
+    );
   };
 
   return (
@@ -43,7 +97,7 @@ const GenericForm: FC<GenericFormProps> = ({
           className="w-full"
           onSubmit={(e: React.FormEvent) => preOnSubmit(e)}
         >
-          {formChildren}
+          {renderFormChildren()}
         </form>
         {afterFormChildren}
       </Card>

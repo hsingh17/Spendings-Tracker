@@ -15,18 +15,16 @@ const CreateAccount = () => {
     const newPassword = inputMap.get("password");
     const confirmPassword = inputMap.get("confirm-password");
     if (newPassword !== confirmPassword) {
-      // TODO: Error
       alert("Passwords must match!");
       return;
     }
 
-    if (email && username && newPassword) {
-      createAccount({
-        email: email,
-        username: username,
-        password: newPassword,
-      });
-    }
+    // Using '!' because isFormValid can only be true if all conditions are met
+    createAccount({
+      email: email!,
+      username: username!,
+      password: newPassword!,
+    });
   };
 
   return (
@@ -37,20 +35,15 @@ const CreateAccount = () => {
         <>
           <EmailInput />
           <UsernameInput />
-
-          <PasswordInput customStyles="mt-3 mb-2" showForgotPassword={false} />
           <PasswordInput
-            name="confirm-password"
-            title="Confirm Password"
             customStyles="mt-3 mb-2"
-            showForgotPassword={false}
+            showPasswordReq={true}
+            showConfirmPassword={true}
           />
-
           <GenericFormButton value="Create Account" />
-
-          <BackToLoginPage />
         </>
       }
+      afterFormChildren={<BackToLoginPage />}
     />
   );
 };

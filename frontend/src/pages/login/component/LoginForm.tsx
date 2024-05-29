@@ -35,7 +35,7 @@ const LoginForm: FC = () => {
           <>
             <UsernameInput />
             <div className="mt-5">
-              <PasswordInput />
+              <PasswordInput showForgotPassword={true} />
               <GenericFormButton value="Log in" />
               <GoogleSignInButton />
             </div>

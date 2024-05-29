@@ -10,13 +10,9 @@ const SendPasswordReset = () => {
 
   const onSubmit = (inputMap: Map<string, string>) => {
     const username = inputMap.get("username");
-    if (!username || username.length == 0) {
-      // TODO: Error
-      alert("Username can't be empty");
-      return;
-    }
 
-    sendPasswordResetEmail(username);
+    // Validation ensures we won't get here unless username is populated
+    sendPasswordResetEmail(username!);
   };
 
   return (
