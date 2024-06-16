@@ -39,45 +39,11 @@ public class SpendingUserAggr extends AuditableEntity {
             orphanRemoval = true)
     private Set<Spending> spendings = new HashSet<>();
 
-
     public SpendingUserAggr(User user, LocalDate date, Set<Spending> spendings) {
         this.user = user;
         this.date = date;
         this.spendings = spendings;
         spendings.forEach(spending -> spending.setSpendingUserAggr(this));
-    }
-
-    public BigInteger getSpendingUserAggrId() {
-        return spendingUserAggrId;
-    }
-
-    public void setSpendingUserAggrId(BigInteger spendingUserAggrId) {
-        this.spendingUserAggrId = spendingUserAggrId;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public Set<Spending> getSpendings() {
-        return spendings;
-    }
-
-    public void setSpendings(Set<Spending> spendings) {
-        spendings.forEach(spending -> spending.setSpendingUserAggr(this));
-        this.spendings = spendings;
     }
 
     public void addSpending(Spending spending) {
@@ -87,18 +53,5 @@ public class SpendingUserAggr extends AuditableEntity {
 
     public void removeSpending(Spending spending) {
         spendings.remove(spending);
-    }
-
-    public void addSpendings(Set<Spending> spendings) {
-        spendings.forEach(spending -> spending.setSpendingUserAggr(this));
-        this.spendings.addAll(spendings);
-    }
-
-    public void removeSpendings(Set<Spending> spendings) {
-        this.spendings.removeAll(spendings);
-    }
-
-    public void emptySpendings() {
-        spendings.clear();
     }
 }

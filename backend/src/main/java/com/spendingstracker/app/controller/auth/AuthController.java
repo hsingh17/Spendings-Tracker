@@ -47,7 +47,6 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<UserDetails>> getMe() {
         log.info("GET /me");
-
         UserDetails userDetails = authService.getUserDetailsForAuthenticatedUser();
         ApiResponse<UserDetails> apiResponse = buildOkAuthApiResponse(userDetails, null);
         return ResponseEntity.ok(apiResponse);
