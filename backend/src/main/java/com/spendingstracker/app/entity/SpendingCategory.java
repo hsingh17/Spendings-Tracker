@@ -32,5 +32,9 @@ public class SpendingCategory extends AuditableEntity {
     private String s3SvgUrl;
 
     @Column(name = "IS_ACTIVE")
-    private boolean isActive;
+    private boolean isActive = true;
+
+    public SpendingCategory(SpendingCategoryEnum name) {
+        this.name = name;
+    }
 }

@@ -33,16 +33,17 @@ public interface SpendingUserAggrRepository extends JpaRepository<SpendingUserAg
                     """
                     SELECT
                         S.SPENDING_ID AS spendingId,
-                        S.CATEGORY AS category,
+                        SC.NAME AS category,
                         S.AMOUNT AS amount
                     FROM
                         APP.SPENDING_USER_AGGR SUA,
-                        APP.SPENDING S
+                        APP.SPENDING S,
+                        APP.SPENDING_CATEGORY SC
                     WHERE
                             SUA.SPENDING_USER_AGGR_ID = S.SPENDING_USER_AGGR_ID
+                        AND S.SPENDING_CATEGORY_ID = SC.SPENDING_CATEGORY_ID
                         AND SUA.USER_ID = :userId
                         AND SUA.DATE = :date
-
                 """,
             nativeQuery = true)
     List<SpendingProjection> findSpendingDetailsByUserIdAndDate(
@@ -243,13 +244,15 @@ public interface SpendingUserAggrRepository extends JpaRepository<SpendingUserAg
             value =
                     """
                     SELECT
-                        S.CATEGORY as category,
+                        SC.NAME as category,
                         SUM(S.AMOUNT) as total
                     FROM
                         APP.SPENDING_USER_AGGR SUA,
-                        APP.SPENDING S
+                        APP.SPENDING S,
+                        APP.SPENDING_CATEGORY SC
                     WHERE
                             SUA.SPENDING_USER_AGGR_ID = S.SPENDING_USER_AGGR_ID
+                        AND S.SPENDING_CATEGORY_ID = SC.SPENDING_CATEGORY_ID
                         AND SUA.USER_ID = :userId
                         AND SUA.DATE >= :startDate
                         AND SUA.DATE <= :endDate
@@ -264,9 +267,11 @@ public interface SpendingUserAggrRepository extends JpaRepository<SpendingUserAg
                         COUNT(*)
                     FROM
                         APP.SPENDING_USER_AGGR SUA,
-                        APP.SPENDING S
+                        APP.SPENDING S,
+                        APP.SPENDING_CATEGORY SC
                     WHERE
                             SUA.SPENDING_USER_AGGR_ID = S.SPENDING_USER_AGGR_ID
+                        AND S.SPENDING_CATEGORY_ID = SC.SPENDING_CATEGORY_ID
                         AND SUA.USER_ID = :userId
                         AND SUA.DATE >= :startDate
                         AND SUA.DATE <= :endDate
@@ -274,7 +279,6 @@ public interface SpendingUserAggrRepository extends JpaRepository<SpendingUserAg
                         S.CATEGORY
                     ORDER BY
                         SUM(S.AMOUNT) DESC
-
                     """,
             nativeQuery = true)
     Page<SpendingListProjection> findSpendingsCategorical(

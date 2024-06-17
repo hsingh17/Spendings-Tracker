@@ -27,14 +27,14 @@ BEGIN
             END IF;
 
             INSERT INTO
-                APP.SPENDING (SPENDING_USER_AGGR_ID, CATEGORY, AMOUNT)
+                APP.SPENDING (SPENDING_USER_AGGR_ID, SPENDING_CATEGORY_ID, AMOUNT)
             SELECT
                 MAX(SUA.SPENDING_USER_AGGR_ID),
                 (
                     SELECT
-                        CATEGORY
+                        SC.SPENDING_CATEGORY_ID
                     FROM
-                        APP.SPENDING_CATEGORY
+                        APP.SPENDING_CATEGORY SC
                     ORDER BY
                         RAND ()
                     LIMIT

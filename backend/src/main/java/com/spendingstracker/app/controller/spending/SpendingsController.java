@@ -133,6 +133,12 @@ public class SpendingsController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    @GetMapping
+    public ResponseEntity<ApiResponse<Object>> getSpendingCategories() {
+        /// TODO;
+        return null;
+    }
+
     /**
      * Route to create spendings for a certain date.
      *

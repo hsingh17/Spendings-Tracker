@@ -19,7 +19,7 @@ import java.util.Map;
  */
 @Slf4j
 public class SpendingCategoryJpaCache {
-    private  Map<SpendingCategoryEnum, SpendingCategory> cache;
+    private Map<SpendingCategoryEnum, SpendingCategory> cache;
 
     private final SpendingCategoryRepository spendingCategoryRepository;
 
@@ -38,6 +38,10 @@ public class SpendingCategoryJpaCache {
     }
 
     public SpendingCategory getFromCache(SpendingCategoryEnum spendingCategoryEnum) {
+        log.debug(
+                "Finding SpendingCategory entity for SpendingCategoryEnum {}",
+                spendingCategoryEnum);
+
         if (cache.containsKey(spendingCategoryEnum)) {
             return cache.get(spendingCategoryEnum);
         }
@@ -48,7 +52,14 @@ public class SpendingCategoryJpaCache {
             return cache.get(spendingCategoryEnum);
         }
 
-        // Valid SpendingCategoryEnum that hasn't been added to the repo yet!
-        // TODO
+        log.warn(
+                "No SpendingCategory entity found for SpendingCategoryEnum {}."
+                        + "Creating entity for it.",
+                spendingCategoryEnum);
+
+        SpendingCategory spendingCategory = new SpendingCategory(spendingCategoryEnum);
+        spendingCategoryRepository.save(spendingCategory);
+
+        return spendingCategory;
     }
 }

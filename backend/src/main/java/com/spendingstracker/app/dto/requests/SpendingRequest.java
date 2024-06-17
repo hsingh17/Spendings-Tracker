@@ -1,5 +1,7 @@
 package com.spendingstracker.app.dto.requests;
 
+import com.spendingstracker.app.constants.SpendingCategoryEnum;
+import com.spendingstracker.app.entity.SpendingCategory;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -9,7 +11,7 @@ import java.math.BigInteger;
 @Data
 public class SpendingRequest {
     private BigInteger spendingId;
-    private String category;
+    private SpendingCategoryEnum category;
     private BigDecimal amount;
     private boolean delete;
 
@@ -19,18 +21,5 @@ public class SpendingRequest {
      */
     public void addAmount(BigDecimal amount) {
         this.amount = this.amount.add(amount);
-    }
-
-    /**
-     * Sums the amounts of <code>l</code> and <code>r</code> together. Used for merging <code>
-     * SpendingRequest</code> objects that have the same <code>category</code>
-     *
-     * @param l <code>SpendingRequest</code> object
-     * @param r <code>SpendingRequest</code> object
-     * @return <code>SpendingRequest</code> whose sum is <code>l.amount + r.amount</code>
-     */
-    public static SpendingRequest merge(SpendingRequest l, SpendingRequest r) {
-        l.addAmount(r.getAmount());
-        return l;
     }
 }
