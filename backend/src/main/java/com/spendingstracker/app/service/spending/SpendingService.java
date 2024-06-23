@@ -3,6 +3,7 @@ package com.spendingstracker.app.service.spending;
 import com.spendingstracker.app.constants.Granularity;
 import com.spendingstracker.app.constants.GraphType;
 import com.spendingstracker.app.dto.requests.SpendingsSaveRequest;
+import com.spendingstracker.app.dto.response.SpendingCategoriesResponse;
 import com.spendingstracker.app.dto.response.SpendingDetailsResponse;
 import com.spendingstracker.app.dto.response.SpendingPageResponse;
 

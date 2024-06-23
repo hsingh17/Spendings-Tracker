@@ -28,8 +28,8 @@ public class SpendingCategory extends AuditableEntity {
     @Column(name = "NAME")
     private SpendingCategoryEnum name;
 
-    @Column(name = "S3_SVG_URL")
-    private String s3SvgUrl;
+    @Column(name = "S3_KEY")
+    private String s3Key;
 
     @Column(name = "IS_ACTIVE")
     private boolean isActive = true;

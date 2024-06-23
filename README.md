@@ -7,8 +7,7 @@ This repository holds the code for my spendings tracker app built with Java and 
 - add fontawesome icons to relevant areas (signin button, username/password icons)
 - dashboard -> graphs
 - add empty state and error states everywhere
-- password reset functionality
-- delete account functionality
+- delete account functionality -> in reality, we're going to simply set IS_ACTIVE to N
 - home page -> cool parallax effect
 - dark/light mode
 - make custom logo

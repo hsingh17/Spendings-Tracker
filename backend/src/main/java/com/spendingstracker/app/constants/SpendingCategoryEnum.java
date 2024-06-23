@@ -2,7 +2,7 @@ package com.spendingstracker.app.constants;
 
 import java.util.Arrays;
 
-/** <code>enum</code> that represents spending categories */
+/** <code>enum</code> that represents spending categoryToS3UrlMap */
 public enum SpendingCategoryEnum {
     TRANSPORATION("Transporation"),
     CLOTHING("Clothing"),

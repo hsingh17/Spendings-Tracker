@@ -4,13 +4,9 @@ import com.spendingstracker.app.constants.Granularity;
 import com.spendingstracker.app.constants.GraphType;
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.requests.SpendingsSaveRequest;
-import com.spendingstracker.app.dto.response.SpendingDetailsResponse;
-import com.spendingstracker.app.dto.response.SpendingPageItem;
-import com.spendingstracker.app.dto.response.SpendingPageResponse;
+import com.spendingstracker.app.dto.response.*;
 import com.spendingstracker.app.projection.SpendingListProjection;
-import com.spendingstracker.app.dto.response.ApiLinks;
-import com.spendingstracker.app.dto.response.ApiMetadata;
-import com.spendingstracker.app.dto.response.ApiResponse;
+import com.spendingstracker.app.service.spending.SpendingCategoryService;
 import com.spendingstracker.app.service.spending.SpendingService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,6 +30,7 @@ import java.time.LocalDate;
 @Slf4j
 public class SpendingsController {
     private final SpendingService spendingService;
+    private final SpendingCategoryService spendingCategoryService;
 
     /**
      * Instantiate the <code>SpendingsController</code> from a <code>SpendingService</code> object.
@@ -41,8 +38,10 @@ public class SpendingsController {
      * @param spendingService <code>SpendingService</code> object
      * @see SpendingService
      */
-    public SpendingsController(SpendingService spendingService) {
+    public SpendingsController(
+            SpendingService spendingService, SpendingCategoryService spendingCategoryService) {
         this.spendingService = spendingService;
+        this.spendingCategoryService = spendingCategoryService;
     }
 
     /**
@@ -105,10 +104,10 @@ public class SpendingsController {
                         spendingsPage.getNumberOfElements(),
                         spendingsPage.getTotalElements());
 
-        ApiResponse<SpendingPageResponse> apiResponse =
+        ApiResponse<SpendingPageResponse> response =
                 buildOkApiResponse(spendingPageResponse, null, apiMetadata);
 
-        return ResponseEntity.ok(apiResponse);
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -127,16 +126,10 @@ public class SpendingsController {
         SpendingDetailsResponse spendingsResponse =
                 spendingService.getSpendingDetails(spendingDate, getUserId());
 
-        ApiResponse<SpendingDetailsResponse> apiResponse =
+        ApiResponse<SpendingDetailsResponse> response =
                 buildOkApiResponse(spendingsResponse, null, null);
 
-        return ResponseEntity.ok(apiResponse);
-    }
-
-    @GetMapping
-    public ResponseEntity<ApiResponse<Object>> getSpendingCategories() {
-        /// TODO;
-        return null;
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -158,11 +151,11 @@ public class SpendingsController {
         spendingService.createSpending(spendingsSaveRequest, spendingDate, getUserId());
 
         int N = spendingsSaveRequest.spendingRequests().size();
-        ApiResponse<Object> apiResponse =
+        ApiResponse<Object> response =
                 buildOkApiResponse(
                         null, "Created " + N + " spendings for date " + spendingDate, null);
 
-        return ResponseEntity.ok(apiResponse);
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -182,11 +175,11 @@ public class SpendingsController {
         log.info("PUT /spendings/" + spendingDate);
 
         spendingService.updateSpending(spendingsSaveRequest, spendingDate, getUserId());
-        ApiResponse<Object> apiResponse =
+        ApiResponse<Object> response =
                 buildOkApiResponse(
                         null, "Updated spending for spending date: " + spendingDate, null);
 
-        return ResponseEntity.ok(apiResponse);
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -204,10 +197,26 @@ public class SpendingsController {
         log.info("DELETE /spendings/" + spendingUserAggrId);
 
         spendingService.deleteSpending(spendingUserAggrId);
-        ApiResponse<Object> apiResponse =
+        ApiResponse<Object> response =
                 buildOkApiResponse(null, "Deleted spending for id: " + spendingUserAggrId, null);
 
-        return ResponseEntity.ok(apiResponse);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/spending-categories")
+    public ResponseEntity<ApiResponse<SpendingCategoriesResponse>> getSpendingCategories() {
+        log.info("GET /spending-categories");
+        SpendingCategoriesResponse spendingCategoriesResponse =
+                spendingCategoryService.getSpendingCategories();
+        ApiResponse<SpendingCategoriesResponse> response =
+                buildOkApiResponse(
+                        spendingCategoriesResponse,
+                        "Returned "
+                                + spendingCategoriesResponse.categoryToS3UrlMap().size()
+                                + " categories",
+                        null);
+
+        return ResponseEntity.ok(response);
     }
 
     /**
