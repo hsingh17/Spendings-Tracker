@@ -1,6 +1,5 @@
 package com.spendingstracker.app.dto.response;
 
-
 import java.util.Map;
 
 /**

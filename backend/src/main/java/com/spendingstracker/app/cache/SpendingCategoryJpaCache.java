@@ -6,9 +6,7 @@ import com.spendingstracker.app.repository.SpendingCategoryRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Cache class for loading <code>SPENDING_CATEGORY</code> records into memory on start
@@ -30,7 +28,8 @@ public class SpendingCategoryJpaCache {
 
     private void loadCache() {
         Map<SpendingCategoryEnum, SpendingCategory> temp = new HashMap<>();
-        for (SpendingCategory spendingCategory : spendingCategoryRepository.findAll()) {
+        for (SpendingCategory spendingCategory :
+                spendingCategoryRepository.getActiveSpendingCategories()) {
             temp.put(spendingCategory.getName(), spendingCategory);
         }
 
@@ -61,5 +60,10 @@ public class SpendingCategoryJpaCache {
         spendingCategoryRepository.save(spendingCategory);
 
         return spendingCategory;
+    }
+
+    public Collection<SpendingCategory> getActiveSpendingCategories() {
+        log.debug("Loading active spending categories from cache");
+        return cache.values();
     }
 }

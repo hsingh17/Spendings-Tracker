@@ -6,7 +6,8 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 /**
- * <code>Converter</code> to convert between <code>String</code> and <code>SpendingCategoryEnum</code>
+ * <code>Converter</code> to convert between <code>String</code> and <code>SpendingCategoryEnum
+ * </code>
  *
  * @see SpendingCategoryEnum
  */
@@ -17,8 +18,8 @@ public class SpendingCategoryEnumConverter implements Converter<String, Spending
      * Converts the coded value <code>source</code> to a <code>SpendingCategoryEnum</code>
      *
      * @param source coded values of the graph type
-     * @return a <code>SpendingCategoryEnum</code> if there exists a <code>SpendingCategoryEnum</code> with coded value
-     *     <code>source</code>
+     * @return a <code>SpendingCategoryEnum</code> if there exists a <code>SpendingCategoryEnum
+     *     </code> with coded value <code>source</code>
      * @see SpendingCategoryEnum
      */
     @Override

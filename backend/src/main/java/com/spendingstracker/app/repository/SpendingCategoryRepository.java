@@ -1,9 +1,8 @@
 package com.spendingstracker.app.repository;
 
 import com.spendingstracker.app.entity.SpendingCategory;
-import com.spendingstracker.app.entity.UserRegistration;
-
 import com.spendingstracker.app.projection.SpendingCategoryProjection;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -22,13 +21,12 @@ public interface SpendingCategoryRepository extends CrudRepository<SpendingCateg
             value =
                     """
                         SELECT
-                            SC.NAME name,
-                            SC.S3_KEY s3Key
+                            SC.*
                         FROM
                             APP.SPENDING_CATEGORY SC
                         WHERE
                             SC.IS_ACTIVE = "Y"
                     """,
             nativeQuery = true)
-    List<SpendingCategoryProjection> getActiveSpendingCategories();
+    List<SpendingCategory> getActiveSpendingCategories();
 }

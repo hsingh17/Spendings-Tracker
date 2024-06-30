@@ -56,4 +56,4 @@ redirects:
 google:
   client-id: ${GOOGLE_CLIENT_ID}
 s3:
-  categories-bucket-name: TODO
+  categories-bucket-name: spending-categories-svg

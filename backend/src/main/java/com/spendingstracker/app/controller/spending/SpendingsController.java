@@ -203,6 +203,13 @@ public class SpendingsController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Route to get all active spending categories
+     *
+     * @return All active spending categories
+     * @see ApiResponse
+     * @see SpendingCategoriesResponse
+     */
     @GetMapping("/spending-categories")
     public ResponseEntity<ApiResponse<SpendingCategoriesResponse>> getSpendingCategories() {
         log.info("GET /spending-categories");

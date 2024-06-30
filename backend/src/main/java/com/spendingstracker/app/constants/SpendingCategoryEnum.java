@@ -17,22 +17,22 @@ public enum SpendingCategoryEnum {
     SAVINGS("Savings"),
     OTHER("Other");
 
-    private final String code;
+    private final String stringDecode;
 
     /**
-     * Initialize <code>SpendingCategoryEnum</code> from a <code>code</code>
+     * Initialize <code>SpendingCategoryEnum</code> from a <code>stringDecode</code>
      *
-     * @param code coded value of the <code>enum</code>
+     * @param stringDecode coded value of the <code>enum</code>
      */
-    SpendingCategoryEnum(String code) {
-        this.code = code;
+    SpendingCategoryEnum(String stringDecode) {
+        this.stringDecode = stringDecode;
     }
 
     /**
-     * @return <code>code</code>, the coded value of the enum
+     * @return <code>stringDecode</code>, the coded value of the enum
      */
-    public String getCode() {
-        return code;
+    public String getStringDecode() {
+        return stringDecode;
     }
 
     /**
@@ -40,13 +40,13 @@ public enum SpendingCategoryEnum {
      * (e.g: Line, Pie, Bar).
      *
      * @param code coded value of the enum
-     * @return <code>SpendingCategoryEnum</code> that maps to the <code>code</code>
+     * @return <code>SpendingCategoryEnum</code> that maps to the <code>stringDecode</code>
      * @throws IllegalArgumentException when there is no <code>enum</code> that maps to the <code>
      *     code</code>
      */
     public static SpendingCategoryEnum fromCode(String code) {
         return Arrays.stream(SpendingCategoryEnum.values())
-                .filter(spendingType -> spendingType.code.equals(code))
+                .filter(spendingType -> spendingType.stringDecode.equals(code))
                 .findFirst()
                 .orElseThrow(
                         () ->

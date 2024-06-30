@@ -3,6 +3,10 @@ This repository holds the code for my spendings tracker app built with Java and 
 
 ## TODO
 - clean up add/edit spending UI -> make category a set of predfined options dropdown -> can change datamodel to no longer store a string and just use some enum
+	- create s3 bucket
+	- use dummy svgs for time being
+	- update ui
+	- make custom svgs
 - remove group by for bar and pie charts
 - add fontawesome icons to relevant areas (signin button, username/password icons)
 - dashboard -> graphs

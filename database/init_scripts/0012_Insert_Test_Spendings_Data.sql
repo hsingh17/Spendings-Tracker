@@ -17,7 +17,7 @@ BEGIN
         VALUES
             (
                 userId,
-                DATE_SUB (CURDATE (), INTERVAL FLOOR(RAND () * 10000) DAY)
+                DATE_SUB(CURDATE(), INTERVAL FLOOR(RAND() * 10000) DAY)
             );
 
         SET J = 0;
@@ -36,13 +36,13 @@ BEGIN
                     FROM
                         APP.SPENDING_CATEGORY SC
                     ORDER BY
-                        RAND ()
+                        RAND()
                     LIMIT
                         1
                 ),
                 RAND () * 100000
-FROM
-    APP.SPENDING_USER_AGGR SUA;
+            FROM
+                APP.SPENDING_USER_AGGR SUA;
 
             SET J = J + 1;
             ITERATE INSERT_SPENDING_LOOP;

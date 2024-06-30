@@ -1,6 +1,7 @@
 package com.spendingstracker.app.service.spending;
 
 import com.spendingstracker.app.dto.response.SpendingCategoriesResponse;
+
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional

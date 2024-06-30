@@ -2,7 +2,6 @@ package com.spendingstracker.app.converter.jpa;
 
 import com.spendingstracker.app.constants.ExternalUserType;
 
-import com.spendingstracker.app.constants.SpendingCategoryEnum;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

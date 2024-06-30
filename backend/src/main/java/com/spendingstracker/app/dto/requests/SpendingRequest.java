@@ -1,7 +1,7 @@
 package com.spendingstracker.app.dto.requests;
 
 import com.spendingstracker.app.constants.SpendingCategoryEnum;
-import com.spendingstracker.app.entity.SpendingCategory;
+
 import lombok.Data;
 
 import java.math.BigDecimal;

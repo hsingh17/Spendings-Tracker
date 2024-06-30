@@ -16,7 +16,7 @@ public class SpendingCategoryEnumConverter
         implements AttributeConverter<SpendingCategoryEnum, String> {
     @Override
     public String convertToDatabaseColumn(SpendingCategoryEnum SpendingCategoryEnum) {
-        return SpendingCategoryEnum.getCode();
+        return SpendingCategoryEnum.getStringDecode();
     }
 
     @Override

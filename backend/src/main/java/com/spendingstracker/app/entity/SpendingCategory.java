@@ -1,17 +1,14 @@
 package com.spendingstracker.app.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import com.spendingstracker.app.constants.SpendingCategoryEnum;
+
 import jakarta.persistence.*;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigInteger;
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 /** An entity class that maps to the table <code>APP.SPENDING_CATEGORY</code> */
 @NoArgsConstructor
