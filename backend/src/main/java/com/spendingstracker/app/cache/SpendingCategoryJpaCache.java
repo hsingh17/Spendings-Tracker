@@ -5,6 +5,7 @@ import com.spendingstracker.app.entity.SpendingCategory;
 import com.spendingstracker.app.repository.SpendingCategoryRepository;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
@@ -15,6 +16,7 @@ import java.util.*;
  * @see SpendingCategory
  * @see SpendingCategoryRepository
  */
+@Component
 @Slf4j
 public class SpendingCategoryJpaCache {
     private Map<SpendingCategoryEnum, SpendingCategory> cache;
