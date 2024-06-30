@@ -49,7 +49,7 @@ const TableRow: FC<TableRowProps> = ({
         <div className="flex justify-center items-center w-full">
           <button>
             <EditIcon
-              className="h-7 w-fit mr-5"
+              className="h-7 w-7 mr-5"
               stroke={"#40A3E6"}
               onClick={() => handleEdit()}
             />
@@ -57,7 +57,7 @@ const TableRow: FC<TableRowProps> = ({
 
           <button>
             <DeleteIcon
-              className="h-7 w-fit"
+              className="h-7 w-7"
               stroke={"red"}
               onClick={() => parentSetSpendingId(spending.spendingUserAggrId)}
             />

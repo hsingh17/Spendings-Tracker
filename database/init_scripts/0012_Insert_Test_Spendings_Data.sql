@@ -20,33 +20,20 @@ BEGIN
                 DATE_SUB(CURDATE(), INTERVAL FLOOR(RAND() * 10000) DAY)
             );
 
-        SET J = 0;
-        INSERT_SPENDING_LOOP: LOOP
-            IF J = 100 THEN
-                LEAVE INSERT_SPENDING_LOOP;
-            END IF;
+        INSERT INTO
+            APP.SPENDING (SPENDING_USER_AGGR_ID, SPENDING_CATEGORY_ID, AMOUNT)
+        SELECT
+            (
+                SELECT
+                    MAX(SUA.SPENDING_USER_AGGR_ID)
+                FROM
+                    APP.SPENDING_USER_AGGR SUA
+            ),
+            SC.SPENDING_CATEGORY_ID,
+            RAND () * 100000
+        FROM
+            APP.SPENDING_CATEGORY SC;
 
-            INSERT INTO
-                APP.SPENDING (SPENDING_USER_AGGR_ID, SPENDING_CATEGORY_ID, AMOUNT)
-            SELECT
-                MAX(SUA.SPENDING_USER_AGGR_ID),
-                (
-                    SELECT
-                        SC.SPENDING_CATEGORY_ID
-                    FROM
-                        APP.SPENDING_CATEGORY SC
-                    ORDER BY
-                        RAND()
-                    LIMIT
-                        1
-                ),
-                RAND () * 100000
-            FROM
-                APP.SPENDING_USER_AGGR SUA;
-
-            SET J = J + 1;
-            ITERATE INSERT_SPENDING_LOOP;
-        END LOOP INSERT_SPENDING_LOOP;
 
         SET I = I + 1;
         ITERATE INSERT_SPENDING_DATE_LOOP;
