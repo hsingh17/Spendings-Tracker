@@ -47,6 +47,14 @@ export type ApiResponse<T> = {
   data: Nullable<T>;
 };
 
+export type SpendingCategoriesResponse = {
+  categoryToS3UrlMap: CategoriesMap;
+};
+
+export type CategoriesMap = {
+  [category: string]: string;
+};
+
 export type SpendingDetailResponse = {
   spendings: Spending[];
 };
@@ -95,19 +103,6 @@ export type SaveSpendingsTitleProps = {
   date: string;
   isCreateMode: boolean;
   parentHandleDateChange: (date: string) => void;
-};
-
-export type FormInputColumnsProps = {
-  spendings: Array<SpendingFormInput>;
-  parentHandleDeleteRow: (idx: number) => void;
-  parentHandleChange: (idx: number, newSpending: SpendingFormInput) => void;
-};
-
-export type FormInputProps = {
-  idx: number;
-  labelText: string;
-  value: Nullable<string | number>;
-  parentHandleChange: (e: React.ChangeEvent, labelText: string) => void;
 };
 
 export enum SortType {

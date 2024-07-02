@@ -1,9 +1,9 @@
 import React, { FC, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { ReactComponent as AddRow } from "../../../assets/raw/add-row.svg";
 import Card from "../../../common/Card";
 import useSaveSpendings from "../../../hooks/useSaveSpendings";
+import useSpendingCategories from "../../../hooks/useSpendingCategories";
 import {
   MAX_AMOUNT,
   MAX_CATEGORY_LENGTH,
@@ -16,7 +16,10 @@ import {
   Spending,
   SpendingFormInput,
 } from "../../../utils/types";
-import FormInputColumns from "./FormInputColumns";
+import SaveSpendingsAddRowButton from "./SaveSpendingsAddRowButton";
+import SaveSpendingsFooterButtons from "./SaveSpendingsFormFooterButtons";
+import SaveSpendingsFormList from "./SaveSpendingsFormList";
+import SaveSpendingsModal from "./SaveSpendingsModal";
 
 function spendingComparator(
   a: SpendingFormInput,
@@ -57,11 +60,12 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
       categoryError: null,
       amountError: null,
     }));
+  const { data: response } = useSpendingCategories();
+  const categoriesMap = response?.data?.categoryToS3UrlMap || {};
 
   const [spendings, setSpendings] = useState<Array<SpendingFormInput>>(
     mappedSpendings ? mappedSpendings.sort(spendingComparator) : [],
   );
-
   const cardRef = useRef<HTMLDivElement>();
   const navigate = useNavigate();
   const { mutate: saveSpendings } = useSaveSpendings(date, isCreateMode, () =>
@@ -203,44 +207,34 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
     setSpendings(newSpendings);
   };
 
-  const handleChange = (idx: number, newSpending: SpendingFormInput) => {
-    const newSpendings: Array<SpendingFormInput> = [...spendings];
-    newSpendings[idx] = newSpending;
-    setSpendings(newSpendings);
-  };
+  // const handleChange = (idx: number, newSpending: SpendingFormInput) => {
+  //   const newSpendings: Array<SpendingFormInput> = [...spendings];
+  //   newSpendings[idx] = newSpending;
+  //   setSpendings(newSpendings);
+  // };
 
   return (
     <div className="flex flex-col items-center mt-7">
-      <Card customStyles="items-center p-7" innerRef={cardRef}>
-        <FormInputColumns
+      <Card
+        customStyles="items-center p-7 w-full md:w-[500px]"
+        innerRef={cardRef}
+      >
+        <SaveSpendingsFormList
           spendings={spendings}
-          parentHandleChange={handleChange}
-          parentHandleDeleteRow={handleDeleteRow}
+          categoriesMap={categoriesMap}
+          handleDeleteRow={handleDeleteRow}
         />
 
-        <button
-          className="flex justify-center mt-1"
-          onClick={(e: React.MouseEvent) => handleAddNewRow(e)}
-        >
-          <AddRow className="w-10 h-10 opacity-50 hover:opacity-80" />
-        </button>
+        <SaveSpendingsAddRowButton handleAddNewRow={handleAddNewRow} />
       </Card>
 
-      <div className="ml-auto mt-5">
-        <button
-          className="mr-4 text-slate-600 text-lg"
-          onClick={() => navigate(-1)}
-        >
-          Cancel
-        </button>
-        <button
-          className="bg-theme-cta px-5 py-2 text-white font-semibold rounded-xl hover:cursor-pointer text-lg disabled:opacity-25"
-          disabled={spendings.length === 0}
-          onClick={(e: React.MouseEvent) => handleSubmit(e)}
-        >
-          {isCreateMode ? "Create" : "Update"}
-        </button>
-      </div>
+      <SaveSpendingsFooterButtons
+        isDisabled={spendings.length === 0}
+        isCreateMode={isCreateMode}
+        handleSubmit={handleSubmit}
+      />
+
+      <SaveSpendingsModal />
     </div>
   );
 };

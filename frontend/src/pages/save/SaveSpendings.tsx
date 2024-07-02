@@ -11,7 +11,7 @@ const SaveSpendings = () => {
   const params = useParams<SaveSpendingProps>();
   const { data: response } = useSpending(params.date as string);
   const spendings = response?.data?.spendings;
-
+  const isCreateMode = !spendings || spendings.length === 0;
   const handleDateChange = (spendingDate: string) =>
     navigate(`${SAVE_SPENDINGS_PAGE}/${spendingDate}`, {
       replace: true,
@@ -25,13 +25,13 @@ const SaveSpendings = () => {
     <div className="p-3">
       <SaveSpendingsTitle
         date={params.date || DateUtils.getCurrentDate()}
-        isCreateMode={!spendings || spendings.length === 0}
+        isCreateMode={isCreateMode}
         parentHandleDateChange={handleDateChange}
       />
 
       <SaveSpendingsForm
         date={params.date as string}
-        isCreateMode={!spendings || spendings.length === 0}
+        isCreateMode={isCreateMode}
         initialSpendings={spendings ? spendings : null}
       />
     </div>
