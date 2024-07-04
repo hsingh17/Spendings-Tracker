@@ -281,8 +281,10 @@ export enum FormInputError {
 }
 
 export type TooltipPosition = {
-  top: number;
-  left: number;
+  top?: number;
+  left?: number;
+  right?: number;
+  bottom?: number;
 };
 
 export type ResetPasswordRequest = {

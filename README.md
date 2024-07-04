@@ -26,5 +26,6 @@ This repository holds the code for my spendings tracker app built with Java and 
 
 ## Known issues
 
+- sql for categorical spending data is broken
 - when adding or updating amount of spending and it's fully highlighted, pressing any key will result in NaN
 - google sign in button randomly resizes

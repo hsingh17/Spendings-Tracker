@@ -15,13 +15,13 @@ const LineChartTooltip: FC<LineChartTooltipProps> = ({
   tooltipPosition,
   total,
 }) => {
-  if (!tooltipPosition || !date || !total) {
+  if (!date || !total) {
     return <></>;
   }
   return (
     <Tooltip
       position={tooltipPosition}
-      className="w-fit h-fit bg-theme-cta text-white p-2 rounded-xl"
+      className="absolute w-fit h-fit bg-theme-cta text-white p-2 rounded-xl"
     >
       <p className="text-sm">{DateUtils.formatDateUS(date)}</p>
       <p className="font-bold md:text-lg">{MoneyUtils.formatMoneyUsd(total)}</p>

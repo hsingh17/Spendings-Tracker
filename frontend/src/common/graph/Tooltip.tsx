@@ -3,10 +3,17 @@ import useCalcMouseDir, {
   XMouseDir,
   YMouseDir,
 } from "../../hooks/useCalcMouseDir";
-import { TooltipPosition } from "../../utils/types";
+import { Nullable, TooltipPosition } from "../../utils/types";
+
+enum Direction {
+  TOP,
+  RIGHT,
+  BOTTOM,
+  LEFT,
+}
 
 type TooltipProps = {
-  position: TooltipPosition;
+  position: Nullable<TooltipPosition>;
   className?: string;
   children: ReactNode;
   enableDynamicTooltip?: boolean;
@@ -14,7 +21,7 @@ type TooltipProps = {
 
 const Tooltip: FC<TooltipProps> = ({
   position,
-  className,
+  className = "",
   children,
   enableDynamicTooltip = true,
 }) => {
@@ -35,17 +42,41 @@ const Tooltip: FC<TooltipProps> = ({
     return divRef.current.clientHeight;
   };
 
+  const calculateFinalPosition = (
+    direction: Direction,
+    positionValue?: number,
+  ): number | undefined => {
+    if (!enableDynamicTooltip || !positionValue) {
+      return positionValue;
+    }
+
+    switch (direction) {
+      case Direction.TOP:
+      case Direction.BOTTOM:
+        return positionValue + yOffset;
+      case Direction.LEFT:
+      case Direction.RIGHT:
+        return positionValue - xOffset;
+    }
+  };
+
   const xOffset = calculateXOffset();
   const yOffset = calculateYOffset();
+
+  if (!position) {
+    return <></>;
+  }
 
   return (
     <div
       ref={divRef}
-      className={`absolute ${className}`}
+      className={className}
       style={{
         display: "block",
-        top: enableDynamicTooltip ? position.top + yOffset : position.top,
-        left: enableDynamicTooltip ? position.left - xOffset : position.left,
+        top: calculateFinalPosition(Direction.TOP, position.top),
+        left: calculateFinalPosition(Direction.LEFT, position.left),
+        bottom: calculateFinalPosition(Direction.BOTTOM, position.bottom),
+        right: calculateFinalPosition(Direction.RIGHT, position.right),
       }}
     >
       {children}

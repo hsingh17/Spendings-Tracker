@@ -16,14 +16,14 @@ const CategoricalChartTooltip: FC<CategoricalChartTooltipProps> = ({
   total,
   enableDynamicTooltip = true,
 }) => {
-  if (!tooltipPosition || !category || !total) {
+  if (!category || !total) {
     return <></>;
   }
 
   return (
     <Tooltip
       position={tooltipPosition}
-      className="w-fit h-fit bg-theme-neutral text-theme-brand p-2"
+      className="absolute w-fit h-fit bg-theme-neutral text-theme-brand p-2"
       enableDynamicTooltip={enableDynamicTooltip}
     >
       <p className="text-lg md:text-xl font-semibold">{category}</p>
