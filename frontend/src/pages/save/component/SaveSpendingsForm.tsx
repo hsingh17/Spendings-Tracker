@@ -51,6 +51,8 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
   isCreateMode,
   initialSpendings,
 }) => {
+  const [showModal, setShowModal] = useState<boolean>(false);
+
   const mappedSpendings: Nullable<Array<SpendingFormInput>> =
     initialSpendings?.map((spending) => ({
       spendingId: spending.spendingId,
@@ -233,8 +235,20 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
         isCreateMode={isCreateMode}
         handleSubmit={handleSubmit}
       />
+      <button
+        onClick={(e: React.MouseEvent) => {
+          e.preventDefault();
+          setShowModal(true);
+        }}
+      >
+        test
+      </button>
 
-      <SaveSpendingsModal />
+      <SaveSpendingsModal
+        show={showModal}
+        setShow={setShowModal}
+        addNewRow={handleAddNewRow}
+      />
     </div>
   );
 };

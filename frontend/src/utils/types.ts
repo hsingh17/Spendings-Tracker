@@ -7,11 +7,6 @@ export type RenderChildrenProps = {
   children: ReactNode;
 };
 
-export type CardProps = RenderChildrenProps & {
-  customStyles?: string;
-  innerRef?: React.MutableRefObject<HTMLDivElement | undefined>;
-};
-
 export type User = {
   userId: number;
   username: string;
@@ -149,13 +144,6 @@ export type TableRowProps = {
   spending: SpendingListRow;
   parentRefetch: () => void;
   parentSetSpendingId: (spendingId: number) => void;
-};
-
-export type DeleteModalProps = {
-  show: boolean;
-  spendingId: Nullable<number>;
-  parentSetShow: (show: boolean) => void;
-  parentRefetch: () => void;
 };
 
 export type SpendingComponentProps = {

@@ -1,5 +1,10 @@
 import { FC } from "react";
-import { CardProps } from "../utils/types";
+import { RenderChildrenProps } from "../utils/types";
+
+type CardProps = RenderChildrenProps & {
+  customStyles?: string;
+  innerRef?: React.MutableRefObject<HTMLDivElement | undefined>;
+};
 
 const Card: FC<CardProps> = ({
   children,

@@ -2,8 +2,8 @@ import { FC, ReactNode, useRef } from "react";
 import useCalcMouseDir, {
   XMouseDir,
   YMouseDir,
-} from "../../hooks/useCalcMouseDir";
-import { Nullable, TooltipPosition } from "../../utils/types";
+} from "../hooks/useCalcMouseDir";
+import { Nullable, TooltipPosition } from "../utils/types";
 
 enum Direction {
   TOP,

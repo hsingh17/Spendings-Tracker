@@ -1,7 +1,14 @@
 import React, { FC, useState } from "react";
 import { ReactComponent as WarningIcon } from "../../../assets/raw/warning-icon.svg";
 import useDeleteSpending from "../../../hooks/useDeleteSpending";
-import { DeleteModalProps } from "../../../utils/types";
+import { Nullable } from "../../../utils/types";
+
+type DeleteModalProps = {
+  show: boolean;
+  spendingId: Nullable<number>;
+  parentSetShow: (show: boolean) => void;
+  parentRefetch: () => void;
+};
 
 const ANIMATE_IN = "animate-[slide-in_0.3s_ease-in-out_forwards]";
 const ANIMATE_OUT = "animate-[slide-out_0.3s_ease-in-out_forwards]";

@@ -2,7 +2,7 @@ import { FC } from "react";
 import DateUtils from "../../../utils/date-utils";
 import MoneyUtils from "../../../utils/money-utils";
 import { Nullable, TooltipPosition } from "../../../utils/types";
-import Tooltip from "../Tooltip";
+import Tooltip from "../../Tooltip";
 
 type LineChartTooltipProps = {
   date: string;

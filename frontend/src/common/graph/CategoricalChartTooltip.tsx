@@ -1,7 +1,7 @@
 import { FC } from "react";
 import MoneyUtils from "../../utils/money-utils";
 import { Nullable, TooltipPosition } from "../../utils/types";
-import Tooltip from "./Tooltip";
+import Tooltip from "../Tooltip";
 
 type CategoricalChartTooltipProps = {
   category: string;
