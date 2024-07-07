@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 import { CategoriesMap, SpendingFormInput } from "../../../utils/types";
 import TableEmptyState from "../../view/component/TableEmptyState";
 import SaveSpendingsFormRow from "./SaveSpendingsFormRow";
@@ -7,12 +7,14 @@ type SaveSpendingsFormListProps = {
   spendings: Array<SpendingFormInput>;
   categoriesMap: CategoriesMap;
   handleDeleteRow: (idx: number) => void;
+  setModalSpendingIdx: Dispatch<SetStateAction<number | undefined>>;
 };
 
 const SaveSpendingsFormList: FC<SaveSpendingsFormListProps> = ({
   spendings,
   categoriesMap,
   handleDeleteRow,
+  setModalSpendingIdx,
 }) => {
   const countSpendingsToDisplay = (spendings: Array<SpendingFormInput>) =>
     spendings.filter((spending) => !spending.delete).length;
@@ -32,6 +34,7 @@ const SaveSpendingsFormList: FC<SaveSpendingsFormListProps> = ({
               spending={spending}
               categoriesMap={categoriesMap}
               handleDeleteRow={handleDeleteRow}
+              setModalSpendingIdx={setModalSpendingIdx}
             />
           );
         })}

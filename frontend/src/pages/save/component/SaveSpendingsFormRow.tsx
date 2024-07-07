@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 import { ReactComponent as DeleteRowIcon } from "../../../assets/raw/delete-icon.svg";
 import MoneyUtils from "../../../utils/money-utils";
 import { CategoriesMap, SpendingFormInput } from "../../../utils/types";
@@ -9,6 +9,7 @@ export type SpendingsFormRowProps = {
   spending: SpendingFormInput;
   categoriesMap: CategoriesMap;
   handleDeleteRow: (idx: number) => void;
+  setModalSpendingIdx: Dispatch<SetStateAction<number>>;
 };
 
 const SaveSpendingsFormRow: FC<SpendingsFormRowProps> = ({
@@ -16,6 +17,7 @@ const SaveSpendingsFormRow: FC<SpendingsFormRowProps> = ({
   spending,
   categoriesMap,
   handleDeleteRow,
+  setModalSpendingIdx,
 }) => {
   if (spending.delete) {
     // SpendingFormInput marked for deletion
@@ -23,7 +25,10 @@ const SaveSpendingsFormRow: FC<SpendingsFormRowProps> = ({
   }
 
   return (
-    <div className="flex flex-row items-center mt-1 w-full p-1 rounded-xl hover:bg-slate-300 hover:bg-opacity-20 hover:cursor-pointer">
+    <div
+      className="flex flex-row items-center mt-1 w-full p-1 rounded-xl hover:bg-slate-300 hover:bg-opacity-20 hover:cursor-pointer"
+      onClick={() => setModalSpendingIdx(idx)}
+    >
       <SaveSpendingsFormRowCategoryImage
         category={spending.category || ""}
         imgSrc={categoriesMap[spending.category || ""]}

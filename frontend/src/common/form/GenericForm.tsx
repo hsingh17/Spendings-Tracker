@@ -6,6 +6,8 @@ type GenericFormProps = {
   beforeFormChildren?: ReactNode;
   formChildren: ReactNode;
   afterFormChildren?: ReactNode;
+  wrapperClassName?: string;
+  cardClassName?: string;
   onSubmit: (inputMap: Map<string, string>) => void;
 };
 
@@ -17,8 +19,10 @@ const GenericForm: FC<GenericFormProps> = ({
   beforeFormChildren,
   formChildren,
   afterFormChildren,
-  onSubmit,
   title,
+  wrapperClassName,
+  cardClassName,
+  onSubmit,
 }) => {
   const [validators, setValidators] = useState<Map<string, () => boolean>>(
     new Map(),
@@ -89,8 +93,10 @@ const GenericForm: FC<GenericFormProps> = ({
   };
 
   return (
-    <div className="flex flex-col lg:justify-center lg:items-center lg:w-full lg:h-screen">
-      <Card customStyles="items-center w-full lg:w-2/6 h-fit p-7">
+    <div
+      className={`flex flex-col lg:justify-center lg:items-center lg:w-full ${wrapperClassName}`}
+    >
+      <Card className={`items-center w-full h-fit p-7 ${cardClassName}`}>
         <h1 className="mr-auto text-3xl font-bold">{title}</h1>
         {beforeFormChildren}
         <form

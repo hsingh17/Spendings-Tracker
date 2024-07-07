@@ -1,30 +1,61 @@
 import React, { Dispatch, FC, SetStateAction } from "react";
+import GenericForm from "../../../common/form/GenericForm";
 import Modal from "../../../common/Modal";
+import {
+  CategoriesMap,
+  Nullable,
+  SpendingFormInput,
+} from "../../../utils/types";
 
 type SaveSpendingsModalProps = {
-  show: boolean;
+  categoriesMap: CategoriesMap;
+  spending: Nullable<SpendingFormInput>;
   addNewRow: (e: React.MouseEvent) => void;
-  setShow: Dispatch<SetStateAction<boolean>>;
+  setModalSpendingIdx: Dispatch<SetStateAction<number | undefined>>;
 };
 
 const SaveSpendingsModal: FC<SaveSpendingsModalProps> = ({
-  show,
+  spending,
   addNewRow,
-  setShow,
+  setModalSpendingIdx,
 }) => {
+  if (!spending) {
+    return null;
+  }
+
+  const setShow = () => {
+    setModalSpendingIdx(undefined);
+  };
+
   return (
     <Modal
-      show={show}
+      show={true}
       actionButtonDesc="Add"
-      className="bg-red-500"
+      className="w-fit"
       actionButtonClassName="bg-blue-500"
       setShow={setShow}
       onClickActionButton={addNewRow}
     >
-      <p>hello</p>
+      <GenericForm
+        wrapperClassName="h-fit"
+        cardClassName="w-10"
+        title={!spending.spendingId ? "Add" : "Edit"}
+        onSubmit={() => alert("TODO")}
+        formChildren={
+          <>
+            <label>Category</label>
+            <input type="" id="category" />
+            <label>Amount</label>
+            <input
+              id="amount"
+              type="number"
+              defaultValue={spending.amount || 0}
+            />
+          </>
+        }
+      />
     </Modal>
   );
 };
 
 export default SaveSpendingsModal;
-4;

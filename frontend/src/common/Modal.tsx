@@ -13,7 +13,7 @@ type ModalProps = {
   actionButtonDesc: string;
   actionButtonClassName: string;
   onClickActionButton: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  setShow: Dispatch<SetStateAction<boolean>>;
+  setShow: Dispatch<SetStateAction<boolean>> | ((show: boolean) => void);
 };
 
 const ANIMATE_IN = "animate-[slide-in_0.3s_ease-in-out_forwards]";
@@ -43,10 +43,11 @@ const Modal: FC<ModalProps> = ({
     return null;
   }
 
+  // TODO: Probably just remove the cancel and action button
   return (
     <div className="fixed bg-slate-900 bg-opacity-80 filter backdrop-blur-[1px] w-full h-full top-0 left-0 z-30">
       <div
-        className={`fixed flex flex-col justify-center items-center z-10 left-1/2 top-1/3 bg-theme-neutral rounded-lg shadow-3xl border-2 border-gray-300 ${animation} ${className}`}
+        className={`fixed flex flex-col justify-center items-center z-10 left-1/2 top-1/3 rounded-lg shadow-3xl ${animation} ${className}`}
       >
         {children}
 

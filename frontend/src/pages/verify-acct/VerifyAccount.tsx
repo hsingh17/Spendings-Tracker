@@ -34,9 +34,11 @@ const VerifyAccount = () => {
 
   return (
     <GenericForm
-      onSubmit={onSubmit}
       title="Complete registration"
+      wrapperClassName="lg:h-screen"
+      cardClassName="lg:w-2/6"
       beforeFormChildren={<VerifyAccountHeader />}
+      onSubmit={onSubmit}
       formChildren={
         <>
           <CodeInput />

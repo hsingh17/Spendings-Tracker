@@ -31,6 +31,8 @@ const CreateAccount = () => {
     <GenericForm
       onSubmit={onSubmit}
       title="Create an Account"
+      wrapperClassName="lg:h-screen"
+      cardClassName="lg:w-2/6"
       formChildren={
         <>
           <EmailInput />

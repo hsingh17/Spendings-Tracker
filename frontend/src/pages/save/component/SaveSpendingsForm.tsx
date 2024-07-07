@@ -51,7 +51,7 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
   isCreateMode,
   initialSpendings,
 }) => {
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [modalSpendingIdx, setModalSpendingIdx] = useState<number>();
 
   const mappedSpendings: Nullable<Array<SpendingFormInput>> =
     initialSpendings?.map((spending) => ({
@@ -214,20 +214,34 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
   //   newSpendings[idx] = newSpending;
   //   setSpendings(newSpendings);
   // };
+  const getSpendingForModal = (): Nullable<SpendingFormInput> => {
+    if (!modalSpendingIdx) {
+      return null;
+    }
+
+    return modalSpendingIdx === -1
+      ? {
+          amount: 0,
+          category: null,
+          amountError: null,
+          categoryError: null,
+          delete: false,
+          spendingId: null,
+        }
+      : spendings[modalSpendingIdx];
+  };
 
   return (
     <div className="flex flex-col items-center mt-7">
-      <Card
-        customStyles="items-center p-7 w-full md:w-[500px]"
-        innerRef={cardRef}
-      >
+      <Card className="items-center p-7 w-full md:w-[500px]" innerRef={cardRef}>
         <SaveSpendingsFormList
           spendings={spendings}
           categoriesMap={categoriesMap}
           handleDeleteRow={handleDeleteRow}
+          setModalSpendingIdx={setModalSpendingIdx}
         />
 
-        <SaveSpendingsAddRowButton handleAddNewRow={handleAddNewRow} />
+        <SaveSpendingsAddRowButton setModalSpendingIdx={setModalSpendingIdx} />
       </Card>
 
       <SaveSpendingsFooterButtons
@@ -235,18 +249,11 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
         isCreateMode={isCreateMode}
         handleSubmit={handleSubmit}
       />
-      <button
-        onClick={(e: React.MouseEvent) => {
-          e.preventDefault();
-          setShowModal(true);
-        }}
-      >
-        test
-      </button>
 
       <SaveSpendingsModal
-        show={showModal}
-        setShow={setShowModal}
+        categoriesMap={categoriesMap}
+        spending={getSpendingForModal()}
+        setModalSpendingIdx={setModalSpendingIdx}
         addNewRow={handleAddNewRow}
       />
     </div>

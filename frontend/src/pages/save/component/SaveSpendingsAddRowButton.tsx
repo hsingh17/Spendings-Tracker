@@ -1,17 +1,17 @@
-import { FC } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 import AddIcon from "../../../assets/components/AddIcon";
 
 type SaveSpendingsAddRowButtonProps = {
-  handleAddNewRow: (e: React.MouseEvent) => void;
+  setModalSpendingIdx: Dispatch<SetStateAction<number | undefined>>;
 };
 
 const SaveSpendingsAddRowButton: FC<SaveSpendingsAddRowButtonProps> = ({
-  handleAddNewRow,
+  setModalSpendingIdx,
 }) => {
   return (
     <button
       className="flex justify-center w-full bg-theme-cta rounded-xl py-3 opacity-60 hover:opacity-80"
-      onClick={(e: React.MouseEvent) => handleAddNewRow(e)}
+      onClick={() => setModalSpendingIdx(-1)}
     >
       <span className="flex flex-row items-center text-center">
         <AddIcon className="w-8 h-8 mt-1" />

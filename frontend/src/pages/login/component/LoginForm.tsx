@@ -30,6 +30,8 @@ const LoginForm: FC = () => {
     <>
       <GenericForm
         title="Log in"
+        wrapperClassName="lg:h-screen"
+        cardClassName="lg:w-2/6"
         onSubmit={onSubmit}
         formChildren={
           <>
