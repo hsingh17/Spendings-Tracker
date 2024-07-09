@@ -6,6 +6,9 @@ import {
   Nullable,
   SpendingFormInput,
 } from "../../../utils/types";
+import SaveSpendingsModalAmountInput from "./SaveSpendingsModalAmountInput";
+import SaveSpendingsModalCategoryInput from "./SaveSpendingsModalCategoryInput";
+import SaveSpendingsModalFormFooter from "./SaveSpendingsModalFormFooter";
 
 type SaveSpendingsModalProps = {
   categoriesMap: CategoriesMap;
@@ -16,7 +19,7 @@ type SaveSpendingsModalProps = {
 
 const SaveSpendingsModal: FC<SaveSpendingsModalProps> = ({
   spending,
-  addNewRow,
+  // addNewRow,
   setModalSpendingIdx,
 }) => {
   if (!spending) {
@@ -28,31 +31,20 @@ const SaveSpendingsModal: FC<SaveSpendingsModalProps> = ({
   };
 
   return (
-    <Modal
-      show={true}
-      actionButtonDesc="Add"
-      className="w-fit"
-      actionButtonClassName="bg-blue-500"
-      setShow={setShow}
-      onClickActionButton={addNewRow}
-    >
+    <Modal show={true} className="w-full md:w-[600px]" setShow={setShow}>
       <GenericForm
-        wrapperClassName="h-fit"
-        cardClassName="w-10"
+        wrapperClassName="h-fit w-full"
+        cardClassName="w-full"
+        formClassName="flex flex-col"
         title={!spending.spendingId ? "Add" : "Edit"}
         onSubmit={() => alert("TODO")}
         formChildren={
           <>
-            <label>Category</label>
-            <input type="" id="category" />
-            <label>Amount</label>
-            <input
-              id="amount"
-              type="number"
-              defaultValue={spending.amount || 0}
-            />
+            <SaveSpendingsModalCategoryInput />
+            <SaveSpendingsModalAmountInput spending={spending} />
           </>
         }
+        afterFormChildren={<SaveSpendingsModalFormFooter setShow={setShow} />}
       />
     </Modal>
   );

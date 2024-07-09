@@ -8,6 +8,7 @@ type GenericFormProps = {
   afterFormChildren?: ReactNode;
   wrapperClassName?: string;
   cardClassName?: string;
+  formClassName?: string;
   onSubmit: (inputMap: Map<string, string>) => void;
 };
 
@@ -22,6 +23,7 @@ const GenericForm: FC<GenericFormProps> = ({
   title,
   wrapperClassName,
   cardClassName,
+  formClassName,
   onSubmit,
 }) => {
   const [validators, setValidators] = useState<Map<string, () => boolean>>(
@@ -100,7 +102,7 @@ const GenericForm: FC<GenericFormProps> = ({
         <h1 className="mr-auto text-3xl font-bold">{title}</h1>
         {beforeFormChildren}
         <form
-          className="w-full"
+          className={`w-full ${formClassName}`}
           onSubmit={(e: React.FormEvent) => preOnSubmit(e)}
         >
           {renderFormChildren()}

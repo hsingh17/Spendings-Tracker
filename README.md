@@ -19,7 +19,13 @@ This repository holds the code for my spendings tracker app built with Java and 
   - add empty state and error states everywhere
 
 - dashboard -> graphs
-- delete account functionality -> in reality, we're going to simply set IS_ACTIVE to N
+
+- settings
+
+  - preferred currency type -> list and save spendings page will need to return the preferred currency types so UI can render correctly
+  - preferred date format
+  - delete account functionality -> in reality, we're going to simply set IS_ACTIVE to N
+
 - maybe add a notes/memo field when adding spendings (would need to remove the unique category constraint)
 - home page -> cool parallax effect
 - dark/light mode

@@ -215,7 +215,7 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
   //   setSpendings(newSpendings);
   // };
   const getSpendingForModal = (): Nullable<SpendingFormInput> => {
-    if (!modalSpendingIdx) {
+    if (modalSpendingIdx !== 0 && !modalSpendingIdx) {
       return null;
     }
 
