@@ -18,6 +18,7 @@ type SaveSpendingsModalProps = {
 };
 
 const SaveSpendingsModal: FC<SaveSpendingsModalProps> = ({
+  categoriesMap,
   spending,
   // addNewRow,
   setModalSpendingIdx,
@@ -40,7 +41,7 @@ const SaveSpendingsModal: FC<SaveSpendingsModalProps> = ({
         onSubmit={() => alert("TODO")}
         formChildren={
           <>
-            <SaveSpendingsModalCategoryInput />
+            <SaveSpendingsModalCategoryInput categoriesMap={categoriesMap} />
             <SaveSpendingsModalAmountInput spending={spending} />
           </>
         }

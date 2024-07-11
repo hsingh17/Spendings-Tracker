@@ -22,6 +22,8 @@ const Modal: FC<ModalProps> = ({ children, className, show /*setShow*/ }) => {
   //   }, 300); // Delay setting state so animation can play
   // };
 
+  // TODO: maybe use useeffect with "show" as parameter to trigger close animation
+
   if (!show) {
     return null;
   }
