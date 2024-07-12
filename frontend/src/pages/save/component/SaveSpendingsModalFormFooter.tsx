@@ -16,7 +16,10 @@ const SaveSpendingsModalFormFooter: FC<SaveSpendingsModalFormFooterProps> = ({
         Cancel
       </button>
 
-      <button className="bg-theme-cta text-theme-neutral rounded-xl px-3 py-1 font-semibold">
+      <button
+        className="bg-theme-cta text-theme-neutral rounded-xl px-3 py-1 font-semibold"
+        type="submit"
+      >
         Save
       </button>
     </div>

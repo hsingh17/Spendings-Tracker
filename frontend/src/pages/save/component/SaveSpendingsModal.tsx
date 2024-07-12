@@ -32,7 +32,7 @@ const SaveSpendingsModal: FC<SaveSpendingsModalProps> = ({
   };
 
   return (
-    <Modal show={true} className="w-full md:w-[600px]" setShow={setShow}>
+    <Modal className="w-full md:w-[600px]">
       <GenericForm
         wrapperClassName="h-fit w-full"
         cardClassName="w-full"
@@ -43,9 +43,9 @@ const SaveSpendingsModal: FC<SaveSpendingsModalProps> = ({
           <>
             <SaveSpendingsModalCategoryInput categoriesMap={categoriesMap} />
             <SaveSpendingsModalAmountInput spending={spending} />
+            <SaveSpendingsModalFormFooter setShow={setShow} />
           </>
         }
-        afterFormChildren={<SaveSpendingsModalFormFooter setShow={setShow} />}
       />
     </Modal>
   );
