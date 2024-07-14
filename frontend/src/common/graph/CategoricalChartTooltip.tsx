@@ -27,7 +27,7 @@ const CategoricalChartTooltip: FC<CategoricalChartTooltipProps> = ({
       enableDynamicTooltip={enableDynamicTooltip}
     >
       <p className="text-lg md:text-xl font-semibold">{category}</p>
-      <p className="font-bold md:text-lg">{MoneyUtils.formatMoneyUsd(total)}</p>
+      <p className="font-bold md:text-lg">{MoneyUtils.formatMoney(total)}</p>
     </Tooltip>
   );
 };

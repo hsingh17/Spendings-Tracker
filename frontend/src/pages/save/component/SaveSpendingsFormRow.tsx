@@ -35,7 +35,7 @@ const SaveSpendingsFormRow: FC<SpendingsFormRowProps> = ({
       />
 
       <p className="ml-2 mb-[2px] font-semibold text-xl">
-        {MoneyUtils.formatMoneyUsd(spending.amount)}
+        {MoneyUtils.formatMoney(spending.amount)}
       </p>
 
       <button className="ml-auto mr-2" onClick={() => handleDeleteRow(idx)}>

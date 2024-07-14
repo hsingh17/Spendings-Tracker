@@ -23,7 +23,7 @@ const RecentSpendingsCard: FC<RecentSpendingsCardProps> = ({
           {DateUtils.formatDateUS(spendingListRow.date)}
         </p>
         <p className="font-semibold text-theme-cta text-xl mb-auto break-words">
-          {MoneyUtils.formatMoneyUsd(spendingListRow.total)}
+          {MoneyUtils.formatMoney(spendingListRow.total)}
         </p>
       </Card>
     </div>

@@ -41,7 +41,7 @@ const TableRow: FC<TableRowProps> = ({
 
       <td className="text-center">
         <p className="text-right block">
-          {MoneyUtils.formatMoneyUsd(spending.total)}
+          {MoneyUtils.formatMoney(spending.total)}
         </p>
       </td>
 

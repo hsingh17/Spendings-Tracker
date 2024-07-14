@@ -24,7 +24,7 @@ const LineChartTooltip: FC<LineChartTooltipProps> = ({
       className="absolute w-fit h-fit bg-theme-cta text-white p-2 rounded-xl"
     >
       <p className="text-sm">{DateUtils.formatDateUS(date)}</p>
-      <p className="font-bold md:text-lg">{MoneyUtils.formatMoneyUsd(total)}</p>
+      <p className="font-bold md:text-lg">{MoneyUtils.formatMoney(total)}</p>
     </Tooltip>
   );
 };

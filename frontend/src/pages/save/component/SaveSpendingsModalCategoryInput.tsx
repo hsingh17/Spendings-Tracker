@@ -51,6 +51,8 @@ const SaveSpendingsModalCategoryInput: FC<SaveSpendingsModalFormProps> = ({
   return (
     <div className="flex flex-col mb-3 mt-3">
       <label className="font-semibold text-slate-500">Category</label>
+
+      {/* TODO Put this logic into SpendingCategoryDropdown.tsx */}
       <select
         className={`p-2 mt-2 rounded-lg border-4 ${selectClassName} ${errs.length > 0 ? "border-red-500" : ""}`}
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onChange(e)}
