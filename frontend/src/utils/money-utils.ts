@@ -13,7 +13,7 @@ const MoneyUtils = {
   formatMoney(
     amount: Nullable<number>,
     currencyType: CurrencyType = CurrencyType.USD,
-    withDollarSign: boolean = true,
+    withCurrencySign: boolean = true,
   ): string {
     let ret: string;
     switch (currencyType) {
@@ -21,7 +21,7 @@ const MoneyUtils = {
         ret = !amount ? "$0.00" : usdFormatter.format(amount);
     }
 
-    return withDollarSign ? ret : ret.substring(1);
+    return withCurrencySign ? ret : ret.substring(1);
   },
 };
 

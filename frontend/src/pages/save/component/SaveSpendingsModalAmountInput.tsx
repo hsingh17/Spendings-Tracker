@@ -20,16 +20,26 @@ const SaveSpendingsModalAmountInput: FC<SaveSpendingsModalFormProps> = ({
   //   addFormValidators
   // );
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e);
-    setAmount(2);
+  const handleChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== "Backspace" && Number.isNaN(Number.parseInt(e.key))) {
+      return;
+    }
+
+    let amountStr = amount.toString();
+    if (e.key === "Backspace" && amount) {
+      amountStr = amountStr.substring(0, amountStr.length - 1);
+    } else {
+      amountStr += e.key;
+    }
+
+    setAmount(Number.parseInt(amountStr));
   };
 
   return (
     <>
       <label className="font-semibold text-slate-500">Amount</label>
       <div className="flex flex-row w-full mt-2 ">
-        <span className="py-1 px-5 flex flex-col justify-center items-center font-semibold text-lg rounded-s-xl bg-slate-300 bg-opacity-80 shadow-2xl shadow-black">
+        <span className="py-1 px-5 flex flex-col justify-center items-center font-semibold text-lg rounded-s-xl bg-slate-300 bg-opacity-80 drop-shadow-xl">
           $
         </span>
         <input
@@ -38,7 +48,9 @@ const SaveSpendingsModalAmountInput: FC<SaveSpendingsModalFormProps> = ({
           id={name}
           name={name}
           value={MoneyUtils.formatMoney(amount, CurrencyType.USD, false)}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e)}
+          onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) =>
+            handleChange(e)
+          }
         />
       </div>
     </>
