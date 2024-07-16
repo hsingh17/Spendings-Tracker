@@ -8,6 +8,23 @@ type SaveSpendingsModalFormProps = GenericFormInputProps & {
 
 // const AMOUNT_VALIDATORS: FormValidator[] = [];
 
+function calculateNewAmount(amountStr: string, key: string): number {
+  const amountStrArr = amountStr.split(".");
+  let newAmountStr = "";
+  if (key === "Backspace") {
+    newAmountStr =
+      amountStrArr[0].substring(0, amountStrArr[0].length - 1) +
+      "." +
+      amountStr[0][amountStr[0].length - 1] +
+      amountStrArr[1];
+  } else {
+    newAmountStr =
+      amountStrArr[0] + amountStrArr[1][0] + "." + amountStrArr[1].substring(1);
+  }
+
+  return Number.parseFloat(newAmountStr);
+}
+
 const SaveSpendingsModalAmountInput: FC<SaveSpendingsModalFormProps> = ({
   name = "amount",
   // addformvalidators: addFormValidators,
@@ -25,14 +42,19 @@ const SaveSpendingsModalAmountInput: FC<SaveSpendingsModalFormProps> = ({
       return;
     }
 
-    let amountStr = amount.toString();
+    let amountStr = amount.toFixed(2);
     if (e.key === "Backspace" && amount) {
       amountStr = amountStr.substring(0, amountStr.length - 1);
-    } else {
+    } else if (e.key !== "Backspace") {
       amountStr += e.key;
     }
 
-    setAmount(Number.parseInt(amountStr));
+    if (amountStr.length < 3) {
+      setAmount(0);
+      return;
+    }
+
+    setAmount(calculateNewAmount(amountStr, e.key));
   };
 
   return (
@@ -48,6 +70,7 @@ const SaveSpendingsModalAmountInput: FC<SaveSpendingsModalFormProps> = ({
           id={name}
           name={name}
           value={MoneyUtils.formatMoney(amount, CurrencyType.USD, false)}
+          readOnly
           onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) =>
             handleChange(e)
           }
