@@ -1,12 +1,24 @@
 import React, { FC, useState } from "react";
+import GenericInputFieldError from "../../../common/form/GenericInputFieldError";
+import useFormValidate from "../../../hooks/useFormValidate";
+import { MAX_AMOUNT } from "../../../utils/constants";
 import MoneyUtils, { CurrencyType } from "../../../utils/money-utils";
-import { GenericFormInputProps, SpendingFormInput } from "../../../utils/types";
+import {
+  FormValidator,
+  GenericFormInputProps,
+  SpendingFormInput,
+} from "../../../utils/types";
 
 type SaveSpendingsModalFormProps = GenericFormInputProps & {
   spending: SpendingFormInput;
 };
 
-// const AMOUNT_VALIDATORS: FormValidator[] = [];
+const AMOUNT_VALIDATORS: FormValidator[] = [
+  {
+    msg: "Amount can not be zero",
+    validate: (amount: string): boolean => Number.parseFloat(amount) > 0,
+  },
+];
 
 function calculateNewAmount(amountStr: string, key: string): number {
   const amountStrArr = amountStr.split(".");
@@ -27,15 +39,16 @@ function calculateNewAmount(amountStr: string, key: string): number {
 
 const SaveSpendingsModalAmountInput: FC<SaveSpendingsModalFormProps> = ({
   name = "amount",
-  // addformvalidators: addFormValidators,
+  addformvalidators: addFormValidators,
   spending,
 }) => {
   const [amount, setAmount] = useState<number>(spending.amount || 0);
-  // const { setVal, errs } = useFormValidate(
-  //   name,
-  //   getValidators(categoriesMap),
-  //   addFormValidators
-  // );
+  const { setVal, errs } = useFormValidate(
+    name,
+    AMOUNT_VALIDATORS,
+    addFormValidators,
+  );
+  const hasInputError = errs.length > 0 && !errs[0].valid;
 
   const handleChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== "Backspace" && Number.isNaN(Number.parseInt(e.key))) {
@@ -54,13 +67,21 @@ const SaveSpendingsModalAmountInput: FC<SaveSpendingsModalFormProps> = ({
       return;
     }
 
-    setAmount(calculateNewAmount(amountStr, e.key));
+    const newAmount = calculateNewAmount(amountStr, e.key);
+    if (newAmount >= MAX_AMOUNT) {
+      return;
+    }
+
+    setAmount(newAmount);
+    setVal(amountStr);
   };
 
   return (
     <>
       <label className="font-semibold text-slate-500">Amount</label>
-      <div className="flex flex-row w-full mt-2 ">
+      <div
+        className={`flex flex-row w-full mt-2 ${hasInputError ? "border-red-500 rounded-xl p-[1px] border-2" : ""}`}
+      >
         <span className="py-1 px-5 flex flex-col justify-center items-center font-semibold text-lg rounded-s-xl bg-slate-300 bg-opacity-80 drop-shadow-xl">
           $
         </span>
@@ -76,6 +97,8 @@ const SaveSpendingsModalAmountInput: FC<SaveSpendingsModalFormProps> = ({
           }
         />
       </div>
+
+      <GenericInputFieldError err={errs[0]} asListElement={false} />
     </>
   );
 };

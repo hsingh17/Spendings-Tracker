@@ -1,4 +1,5 @@
 import React, { FC, useState } from "react";
+import GenericInputFieldError from "../../../common/form/GenericInputFieldError";
 import useFormValidate from "../../../hooks/useFormValidate";
 import {
   CategoriesMap,
@@ -32,6 +33,7 @@ const SaveSpendingsModalCategoryInput: FC<SaveSpendingsModalFormProps> = ({
     getValidators(categoriesMap),
     addFormValidators,
   );
+  const hasInputError = errs.length > 0 && !errs[0].valid;
 
   const [selectClassName, setSelectClassName] = useState<string>(
     DEFAULT_SELECT_CLASS_NAME,
@@ -54,7 +56,7 @@ const SaveSpendingsModalCategoryInput: FC<SaveSpendingsModalFormProps> = ({
 
       {/* TODO Put this logic into SpendingCategoryDropdown.tsx */}
       <select
-        className={`p-2 mt-2 rounded-lg border-4 ${selectClassName} ${errs.length > 0 ? "border-red-500" : ""}`}
+        className={`p-2 mt-2 rounded-lg border-4 ${selectClassName} ${hasInputError ? "border-red-500" : ""}`}
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onChange(e)}
         name={name}
         defaultValue={"Choose category"}
@@ -71,9 +73,7 @@ const SaveSpendingsModalCategoryInput: FC<SaveSpendingsModalFormProps> = ({
         })}
       </select>
 
-      <span className="text-red-600 font-semibold">
-        {errs.length > 0 ? errs[0].errMsg : ""}
-      </span>
+      <GenericInputFieldError err={errs[0]} asListElement={false} />
     </div>
   );
 };
