@@ -1,24 +1,13 @@
-import React, { FC, useState } from "react";
-import GenericInputFieldError from "../../../common/form/GenericInputFieldError";
-import useFormValidate from "../../../hooks/useFormValidate";
+import React, { FC } from "react";
 import { MAX_AMOUNT } from "../../../utils/constants";
 import MoneyUtils, { CurrencyType } from "../../../utils/money-utils";
-import {
-  FormValidator,
-  GenericFormInputProps,
-  SpendingFormInput,
-} from "../../../utils/types";
 
-type SaveSpendingsModalFormProps = GenericFormInputProps & {
-  spending: SpendingFormInput;
+type SaveSpendingsModalAmountInputProps = {
+  name: string;
+  amount: number;
+  hasInputError: boolean;
+  setAmount: (amount: number) => void;
 };
-
-const AMOUNT_VALIDATORS: FormValidator[] = [
-  {
-    msg: "Amount can not be zero",
-    validate: (amount: string): boolean => Number.parseFloat(amount) > 0,
-  },
-];
 
 function calculateNewAmount(amountStr: string, key: string): number {
   const amountStrArr = amountStr.split(".");
@@ -37,19 +26,12 @@ function calculateNewAmount(amountStr: string, key: string): number {
   return Number.parseFloat(newAmountStr);
 }
 
-const SaveSpendingsModalAmountInput: FC<SaveSpendingsModalFormProps> = ({
-  name = "amount",
-  addformvalidators: addFormValidators,
-  spending,
+const SaveSpendingsModalAmountInput: FC<SaveSpendingsModalAmountInputProps> = ({
+  name,
+  amount,
+  hasInputError,
+  setAmount,
 }) => {
-  const [amount, setAmount] = useState<number>(spending.amount || 0);
-  const { setVal, errs } = useFormValidate(
-    name,
-    AMOUNT_VALIDATORS,
-    addFormValidators,
-  );
-  const hasInputError = errs.length > 0 && !errs[0].valid;
-
   const handleChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== "Backspace" && Number.isNaN(Number.parseInt(e.key))) {
       return;
@@ -73,7 +55,6 @@ const SaveSpendingsModalAmountInput: FC<SaveSpendingsModalFormProps> = ({
     }
 
     setAmount(newAmount);
-    setVal(amountStr);
   };
 
   return (
@@ -97,8 +78,6 @@ const SaveSpendingsModalAmountInput: FC<SaveSpendingsModalFormProps> = ({
           }
         />
       </div>
-
-      <GenericInputFieldError err={errs[0]} asListElement={false} />
     </>
   );
 };

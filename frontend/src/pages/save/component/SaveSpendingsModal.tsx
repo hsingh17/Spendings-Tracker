@@ -6,8 +6,8 @@ import {
   Nullable,
   SpendingFormInput,
 } from "../../../utils/types";
-import SaveSpendingsModalAmountInput from "./SaveSpendingsModalAmountInput";
-import SaveSpendingsModalCategoryInput from "./SaveSpendingsModalCategoryInput";
+import SaveSpendingsModalAmount from "./SaveSpendingsModalAmount";
+import SaveSpendingsModalCategory from "./SaveSpendingsModalCategory";
 import SaveSpendingsModalFormFooter from "./SaveSpendingsModalFormFooter";
 
 type SaveSpendingsModalProps = {
@@ -41,8 +41,11 @@ const SaveSpendingsModal: FC<SaveSpendingsModalProps> = ({
         onSubmit={() => alert("TODO")}
         formChildren={
           <>
-            <SaveSpendingsModalCategoryInput categoriesMap={categoriesMap} />
-            <SaveSpendingsModalAmountInput spending={spending} />
+            <SaveSpendingsModalCategory
+              spending={spending}
+              categoriesMap={categoriesMap}
+            />
+            <SaveSpendingsModalAmount spending={spending} />
             <SaveSpendingsModalFormFooter setShow={setShow} />
           </>
         }

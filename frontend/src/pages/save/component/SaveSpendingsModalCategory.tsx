@@ -5,9 +5,12 @@ import {
   CategoriesMap,
   FormValidator,
   GenericFormInputProps,
+  Spending,
 } from "../../../utils/types";
+import SpendingCategoryDropdown from "./SpendingCategoryDropdown";
 
 type SaveSpendingsModalFormProps = GenericFormInputProps & {
+  spending: Spending;
   categoriesMap: CategoriesMap;
   addformvalidators?: (formFieldName: string, validate: () => boolean) => void;
 };
@@ -23,9 +26,10 @@ function getValidators(categoriesMap: CategoriesMap): FormValidator[] {
     },
   ];
 }
-const SaveSpendingsModalCategoryInput: FC<SaveSpendingsModalFormProps> = ({
+const SaveSpendingsModalCategory: FC<SaveSpendingsModalFormProps> = ({
   name = "category",
   categoriesMap,
+  spending,
   addformvalidators: addFormValidators,
 }) => {
   const { setVal, errs } = useFormValidate(
@@ -52,30 +56,18 @@ const SaveSpendingsModalCategoryInput: FC<SaveSpendingsModalFormProps> = ({
 
   return (
     <div className="flex flex-col mb-3 mt-3">
-      <label className="font-semibold text-slate-500">Category</label>
-
-      {/* TODO Put this logic into SpendingCategoryDropdown.tsx */}
-      <select
-        className={`p-2 mt-2 rounded-lg border-4 ${selectClassName} ${hasInputError ? "border-red-500" : ""}`}
-        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onChange(e)}
+      <SpendingCategoryDropdown
+        className={selectClassName}
         name={name}
-        defaultValue={"Choose category"}
-      >
-        <option value="Choose category" disabled hidden>
-          Choose category
-        </option>
-        {Object.keys(categoriesMap).map((key) => {
-          return (
-            <option key={key} value={key} className="font-normal text-black">
-              {key}
-            </option>
-          );
-        })}
-      </select>
+        hasInputError={hasInputError}
+        categoriesMap={categoriesMap}
+        spending={spending}
+        onChange={onChange}
+      />
 
       <GenericInputFieldError err={errs[0]} asListElement={false} />
     </div>
   );
 };
 
-export default SaveSpendingsModalCategoryInput;
+export default SaveSpendingsModalCategory;

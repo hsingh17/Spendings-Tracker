@@ -31,8 +31,6 @@ export default function useFormValidate(
         newErrs.push(formErr);
       }
 
-      console.log(newErrs);
-
       setErrs(newErrs);
       return valid;
     },
