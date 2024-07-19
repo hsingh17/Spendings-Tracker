@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import GenericInputFieldError from "../../../common/form/GenericInputFieldError";
 import useFormValidate from "../../../hooks/useFormValidate";
 import {
@@ -36,6 +36,10 @@ const SaveSpendingsModalAmount: FC<SaveSpendingsModalFormProps> = ({
     setAmount(newAmount);
     setVal(newAmount.toPrecision(2));
   };
+
+  useEffect(() => {
+    setVal(spending.amount?.toPrecision(2) || "");
+  }, [spending]);
 
   return (
     <>

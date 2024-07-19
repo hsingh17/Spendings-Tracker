@@ -1,14 +1,9 @@
-import React, { FC, useEffect, useRef, useState } from "react";
-import toast from "react-hot-toast";
+import React, { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "../../../common/Card";
 import useSaveSpendings from "../../../hooks/useSaveSpendings";
 import useSpendingCategories from "../../../hooks/useSpendingCategories";
-import {
-  MAX_AMOUNT,
-  MAX_CATEGORY_LENGTH,
-  MAX_SPENDINGS_FOR_A_DAY,
-} from "../../../utils/constants";
+import { MAX_AMOUNT, MAX_CATEGORY_LENGTH } from "../../../utils/constants";
 import {
   FormInputError,
   Nullable,
@@ -68,7 +63,6 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
   const [spendings, setSpendings] = useState<Array<SpendingFormInput>>(
     mappedSpendings ? mappedSpendings.sort(spendingComparator) : [],
   );
-  const cardRef = useRef<HTMLDivElement>();
   const navigate = useNavigate();
   const { mutate: saveSpendings } = useSaveSpendings(date, isCreateMode, () =>
     navigate(-1),
@@ -78,8 +72,8 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
     setSpendings(mappedSpendings ? mappedSpendings : []);
   }, [initialSpendings]);
 
-  const countSpendingsToDisplay = () =>
-    spendings.filter((SpendingFormInput) => !SpendingFormInput.delete).length;
+  // const countSpendingsToDisplay = () =>
+  //   spendings.filter((SpendingFormInput) => !SpendingFormInput.delete).length;
 
   const handleSubmit = (e: React.MouseEvent) => {
     const isValidFormInput = (): boolean => {
@@ -167,31 +161,32 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
     });
   };
 
-  const handleAddNewRow = (e: React.MouseEvent) => {
-    e.preventDefault();
-
-    if (countSpendingsToDisplay() >= MAX_SPENDINGS_FOR_A_DAY) {
-      // No more spendings allowed for the day
-      toast.error("Reached maximum spendings for a day!");
-      return;
-    }
-
+  const addNewSpending = (inputMap: Map<string, string>) => {
     const newSpendings: Array<SpendingFormInput> = [...spendings];
-    newSpendings.push({
-      spendingId: null,
-      category: null,
-      amount: null,
-      delete: false,
-      categoryError: null,
-      amountError: null,
-    });
+    const isValidIdx =
+      modalSpendingIdx === 0 || (modalSpendingIdx && modalSpendingIdx >= 0);
+    const spending = isValidIdx
+      ? newSpendings[modalSpendingIdx!]
+      : {
+          spendingId: null,
+          category: null,
+          amount: null,
+          delete: false,
+          categoryError: null,
+          amountError: null,
+        };
+    const newCategory = inputMap.get("category");
+    const newAmountStr = inputMap.get("amount") || "0";
+    const newAmount = Number.parseFloat(newAmountStr.replaceAll(",", ""));
 
-    if (cardRef.current) {
-      // Auto scroll user down to bottom of the card
-      window.scrollTo({
-        top: cardRef.current.scrollHeight + 100, // + 100 for a little padding
-        behavior: "smooth",
-      });
+    // Do updates
+    spending.category = newCategory;
+    spending.amount = newAmount;
+
+    if (isValidIdx) {
+      newSpendings[modalSpendingIdx!] = spending;
+    } else {
+      newSpendings.push(spending);
     }
 
     setSpendings(newSpendings);
@@ -233,7 +228,7 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
 
   return (
     <div className="flex flex-col items-center mt-7">
-      <Card className="items-center p-7 w-full md:w-[500px]" innerRef={cardRef}>
+      <Card className="items-center p-7 w-full md:w-[500px]">
         <SaveSpendingsFormList
           spendings={spendings}
           categoriesMap={categoriesMap}
@@ -254,7 +249,7 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
         categoriesMap={categoriesMap}
         spending={getSpendingForModal()}
         setModalSpendingIdx={setModalSpendingIdx}
-        addNewRow={handleAddNewRow}
+        onSubmit={addNewSpending}
       />
     </div>
   );

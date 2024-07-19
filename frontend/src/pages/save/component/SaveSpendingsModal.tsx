@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, SetStateAction } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 import GenericForm from "../../../common/form/GenericForm";
 import Modal from "../../../common/Modal";
 import {
@@ -13,14 +13,14 @@ import SaveSpendingsModalFormFooter from "./SaveSpendingsModalFormFooter";
 type SaveSpendingsModalProps = {
   categoriesMap: CategoriesMap;
   spending: Nullable<SpendingFormInput>;
-  addNewRow: (e: React.MouseEvent) => void;
+  onSubmit: (inputMap: Map<string, string>) => void;
   setModalSpendingIdx: Dispatch<SetStateAction<number | undefined>>;
 };
 
 const SaveSpendingsModal: FC<SaveSpendingsModalProps> = ({
   categoriesMap,
   spending,
-  // addNewRow,
+  onSubmit,
   setModalSpendingIdx,
 }) => {
   if (!spending) {
@@ -31,6 +31,11 @@ const SaveSpendingsModal: FC<SaveSpendingsModalProps> = ({
     setModalSpendingIdx(undefined);
   };
 
+  const onSubmitWrapper = (inputMap: Map<string, string>) => {
+    setShow();
+    onSubmit(inputMap);
+  };
+
   return (
     <Modal className="w-full md:w-[600px]">
       <GenericForm
@@ -38,7 +43,7 @@ const SaveSpendingsModal: FC<SaveSpendingsModalProps> = ({
         cardClassName="w-full"
         formClassName="flex flex-col"
         title={!spending.spendingId ? "Add" : "Edit"}
-        onSubmit={() => alert("TODO")}
+        onSubmit={onSubmitWrapper}
         formChildren={
           <>
             <SaveSpendingsModalCategory

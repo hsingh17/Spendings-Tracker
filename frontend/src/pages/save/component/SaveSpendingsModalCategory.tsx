@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import GenericInputFieldError from "../../../common/form/GenericInputFieldError";
 import useFormValidate from "../../../hooks/useFormValidate";
 import {
@@ -40,7 +40,7 @@ const SaveSpendingsModalCategory: FC<SaveSpendingsModalFormProps> = ({
   const hasInputError = errs.length > 0 && !errs[0].valid;
 
   const [selectClassName, setSelectClassName] = useState<string>(
-    DEFAULT_SELECT_CLASS_NAME,
+    spending.category || DEFAULT_SELECT_CLASS_NAME,
   );
 
   const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -53,6 +53,10 @@ const SaveSpendingsModalCategory: FC<SaveSpendingsModalFormProps> = ({
     setSelectClassName("");
     setVal(e.target.value);
   };
+
+  useEffect(() => {
+    setVal(spending.category || "");
+  }, [spending]);
 
   return (
     <div className="flex flex-col mb-3 mt-3">
