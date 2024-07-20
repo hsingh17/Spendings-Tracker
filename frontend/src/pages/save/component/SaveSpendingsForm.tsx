@@ -3,7 +3,11 @@ import { useNavigate } from "react-router-dom";
 import Card from "../../../common/Card";
 import useSaveSpendings from "../../../hooks/useSaveSpendings";
 import useSpendingCategories from "../../../hooks/useSpendingCategories";
-import { MAX_AMOUNT, MAX_CATEGORY_LENGTH } from "../../../utils/constants";
+import {
+  MAX_AMOUNT,
+  MAX_CATEGORY_LENGTH,
+  MAX_SPENDINGS_FOR_A_DAY,
+} from "../../../utils/constants";
 import {
   FormInputError,
   Nullable,
@@ -72,8 +76,8 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
     setSpendings(mappedSpendings ? mappedSpendings : []);
   }, [initialSpendings]);
 
-  // const countSpendingsToDisplay = () =>
-  //   spendings.filter((SpendingFormInput) => !SpendingFormInput.delete).length;
+  const countSpendingsToDisplay = () =>
+    spendings.filter((SpendingFormInput) => !SpendingFormInput.delete).length;
 
   const handleSubmit = (e: React.MouseEvent) => {
     const isValidFormInput = (): boolean => {
@@ -194,6 +198,7 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
 
   const handleDeleteRow = (idx: number) => {
     const newSpendings: Array<SpendingFormInput> = [...spendings];
+
     if (newSpendings[idx].spendingId !== null) {
       newSpendings[idx].delete = true;
     } else {
@@ -204,11 +209,6 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
     setSpendings(newSpendings);
   };
 
-  // const handleChange = (idx: number, newSpending: SpendingFormInput) => {
-  //   const newSpendings: Array<SpendingFormInput> = [...spendings];
-  //   newSpendings[idx] = newSpending;
-  //   setSpendings(newSpendings);
-  // };
   const getSpendingForModal = (): Nullable<SpendingFormInput> => {
     if (modalSpendingIdx !== 0 && !modalSpendingIdx) {
       return null;
@@ -236,7 +236,10 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
           setModalSpendingIdx={setModalSpendingIdx}
         />
 
-        <SaveSpendingsAddRowButton setModalSpendingIdx={setModalSpendingIdx} />
+        <SaveSpendingsAddRowButton
+          isDisabled={countSpendingsToDisplay() === MAX_SPENDINGS_FOR_A_DAY}
+          setModalSpendingIdx={setModalSpendingIdx}
+        />
       </Card>
 
       <SaveSpendingsFooterButtons

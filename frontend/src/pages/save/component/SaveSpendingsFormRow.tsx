@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction } from "react";
+import React, { Dispatch, FC, SetStateAction } from "react";
 import { ReactComponent as DeleteRowIcon } from "../../../assets/raw/delete-icon.svg";
 import MoneyUtils from "../../../utils/money-utils";
 import { CategoriesMap, SpendingFormInput } from "../../../utils/types";
@@ -9,7 +9,7 @@ export type SpendingsFormRowProps = {
   spending: SpendingFormInput;
   categoriesMap: CategoriesMap;
   handleDeleteRow: (idx: number) => void;
-  setModalSpendingIdx: Dispatch<SetStateAction<number>>;
+  setModalSpendingIdx: Dispatch<SetStateAction<number | undefined>>;
 };
 
 const SaveSpendingsFormRow: FC<SpendingsFormRowProps> = ({
@@ -23,6 +23,12 @@ const SaveSpendingsFormRow: FC<SpendingsFormRowProps> = ({
     // SpendingFormInput marked for deletion
     return <></>;
   }
+
+  const handleDeleteRowWrapper = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    handleDeleteRow(idx);
+  };
 
   return (
     <div
@@ -38,7 +44,12 @@ const SaveSpendingsFormRow: FC<SpendingsFormRowProps> = ({
         {MoneyUtils.formatMoney(spending.amount)}
       </p>
 
-      <button className="ml-auto mr-2" onClick={() => handleDeleteRow(idx)}>
+      <button
+        className="ml-auto mr-2"
+        onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+          handleDeleteRowWrapper(e)
+        }
+      >
         <DeleteRowIcon
           className="w-10 h-10 p-1 rounded-lg hover:bg-slate-400 hover:bg-opacity-35"
           stroke="red"
