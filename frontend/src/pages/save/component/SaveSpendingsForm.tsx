@@ -8,10 +8,10 @@ import {
   MAX_CATEGORY_LENGTH,
   MAX_SPENDINGS_FOR_A_DAY,
 } from "../../../utils/constants";
+import DateUtils from "../../../utils/date-utils";
 import {
   FormInputError,
   Nullable,
-  SaveSpendingsFormProps,
   Spending,
   SpendingFormInput,
 } from "../../../utils/types";
@@ -19,6 +19,14 @@ import SaveSpendingsAddRowButton from "./SaveSpendingsAddRowButton";
 import SaveSpendingsFooterButtons from "./SaveSpendingsFormFooterButtons";
 import SaveSpendingsFormList from "./SaveSpendingsFormList";
 import SaveSpendingsModal from "./SaveSpendingsModal";
+import SaveSpendingsTitle from "./SaveSpendingsTitle";
+
+type SaveSpendingsFormProps = {
+  date: string;
+  initialSpendings: Nullable<Spending[]>;
+  isCreateMode: boolean;
+  handleDateChange: (date: string) => void;
+};
 
 function spendingComparator(
   a: SpendingFormInput,
@@ -49,22 +57,24 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
   date,
   isCreateMode,
   initialSpendings,
+  handleDateChange,
 }) => {
   const [modalSpendingIdx, setModalSpendingIdx] = useState<number>();
 
-  const mappedSpendings: Nullable<Array<SpendingFormInput>> =
-    initialSpendings?.map((spending) => ({
+  const mappedSpendings: Nullable<SpendingFormInput[]> = initialSpendings?.map(
+    (spending) => ({
       spendingId: spending.spendingId,
       amount: spending.amount,
       category: spending.category,
       delete: spending.delete,
       categoryError: null,
       amountError: null,
-    }));
+    }),
+  );
   const { data: response } = useSpendingCategories();
   const categoriesMap = response?.data?.categoryToS3UrlMap || {};
 
-  const [spendings, setSpendings] = useState<Array<SpendingFormInput>>(
+  const [spendings, setSpendings] = useState<SpendingFormInput[]>(
     mappedSpendings ? mappedSpendings.sort(spendingComparator) : [],
   );
   const navigate = useNavigate();
@@ -229,6 +239,12 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
   return (
     <div className="flex flex-col items-center mt-7">
       <Card className="items-center p-7 w-full md:w-[500px]">
+        <SaveSpendingsTitle
+          date={date || DateUtils.getCurrentDate()}
+          handleDateChange={handleDateChange}
+          spendings={spendings}
+        />
+
         <SaveSpendingsFormList
           spendings={spendings}
           categoriesMap={categoriesMap}

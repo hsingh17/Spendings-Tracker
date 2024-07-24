@@ -20,6 +20,7 @@ const SaveSpendingsFormList: FC<SaveSpendingsFormListProps> = ({
     spendings.filter((spending) => !spending.delete).length;
 
   if (!spendings || countSpendingsToDisplay(spendings) === 0) {
+    // TODO: Custom empty state for this
     return <TableEmptyState />;
   }
 

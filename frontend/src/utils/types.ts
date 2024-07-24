@@ -89,18 +89,6 @@ export type SpendingListRow = {
   total: number;
 };
 
-export type SaveSpendingsFormProps = {
-  date: string;
-  initialSpendings: Nullable<Array<Spending>>;
-  isCreateMode: boolean;
-};
-
-export type SaveSpendingsTitleProps = {
-  date: string;
-  isCreateMode: boolean;
-  parentHandleDateChange: (date: string) => void;
-};
-
 export enum SortType {
   DATE,
   TOTAL,

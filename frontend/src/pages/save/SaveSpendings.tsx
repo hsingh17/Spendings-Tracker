@@ -1,10 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
 import useSpending from "../../hooks/useSpending";
 import { SAVE_SPENDINGS_PAGE } from "../../utils/constants";
-import DateUtils from "../../utils/date-utils";
 import { SaveSpendingProps } from "../../utils/types";
 import SaveSpendingsForm from "./component/SaveSpendingsForm";
-import SaveSpendingsTitle from "./component/SaveSpendingsTitle";
 
 const SaveSpendings = () => {
   const navigate = useNavigate();
@@ -23,16 +21,11 @@ const SaveSpendings = () => {
 
   return (
     <div className="p-3">
-      <SaveSpendingsTitle
-        date={params.date || DateUtils.getCurrentDate()}
-        isCreateMode={isCreateMode}
-        parentHandleDateChange={handleDateChange}
-      />
-
       <SaveSpendingsForm
         date={params.date as string}
         isCreateMode={isCreateMode}
         initialSpendings={spendings ? spendings : null}
+        handleDateChange={handleDateChange}
       />
     </div>
   );
