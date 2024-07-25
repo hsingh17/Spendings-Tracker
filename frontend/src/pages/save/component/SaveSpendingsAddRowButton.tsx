@@ -17,7 +17,7 @@ const SaveSpendingsAddRowButton: FC<SaveSpendingsAddRowButtonProps> = ({
     <>
       <button
         disabled={isDisabled}
-        className={`flex justify-center w-full  rounded-xl py-3 ${isDisabled ? DISABLED_STYLE : ENABLED_STYLE}`}
+        className={`flex justify-center w-11/12 md:w-full rounded-xl py-3 ${isDisabled ? DISABLED_STYLE : ENABLED_STYLE}`}
         onClick={() => setModalSpendingIdx(-1)}
       >
         <span className="flex flex-row items-center text-center">

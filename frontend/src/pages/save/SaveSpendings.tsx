@@ -20,7 +20,7 @@ const SaveSpendings = () => {
   }
 
   return (
-    <div className="p-3">
+    <div className="md:p-3 flex flex-col items-center">
       <SaveSpendingsForm
         date={params.date as string}
         isCreateMode={isCreateMode}

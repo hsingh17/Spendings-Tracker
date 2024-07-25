@@ -10,8 +10,8 @@ import lombok.Setter;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /** An entity class that maps to the table <code>APP.SPENDING_USER_AGGR</code> */
 @NoArgsConstructor
@@ -38,9 +38,9 @@ public class SpendingUserAggr extends AuditableEntity {
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             orphanRemoval = true)
-    private Set<Spending> spendings = new HashSet<>();
+    private List<Spending> spendings = new ArrayList<>();
 
-    public SpendingUserAggr(User user, LocalDate date, Set<Spending> spendings) {
+    public SpendingUserAggr(User user, LocalDate date, List<Spending> spendings) {
         this.user = user;
         this.date = date;
         this.spendings = spendings;

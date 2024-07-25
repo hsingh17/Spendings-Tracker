@@ -5,10 +5,6 @@ This repository holds the code for my spendings tracker app built with Java and 
 ## TODO
 
 - clean up add/edit spending UI -> make category a set of predfined options dropdown -> can change datamodel to no longer store a string and just use some enum
-  - update ui
-    - total for the date at the top
-    - inspiration: https://dribbble.com/shots/22860204-Add-item-modal-Clean-and-powerful
-    - add/edit pops up a modal
   - make custom svgs
 - small ui updates
 
@@ -37,6 +33,4 @@ This repository holds the code for my spendings tracker app built with Java and 
 
 ## Known issues
 
-- sql for categorical spending data is broken
-- when adding or updating amount of spending and it's fully highlighted, pressing any key will result in NaN
 - google sign in button randomly resizes

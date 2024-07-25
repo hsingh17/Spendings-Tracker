@@ -65,12 +65,6 @@ export type Spending = {
   delete: Nullable<boolean>;
 };
 
-// TODO: Probably can remove and just use Spending
-export type SpendingFormInput = Spending & {
-  categoryError: Nullable<FormInputError>;
-  amountError: Nullable<FormInputError>;
-};
-
 export type CategoricalSpendings = {
   category: string;
   total: number;

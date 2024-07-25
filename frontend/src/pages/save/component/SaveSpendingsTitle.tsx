@@ -16,11 +16,11 @@ const SaveSpendingsTitle: FC<SaveSpendingsTitleProps> = ({
 }) => {
   return (
     <div className="w-full p-5 -mb-4 flex flex-col justify-center items-center">
-      <SaveSpendingsTitleTotal spendings={spendings} />
       <SaveSpendingsTitleDateInput
         date={date}
         handleDateChange={handleDateChange}
       />
+      <SaveSpendingsTitleTotal spendings={spendings} />
     </div>
   );
 };

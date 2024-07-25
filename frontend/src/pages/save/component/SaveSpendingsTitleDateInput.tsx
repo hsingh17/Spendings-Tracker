@@ -14,12 +14,13 @@ const SaveSpendingsTitleDateInput: FC<SaveSpendingsTitleDateInputProps> = ({
     const target = e.target as typeof e.target & {
       value: string;
     };
+
     handleDateChange(target.value);
   };
 
   return (
     <input
-      className="w-full bg-theme-white border-[0px] border-slate-300 rounded-lg px-2 py-1 text-theme-brand-secondary mt-2 text-center text-xl font-semibold"
+      className="w-fit mr-auto rounded-lg px-2 py-1 text-theme-brand-secondary text-center text-lg -mt-2 -ml-3 md:-mt-8 md:-ml-5 font-semibold mb-7"
       type="date"
       id="spending-date"
       defaultValue={date}

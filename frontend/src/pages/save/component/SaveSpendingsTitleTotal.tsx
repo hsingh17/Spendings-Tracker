@@ -23,7 +23,7 @@ const SaveSpendingsTitleTotal: FC<SaveSpendingsTitleTotalProps> = ({
   }, [spendings]);
 
   return (
-    <h1 className="text-theme-cta font-semibold text-4xl">
+    <h1 className="text-theme-cta font-semibold text-4xl md:text-6xl">
       {MoneyUtils.formatMoney(total, CurrencyType.USD)}
     </h1>
   );

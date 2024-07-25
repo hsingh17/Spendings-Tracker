@@ -85,7 +85,7 @@ public class SpendingServiceImpl implements SpendingService {
         }
 
         Page<SpendingPageItem> spendingPageItemPage =
-                new PageImpl<>(spendingPageItemList, pageRequest, spendingPageItemList.size());
+                new PageImpl<>(spendingPageItemList, pageRequest, spendingsListProjs.getTotalElements());
 
         return SpendingPageResponse.builder().spendingPage(spendingPageItemPage).build();
     }
@@ -116,7 +116,7 @@ public class SpendingServiceImpl implements SpendingService {
             SpendingsSaveRequest spendingsSaveRequest, LocalDate spendingDate, BigInteger userId) {
         User user = userService.getUserById(userId);
 
-        Set<Spending> spendings = new HashSet<>();
+        List<Spending> spendings = new ArrayList<>();
         for (SpendingRequest spendingReq : spendingsSaveRequest.spendingRequests()) {
             SpendingCategory spendingCategory =
                     spendingCategoryJpaCache.getFromCache(spendingReq.getCategory());
@@ -132,7 +132,7 @@ public class SpendingServiceImpl implements SpendingService {
     }
 
     private void mergeExistingSpendingsWithRequest(
-            SpendingUserAggr spendingUserAggr, Set<SpendingRequest> spendingReqs) {
+            SpendingUserAggr spendingUserAggr, List<SpendingRequest> spendingReqs) {
         for (SpendingRequest spendingRequest : spendingReqs) {
             SpendingCategoryEnum category = spendingRequest.getCategory();
             BigDecimal amount = spendingRequest.getAmount();

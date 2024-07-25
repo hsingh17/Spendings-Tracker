@@ -1,6 +1,5 @@
 import { Dispatch, FC, SetStateAction } from "react";
 import { CategoriesMap, SpendingFormInput } from "../../../utils/types";
-import TableEmptyState from "../../view/component/TableEmptyState";
 import SaveSpendingsFormRow from "./SaveSpendingsFormRow";
 
 type SaveSpendingsFormListProps = {
@@ -16,14 +15,6 @@ const SaveSpendingsFormList: FC<SaveSpendingsFormListProps> = ({
   handleDeleteRow,
   setModalSpendingIdx,
 }) => {
-  const countSpendingsToDisplay = (spendings: Array<SpendingFormInput>) =>
-    spendings.filter((spending) => !spending.delete).length;
-
-  if (!spendings || countSpendingsToDisplay(spendings) === 0) {
-    // TODO: Custom empty state for this
-    return <TableEmptyState />;
-  }
-
   return (
     <div className="w-full h-full overflow-x-scroll">
       <div className="p-5 flex flex-col items-center">

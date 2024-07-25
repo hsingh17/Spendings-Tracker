@@ -1,5 +1,7 @@
 package com.spendingstracker.app.constants;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.util.Arrays;
 
 /** <code>enum</code> that represents spending categoryToS3UrlMap */
@@ -31,6 +33,7 @@ public enum SpendingCategoryEnum {
     /**
      * @return <code>stringDecode</code>, the coded value of the enum
      */
+    @JsonValue
     public String getStringDecode() {
         return stringDecode;
     }

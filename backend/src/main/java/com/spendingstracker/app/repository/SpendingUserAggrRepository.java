@@ -257,7 +257,7 @@ public interface SpendingUserAggrRepository extends JpaRepository<SpendingUserAg
                         AND SUA.DATE >= :startDate
                         AND SUA.DATE <= :endDate
                     GROUP BY
-                        S.CATEGORY
+                        SC.NAME
                     ORDER BY
                         SUM(S.AMOUNT) DESC
                     """,
@@ -276,7 +276,7 @@ public interface SpendingUserAggrRepository extends JpaRepository<SpendingUserAg
                         AND SUA.DATE >= :startDate
                         AND SUA.DATE <= :endDate
                     GROUP BY
-                        S.CATEGORY
+                        SC.NAME
                     ORDER BY
                         SUM(S.AMOUNT) DESC
                     """,

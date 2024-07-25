@@ -39,4 +39,13 @@ public class Spending extends AuditableEntity {
         this.spendingCategory = spendingCategory;
         this.amount = amount;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Spending)) {
+            return false;
+        }
+
+        return this.spendingId.equals(((Spending) o).spendingId);
+    }
 }
