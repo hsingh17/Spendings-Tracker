@@ -11,11 +11,6 @@ VALUES
 INSERT INTO
     APP.SPENDING_CATEGORY (NAME, S3_KEY)
 VALUES
-    ("Vehicle", "placeholder.svg");
-
-INSERT INTO
-    APP.SPENDING_CATEGORY (NAME, S3_KEY)
-VALUES
     ("Travel", "placeholder.svg");
 
 INSERT INTO
