@@ -19,6 +19,7 @@ const TableRow: FC<TableRowProps> = ({
 
   if (isLoading) {
     return (
+      // TODO: Make a component
       <tr className="border-gray-300 leading-[3rem]">
         <td>
           <ShimmerLoadingBox />
@@ -45,6 +46,7 @@ const TableRow: FC<TableRowProps> = ({
         </p>
       </td>
 
+      {/* TODO: Make component */}
       <td>
         <div className="flex justify-center items-center w-full">
           <button>

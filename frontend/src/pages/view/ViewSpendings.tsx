@@ -40,6 +40,7 @@ const ViewSpendings = () => {
   return (
     <div className="p-3">
       <Card className="p-7">
+        {/* TODO: Make this a TableBody component and then rename existing to SpendingsTableBody */}
         <TableTitle />
 
         <TableFilter

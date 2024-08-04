@@ -1,54 +1,54 @@
 INSERT INTO
     APP.SPENDING_CATEGORY (NAME, S3_KEY)
 VALUES
-    ("Transporation", "placeholder.svg");
+    ("Transporation", "transporation.svg");
 
 INSERT INTO
     APP.SPENDING_CATEGORY (NAME, S3_KEY)
 VALUES
-    ("Clothing", "placeholder.svg");
+    ("Clothing", "clothing.svg");
 
 INSERT INTO
     APP.SPENDING_CATEGORY (NAME, S3_KEY)
 VALUES
-    ("Travel", "placeholder.svg");
+    ("Travel", "travel.svg");
 
 INSERT INTO
     APP.SPENDING_CATEGORY (NAME, S3_KEY)
 VALUES
-    ("Health", "placeholder.svg");
+    ("Health", "health.svg");
 
 INSERT INTO
     APP.SPENDING_CATEGORY (NAME, S3_KEY)
 VALUES
-    ("Food", "placeholder.svg");
+    ("Food", "food.svg");
 
 INSERT INTO
     APP.SPENDING_CATEGORY (NAME, S3_KEY)
 VALUES
-    ("Pet", "placeholder.svg");
+    ("Pet", "pet.svg");
 
 INSERT INTO
     APP.SPENDING_CATEGORY (NAME, S3_KEY)
 VALUES
-    ("Entertainment", "placeholder.svg");
+    ("Entertainment", "entertainment.svg");
 
 INSERT INTO
     APP.SPENDING_CATEGORY (NAME, S3_KEY)
 VALUES
-    ("Utility", "placeholder.svg");
+    ("Utility", "utility.svg");
 
 INSERT INTO
     APP.SPENDING_CATEGORY (NAME, S3_KEY)
 VALUES
-    ("Subscription", "placeholder.svg");
+    ("Subscription", "subscription.svg");
 
 INSERT INTO
     APP.SPENDING_CATEGORY (NAME, S3_KEY)
 VALUES
-    ("Savings", "placeholder.svg");
+    ("Savings", "savings.svg");
 
 INSERT INTO
     APP.SPENDING_CATEGORY (NAME, S3_KEY)
 VALUES
-    ("Other", "placeholder.svg");
+    ("Other", "other.svg");

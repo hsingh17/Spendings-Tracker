@@ -40,7 +40,7 @@ const SaveSpendingsFormRow: FC<SpendingsFormRowProps> = ({
         imgSrc={categoriesMap[spending.category || ""]}
       />
 
-      <p className="ml-2 mb-[2px] font-semibold text-xl">
+      <p className="ml-3 text-right mb-[2px] font-semibold text-xl">
         {MoneyUtils.formatMoney(spending.amount)}
       </p>
 
