@@ -5,6 +5,12 @@ import com.spendingstracker.app.constants.ExternalUserType;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
+/**
+ * Converter for JPA to convert <code>ExternalUserType</code> to <code>String</code> value of the
+ * enum
+ *
+ * @see ExternalUserType
+ */
 @Converter(autoApply = true)
 public class ExternalUserTypeConverter implements AttributeConverter<ExternalUserType, String> {
     @Override

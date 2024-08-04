@@ -68,7 +68,7 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
     const domPoint = new DOMPointReadOnly(e.clientX, e.clientY);
     const svgNode = e.currentTarget as SVGGraphicsElement;
     const svgPoint = domPoint.matrixTransform(
-      svgNode.getScreenCTM()?.inverse()
+      svgNode.getScreenCTM()?.inverse(),
     );
     const [x, y] = calculateDisplacedCoords(curAngle);
 
@@ -86,11 +86,11 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
     <div className="relative">
       <svg height={height} width={width}>
         <g
-          className="animate-[scale-in_1s_ease-in-out_forwards,rotate-to-zero_1.25s_ease-in-out_forwards]"
+          className="animate-[rotate-to-zero_1.25s_ease-in-out_forwards]"
           style={{
             transform: `translate(${width / 2}px, ${height / 2}px)`,
             transformOrigin: "center center",
-            scale: "0",
+            scale: "1",
             rotate: "180deg",
           }}
         >

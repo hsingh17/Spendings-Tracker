@@ -54,6 +54,7 @@ export const PASSWORD_RESET_ROUTE: string = `${BASE_API_URL}${API_VERSION}/auth/
 export const CREATE_ACCT_ROUTE: string = `${BASE_API_URL}${API_VERSION}/auth/register`;
 export const VERIFY_ACCT_ROUTE: string = `${BASE_API_URL}${API_VERSION}/auth/verify-acct`;
 export const SPENDINGS_API_ROUTE: string = `${BASE_API_URL}${API_VERSION}/api/spendings`;
+export const SPENDING_CATEGORIES_ROUTE: string = `${BASE_API_URL}${API_VERSION}/api/spending-categories`;
 
 // #######################################################################################
 // #######################################################################################

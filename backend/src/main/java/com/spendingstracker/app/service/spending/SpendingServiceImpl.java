@@ -1,7 +1,9 @@
 package com.spendingstracker.app.service.spending;
 
+import com.spendingstracker.app.cache.SpendingCategoryJpaCache;
 import com.spendingstracker.app.constants.Granularity;
 import com.spendingstracker.app.constants.GraphType;
+import com.spendingstracker.app.constants.SpendingCategoryEnum;
 import com.spendingstracker.app.dto.requests.SpendingRequest;
 import com.spendingstracker.app.dto.requests.SpendingsSaveRequest;
 import com.spendingstracker.app.dto.response.SpendingDetailsResponse;
@@ -9,6 +11,7 @@ import com.spendingstracker.app.dto.response.SpendingPageItem;
 import com.spendingstracker.app.dto.response.SpendingPageResponse;
 import com.spendingstracker.app.dto.response.SpendingResponse;
 import com.spendingstracker.app.entity.Spending;
+import com.spendingstracker.app.entity.SpendingCategory;
 import com.spendingstracker.app.entity.SpendingUserAggr;
 import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.exception.NoSuchGranularityException;
@@ -43,14 +46,17 @@ public class SpendingServiceImpl implements SpendingService {
     private final SpendingRepository spendingRepository;
     private final SpendingUserAggrRepository spendingUserAggrRepository;
     private final UserService userService;
+    private final SpendingCategoryJpaCache spendingCategoryJpaCache;
 
     public SpendingServiceImpl(
             SpendingRepository spendingRepository,
             SpendingUserAggrRepository spendingUserAggrRepository,
-            UserService userService) {
+            UserService userService,
+            SpendingCategoryJpaCache spendingCategoryJpaCache) {
         this.spendingRepository = spendingRepository;
         this.spendingUserAggrRepository = spendingUserAggrRepository;
         this.userService = userService;
+        this.spendingCategoryJpaCache = spendingCategoryJpaCache;
     }
 
     public SpendingPageResponse getSpendings(
@@ -79,7 +85,7 @@ public class SpendingServiceImpl implements SpendingService {
         }
 
         Page<SpendingPageItem> spendingPageItemPage =
-                new PageImpl<>(spendingPageItemList, pageRequest, spendingPageItemList.size());
+                new PageImpl<>(spendingPageItemList, pageRequest, spendingsListProjs.getTotalElements());
 
         return SpendingPageResponse.builder().spendingPage(spendingPageItemPage).build();
     }
@@ -110,9 +116,11 @@ public class SpendingServiceImpl implements SpendingService {
             SpendingsSaveRequest spendingsSaveRequest, LocalDate spendingDate, BigInteger userId) {
         User user = userService.getUserById(userId);
 
-        Set<Spending> spendings = new HashSet<>();
+        List<Spending> spendings = new ArrayList<>();
         for (SpendingRequest spendingReq : spendingsSaveRequest.spendingRequests()) {
-            spendings.add(new Spending(spendingReq.getCategory(), spendingReq.getAmount()));
+            SpendingCategory spendingCategory =
+                    spendingCategoryJpaCache.getFromCache(spendingReq.getCategory());
+            spendings.add(new Spending(spendingCategory, spendingReq.getAmount()));
         }
 
         SpendingUserAggr spendingUserAggr = new SpendingUserAggr(user, spendingDate, spendings);
@@ -124,14 +132,15 @@ public class SpendingServiceImpl implements SpendingService {
     }
 
     private void mergeExistingSpendingsWithRequest(
-            SpendingUserAggr spendingUserAggr, Set<SpendingRequest> spendingReqs) {
+            SpendingUserAggr spendingUserAggr, List<SpendingRequest> spendingReqs) {
         for (SpendingRequest spendingRequest : spendingReqs) {
-            String category = spendingRequest.getCategory();
+            SpendingCategoryEnum category = spendingRequest.getCategory();
             BigDecimal amount = spendingRequest.getAmount();
+            SpendingCategory spendingCategory = spendingCategoryJpaCache.getFromCache(category);
 
             // Brand new spending added
             if (spendingRequest.getSpendingId() == null) {
-                spendingUserAggr.addSpending(new Spending(category, amount));
+                spendingUserAggr.addSpending(new Spending(spendingCategory, amount));
                 continue;
             }
 
@@ -140,7 +149,7 @@ public class SpendingServiceImpl implements SpendingService {
             if (spendingRequest.isDelete()) {
                 spendingUserAggr.removeSpending(spending);
             } else {
-                spending.setCategory(category);
+                spending.setSpendingCategory(spendingCategory);
                 spending.setAmount(amount);
                 spendingUserAggr.addSpending(spending);
             }

@@ -1,13 +1,27 @@
 import { Nullable } from "./types";
 
+export const enum CurrencyType {
+  USD,
+}
+
 const usdFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
 });
 
 const MoneyUtils = {
-  formatMoneyUsd(amount: Nullable<number>): string {
-    return !amount ? "" : usdFormatter.format(amount);
+  formatMoney(
+    amount: Nullable<number>,
+    currencyType: CurrencyType = CurrencyType.USD,
+    withCurrencySign: boolean = true,
+  ): string {
+    let ret: string;
+    switch (currencyType) {
+      case CurrencyType.USD:
+        ret = !amount ? "$0.00" : usdFormatter.format(amount);
+    }
+
+    return withCurrencySign ? ret : ret.substring(1);
   },
 };
 

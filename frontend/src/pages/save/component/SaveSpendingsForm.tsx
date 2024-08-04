@@ -1,246 +1,156 @@
-import React, { FC, useEffect, useRef, useState } from "react";
-import toast from "react-hot-toast";
+import React, { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ReactComponent as AddRow } from "../../../assets/raw/add-row.svg";
 import Card from "../../../common/Card";
 import useSaveSpendings from "../../../hooks/useSaveSpendings";
-import {
-  MAX_AMOUNT,
-  MAX_CATEGORY_LENGTH,
-  MAX_SPENDINGS_FOR_A_DAY,
-} from "../../../utils/constants";
-import {
-  FormInputError,
-  Nullable,
-  SaveSpendingsFormProps,
-  Spending,
-  SpendingFormInput,
-} from "../../../utils/types";
-import FormInputColumns from "./FormInputColumns";
+import useSpendingCategories from "../../../hooks/useSpendingCategories";
+import { MAX_SPENDINGS_FOR_A_DAY } from "../../../utils/constants";
+import DateUtils from "../../../utils/date-utils";
+import { Nullable, Spending } from "../../../utils/types";
+import SaveSpendingsAddRowButton from "./SaveSpendingsAddRowButton";
+import SaveSpendingsFooterButtons from "./SaveSpendingsFormFooterButtons";
+import SaveSpendingsFormList from "./SaveSpendingsFormList";
+import SaveSpendingsModal from "./SaveSpendingsModal";
+import SaveSpendingsTitle from "./SaveSpendingsTitle";
 
-function spendingComparator(
-  a: SpendingFormInput,
-  b: SpendingFormInput,
-): number {
-  const aCategory: Nullable<string> = a.category;
-  const bCategory: Nullable<string> = b.category;
-
-  if (!aCategory || !bCategory) {
-    return !aCategory ? -1 : 1;
-  }
-
-  if (aCategory !== bCategory) {
-    return aCategory < bCategory ? -1 : 1;
-  }
-
-  const aAmount: Nullable<number> = a.amount;
-  const bAmount: Nullable<number> = b.amount;
-
-  if (!aAmount || !bAmount) {
-    return !aAmount ? -1 : 1;
-  }
-
-  return aAmount < bAmount ? -1 : 1;
-}
+type SaveSpendingsFormProps = {
+  date: string;
+  initialSpendings: Nullable<Spending[]>;
+  isCreateMode: boolean;
+  handleDateChange: (date: string) => void;
+};
 
 const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
   date,
   isCreateMode,
   initialSpendings,
+  handleDateChange,
 }) => {
-  const mappedSpendings: Nullable<Array<SpendingFormInput>> =
-    initialSpendings?.map((spending) => ({
-      spendingId: spending.spendingId,
-      amount: spending.amount,
-      category: spending.category,
-      delete: spending.delete,
-      categoryError: null,
-      amountError: null,
-    }));
+  const [modalSpendingIdx, setModalSpendingIdx] = useState<number>();
+  const { data: response } = useSpendingCategories();
+  const categoriesMap = response?.data?.categoryToS3UrlMap || {};
 
-  const [spendings, setSpendings] = useState<Array<SpendingFormInput>>(
-    mappedSpendings ? mappedSpendings.sort(spendingComparator) : [],
+  const [spendings, setSpendings] = useState<Spending[]>(
+    initialSpendings || [],
   );
-
-  const cardRef = useRef<HTMLDivElement>();
   const navigate = useNavigate();
   const { mutate: saveSpendings } = useSaveSpendings(date, isCreateMode, () =>
     navigate(-1),
   );
 
-  useEffect(() => {
-    setSpendings(mappedSpendings ? mappedSpendings : []);
-  }, [initialSpendings]);
-
   const countSpendingsToDisplay = () =>
-    spendings.filter((SpendingFormInput) => !SpendingFormInput.delete).length;
+    spendings.filter((spending) => !spending.delete).length;
 
   const handleSubmit = (e: React.MouseEvent) => {
-    const isValidFormInput = (): boolean => {
-      let isValid: boolean = true;
-      const validatedSpendings: Array<SpendingFormInput> = spendings.map(
-        (spending) => {
-          const newSpending: SpendingFormInput = { ...spending };
-          newSpending.categoryError = null;
-          newSpending.amountError = null;
-
-          if (
-            !newSpending.category ||
-            newSpending.category.trim().length === 0
-          ) {
-            newSpending.categoryError = FormInputError.EMPTY_CATEGORY;
-          } else if (newSpending.category.length > MAX_CATEGORY_LENGTH) {
-            newSpending.categoryError = FormInputError.MAX_CATEGORY_LENGTH;
-          }
-
-          if (!newSpending.amount || newSpending.amount === 0) {
-            newSpending.amountError = FormInputError.ZERO_AMOUNT;
-          } else if (newSpending.amount >= MAX_AMOUNT) {
-            newSpending.amountError = FormInputError.MAX_AMOUNT;
-          }
-
-          if (newSpending.categoryError || newSpending.amountError) {
-            isValid = false; // Can do this inline but TypeScript warning/error makes it look uglier than this
-          }
-
-          return newSpending;
-        },
-      );
-
-      // Make sure no duplicate category names
-      const map: Map<string, SpendingFormInput[]> = new Map();
-      validatedSpendings.forEach((value) => {
-        const category = value.category;
-        if (!category) {
-          return;
-        }
-
-        const mapList: SpendingFormInput[] | undefined = map.get(category);
-
-        if (!mapList) {
-          map.set(category, [value]);
-        } else {
-          mapList.push(value);
-        }
-      });
-
-      for (const [, spendingList] of map.entries()) {
-        if (spendingList.length === 1) {
-          continue;
-        }
-
-        // Duplicated categories. Iterate through all the offending ones and mark
-        for (const spendingFormInput of spendingList) {
-          spendingFormInput.categoryError = FormInputError.DUPLICATE_CATEGORY;
-        }
-
-        isValid = false;
-      }
-
-      if (!isValid) {
-        setSpendings(validatedSpendings);
-      }
-
-      return isValid;
-    };
-
     e.preventDefault();
-    if (!isValidFormInput()) {
-      return;
-    }
-
-    const mappedSpendings: Array<Spending> = spendings.map((spending) => ({
+    const mappedSpendings: Spending[] = spendings.map((spending) => ({
       spendingId: spending.spendingId,
       amount: spending.amount,
       category: spending.category?.trim(),
       delete: spending.delete,
     }));
 
+    console.log(mappedSpendings);
+
     saveSpendings({
       spendingRequests: mappedSpendings,
     });
   };
 
-  const handleAddNewRow = (e: React.MouseEvent) => {
-    e.preventDefault();
+  const addNewSpending = (inputMap: Map<string, string>) => {
+    const newSpendings: Spending[] = [...spendings];
+    const isValidIdx =
+      modalSpendingIdx === 0 || (modalSpendingIdx && modalSpendingIdx >= 0);
+    const spending = isValidIdx
+      ? newSpendings[modalSpendingIdx!]
+      : {
+          spendingId: null,
+          category: null,
+          amount: null,
+          delete: false,
+          categoryError: null,
+          amountError: null,
+        };
+    const newCategory = inputMap.get("category");
+    const newAmountStr = inputMap.get("amount") || "0";
+    const newAmount = Number.parseFloat(newAmountStr.replaceAll(",", ""));
 
-    if (countSpendingsToDisplay() >= MAX_SPENDINGS_FOR_A_DAY) {
-      // No more spendings allowed for the day
-      toast.error("Reached maximum spendings for a day!");
-      return;
-    }
+    // Do updates
+    spending.category = newCategory;
+    spending.amount = newAmount;
 
-    const newSpendings: Array<SpendingFormInput> = [...spendings];
-    newSpendings.push({
-      spendingId: null,
-      category: null,
-      amount: null,
-      delete: false,
-      categoryError: null,
-      amountError: null,
-    });
-
-    if (cardRef.current) {
-      // Auto scroll user down to bottom of the card
-      window.scrollTo({
-        top: cardRef.current.scrollHeight + 100, // + 100 for a little padding
-        behavior: "smooth",
-      });
+    if (isValidIdx) {
+      newSpendings[modalSpendingIdx!] = spending;
+    } else {
+      newSpendings.push(spending);
     }
 
     setSpendings(newSpendings);
   };
 
   const handleDeleteRow = (idx: number) => {
-    const newSpendings: Array<SpendingFormInput> = [...spendings];
+    const newSpendings: Spending[] = [...spendings];
+
     if (newSpendings[idx].spendingId !== null) {
       newSpendings[idx].delete = true;
     } else {
-      // Completely new SpendingFormInput that can be safely removed
+      // Completely new spending that can be safely removed
       newSpendings.splice(idx, 1);
     }
 
     setSpendings(newSpendings);
   };
 
-  const handleChange = (idx: number, newSpending: SpendingFormInput) => {
-    const newSpendings: Array<SpendingFormInput> = [...spendings];
-    newSpendings[idx] = newSpending;
-    setSpendings(newSpendings);
+  const getSpendingForModal = (): Nullable<Spending> => {
+    if (modalSpendingIdx !== 0 && !modalSpendingIdx) {
+      return null;
+    }
+
+    return modalSpendingIdx === -1
+      ? {
+          amount: 0,
+          category: null,
+          delete: false,
+          spendingId: null,
+        }
+      : spendings[modalSpendingIdx];
   };
 
+  useEffect(() => {
+    setSpendings(initialSpendings || []);
+  }, [initialSpendings]);
+
   return (
-    <div className="flex flex-col items-center mt-7">
-      <Card customStyles="items-center p-7" innerRef={cardRef}>
-        <FormInputColumns
+    <div className="flex flex-col items-center md:mt-7 w-full md:w-fit">
+      <Card className="items-center pb-5 md:p-7 w-full md:w-[500px]">
+        <SaveSpendingsTitle
+          date={date || DateUtils.getCurrentDate()}
+          handleDateChange={handleDateChange}
           spendings={spendings}
-          parentHandleChange={handleChange}
-          parentHandleDeleteRow={handleDeleteRow}
         />
 
-        <button
-          className="flex justify-center mt-1"
-          onClick={(e: React.MouseEvent) => handleAddNewRow(e)}
-        >
-          <AddRow className="w-10 h-10 opacity-50 hover:opacity-80" />
-        </button>
-      </Card>
+        <SaveSpendingsFormList
+          spendings={spendings}
+          categoriesMap={categoriesMap}
+          handleDeleteRow={handleDeleteRow}
+          setModalSpendingIdx={setModalSpendingIdx}
+        />
 
-      <div className="ml-auto mt-5">
-        <button
-          className="mr-4 text-slate-600 text-lg"
-          onClick={() => navigate(-1)}
-        >
-          Cancel
-        </button>
-        <button
-          className="bg-theme-cta px-5 py-2 text-white font-semibold rounded-xl hover:cursor-pointer text-lg disabled:opacity-25"
-          disabled={spendings.length === 0}
-          onClick={(e: React.MouseEvent) => handleSubmit(e)}
-        >
-          {isCreateMode ? "Create" : "Update"}
-        </button>
-      </div>
+        <SaveSpendingsAddRowButton
+          isDisabled={countSpendingsToDisplay() === MAX_SPENDINGS_FOR_A_DAY}
+          setModalSpendingIdx={setModalSpendingIdx}
+        />
+      </Card>
+      <SaveSpendingsFooterButtons
+        isDisabled={spendings.length === 0}
+        isCreateMode={isCreateMode}
+        handleSubmit={handleSubmit}
+      />
+      <SaveSpendingsModal
+        categoriesMap={categoriesMap}
+        spending={getSpendingForModal()}
+        setModalSpendingIdx={setModalSpendingIdx}
+        onSubmit={addNewSpending}
+      />
     </div>
   );
 };

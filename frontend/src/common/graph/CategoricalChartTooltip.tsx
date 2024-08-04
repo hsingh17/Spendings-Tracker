@@ -1,7 +1,7 @@
 import { FC } from "react";
 import MoneyUtils from "../../utils/money-utils";
 import { Nullable, TooltipPosition } from "../../utils/types";
-import Tooltip from "./Tooltip";
+import Tooltip from "../Tooltip";
 
 type CategoricalChartTooltipProps = {
   category: string;
@@ -16,18 +16,18 @@ const CategoricalChartTooltip: FC<CategoricalChartTooltipProps> = ({
   total,
   enableDynamicTooltip = true,
 }) => {
-  if (!tooltipPosition || !category || !total) {
+  if (!category || !total) {
     return <></>;
   }
 
   return (
     <Tooltip
       position={tooltipPosition}
-      className="w-fit h-fit bg-theme-neutral text-theme-brand p-2"
+      className="absolute w-fit h-fit bg-theme-neutral text-theme-brand p-2"
       enableDynamicTooltip={enableDynamicTooltip}
     >
       <p className="text-lg md:text-xl font-semibold">{category}</p>
-      <p className="font-bold md:text-lg">{MoneyUtils.formatMoneyUsd(total)}</p>
+      <p className="font-bold md:text-lg">{MoneyUtils.formatMoney(total)}</p>
     </Tooltip>
   );
 };

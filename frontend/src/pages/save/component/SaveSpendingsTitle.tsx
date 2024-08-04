@@ -1,30 +1,27 @@
-import React, { FC } from "react";
-import { SaveSpendingsTitleProps } from "../../../utils/types";
+import { FC } from "react";
+import { Spending } from "../../../utils/types";
+import SaveSpendingsTitleDateInput from "./SaveSpendingsTitleDateInput";
+import SaveSpendingsTitleTotal from "./SaveSpendingsTitleTotal";
+
+type SaveSpendingsTitleProps = {
+  date: string;
+  spendings: Spending[];
+  handleDateChange: (date: string) => void;
+};
 
 const SaveSpendingsTitle: FC<SaveSpendingsTitleProps> = ({
   date,
-  isCreateMode,
-  parentHandleDateChange,
+  spendings,
+  handleDateChange,
 }) => {
-  const handleChange = (e: React.FormEvent) => {
-    e.preventDefault();
-    const target = e.target as typeof e.target & {
-      value: string;
-    };
-    parentHandleDateChange(target.value);
-  };
-
   return (
-    <h1 className="text-3xl font-semibold text-slate-600">
-      {`${isCreateMode ? "Create" : "Edit"} spendings for`}
-      <input
-        className="block md:inline mt-3 md:mt-0 w-full md:w-fit md:ml-2 bg-theme-white border-[3px] border-theme-cta rounded-lg px-2 py-1 text-theme-brand-secondary"
-        type="date"
-        id="spending-date"
-        defaultValue={date}
-        onChange={(e: React.FormEvent) => handleChange(e)}
+    <div className="w-full p-5 -mb-4 flex flex-col justify-center items-center">
+      <SaveSpendingsTitleDateInput
+        date={date}
+        handleDateChange={handleDateChange}
       />
-    </h1>
+      <SaveSpendingsTitleTotal spendings={spendings} />
+    </div>
   );
 };
 

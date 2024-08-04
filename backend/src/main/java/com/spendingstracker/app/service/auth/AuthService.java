@@ -43,7 +43,9 @@ public interface AuthService {
      * @see LoginRequest
      */
     UserDetails loginUser(
-            LoginRequest loginRequest, HttpServletResponse response, ExternalUserType externalUserType);
+            LoginRequest loginRequest,
+            HttpServletResponse response,
+            ExternalUserType externalUserType);
 
     /**
      * Logs a user out.

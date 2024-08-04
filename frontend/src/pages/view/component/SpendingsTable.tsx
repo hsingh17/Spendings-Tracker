@@ -7,8 +7,8 @@ import {
   SpendingsTableProps,
 } from "../../../utils/types";
 import TableBody from "./TableBody";
-import TableHeader from "./TableHeader";
 import TableEmptyState from "./TableEmptyState";
+import TableHeader from "./TableHeader";
 
 const SpendingsTable: FC<SpendingsTableProps> = ({
   isLoading,
@@ -28,8 +28,9 @@ const SpendingsTable: FC<SpendingsTableProps> = ({
     sortOrder: SortOrder.DESC,
   });
 
+  // TODO: Maybe better way
   const handleSort = (sortType: SortType) => {
-    let newSpendingsCopy: Array<SpendingListRow> = spendingsCopy;
+    let newSpendingsCopy: SpendingListRow[] = spendingsCopy;
     const sortOrder: SortOrder = getSortOrder(sortType);
 
     if (sortType === SortType.DATE) {

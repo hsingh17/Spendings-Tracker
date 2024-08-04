@@ -28,14 +28,24 @@ public class Spending extends AuditableEntity {
     @JsonIgnore
     private SpendingUserAggr spendingUserAggr;
 
-    @Column(name = "CATEGORY")
-    private String category;
+    @JoinColumn(name = "SPENDING_CATEGORY_ID")
+    @OneToOne(fetch = FetchType.LAZY)
+    private SpendingCategory spendingCategory;
 
     @Column(name = "AMOUNT")
     private BigDecimal amount;
 
-    public Spending(String category, BigDecimal amount) {
-        this.category = category;
+    public Spending(SpendingCategory spendingCategory, BigDecimal amount) {
+        this.spendingCategory = spendingCategory;
         this.amount = amount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Spending)) {
+            return false;
+        }
+
+        return this.spendingId.equals(((Spending) o).spendingId);
     }
 }

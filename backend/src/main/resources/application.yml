@@ -21,6 +21,8 @@ ses:
       registration-email: RegistrationEmail
       password-reset-email: PasswordResetEmail
   from-email: spendingstracker.no.reply@gmail.com
+s3:
+  presigned-url-expiration-minutes: 10
 --- # Local Profile
 spring:
   config:
@@ -53,3 +55,5 @@ redirects:
   password-reset: http://localhost:5173/password-reset?
 google:
   client-id: ${GOOGLE_CLIENT_ID}
+s3:
+  categories-bucket-name: spending-categories-svg

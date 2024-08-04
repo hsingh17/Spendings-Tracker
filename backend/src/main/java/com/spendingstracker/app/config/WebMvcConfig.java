@@ -3,6 +3,7 @@ package com.spendingstracker.app.config;
 import com.spendingstracker.app.converter.web.ExternalUserTypeConvereter;
 import com.spendingstracker.app.converter.web.GranularityConverter;
 import com.spendingstracker.app.converter.web.GraphTypeConverter;
+import com.spendingstracker.app.converter.web.SpendingCategoryEnumConverter;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -18,6 +19,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private final GranularityConverter granularityConverter;
     private final GraphTypeConverter graphTypeConverter;
     private final ExternalUserTypeConvereter externalUserTypeConvereter;
+    private final SpendingCategoryEnumConverter spendingCategoryEnumConverter;
 
     /**
      * Constructor to initialize class variables
@@ -25,17 +27,21 @@ public class WebMvcConfig implements WebMvcConfigurer {
      * @param granularityConverter
      * @param graphTypeConverter
      * @param externalUserTypeConvereter
+     * @param spendingCategoryEnumConverter
      * @see GranularityConverter
      * @see GraphTypeConverter
      * @see ExternalUserTypeConvereter
+     * @see SpendingCategoryEnumConverter
      */
     public WebMvcConfig(
             GranularityConverter granularityConverter,
             GraphTypeConverter graphTypeConverter,
-            ExternalUserTypeConvereter externalUserTypeConvereter) {
+            ExternalUserTypeConvereter externalUserTypeConvereter,
+            SpendingCategoryEnumConverter spendingCategoryEnumConverter) {
         this.granularityConverter = granularityConverter;
         this.graphTypeConverter = graphTypeConverter;
         this.externalUserTypeConvereter = externalUserTypeConvereter;
+        this.spendingCategoryEnumConverter = spendingCategoryEnumConverter;
     }
 
     /**
@@ -52,5 +58,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addConverter(externalUserTypeConvereter);
         registry.addConverter(granularityConverter);
         registry.addConverter(graphTypeConverter);
+        registry.addConverter(spendingCategoryEnumConverter);
     }
 }

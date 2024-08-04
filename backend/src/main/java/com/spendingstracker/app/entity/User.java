@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigInteger;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /** An entity class that maps to the table <code>APP.USER</code> */
 @Getter
@@ -43,13 +43,13 @@ public class User extends AuditableEntity {
             fetch = FetchType.LAZY,
             orphanRemoval = true)
     @JsonIgnore
-    private Set<SpendingUserAggr> spendingUserAggrs = new HashSet<>();
+    private List<SpendingUserAggr> spendingUserAggrs = new ArrayList<>();
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private UserRegistration userRegistration;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<UserPasswordReset> userPasswordReset;
+    private List<UserPasswordReset> userPasswordReset;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private ExternalUser externalUser;

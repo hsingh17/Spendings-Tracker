@@ -18,6 +18,8 @@ const SendPasswordReset = () => {
   return (
     <GenericForm
       title="Send Password Reset Instructions"
+      wrapperClassName="lg:h-screen"
+      cardClassName="lg:w-2/6"
       onSubmit={onSubmit}
       beforeFormChildren={<ResetPasswordHeader />}
       formChildren={

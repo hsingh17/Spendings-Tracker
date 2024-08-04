@@ -7,11 +7,6 @@ export type RenderChildrenProps = {
   children: ReactNode;
 };
 
-export type CardProps = RenderChildrenProps & {
-  customStyles?: string;
-  innerRef?: React.MutableRefObject<HTMLDivElement | undefined>;
-};
-
 export type User = {
   userId: number;
   username: string;
@@ -47,6 +42,14 @@ export type ApiResponse<T> = {
   data: Nullable<T>;
 };
 
+export type SpendingCategoriesResponse = {
+  categoryToS3UrlMap: CategoriesMap;
+};
+
+export type CategoriesMap = {
+  [category: string]: string;
+};
+
 export type SpendingDetailResponse = {
   spendings: Spending[];
 };
@@ -60,11 +63,6 @@ export type Spending = {
   category: Nullable<string>;
   amount: Nullable<number>;
   delete: Nullable<boolean>;
-};
-
-export type SpendingFormInput = Spending & {
-  categoryError: Nullable<FormInputError>;
-  amountError: Nullable<FormInputError>;
 };
 
 export type CategoricalSpendings = {
@@ -83,31 +81,6 @@ export type SpendingListRow = {
   date: string;
   category: string;
   total: number;
-};
-
-export type SaveSpendingsFormProps = {
-  date: string;
-  initialSpendings: Nullable<Array<Spending>>;
-  isCreateMode: boolean;
-};
-
-export type SaveSpendingsTitleProps = {
-  date: string;
-  isCreateMode: boolean;
-  parentHandleDateChange: (date: string) => void;
-};
-
-export type FormInputColumnsProps = {
-  spendings: Array<SpendingFormInput>;
-  parentHandleDeleteRow: (idx: number) => void;
-  parentHandleChange: (idx: number, newSpending: SpendingFormInput) => void;
-};
-
-export type FormInputProps = {
-  idx: number;
-  labelText: string;
-  value: Nullable<string | number>;
-  parentHandleChange: (e: React.ChangeEvent, labelText: string) => void;
 };
 
 export enum SortType {
@@ -154,13 +127,6 @@ export type TableRowProps = {
   spending: SpendingListRow;
   parentRefetch: () => void;
   parentSetSpendingId: (spendingId: number) => void;
-};
-
-export type DeleteModalProps = {
-  show: boolean;
-  spendingId: Nullable<number>;
-  parentSetShow: (show: boolean) => void;
-  parentRefetch: () => void;
 };
 
 export type SpendingComponentProps = {
@@ -286,8 +252,10 @@ export enum FormInputError {
 }
 
 export type TooltipPosition = {
-  top: number;
-  left: number;
+  top?: number;
+  left?: number;
+  right?: number;
+  bottom?: number;
 };
 
 export type ResetPasswordRequest = {

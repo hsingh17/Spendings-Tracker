@@ -18,12 +18,12 @@ const RecentSpendingsCard: FC<RecentSpendingsCardProps> = ({
     <div
       onClick={() => navigate(`${SAVE_SPENDINGS_PAGE}/${spendingListRow.date}`)}
     >
-      <Card customStyles="mr-5 w-48 h-fit p-3 hover:cursor-pointer hover:opacity-50">
+      <Card className="mr-5 w-48 h-fit p-3 hover:cursor-pointer hover:opacity-50">
         <p className="font-medium text-theme-brand mb-auto">
           {DateUtils.formatDateUS(spendingListRow.date)}
         </p>
         <p className="font-semibold text-theme-cta text-xl mb-auto break-words">
-          {MoneyUtils.formatMoneyUsd(spendingListRow.total)}
+          {MoneyUtils.formatMoney(spendingListRow.total)}
         </p>
       </Card>
     </div>
