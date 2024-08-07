@@ -12,6 +12,7 @@ import com.spendingstracker.app.service.auth.AuthService;
 import com.spendingstracker.app.util.JwtUtil;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -71,7 +72,7 @@ public class AuthController {
      */
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<UserDetails>> postLogin(
-            @RequestBody LoginRequest loginRequest,
+            @RequestBody @Valid LoginRequest loginRequest,
             HttpServletResponse response,
             @RequestParam(value = "external-user-type", required = false)
                     ExternalUserType externalUserType)

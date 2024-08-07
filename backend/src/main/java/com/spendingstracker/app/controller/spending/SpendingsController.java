@@ -1,8 +1,7 @@
 package com.spendingstracker.app.controller.spending;
 
-import com.spendingstracker.app.constants.Granularity;
-import com.spendingstracker.app.constants.GraphType;
 import com.spendingstracker.app.dto.CustomUserDetails;
+import com.spendingstracker.app.dto.requests.GetSpendingsRequestFilters;
 import com.spendingstracker.app.dto.requests.SpendingsSaveRequest;
 import com.spendingstracker.app.dto.response.*;
 import com.spendingstracker.app.projection.SpendingListProjection;
@@ -10,7 +9,7 @@ import com.spendingstracker.app.service.spending.SpendingCategoryService;
 import com.spendingstracker.app.service.spending.SpendingService;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.Valid;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,58 +46,37 @@ public class SpendingsController {
     /**
      * Route for returning the user's spendings based on the query params passed in.
      *
-     * @param startDate date from which to begin looking for spendings.
-     * @param endDate date to end looking for spendings.
-     * @param granularity the granularity to which the spendings should be grouped by
-     * @param graphType the graph type being requested by the user.
-     * @param page the page which user is looking for spendings on
-     * @param limit the number of spendings to return
+     * @param filters object that stores all necessary filters for the request
      * @param request <code>HttpServletRequest</code> object, used to build the <code>ApiLinks
      *     </code> object
      * @return <code>{@literal ResponseEntity<ApiResponse<List<SpendingsListProjection>>>}</code>
      * @throws IllegalArgumentException when one of the <code>RequestParam</code> passed in do not
      *     pass validation.
      * @see SpendingListProjection
-     * @see Granularity
-     * @see GraphType
      * @see ApiLinks
      * @see ApiMetadata
      * @see ApiResponse
      */
     @GetMapping("/spendings")
     public ResponseEntity<ApiResponse<SpendingPageResponse>> getSpendings(
-            @RequestParam(name = "start-date", defaultValue = "1000-01-01") LocalDate startDate,
-            @RequestParam(name = "end-date", defaultValue = "9999-12-31") LocalDate endDate,
-            @RequestParam(name = "granularity", defaultValue = "Day") Granularity granularity,
-            @RequestParam(name = "graph-type", defaultValue = "Line") GraphType graphType,
-            @RequestParam(name = "page", defaultValue = "0") @Min(0) Integer page,
-            @RequestParam(name = "limit", defaultValue = "25") @Min(1) Integer limit,
-            HttpServletRequest request)
+            @Valid GetSpendingsRequestFilters filters, HttpServletRequest request)
             throws IllegalArgumentException {
-        log.info(
-                "GET /spendings?start-date={}&end-date={}&group-by={}&graph-type={}&page={}&limit={}",
-                startDate,
-                endDate,
-                granularity.getCode(),
-                graphType.getCode(),
-                page,
-                limit);
+        log.info("GET /spendings{}", filters);
 
         SpendingPageResponse spendingPageResponse =
-                spendingService.getSpendings(
-                        getUserId(), startDate, endDate, page, limit, granularity, graphType);
+                spendingService.getSpendings(getUserId(), filters);
         Page<SpendingPageItem> spendingsPage = spendingPageResponse.getSpendingPage();
 
         ApiLinks apiLinks =
                 buildApiLinks(
                         request.getRequestURI(),
                         request.getQueryString(),
-                        page,
+                        filters.getPage(),
                         spendingsPage.getTotalPages() - 1);
 
         ApiMetadata apiMetadata =
                 buildApiMetadata(
-                        page,
+                        filters.getPage(),
                         apiLinks,
                         spendingsPage.getTotalPages(),
                         spendingsPage.getNumberOfElements(),

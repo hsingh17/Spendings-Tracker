@@ -1,7 +1,6 @@
 package com.spendingstracker.app.service.spending;
 
-import com.spendingstracker.app.constants.Granularity;
-import com.spendingstracker.app.constants.GraphType;
+import com.spendingstracker.app.dto.requests.GetSpendingsRequestFilters;
 import com.spendingstracker.app.dto.requests.SpendingsSaveRequest;
 import com.spendingstracker.app.dto.response.SpendingDetailsResponse;
 import com.spendingstracker.app.dto.response.SpendingPageResponse;
@@ -18,24 +17,13 @@ public interface SpendingService {
      * Get's all of a user's spendings that fit the criteria of the parameters passed in.
      *
      * @param userId primary key in <code>APP.USER</code>
-     * @param startDate date from which to begin looking for spendings.
-     * @param endDate date to end looking for spendings.
-     * @param granularity the granularity to which the spendings should be grouped by
-     * @param type the graph type being requested by the user.
-     * @param page the page which user is looking for spendings on
-     * @param limit the number of spendings to return
+     * @param filters object that stores all necessary filters for the request
      * @return <code>{@literal Page<SpendingsListProjection>}</code> object that contains a page of
      *     <code>SpendingsListProjection</code>
+     * @see GetSpendingsRequestFilters
      */
     @Transactional(readOnly = true)
-    SpendingPageResponse getSpendings(
-            BigInteger userId,
-            LocalDate startDate,
-            LocalDate endDate,
-            int page,
-            int limit,
-            Granularity granularity,
-            GraphType type);
+    SpendingPageResponse getSpendings(BigInteger userId, GetSpendingsRequestFilters filters);
 
     /**
      * Get details for a spending on that date.

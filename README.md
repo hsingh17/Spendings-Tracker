@@ -3,11 +3,7 @@
 This repository holds the code for my spendings tracker app built with Java and React.js
 
 ## TODO
-
-- clean up add/edit spending UI -> make category a set of predfined options dropdown -> can change datamodel to no longer store a string and just use some enum
-  - make custom svgs
 - various updates
-  - update GET endpoint that accepts filters to instead bind to an object (http://dolszewski.com/spring/how-to-bind-requestparam-to-object/)
   - look into making a dynamic custom repo with JDBCTemplate
   - update deletemodal to use generic modal component
   - update/save button should be disabled when making API calls on savespendingsform
