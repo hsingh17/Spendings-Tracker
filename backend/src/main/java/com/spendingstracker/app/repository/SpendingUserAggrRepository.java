@@ -23,6 +23,9 @@ import java.util.Optional;
  */
 @Repository
 public interface SpendingUserAggrRepository {
+    SpendingUserAggr save(SpendingUserAggr spendingUserAggr);
+
+    void deleteById(BigInteger spendingUserAggrId);
 
     Optional<SpendingUserAggr> findSpendingUserAggrByUserAndDate(User user, LocalDate date);
 
@@ -34,4 +37,7 @@ public interface SpendingUserAggrRepository {
             LocalDate endDate,
             Granularity granularity,
             Pageable pageable);
+
+    Page<SpendingListProjection> findSpendingsCategorical(
+            BigInteger userId, LocalDate startDate, LocalDate endDate, Pageable pageable);
 }

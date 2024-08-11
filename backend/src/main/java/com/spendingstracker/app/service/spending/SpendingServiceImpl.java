@@ -1,7 +1,6 @@
 package com.spendingstracker.app.service.spending;
 
 import com.spendingstracker.app.cache.SpendingCategoryJpaCache;
-import com.spendingstracker.app.constants.Granularity;
 import com.spendingstracker.app.constants.GraphType;
 import com.spendingstracker.app.constants.SpendingCategoryEnum;
 import com.spendingstracker.app.dto.requests.GetSpendingsRequestFilters;
@@ -15,7 +14,6 @@ import com.spendingstracker.app.entity.Spending;
 import com.spendingstracker.app.entity.SpendingCategory;
 import com.spendingstracker.app.entity.SpendingUserAggr;
 import com.spendingstracker.app.entity.User;
-import com.spendingstracker.app.exception.NoSuchGranularityException;
 import com.spendingstracker.app.exception.NoSuchGraphTypeException;
 import com.spendingstracker.app.exception.SpendingNotFoundException;
 import com.spendingstracker.app.projection.SpendingListProjection;
@@ -205,33 +203,12 @@ public class SpendingServiceImpl implements SpendingService {
 
     private Page<SpendingListProjection> getSpendingListProjLine(
             BigInteger userId, GetSpendingsRequestFilters filters, PageRequest pageRequest) {
-        Granularity granularity = filters.getGranularity();
-        LocalDate startDate = filters.getStartDate();
-        LocalDate endDate = filters.getEndDate();
-
-        switch (granularity) {
-            case DAY -> {
-                return spendingUserAggrRepository.findSpendingsNumericalGroupByDay(
-                        userId, startDate, endDate, pageRequest);
-            }
-            case WEEK -> {
-                return spendingUserAggrRepository.findSpendingsNumericalGroupByWeek(
-                        userId, startDate, endDate, pageRequest);
-            }
-            case MONTH -> {
-                return spendingUserAggrRepository.findSpendingsNumericalGroupByMonth(
-                        userId, startDate, endDate, pageRequest);
-            }
-            case YEAR -> {
-                return spendingUserAggrRepository.findSpendingsNumericalGroupByYear(
-                        userId, startDate, endDate, pageRequest);
-            }
-            default -> {
-                String errMsg = "No such granularity " + granularity;
-                log.error(errMsg);
-                throw new NoSuchGranularityException(errMsg);
-            }
-        }
+        return spendingUserAggrRepository.findSpendingsNumericalGroupBy(
+                userId,
+                filters.getStartDate(),
+                filters.getEndDate(),
+                filters.getGranularity(),
+                pageRequest);
     }
 
     private Page<SpendingListProjection> getSpendingListProjCategorical(

@@ -37,6 +37,16 @@ public class SpendingUserAggrRepositoryImpl implements SpendingUserAggrRepositor
     }
 
     @Override
+    public SpendingUserAggr save(SpendingUserAggr spendingUserAggr) {
+        return spendingUserAggrJpaRepository.save(spendingUserAggr);
+    }
+
+    @Override
+    public void deleteById(BigInteger spendingUserAggrId) {
+        spendingUserAggrJpaRepository.deleteById(spendingUserAggrId);
+    }
+
+    @Override
     public Page<SpendingListProjection> findSpendingsNumericalGroupBy(
             BigInteger userId,
             LocalDate startDate,
@@ -45,5 +55,12 @@ public class SpendingUserAggrRepositoryImpl implements SpendingUserAggrRepositor
             Pageable pageable) {
         return spendingUserJdbcRepository.findSpendingsNumericalGroupBy(
                 userId, startDate, endDate, granularity, pageable);
+    }
+
+    @Override
+    public Page<SpendingListProjection> findSpendingsCategorical(
+            BigInteger userId, LocalDate startDate, LocalDate endDate, Pageable pageable) {
+        return spendingUserJdbcRepository.findSpendingsCategorical(
+                userId, startDate, endDate, pageable);
     }
 }
