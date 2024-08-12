@@ -4,6 +4,7 @@ import com.spendingstracker.app.constants.Constants;
 import com.spendingstracker.app.constants.Granularity;
 import com.spendingstracker.app.constants.GraphType;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
 import lombok.Data;
@@ -40,6 +41,7 @@ public class GetSpendingsRequestFilters {
     private final int page = 1;
 
     @Min(1)
+    @Max(500)
     private final int limit = 25;
 
     @Override

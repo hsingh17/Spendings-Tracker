@@ -187,10 +187,16 @@ public class SpendingServiceImpl implements SpendingService {
 
         switch (type) {
             case BAR, PIE -> {
-                return getSpendingListProjCategorical(userId, filters, pageRequest);
+                return spendingUserAggrRepository.findSpendingsCategorical(
+                        userId, filters.getStartDate(), filters.getEndDate(), pageRequest);
             }
             case LINE -> {
-                return getSpendingListProjLine(userId, filters, pageRequest);
+                return spendingUserAggrRepository.findSpendingsNumericalGroupBy(
+                        userId,
+                        filters.getStartDate(),
+                        filters.getEndDate(),
+                        filters.getGranularity(),
+                        pageRequest);
             }
 
             default -> {
@@ -199,22 +205,6 @@ public class SpendingServiceImpl implements SpendingService {
                 throw new NoSuchGraphTypeException(errMsg);
             }
         }
-    }
-
-    private Page<SpendingListProjection> getSpendingListProjLine(
-            BigInteger userId, GetSpendingsRequestFilters filters, PageRequest pageRequest) {
-        return spendingUserAggrRepository.findSpendingsNumericalGroupBy(
-                userId,
-                filters.getStartDate(),
-                filters.getEndDate(),
-                filters.getGranularity(),
-                pageRequest);
-    }
-
-    private Page<SpendingListProjection> getSpendingListProjCategorical(
-            BigInteger userId, GetSpendingsRequestFilters filters, PageRequest pageRequest) {
-        return spendingUserAggrRepository.findSpendingsCategorical(
-                userId, filters.getStartDate(), filters.getEndDate(), pageRequest);
     }
 
     private SpendingPageItem buildSpendingPageItemFromSpendingListProj(

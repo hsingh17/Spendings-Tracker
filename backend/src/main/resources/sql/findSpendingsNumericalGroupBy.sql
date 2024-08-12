@@ -71,4 +71,8 @@ ORDER BY
             ELSE SUA.DATE
         END
     )
+LIMIT
+    :limit
+OFFSET
+    :offset
 ;
