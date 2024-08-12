@@ -8,12 +8,14 @@ import com.spendingstracker.app.projection.SpendingProjection;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class SpendingUserAggrRepositoryImpl implements SpendingUserAggrRepository {
     private final SpendingUserAggrJpaRepository spendingUserAggrJpaRepository;
     private final SpendingUserJdbcRepository spendingUserJdbcRepository;

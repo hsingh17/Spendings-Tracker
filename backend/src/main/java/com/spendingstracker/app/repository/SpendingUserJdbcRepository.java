@@ -10,13 +10,17 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
+import java.util.Map;
 
 @Repository
 public class SpendingUserJdbcRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final Map<String, String> sqlResourcesMap;
 
-    public SpendingUserJdbcRepository(NamedParameterJdbcTemplate jdbcTemplate) {
+    public SpendingUserJdbcRepository(
+            NamedParameterJdbcTemplate jdbcTemplate, Map<String, String> sqlResourcesMap) {
         this.jdbcTemplate = jdbcTemplate;
+        this.sqlResourcesMap = sqlResourcesMap;
     }
 
     public Page<SpendingListProjection> findSpendingsNumericalGroupBy(
@@ -29,5 +33,7 @@ public class SpendingUserJdbcRepository {
     }
 
     public Page<SpendingListProjection> findSpendingsCategorical(
-            BigInteger userId, LocalDate startDate, LocalDate endDate, Pageable pageable) {}
+            BigInteger userId, LocalDate startDate, LocalDate endDate, Pageable pageable) {
+        return null;
+    }
 }
