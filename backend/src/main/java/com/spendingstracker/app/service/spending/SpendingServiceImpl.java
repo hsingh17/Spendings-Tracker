@@ -210,10 +210,10 @@ public class SpendingServiceImpl implements SpendingService {
     private SpendingPageItem buildSpendingPageItemFromSpendingListProj(
             SpendingListProjection spendingListProj) {
         return SpendingPageItem.builder()
-                .spendingUserAggrId(spendingListProj.getSpendingUserAggrId())
-                .date(spendingListProj.getDate())
-                .category(spendingListProj.getCategory())
-                .total(spendingListProj.getTotal())
+                .spendingUserAggrId(spendingListProj.spendingUserAggrId())
+                .date(spendingListProj.date())
+                .category(spendingListProj.category())
+                .total(spendingListProj.total())
                 .build();
     }
 }
