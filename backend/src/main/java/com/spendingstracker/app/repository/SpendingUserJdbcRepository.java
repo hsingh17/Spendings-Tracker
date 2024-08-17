@@ -4,6 +4,9 @@ import com.spendingstracker.app.constants.Granularity;
 import com.spendingstracker.app.mapper.SpendingListProjectionMapper;
 import com.spendingstracker.app.projection.SpendingListProjection;
 
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
+@Slf4j
 public class SpendingUserJdbcRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final Map<String, String> sqlResourcesMap;
@@ -26,9 +30,9 @@ public class SpendingUserJdbcRepository {
 
     public SpendingUserJdbcRepository(
             NamedParameterJdbcTemplate jdbcTemplate,
-            Map<String, String> sqlResourcesMap,
+            @Qualifier("sqlResourcesMap") Map<String, String> sqlResourcesMap,
             SpendingListProjectionMapper rowMapper) {
-        this.jdbcTemplate = jdbcTemplate;
+            this.jdbcTemplate = jdbcTemplate;
         this.sqlResourcesMap = sqlResourcesMap;
         this.rowMapper = rowMapper;
     }
@@ -62,7 +66,7 @@ public class SpendingUserJdbcRepository {
 
     private Page<SpendingListProjection> queryForSpendingListProjs(
             int total, String sql, Pageable pageable, SqlParameterSource params) {
-
+        log.debug("Running SQL: {}", sql);
         List<SpendingListProjection> projsList = jdbcTemplate.query(sql, params, rowMapper);
         return new PageImpl<>(projsList, pageable, total); // TODO
     }

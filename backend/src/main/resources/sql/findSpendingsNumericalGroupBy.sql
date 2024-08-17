@@ -3,19 +3,19 @@ SELECT
     SUM(S.AMOUNT) AS total,
     (
         CASE
-            WHEN :granulatity = "DAY" THEN (
-                DATE_FORMAT (SUA.DATE, "%Y-%m-%d") AS date
+            WHEN :granularity = "DAY" THEN (
+                DATE_FORMAT (SUA.DATE, "%Y-%m-%d")
             )
-            WHEN :granulatity = "WEEK" THEN (
+            WHEN :granularity = "WEEK" THEN (
                 DATE_FORMAT (
                     DATE_SUB(SUA.DATE, INTERVAL WEEKDAY (SUA.DATE) DAY),
                     "%Y-%m-%d"
                 )
             )
-            WHEN :granulatity = "MONTH" THEN (
-                DATE_FORMAT(SUA.DATE, "%Y-%m-01") AS date,
+            WHEN :granularity = "MONTH" THEN (
+                DATE_FORMAT(SUA.DATE, "%Y-%m-01")
             )
-            WHEN :granulatity = "YEAR" THEN (
+            WHEN :granularity = "YEAR" THEN (
                 DATE_FORMAT(SUA.DATE, "%Y-01-01")
             )
             ELSE SUA.DATE
@@ -32,19 +32,19 @@ WHERE
 GROUP BY
     (
         CASE
-            WHEN :granulatity = "DAY" THEN (
-                DATE_FORMAT (SUA.DATE, "%Y-%m-%d") AS date
+            WHEN :granularity = "DAY" THEN (
+                DATE_FORMAT (SUA.DATE, "%Y-%m-%d")
             )
-            WHEN :granulatity = "WEEK" THEN (
+            WHEN :granularity = "WEEK" THEN (
                 DATE_FORMAT (
                     DATE_SUB(SUA.DATE, INTERVAL WEEKDAY (SUA.DATE) DAY),
                     "%Y-%m-%d"
                 )
             )
-            WHEN :granulatity = "MONTH" THEN (
-                DATE_FORMAT(SUA.DATE, "%Y-%m-01") AS date,
+            WHEN :granularity = "MONTH" THEN (
+                DATE_FORMAT(SUA.DATE, "%Y-%m-01")
             )
-            WHEN :granulatity = "YEAR" THEN (
+            WHEN :granularity = "YEAR" THEN (
                 DATE_FORMAT(SUA.DATE, "%Y-01-01")
             )
             ELSE SUA.DATE
@@ -53,19 +53,19 @@ GROUP BY
 ORDER BY
     (
         CASE
-            WHEN :granulatity = "DAY" THEN (
-                DATE_FORMAT (SUA.DATE, "%Y-%m-%d") AS date
+            WHEN :granularity = "DAY" THEN (
+                DATE_FORMAT (SUA.DATE, "%Y-%m-%d")
             )
-            WHEN :granulatity = "WEEK" THEN (
+            WHEN :granularity = "WEEK" THEN (
                 DATE_FORMAT (
                     DATE_SUB(SUA.DATE, INTERVAL WEEKDAY (SUA.DATE) DAY),
                     "%Y-%m-%d"
                 )
             )
-            WHEN :granulatity = "MONTH" THEN (
-                DATE_FORMAT(SUA.DATE, "%Y-%m-01") AS date,
+            WHEN :granularity = "MONTH" THEN (
+                DATE_FORMAT(SUA.DATE, "%Y-%m-01")
             )
-            WHEN :granulatity = "YEAR" THEN (
+            WHEN :granularity = "YEAR" THEN (
                 DATE_FORMAT(SUA.DATE, "%Y-01-01")
             )
             ELSE SUA.DATE

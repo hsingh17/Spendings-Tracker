@@ -11,4 +11,4 @@ import jakarta.validation.constraints.Email;
  *   <li>If user is signing in with Google, <code>oAuthCredential</code> will be populated.
  * </ul>
  */
-public record LoginRequest(@Email String username, String password, String oAuthCredential) {}
+public record LoginRequest(String username, String password, String oAuthCredential) {}
