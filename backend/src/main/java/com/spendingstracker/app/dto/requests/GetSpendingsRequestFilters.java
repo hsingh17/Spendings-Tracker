@@ -7,9 +7,13 @@ import com.spendingstracker.app.constants.GraphType;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Setter;
+
+import org.springframework.web.bind.annotation.BindParam;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 /**
  * DTO to store filters for the GET /spendings route. Class fields:
@@ -27,36 +31,64 @@ import java.time.LocalDate;
  * @see Granularity
  * @see GraphType
  */
-@Data
+@Setter
+@AllArgsConstructor
 public class GetSpendingsRequestFilters {
-    private final LocalDate startDate = Constants.LOW_DATE;
+    @BindParam("start-date")
+    private final LocalDate startDate;
 
-    private final LocalDate endDate = Constants.HIGH_DATE;
+    @BindParam("end-date")
+    private final LocalDate endDate;
 
-    private final Granularity granularity = Granularity.DAY;
+    private final Granularity granularity;
 
-    private final GraphType graphType = GraphType.LINE;
+    @BindParam("graph-type")
+    private final GraphType graphType;
 
     @Min(0)
-    private final int page = 1;
+    private final Integer page;
 
     @Min(1)
     @Max(500)
-    private final int limit = 25;
+    private final Integer limit;
+
+    public LocalDate getStartDate() {
+        return Optional.ofNullable(startDate).orElse(Constants.LOW_DATE);
+    }
+
+    public LocalDate getEndDate() {
+        return Optional.ofNullable(endDate).orElse(Constants.HIGH_DATE);
+    }
+
+    public Granularity getGranularity() {
+        return Optional.ofNullable(granularity).orElse(Granularity.DAY);
+    }
+
+    public GraphType getGraphType() {
+        return Optional.ofNullable(graphType).orElse(GraphType.LINE);
+    }
+
+    public int getPage() {
+        return Optional.ofNullable(page).orElse(0);
+    }
+
+    public int getLimit() {
+        return Optional.ofNullable(limit).orElse(25);
+    }
 
     @Override
     public String toString() {
         return "?start-date="
-                + startDate
+                + getStartDate()
                 + "&end-date="
-                + endDate
+                + getEndDate()
                 + "&group-by="
-                + granularity.getCode()
+                + getGranularity().getCode()
                 + "&graph-type="
-                + graphType.getCode()
+                + getGraphType().getCode()
                 + "&page="
-                + page
+                + getPage()
                 + "&limit="
-                + limit;
+                + getLimit();
     }
 }

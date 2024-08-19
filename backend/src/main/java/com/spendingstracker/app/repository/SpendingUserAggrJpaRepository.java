@@ -18,6 +18,7 @@ import java.util.Optional;
  * <code>JpaRepository</code> used to make queries to the <code>APP>.SPENDING_USER_AGGR</code>
  * table.
  *
+ * @see SpendingUserAggrRepository
  * @see SpendingUserAggr
  */
 @Repository

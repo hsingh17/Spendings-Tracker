@@ -70,7 +70,7 @@ ORDER BY
             )
             ELSE SUA.DATE
         END
-    )
+    ) DESC
 LIMIT
     :limit
 OFFSET

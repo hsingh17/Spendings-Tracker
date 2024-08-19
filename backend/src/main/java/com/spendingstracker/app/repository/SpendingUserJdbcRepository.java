@@ -23,6 +23,13 @@ import java.util.Optional;
 
 @Repository
 @Slf4j
+/**
+ * JDBC Repository for running custom SQL loaded from the classpath
+ *
+ * @see SpendingUserAggrRepository
+ * @see com.spendingstracker.app.config.ClassPathResourceLoaderConfig
+ * @see SpendingListProjectionMapper
+ */
 public class SpendingUserJdbcRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final Map<String, String> sqlResourcesMap;
@@ -32,7 +39,7 @@ public class SpendingUserJdbcRepository {
             NamedParameterJdbcTemplate jdbcTemplate,
             @Qualifier("sqlResourcesMap") Map<String, String> sqlResourcesMap,
             SpendingListProjectionMapper rowMapper) {
-            this.jdbcTemplate = jdbcTemplate;
+        this.jdbcTemplate = jdbcTemplate;
         this.sqlResourcesMap = sqlResourcesMap;
         this.rowMapper = rowMapper;
     }
@@ -83,7 +90,7 @@ public class SpendingUserJdbcRepository {
                 .addValue("endDate", endDate)
                 .addValue("granularity", granularity)
                 .addValue("limit", pageable.getPageSize())
-                .addValue("offset", (pageable.getPageNumber() - 1) * pageable.getPageSize());
+                .addValue("offset", pageable.getPageNumber() * pageable.getPageSize());
     }
 
     private int queryForSpendingsListProjsCount(String sql, SqlParameterSource params) {

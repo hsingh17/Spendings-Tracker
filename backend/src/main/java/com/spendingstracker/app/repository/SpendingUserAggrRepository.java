@@ -20,17 +20,43 @@ import java.util.Optional;
  * table.
  *
  * @see SpendingUserAggr
+ * @see SpendingUserAggrRepositoryImpl
  */
 @Repository
 public interface SpendingUserAggrRepository {
+    /**
+     * Save's <code>spendingUserAggr</code> to database
+     *
+     * @param spendingUserAggr <code>SpendingUserAggr</code> object to save
+     * @return <code>SpendingUserAggr</code> object after saving (with primary key)
+     */
     SpendingUserAggr save(SpendingUserAggr spendingUserAggr);
 
+    /**
+     * Deletes the <code>SpendingUserAggr</code> record with primary key <code>spendingUserAggrId
+     * </code>
+     */
     void deleteById(BigInteger spendingUserAggrId);
 
+    /**
+     * Finds the <code>SpendingUserAggr</code> record with <code>user</code> and <code>date</code>
+     *
+     * @return <code>Optional{@literal <SpendingUserAggr>}</code> that may contain a <code>
+     *     SpendingUserAggr</code> record
+     */
     Optional<SpendingUserAggr> findSpendingUserAggrByUserAndDate(User user, LocalDate date);
 
+    /**
+     * Find's all the spendings associated to a particular spending date by <code>user</code> and
+     * <code>date</code>
+     *
+     * @return <code>List{@literal <SpendingProjection>}</code> that contains the specific spendings
+     *     for a day
+     * @see SpendingProjection
+     */
     List<SpendingProjection> findSpendingDetailsByUserIdAndDate(LocalDate date, BigInteger userId);
 
+    /** Find's spendings by grouping them by <code>granularity</code> */
     Page<SpendingListProjection> findSpendingsNumericalGroupBy(
             BigInteger userId,
             LocalDate startDate,
@@ -38,6 +64,7 @@ public interface SpendingUserAggrRepository {
             Granularity granularity,
             Pageable pageable);
 
+    /** Find spendings by grouping by them by their category */
     Page<SpendingListProjection> findSpendingsCategorical(
             BigInteger userId, LocalDate startDate, LocalDate endDate, Pageable pageable);
 }

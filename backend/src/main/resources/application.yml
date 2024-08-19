@@ -28,7 +28,7 @@ classpath-resources:
     - /sql/findSpendingsCategorical.sql
     - /sql/findSpendingsNumericalGroupBy.sql
     - /sql/countSpendingsNumericalGroupBy.sql
-    - /sql/countSpendingsNumericalGroupBy.sql
+    - /sql/countSpendingsCategorical.sql
 --- # Local Profile
 spring:
   config:

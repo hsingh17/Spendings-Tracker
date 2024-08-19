@@ -13,13 +13,14 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.*;
 
+/** Config class for loading <code>ClassPathResource</code>s */
 @Configuration
 @ConfigurationProperties("classpath-resources")
 @Slf4j
-public class ResourceLoaderConfig {
+public class ClassPathResourceLoaderConfig {
     private final List<String> sqlResources;
 
-    public ResourceLoaderConfig(List<String> sqlResources) {
+    public ClassPathResourceLoaderConfig(List<String> sqlResources) {
         this.sqlResources = sqlResources;
     }
 
@@ -29,6 +30,13 @@ public class ResourceLoaderConfig {
 
     @Bean
     @Qualifier("sqlResourcesMap")
+    /**
+     * Loads SQL files located in the classpath under <code>resources/sql</code>
+     *
+     * @return a <code>Map</code> containing the SQL file name as a key and the corresponding SQL as
+     *     value
+     * @see com.spendingstracker.app.repository.SpendingUserJdbcRepository
+     */
     public Map<String, String> sqlResourcesMap() {
         Map<String, String> m = new HashMap<>();
 
@@ -52,6 +60,7 @@ public class ResourceLoaderConfig {
         return Collections.unmodifiableMap(m);
     }
 
+    /** Convert's the file name of a <code>ClassPathResource</code> to a key */
     private String convertFileNameToKey(ClassPathResource resource) {
         String filePath = resource.getPath();
         String fileName =

@@ -16,6 +16,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+/**
+ * Implementation of the <code>SpendingUserAggrRepository</code> interface
+ *
+ * @see SpendingUserAggrRepository
+ */
 public class SpendingUserAggrRepositoryImpl implements SpendingUserAggrRepository {
     private final SpendingUserAggrJpaRepository spendingUserAggrJpaRepository;
     private final SpendingUserJdbcRepository spendingUserJdbcRepository;
