@@ -4,7 +4,6 @@ This repository holds the code for my spendings tracker app built with Java and 
 
 ## TODO
 - various updates
-  - update deletemodal to use generic modal component
   - update/save button should be disabled when making API calls on savespendingsform
   - remove group by for bar and pie charts
   - add fontawesome icons to relevant areas (signin button, username/password icons)

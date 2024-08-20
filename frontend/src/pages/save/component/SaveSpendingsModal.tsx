@@ -1,18 +1,14 @@
 import { Dispatch, FC, SetStateAction } from "react";
 import GenericForm from "../../../common/form/GenericForm";
 import Modal from "../../../common/Modal";
-import {
-  CategoriesMap,
-  Nullable,
-  SpendingFormInput,
-} from "../../../utils/types";
+import { CategoriesMap, Nullable, Spending } from "../../../utils/types";
 import SaveSpendingsModalAmount from "./SaveSpendingsModalAmount";
 import SaveSpendingsModalCategory from "./SaveSpendingsModalCategory";
 import SaveSpendingsModalFormFooter from "./SaveSpendingsModalFormFooter";
 
 type SaveSpendingsModalProps = {
   categoriesMap: CategoriesMap;
-  spending: Nullable<SpendingFormInput>;
+  spending: Nullable<Spending>;
   onSubmit: (inputMap: Map<string, string>) => void;
   setModalSpendingIdx: Dispatch<SetStateAction<number | undefined>>;
 };

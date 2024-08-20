@@ -1,12 +1,12 @@
 import React, { Dispatch, FC, SetStateAction } from "react";
 import { ReactComponent as DeleteRowIcon } from "../../../assets/raw/delete-icon.svg";
 import MoneyUtils from "../../../utils/money-utils";
-import { CategoriesMap, SpendingFormInput } from "../../../utils/types";
+import { CategoriesMap, Spending } from "../../../utils/types";
 import SaveSpendingsFormRowCategoryImage from "./SaveSpendingsFormRowCategoryImage";
 
 export type SpendingsFormRowProps = {
   idx: number;
-  spending: SpendingFormInput;
+  spending: Spending;
   categoriesMap: CategoriesMap;
   handleDeleteRow: (idx: number) => void;
   setModalSpendingIdx: Dispatch<SetStateAction<number | undefined>>;
@@ -20,7 +20,7 @@ const SaveSpendingsFormRow: FC<SpendingsFormRowProps> = ({
   setModalSpendingIdx,
 }) => {
   if (spending.delete) {
-    // SpendingFormInput marked for deletion
+    // Marked for deletion
     return <></>;
   }
 

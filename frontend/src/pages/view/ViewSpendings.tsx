@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import Card from "../../common/Card";
 import useSpendings from "../../hooks/useSpendings";
 import { ApiMetadata, Nullable, SpendingListRow } from "../../utils/types";
-import DeleteModal from "./component/DeleteModal";
+import DeleteSpendingModal from "./component/DeleteSpendingModal";
 import SpendingsTable from "./component/SpendingsTable";
 import TableFilter from "./component/TableFilter";
 import TableFooterContainer from "./component/TableFooterContainer";
@@ -67,7 +67,7 @@ const ViewSpendings = () => {
         parentSetSearchParams={setSearchParamsWrapper}
       />
 
-      <DeleteModal
+      <DeleteSpendingModal
         show={showModal}
         spendingId={spendingId}
         parentRefetch={refetch}
