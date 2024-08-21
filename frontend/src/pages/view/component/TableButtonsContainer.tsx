@@ -15,12 +15,14 @@ type TableButtonListElement = {
   buttonIcon: ReactElement<unknown, JSXElementConstructor<unknown>>;
 };
 
+const ICON_CLASS_NAME = "w-7 h-7 border-l-2 border-gray";
+
 const BUTTONS: TableButtonListElement[] = [
   {
     key: "first",
     buttonIcon: (
       <DoubleLeftArrow
-        className="w-7 h-7 border-l-2 border-gray"
+        className={ICON_CLASS_NAME}
         stroke="gray"
         fill="gray"
         strokeWidth={0}
@@ -29,21 +31,17 @@ const BUTTONS: TableButtonListElement[] = [
   },
   {
     key: "prev",
-    buttonIcon: (
-      <LeftArrow className="w-7 h-7 border-l-2 border-gray" stroke="gray" />
-    ),
+    buttonIcon: <LeftArrow className={ICON_CLASS_NAME} stroke="gray" />,
   },
   {
     key: "next",
-    buttonIcon: (
-      <RightArrow className="w-7 h-7 border-l-2 border-gray" stroke="gray" />
-    ),
+    buttonIcon: <RightArrow className={ICON_CLASS_NAME} stroke="gray" />,
   },
   {
     key: "last",
     buttonIcon: (
       <DoubleRightArrow
-        className="w-7 h-7 border-l-2 border-gray"
+        className={ICON_CLASS_NAME}
         stroke="gray"
         fill="gray"
         strokeWidth={0}
