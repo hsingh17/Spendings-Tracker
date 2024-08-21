@@ -1,12 +1,19 @@
 import React, { FC } from "react";
 import { ReactComponent as CloseIcon } from "../../../assets/raw/close-icon.svg";
-import { TableFilterFormProps } from "../../../utils/types";
+import { Nullable } from "../../../utils/types";
+
+type TableFilterFormProps = {
+  isOpen: boolean;
+  setSearchParams: (searchParams: URLSearchParams) => void;
+  parentResetSearchParams: () => void;
+  setOpen: (e: Nullable<React.MouseEvent>, open: boolean) => void;
+};
 
 const TableFilterForm: FC<TableFilterFormProps> = ({
   isOpen,
   parentResetSearchParams,
-  parentSetOpen,
-  parentSetSearchParams,
+  setOpen,
+  setSearchParams,
 }) => {
   const processFilterForm = (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +33,7 @@ const TableFilterForm: FC<TableFilterFormProps> = ({
       urlSearchParams.append("end-date", target["end-date"].value);
     }
 
-    parentSetSearchParams(urlSearchParams);
+    setSearchParams(urlSearchParams);
   };
 
   return (
@@ -36,7 +43,7 @@ const TableFilterForm: FC<TableFilterFormProps> = ({
     >
       <CloseIcon
         className="ml-auto w-7 h-7 absolute right-4 top-2 hover:cursor-pointer"
-        onClick={(e: React.MouseEvent<SVGElement>) => parentSetOpen(e, false)}
+        onClick={(e: React.MouseEvent<SVGElement>) => setOpen(e, false)}
       />
 
       <form

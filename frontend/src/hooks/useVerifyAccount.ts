@@ -4,7 +4,10 @@ import { useNavigate } from "react-router-dom";
 import QueryClientConfig from "../config/QueryClientConfig";
 import { DASHBOARD_PAGE, PUT, VERIFY_ACCT_ROUTE } from "../utils/constants";
 import fetchRequestWrapper from "../utils/fetch-utils";
-import { VerifyAcctRequest } from "../utils/types";
+
+type VerifyAcctRequest = {
+  pin: string;
+};
 
 async function putVerifyAcct(
   username: string,

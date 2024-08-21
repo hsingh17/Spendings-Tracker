@@ -2,7 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import { GET, SPENDING_CATEGORIES_ROUTE } from "../utils/constants";
 import DateUtils from "../utils/date-utils";
 import fetchRequestWrapper from "../utils/fetch-utils";
-import { SpendingCategoriesResponse } from "../utils/types";
+import { CategoriesMap } from "../utils/types";
+
+type SpendingCategoriesResponse = {
+  categoryToS3UrlMap: CategoriesMap;
+};
 
 async function getSpendingCategories() {
   return await fetchRequestWrapper<SpendingCategoriesResponse>(

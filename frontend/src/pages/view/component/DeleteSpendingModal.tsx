@@ -8,7 +8,7 @@ import DeleteSpendingModalButtons from "./DeleteSpendingModalButtons";
 type DeleteModalProps = {
   show: boolean;
   spendingId: Nullable<number>;
-  parentSetShow: (show: boolean) => void;
+  setShow: (show: boolean) => void;
   parentRefetch: () => void;
 };
 
@@ -16,7 +16,7 @@ const DeleteSpendingModal: FC<DeleteModalProps> = ({
   show,
   spendingId,
   parentRefetch,
-  parentSetShow,
+  setShow,
 }) => {
   const { mutate: deleteSpending } = useDeleteSpending(parentRefetch);
 
@@ -27,12 +27,12 @@ const DeleteSpendingModal: FC<DeleteModalProps> = ({
     }
 
     deleteSpending(spendingId);
-    parentSetShow(false);
+    setShow(false);
   };
 
   const handleCloseModal = (e: React.MouseEvent) => {
     e.preventDefault();
-    parentSetShow(false);
+    setShow(false);
   };
 
   if (!show || !spendingId) {

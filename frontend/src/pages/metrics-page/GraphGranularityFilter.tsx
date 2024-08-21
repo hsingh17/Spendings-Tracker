@@ -1,19 +1,24 @@
 import React, { FC } from "react";
-import { GRANULARITY } from "../../utils/constants";
+import { GRANULARITY, GRAPH_TYPES } from "../../utils/constants";
 
 type GraphGranularityFilter = {
+  graphType: GRAPH_TYPES;
   granularity: GRANULARITY;
   searchParams: URLSearchParams;
   setSearchParams: (urlSearchParams: URLSearchParams) => void;
 };
 
 const GraphGranularityFilter: FC<GraphGranularityFilter> = ({
+  graphType,
   granularity,
   searchParams,
   setSearchParams,
 }) => {
+  // Objects.keys(GRANULARITY) returns:
+  // [ "0", "1", "2", "3", "Day", "Week", "Month", "Year" ]
+  // Only want the Day, Week, etc
   const granularities = Object.keys(GRANULARITY).filter((val) =>
-    isNaN(Number(val))
+    isNaN(Number(val)),
   );
 
   const onChange = (e: React.ChangeEvent) => {
@@ -24,6 +29,11 @@ const GraphGranularityFilter: FC<GraphGranularityFilter> = ({
     searchParams.set("granularity", target.value);
     setSearchParams(searchParams);
   };
+
+  // Don't render for anything but line charts
+  if (graphType !== GRAPH_TYPES.Line) {
+    return <></>;
+  }
 
   return (
     <>

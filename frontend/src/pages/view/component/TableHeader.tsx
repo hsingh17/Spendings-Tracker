@@ -1,6 +1,11 @@
 import { FC } from "react";
 import SortIcon from "../../../common/SortIcon";
-import { TableHeaderProps, SortType, SortOrder } from "../../../utils/types";
+import { Sort, SortOrder, SortType } from "../../../utils/types";
+
+type TableHeaderProps = {
+  sort: Sort;
+  parentHandleSort: (sortType: SortType) => void;
+};
 
 const TableHeader: FC<TableHeaderProps> = ({ parentHandleSort, sort }) => {
   return (

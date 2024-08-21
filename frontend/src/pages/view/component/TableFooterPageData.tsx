@@ -1,5 +1,9 @@
 import { FC } from "react";
-import { TableFooterPageDataProps } from "../../../utils/types";
+import { ApiMetadata, Nullable } from "../../../utils/types";
+
+type TableFooterPageDataProps = {
+  apiMetaData: Nullable<ApiMetadata>;
+};
 
 const TableFooterPageData: FC<TableFooterPageDataProps> = ({ apiMetaData }) => {
   return (

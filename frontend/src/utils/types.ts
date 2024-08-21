@@ -1,4 +1,4 @@
-import React, { JSXElementConstructor, ReactElement, ReactNode } from "react";
+import React, { ReactNode } from "react";
 import { POPUP_TYPES } from "./constants";
 
 export type Nullable<T> = T | null | undefined;
@@ -10,7 +10,7 @@ export type RenderChildrenProps = {
 export type User = {
   userId: number;
   username: string;
-  authorities: Nullable<Array<string>>;
+  authorities: Nullable<string[]>;
   accountNonExpired: Nullable<boolean>;
   accountNonLocked: Nullable<boolean>;
   credentialsNonExpired: Nullable<boolean>;
@@ -42,20 +42,8 @@ export type ApiResponse<T> = {
   data: Nullable<T>;
 };
 
-export type SpendingCategoriesResponse = {
-  categoryToS3UrlMap: CategoriesMap;
-};
-
 export type CategoriesMap = {
   [category: string]: string;
-};
-
-export type SpendingDetailResponse = {
-  spendings: Spending[];
-};
-
-export type SpendingSaveRequest = {
-  spendingRequests: Spending[];
 };
 
 export type Spending = {
@@ -103,89 +91,6 @@ export type SortIconProps = {
   sortOrder: SortOrder;
 };
 
-export type SpendingsTableProps = {
-  isLoading: boolean;
-  spendings: Nullable<Array<SpendingListRow>>;
-  parentRefetch: () => void;
-  parentSetSpendingId: (spendingId: number) => void;
-};
-
-export type TableHeaderProps = {
-  sort: Sort;
-  parentHandleSort: (sortType: SortType) => void;
-};
-
-export type TableBodyProps = {
-  isLoading: boolean;
-  spendings: Array<SpendingListRow>;
-  parentRefetch: () => void;
-  parentSetSpendingId: (spendingId: number) => void;
-};
-
-export type TableRowProps = {
-  isLoading: boolean;
-  spending: SpendingListRow;
-  parentRefetch: () => void;
-  parentSetSpendingId: (spendingId: number) => void;
-};
-
-export type SpendingComponentProps = {
-  spending: Spending;
-};
-
-export type SaveSpendingProps = {
-  date: string;
-};
-
-export type LoginRequest = {
-  username?: string;
-  password?: string;
-  oAuthCredential?: string;
-};
-
-export type TableFilterProps = {
-  isLoading: boolean;
-  parentSetSearchParams: (searchParams: URLSearchParams) => void;
-  parentResetSearchParams: () => void;
-};
-
-export type TableFilterButtonProps = {
-  isOpen: boolean;
-  parentSetOpen: (e: Nullable<React.MouseEvent>, open: boolean) => void;
-};
-
-export type TableFilterFormProps = {
-  isOpen: boolean;
-  parentSetSearchParams: (searchParams: URLSearchParams) => void;
-  parentResetSearchParams: () => void;
-  parentSetOpen: (e: Nullable<React.MouseEvent>, open: boolean) => void;
-};
-
-export type TableFooterContainerProps = {
-  isLoading: boolean;
-  apiMetaData: Nullable<ApiMetadata>;
-  parentSetSearchParams: (searchParams: URLSearchParams) => void;
-};
-
-export type TableButtonsContainerProps = {
-  apiLinks: Nullable<ApiLinks>;
-  parentSetSearchParams: (searchParams: URLSearchParams) => void;
-};
-
-export type TablePageDropdownProps = {
-  parentSetSearchParams: (searchParams: URLSearchParams) => void;
-};
-
-export type TableButtonProps = {
-  buttonIcon: ReactElement<unknown, JSXElementConstructor<unknown>>;
-  buttonUrl: Nullable<string>;
-  parentSetSearchParams: (searchParams: URLSearchParams) => void;
-};
-
-export type TableFooterPageDataProps = {
-  apiMetaData: Nullable<ApiMetadata>;
-};
-
 export type PopupProps = {
   children: React.ReactNode;
   type: POPUP_TYPES;
@@ -207,7 +112,7 @@ export type NavbarArrowProps = NavbarHeaderProps;
 
 export type NavbarListItem = {
   category: string;
-  children: Array<NavbarSublistItem>;
+  children: NavbarSublistItem[];
 };
 
 export type NavbarSublistItem = {
@@ -243,34 +148,11 @@ export enum NavbarAction {
   MOBILE_NAVIGATE_TO_PAGE,
 }
 
-export enum FormInputError {
-  EMPTY_CATEGORY = "Enter a category!",
-  ZERO_AMOUNT = "Must be greater than 0!",
-  MAX_AMOUNT = "Must be less than 99,999,999!",
-  MAX_CATEGORY_LENGTH = "Must be less than 100 characters!",
-  DUPLICATE_CATEGORY = "No duplicate categories allowed!",
-}
-
 export type TooltipPosition = {
   top?: number;
   left?: number;
   right?: number;
   bottom?: number;
-};
-
-export type ResetPasswordRequest = {
-  password: string;
-  uuid: string;
-};
-
-export type CreateAccountRequest = {
-  username: string;
-  password: string;
-  email: string;
-};
-
-export type VerifyAcctRequest = {
-  pin: string;
 };
 
 export enum ExternalUserType {

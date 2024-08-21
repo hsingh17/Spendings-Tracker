@@ -1,7 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { GET, SPENDINGS_API_ROUTE } from "../utils/constants";
 import fetchRequestWrapper from "../utils/fetch-utils";
-import { SpendingDetailResponse } from "../utils/types";
+import { Spending } from "../utils/types";
+
+type SpendingDetailResponse = {
+  spendings: Spending[];
+};
 
 async function getSpending(spendingDate: string) {
   return await fetchRequestWrapper<SpendingDetailResponse>(

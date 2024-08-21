@@ -1,25 +1,28 @@
-import { FC } from "react";
-import { TableButtonProps } from "../../../utils/types";
+import { FC, JSXElementConstructor, ReactElement } from "react";
+import { Nullable } from "../../../utils/types";
+
+type TableButtonProps = {
+  buttonIcon: ReactElement<unknown, JSXElementConstructor<unknown>>;
+  buttonUrl: Nullable<string>;
+  setSearchParams: (searchParams: URLSearchParams) => void;
+};
 
 const TableButton: FC<TableButtonProps> = ({
-  parentSetSearchParams,
+  setSearchParams,
   buttonUrl,
   buttonIcon,
 }) => {
-  const showButton: boolean =
-    buttonUrl !== null &&
-    buttonUrl !== null &&
-    buttonUrl !== undefined &&
-    buttonUrl !== undefined;
-  const queryParams: string = buttonUrl ? buttonUrl.split("?")[1] : "";
+  const showButton: boolean = buttonUrl !== null && buttonUrl !== undefined;
+
+  const queryParams: string =
+    showButton && buttonUrl ? buttonUrl.split("?")[1] : "";
+
   if (!showButton) {
     return null;
   }
 
   return (
-    <button
-      onClick={() => parentSetSearchParams(new URLSearchParams(queryParams))}
-    >
+    <button onClick={() => setSearchParams(new URLSearchParams(queryParams))}>
       {buttonIcon}
     </button>
   );

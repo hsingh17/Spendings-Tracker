@@ -3,7 +3,7 @@ import { CategoriesMap, Spending } from "../../../utils/types";
 import SaveSpendingsFormRow from "./SaveSpendingsFormRow";
 
 type SaveSpendingsFormListProps = {
-  spendings: Array<Spending>;
+  spendings: Spending[];
   categoriesMap: CategoriesMap;
   handleDeleteRow: (idx: number) => void;
   setModalSpendingIdx: Dispatch<SetStateAction<number | undefined>>;

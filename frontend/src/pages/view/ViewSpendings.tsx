@@ -9,7 +9,7 @@ import TableFilter from "./component/TableFilter";
 import TableFooterContainer from "./component/TableFooterContainer";
 import TableTitle from "./component/TableTitle";
 
-const DUMMY_SPENDINGS: Array<SpendingListRow> = Array(25).fill({});
+const DUMMY_SPENDINGS: SpendingListRow[] = Array(25).fill({});
 
 const ViewSpendings = () => {
   const [spendingId, setSpendingId] = useState<Nullable<number>>(null);
@@ -46,7 +46,7 @@ const ViewSpendings = () => {
         <TableFilter
           isLoading={isLoading}
           parentResetSearchParams={resetSearchParamsWrapper}
-          parentSetSearchParams={setSearchParamsWrapper}
+          setSearchParams={setSearchParamsWrapper}
         />
 
         <SpendingsTable
@@ -56,7 +56,7 @@ const ViewSpendings = () => {
             isLoading ? DUMMY_SPENDINGS : response?.data?.spendingPage.content
           }
           parentRefetch={refetchWrapper}
-          parentSetSpendingId={setSpendingIdWrapper}
+          setSpendingId={setSpendingIdWrapper}
         />
       </Card>
 
@@ -64,14 +64,14 @@ const ViewSpendings = () => {
         isLoading={isLoading}
         key={response?.timestamp}
         apiMetaData={metadata}
-        parentSetSearchParams={setSearchParamsWrapper}
+        setSearchParams={setSearchParamsWrapper}
       />
 
       <DeleteSpendingModal
         show={showModal}
         spendingId={spendingId}
         parentRefetch={refetch}
-        parentSetShow={setShowModalWrapper}
+        setShow={setShowModalWrapper}
       />
     </div>
   );

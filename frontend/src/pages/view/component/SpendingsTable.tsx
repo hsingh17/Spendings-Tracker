@@ -4,24 +4,30 @@ import {
   SortOrder,
   SortType,
   SpendingListRow,
-  SpendingsTableProps,
 } from "../../../utils/types";
 import TableBody from "./TableBody";
 import TableEmptyState from "./TableEmptyState";
 import TableHeader from "./TableHeader";
 
+type SpendingsTableProps = {
+  isLoading: boolean;
+  spendings: SpendingListRow[];
+  parentRefetch: () => void;
+  setSpendingId: (spendingId: number) => void;
+};
+
 const SpendingsTable: FC<SpendingsTableProps> = ({
   isLoading,
   spendings,
   parentRefetch,
-  parentSetSpendingId,
+  setSpendingId,
 }) => {
   if (!spendings) {
     return null;
   }
 
   const [spendingsCopy, setSpendingCopy] =
-    useState<Array<SpendingListRow>>(spendings);
+    useState<SpendingListRow[]>(spendings);
 
   const [sort, setSort] = useState<Sort>({
     sortType: SortType.DATE,
@@ -70,7 +76,7 @@ const SpendingsTable: FC<SpendingsTableProps> = ({
           isLoading={isLoading}
           spendings={spendings}
           parentRefetch={parentRefetch}
-          parentSetSpendingId={parentSetSpendingId}
+          setSpendingId={setSpendingId}
         />
       </table>
     </div>

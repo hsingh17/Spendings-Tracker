@@ -52,26 +52,26 @@ export const Metrics = () => {
   if (!response || !response.ok || !response.data) {
     return <h1>Error!</h1>;
   }
+
   return (
     <div className="md:relative w-full h-full flex flex-col">
       {spendings?.length ? (
-        <>
-          <GraphsContainer
-            graphType={getGraphType()}
-            response={response}
-            setSearchParams={setSearchParamsKeepPage}
-          />
-          <GraphFilter
-            granularity={getGranularity()}
-            graphType={getGraphType()}
-            searchParams={searchParams}
-            defaultUrlSearchParams={DEFAULT_URL_SEARCH_PARAMS}
-            setSearchParams={setSearchParamsResetPage}
-          />
-        </>
+        <GraphsContainer
+          graphType={getGraphType()}
+          response={response}
+          setSearchParams={setSearchParamsKeepPage}
+        />
       ) : (
         <GraphEmptyState />
       )}
+
+      <GraphFilter
+        granularity={getGranularity()}
+        graphType={getGraphType()}
+        searchParams={searchParams}
+        defaultUrlSearchParams={DEFAULT_URL_SEARCH_PARAMS}
+        setSearchParams={setSearchParamsResetPage}
+      />
     </div>
   );
 };

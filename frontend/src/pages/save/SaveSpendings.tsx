@@ -1,8 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
 import useSpending from "../../hooks/useSpending";
 import { SAVE_SPENDINGS_PAGE } from "../../utils/constants";
-import { SaveSpendingProps } from "../../utils/types";
 import SaveSpendingsForm from "./component/SaveSpendingsForm";
+
+type SaveSpendingProps = {
+  date: string;
+};
 
 const SaveSpendings = () => {
   const navigate = useNavigate();

@@ -35,7 +35,7 @@ const BarChart: FC<BarChartProps> = ({ response, height, width }) => {
 
   const yScale = scaleLinear()
     .domain(extent(data, (d) => d.total) as [number, number])
-    .range([0, height - 100]);
+    .range([height * 0.1, height - 100]);
 
   const onMouseOver = (idx: number, x: number, y: number) => {
     setTooltipIdx(idx);

@@ -3,7 +3,13 @@ import { useNavigate } from "react-router-dom";
 import QueryClientConfig from "../config/QueryClientConfig";
 import { AUTH_LOGIN_ROUTE, DASHBOARD_PAGE, POST } from "../utils/constants";
 import fetchRequestWrapper from "../utils/fetch-utils";
-import { ExternalUserType, LoginRequest, User } from "../utils/types";
+import { ExternalUserType, User } from "../utils/types";
+
+type LoginRequest = {
+  username?: string;
+  password?: string;
+  oAuthCredential?: string;
+};
 
 async function postLogin(
   formData: LoginRequest,

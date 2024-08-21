@@ -1,12 +1,19 @@
 import { FC } from "react";
-import { SpendingListRow, TableBodyProps } from "../../../utils/types";
+import { SpendingListRow } from "../../../utils/types";
 import TableRow from "./TableRow";
+
+type TableBodyProps = {
+  isLoading: boolean;
+  spendings: SpendingListRow[];
+  parentRefetch: () => void;
+  setSpendingId: (spendingId: number) => void;
+};
 
 const TableBody: FC<TableBodyProps> = ({
   isLoading,
   spendings,
   parentRefetch,
-  parentSetSpendingId,
+  setSpendingId,
 }) => {
   return (
     <tbody>
@@ -17,7 +24,7 @@ const TableBody: FC<TableBodyProps> = ({
             key={idx}
             spending={spending}
             parentRefetch={parentRefetch}
-            parentSetSpendingId={parentSetSpendingId}
+            setSpendingId={setSpendingId}
           />
         );
       })}

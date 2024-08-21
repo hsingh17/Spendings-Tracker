@@ -2,7 +2,11 @@ import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { POST, PUT, SPENDINGS_API_ROUTE } from "../utils/constants";
 import fetchRequestWrapper from "../utils/fetch-utils";
-import { SpendingSaveRequest } from "../utils/types";
+import { Spending } from "../utils/types";
+
+type SpendingSaveRequest = {
+  spendingRequests: Spending[];
+};
 
 async function postOrPutSpendings(
   spendingSaveRequest: SpendingSaveRequest,

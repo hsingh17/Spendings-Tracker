@@ -66,7 +66,7 @@ const Navbar = () => {
   };
 
   // TODO: Somehow get this out of this component
-  const getNavList = (): Array<NavbarListItem> => {
+  const getNavList = (): NavbarListItem[] => {
     const navigateToPage = (page: string) => {
       navigate(page);
       if (isMobile) {

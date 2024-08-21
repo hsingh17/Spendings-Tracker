@@ -7,10 +7,10 @@ const DateUtils = {
     }
 
     // Can't pass date string into the Date object since JS will convert to UTC
-    const split: Array<string> = date.split("-");
-    const yearNum: number = parseInt(split[0]);
-    const monthIdx: number = parseInt(split[1]) - 1;
-    const dateNum: number = parseInt(split[2]);
+    const split = date.split("-");
+    const yearNum = parseInt(split[0]);
+    const monthIdx = parseInt(split[1]) - 1;
+    const dateNum = parseInt(split[2]);
 
     const dateObj: Date = new Date(yearNum, monthIdx, dateNum);
     if (isNaN(dateObj.getTime())) {

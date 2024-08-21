@@ -1,12 +1,18 @@
 import React, { FC, useRef, useState } from "react";
 import useDetectClickOutsideComponent from "../../../hooks/useDetectOutsideComponent";
-import { Nullable, TableFilterProps } from "../../../utils/types";
+import { Nullable } from "../../../utils/types";
 import TableFilterButton from "./TableFilterButton";
 import TableFilterForm from "./TableFilterForm";
 
+type TableFilterProps = {
+  isLoading: boolean;
+  setSearchParams: (searchParams: URLSearchParams) => void;
+  parentResetSearchParams: () => void;
+};
+
 const TableFilter: FC<TableFilterProps> = ({
   isLoading,
-  parentSetSearchParams,
+  setSearchParams,
   parentResetSearchParams,
 }) => {
   const filterFormRef = useRef<HTMLDivElement>(null);
@@ -33,15 +39,15 @@ const TableFilter: FC<TableFilterProps> = ({
   return (
     <div className="mt-5 relative">
       <div className="h-fit w-fit" ref={filterButtonRef}>
-        <TableFilterButton isOpen={isOpen} parentSetOpen={setIsOpenWrapper} />
+        <TableFilterButton isOpen={isOpen} setOpen={setIsOpenWrapper} />
       </div>
 
       <div ref={filterFormRef}>
         <TableFilterForm
           isOpen={isOpen}
-          parentSetOpen={setIsOpenWrapper}
+          setOpen={setIsOpenWrapper}
           parentResetSearchParams={parentResetSearchParams}
-          parentSetSearchParams={parentSetSearchParams}
+          setSearchParams={setSearchParams}
         />
       </div>
     </div>

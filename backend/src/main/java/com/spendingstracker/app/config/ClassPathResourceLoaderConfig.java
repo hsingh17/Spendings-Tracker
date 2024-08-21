@@ -28,8 +28,6 @@ public class ClassPathResourceLoaderConfig {
         return sqlResources;
     }
 
-    @Bean
-    @Qualifier("sqlResourcesMap")
     /**
      * Loads SQL files located in the classpath under <code>resources/sql</code>
      *
@@ -37,6 +35,8 @@ public class ClassPathResourceLoaderConfig {
      *     value
      * @see com.spendingstracker.app.repository.SpendingUserJdbcRepository
      */
+    @Bean
+    @Qualifier("sqlResourcesMap")
     public Map<String, String> sqlResourcesMap() {
         Map<String, String> m = new HashMap<>();
 
