@@ -1,15 +1,10 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import Card from "../../common/Card";
 import useSpendings from "../../hooks/useSpendings";
-import { ApiMetadata, Nullable, SpendingListRow } from "../../utils/types";
+import { ApiMetadata, Nullable } from "../../utils/types";
 import DeleteSpendingModal from "./component/DeleteSpendingModal";
-import SpendingsTable from "./component/SpendingsTable";
-import TableFilter from "./component/TableFilter";
+import TableBody from "./component/TableBody";
 import TableFooterContainer from "./component/TableFooterContainer";
-import TableTitle from "./component/TableTitle";
-
-const DUMMY_SPENDINGS: SpendingListRow[] = Array(25).fill({});
 
 const ViewSpendings = () => {
   const [spendingId, setSpendingId] = useState<Nullable<number>>(null);
@@ -34,31 +29,17 @@ const ViewSpendings = () => {
     setSpendingId(spendingIdToDelete);
     setShowModal(true);
   };
-
-  const refetchWrapper = () => refetch();
-
+  response?.data?.spendingPage.content;
   return (
     <div className="p-3">
-      <Card className="p-7">
-        {/* TODO: Make this a TableBody component and then rename existing to SpendingsTableBody */}
-        <TableTitle />
-
-        <TableFilter
-          isLoading={isLoading}
-          parentResetSearchParams={resetSearchParamsWrapper}
-          setSearchParams={setSearchParamsWrapper}
-        />
-
-        <SpendingsTable
-          isLoading={isLoading}
-          key={response?.timestamp}
-          spendings={
-            isLoading ? DUMMY_SPENDINGS : response?.data?.spendingPage.content
-          }
-          parentRefetch={refetchWrapper}
-          setSpendingId={setSpendingIdWrapper}
-        />
-      </Card>
+      <TableBody
+        isLoading={isLoading}
+        timestamp={response?.timestamp}
+        spendings={response?.data?.spendingPage.content}
+        resetSearchParams={resetSearchParamsWrapper}
+        setSearchParams={setSearchParamsWrapper}
+        setSpendingId={setSpendingIdWrapper}
+      />
 
       <TableFooterContainer
         isLoading={isLoading}
@@ -70,7 +51,7 @@ const ViewSpendings = () => {
       <DeleteSpendingModal
         show={showModal}
         spendingId={spendingId}
-        parentRefetch={refetch}
+        refetch={refetch}
         setShow={setShowModalWrapper}
       />
     </div>

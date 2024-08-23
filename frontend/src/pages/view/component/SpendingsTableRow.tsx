@@ -4,17 +4,16 @@ import { SAVE_SPENDINGS_PAGE } from "../../../utils/constants";
 import DateUtils from "../../../utils/date-utils";
 import MoneyUtils from "../../../utils/money-utils";
 import { SpendingListRow } from "../../../utils/types";
-import TableLoadingShimmer from "./TableLoadingShimmer";
-import TableRowButtons from "./TableRowButtons";
+import SpendingsTableLoadingShimmer from "./SpendingsTableLoadingShimmer";
+import SpendingsTableRowButtons from "./SpendingsTableRowButtons";
 
-type TableRowProps = {
+type SpendingsTableRowProps = {
   isLoading: boolean;
   spending: SpendingListRow;
-  parentRefetch: () => void;
   setSpendingId: (spendingId: number) => void;
 };
 
-const TableRow: FC<TableRowProps> = ({
+const SpendingsTableRow: FC<SpendingsTableRowProps> = ({
   isLoading,
   spending,
   setSpendingId,
@@ -24,7 +23,7 @@ const TableRow: FC<TableRowProps> = ({
   const handleEdit = () => navigate(`${SAVE_SPENDINGS_PAGE}/${spending.date}`);
 
   if (isLoading) {
-    return <TableLoadingShimmer />;
+    return <SpendingsTableLoadingShimmer />;
   }
 
   return (
@@ -39,7 +38,7 @@ const TableRow: FC<TableRowProps> = ({
         </p>
       </td>
 
-      <TableRowButtons
+      <SpendingsTableRowButtons
         spendingId={spending.spendingUserAggrId}
         setSpendingId={setSpendingId}
         handleEdit={handleEdit}
@@ -48,4 +47,4 @@ const TableRow: FC<TableRowProps> = ({
   );
 };
 
-export default TableRow;
+export default SpendingsTableRow;

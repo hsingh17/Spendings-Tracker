@@ -78,6 +78,7 @@ const GraphFilter: FC<GraphFilterProps> = ({
           />
         );
       default:
+        //  return collapsed as default?
         return <h1>No such state!</h1>; // TODO
     }
   };

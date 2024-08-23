@@ -1,6 +1,6 @@
 import ShimmerLoadingBox from "../../../common/ShimmerLoadingBox";
 
-const TableLoadingShimmer = () => {
+const SpendingsTableLoadingShimmer = () => {
   return (
     <tr className="border-gray-300 leading-[3rem]">
       {[...Array(3).keys()].map((val) => (
@@ -12,4 +12,4 @@ const TableLoadingShimmer = () => {
   );
 };
 
-export default TableLoadingShimmer;
+export default SpendingsTableLoadingShimmer;

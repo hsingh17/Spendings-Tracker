@@ -1,25 +1,47 @@
 import { FC, useEffect, useState } from "react";
 import {
+  Nullable,
   Sort,
   SortOrder,
   SortType,
   SpendingListRow,
 } from "../../../utils/types";
-import TableBody from "./TableBody";
+import SpendingsTableBody from "./SpendingsTableBody";
+import SpendingsTableHeader from "./SpendingsTableHeader";
 import TableEmptyState from "./TableEmptyState";
-import TableHeader from "./TableHeader";
 
 type SpendingsTableProps = {
   isLoading: boolean;
-  spendings: SpendingListRow[];
-  parentRefetch: () => void;
+  spendings: Nullable<SpendingListRow[]>;
   setSpendingId: (spendingId: number) => void;
 };
+
+// https://www.typescriptlang.org/docs/handbook/2/functions.html#call-signatures
+type SortFunc = {
+  (spendings: SpendingListRow[], sortOrder: SortOrder): SpendingListRow[];
+};
+
+const SORTERS: Map<SortType, SortFunc> = new Map([
+  [
+    SortType.DATE,
+    (spendings: SpendingListRow[], sortOrder: SortOrder) => {
+      return spendings.sort(
+        (a, b) =>
+          sortOrder * (new Date(a.date).getTime() - new Date(b.date).getTime()),
+      );
+    },
+  ],
+  [
+    SortType.TOTAL,
+    (spendings: SpendingListRow[], sortOrder: SortOrder) => {
+      return spendings.sort((a, b) => -sortOrder * (a.total - b.total));
+    },
+  ],
+]);
 
 const SpendingsTable: FC<SpendingsTableProps> = ({
   isLoading,
   spendings,
-  parentRefetch,
   setSpendingId,
 }) => {
   if (!spendings) {
@@ -34,24 +56,15 @@ const SpendingsTable: FC<SpendingsTableProps> = ({
     sortOrder: SortOrder.DESC,
   });
 
-  // TODO: Maybe better way
   const handleSort = (sortType: SortType) => {
-    let newSpendingsCopy: SpendingListRow[] = spendingsCopy;
-    const sortOrder: SortOrder = getSortOrder(sortType);
-
-    if (sortType === SortType.DATE) {
-      newSpendingsCopy = spendingsCopy.sort(
-        (a, b) =>
-          sortOrder * (new Date(a.date).getTime() - new Date(b.date).getTime()),
-      );
-    } else if (sortType === SortType.TOTAL) {
-      newSpendingsCopy = spendingsCopy.sort(
-        (a, b) => -sortOrder * (a.total - b.total),
-      );
+    const sortOrder = getSortOrder(sortType);
+    const sortFunc = SORTERS.get(sortType);
+    if (!sortFunc) {
+      return;
     }
 
     setSort({ sortType: sortType, sortOrder: sortOrder });
-    setSpendingCopy(newSpendingsCopy);
+    setSpendingCopy(sortFunc(spendings, sortOrder));
   };
 
   const getSortOrder = (sortOn: SortType) =>
@@ -71,11 +84,10 @@ const SpendingsTable: FC<SpendingsTableProps> = ({
   return (
     <div className="overflow-x-scroll">
       <table className="mt-5 table-fixed w-[750px] md:w-full border-collapse">
-        <TableHeader parentHandleSort={handleSort} sort={sort} />
-        <TableBody
+        <SpendingsTableHeader handleSort={handleSort} sort={sort} />
+        <SpendingsTableBody
           isLoading={isLoading}
           spendings={spendings}
-          parentRefetch={parentRefetch}
           setSpendingId={setSpendingId}
         />
       </table>

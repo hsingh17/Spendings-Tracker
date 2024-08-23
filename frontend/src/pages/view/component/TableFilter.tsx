@@ -7,13 +7,13 @@ import TableFilterForm from "./TableFilterForm";
 type TableFilterProps = {
   isLoading: boolean;
   setSearchParams: (searchParams: URLSearchParams) => void;
-  parentResetSearchParams: () => void;
+  resetSearchParams: () => void;
 };
 
 const TableFilter: FC<TableFilterProps> = ({
   isLoading,
   setSearchParams,
-  parentResetSearchParams,
+  resetSearchParams,
 }) => {
   const filterFormRef = useRef<HTMLDivElement>(null);
   const filterButtonRef = useRef<HTMLDivElement>(null);
@@ -46,7 +46,7 @@ const TableFilter: FC<TableFilterProps> = ({
         <TableFilterForm
           isOpen={isOpen}
           setOpen={setIsOpenWrapper}
-          parentResetSearchParams={parentResetSearchParams}
+          resetSearchParams={resetSearchParams}
           setSearchParams={setSearchParams}
         />
       </div>

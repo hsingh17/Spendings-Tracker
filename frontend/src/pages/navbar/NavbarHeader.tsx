@@ -19,7 +19,7 @@ const NavbarHeader: FC<NavbarHeaderProps> = ({ state, transitionState }) => {
           <></>
         ) : (
           <div className="w-10 h-10 bg-theme-cta"></div>
-        ) /*TODO*/
+        ) /*TODO: Logo*/
       }
       <NavbarHeaderTitle state={state} />
       <NavbarHamburgerIcon state={state} transitionState={transitionState} />

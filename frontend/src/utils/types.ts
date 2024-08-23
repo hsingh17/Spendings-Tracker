@@ -1,5 +1,4 @@
 import React, { ReactNode } from "react";
-import { POPUP_TYPES } from "./constants";
 
 export type Nullable<T> = T | null | undefined;
 
@@ -85,16 +84,6 @@ export enum SortOrder {
 export type Sort = {
   sortType: SortType;
   sortOrder: SortOrder;
-};
-
-export type SortIconProps = {
-  sortOrder: SortOrder;
-};
-
-export type PopupProps = {
-  children: React.ReactNode;
-  type: POPUP_TYPES;
-  time: number;
 };
 
 export type NavbarHeaderProps = {

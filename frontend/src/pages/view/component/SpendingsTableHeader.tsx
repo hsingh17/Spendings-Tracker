@@ -2,19 +2,22 @@ import { FC } from "react";
 import SortIcon from "../../../common/SortIcon";
 import { Sort, SortOrder, SortType } from "../../../utils/types";
 
-type TableHeaderProps = {
+type SpendingsTableHeaderProps = {
   sort: Sort;
-  parentHandleSort: (sortType: SortType) => void;
+  handleSort: (sortType: SortType) => void;
 };
 
-const TableHeader: FC<TableHeaderProps> = ({ parentHandleSort, sort }) => {
+const SpendingsTableHeader: FC<SpendingsTableHeaderProps> = ({
+  handleSort,
+  sort,
+}) => {
   return (
     <thead>
       <tr className="bg-theme-brand text-theme-neutral text-xs font-bold uppercase w-full">
         <td className="px-2 py-2 w-1/3 md:w-1/6 whitespace-nowrap hover:cursor-pointer">
           <div
             className="flex flex-row items-center"
-            onClick={() => parentHandleSort(SortType.DATE)}
+            onClick={() => handleSort(SortType.DATE)}
           >
             Date
             <SortIcon
@@ -26,10 +29,10 @@ const TableHeader: FC<TableHeaderProps> = ({ parentHandleSort, sort }) => {
             />
           </div>
         </td>
-        <td className="px-2 py-2 w-1/6  hover:cursor-pointer">
+        <td className="px-2 py-2 w-1/6 hover:cursor-pointer">
           <div
             className="flex flex-row items-center justify-end"
-            onClick={() => parentHandleSort(SortType.TOTAL)}
+            onClick={() => handleSort(SortType.TOTAL)}
           >
             Total
             <SortIcon
@@ -51,4 +54,4 @@ const TableHeader: FC<TableHeaderProps> = ({ parentHandleSort, sort }) => {
   );
 };
 
-export default TableHeader;
+export default SpendingsTableHeader;

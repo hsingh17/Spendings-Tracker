@@ -9,16 +9,16 @@ type DeleteModalProps = {
   show: boolean;
   spendingId: Nullable<number>;
   setShow: (show: boolean) => void;
-  parentRefetch: () => void;
+  refetch: () => void;
 };
 
 const DeleteSpendingModal: FC<DeleteModalProps> = ({
   show,
   spendingId,
-  parentRefetch,
+  refetch,
   setShow,
 }) => {
-  const { mutate: deleteSpending } = useDeleteSpending(parentRefetch);
+  const { mutate: deleteSpending } = useDeleteSpending(refetch);
 
   const handleDelete = (e: React.MouseEvent) => {
     e.preventDefault();

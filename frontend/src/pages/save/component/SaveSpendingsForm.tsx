@@ -49,8 +49,6 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
       delete: spending.delete,
     }));
 
-    console.log(mappedSpendings);
-
     saveSpendings({
       spendingRequests: mappedSpendings,
     });
@@ -140,11 +138,13 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
           setModalSpendingIdx={setModalSpendingIdx}
         />
       </Card>
+
       <SaveSpendingsFooterButtons
         isDisabled={spendings.length === 0}
         isCreateMode={isCreateMode}
         handleSubmit={handleSubmit}
       />
+
       <SaveSpendingsModal
         categoriesMap={categoriesMap}
         spending={getSpendingForModal()}

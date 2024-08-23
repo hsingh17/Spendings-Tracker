@@ -1,17 +1,16 @@
 import React, { FC } from "react";
 import { ReactComponent as CloseIcon } from "../../../assets/raw/close-icon.svg";
-import { Nullable } from "../../../utils/types";
 
 type TableFilterFormProps = {
   isOpen: boolean;
   setSearchParams: (searchParams: URLSearchParams) => void;
-  parentResetSearchParams: () => void;
-  setOpen: (e: Nullable<React.MouseEvent>, open: boolean) => void;
+  resetSearchParams: () => void;
+  setOpen: (e: React.MouseEvent, open: boolean) => void;
 };
 
 const TableFilterForm: FC<TableFilterFormProps> = ({
   isOpen,
-  parentResetSearchParams,
+  resetSearchParams,
   setOpen,
   setSearchParams,
 }) => {
@@ -36,6 +35,7 @@ const TableFilterForm: FC<TableFilterFormProps> = ({
     setSearchParams(urlSearchParams);
   };
 
+  // TODO: Maybe attempt to use GenericForm
   return (
     <div
       className="top-12 w-full md:w-72 h-fit shadow-2xl border border-gray-300 rounded-xl bg-white absolute z-10"
@@ -49,7 +49,7 @@ const TableFilterForm: FC<TableFilterFormProps> = ({
       <form
         className="flex flex-col p-5 mt-1"
         onSubmit={(e: React.FormEvent) => processFilterForm(e)}
-        onReset={() => parentResetSearchParams()}
+        onReset={() => resetSearchParams()}
       >
         <div>
           <label className="block text-sm font-semibold" htmlFor="start-date">

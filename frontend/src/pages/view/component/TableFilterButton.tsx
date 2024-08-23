@@ -1,11 +1,10 @@
 import { FC } from "react";
 import DownChevron from "../../../assets/components/DownChevron";
 import FilterIcon from "../../../assets/components/FilterIcon";
-import { Nullable } from "../../../utils/types";
 
 type TableFilterButtonProps = {
   isOpen: boolean;
-  setOpen: (e: Nullable<React.MouseEvent>, open: boolean) => void;
+  setOpen: (e: React.MouseEvent, open: boolean) => void;
 };
 
 const TableFilterButton: FC<TableFilterButtonProps> = ({ setOpen, isOpen }) => {

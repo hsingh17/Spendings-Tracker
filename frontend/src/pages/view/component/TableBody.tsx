@@ -1,34 +1,46 @@
 import { FC } from "react";
-import { SpendingListRow } from "../../../utils/types";
-import TableRow from "./TableRow";
+import Card from "../../../common/Card";
+import { Nullable, SpendingListRow } from "../../../utils/types";
+import SpendingsTable from "./SpendingsTable";
+import TableFilter from "./TableFilter";
+import TableTitle from "./TableTitle";
 
 type TableBodyProps = {
   isLoading: boolean;
-  spendings: SpendingListRow[];
-  parentRefetch: () => void;
-  setSpendingId: (spendingId: number) => void;
+  timestamp: Nullable<string>;
+  spendings: Nullable<SpendingListRow[]>;
+  resetSearchParams: () => void;
+  setSearchParams: (urlSearchParams: URLSearchParams) => void;
+  setSpendingId: (spendingIdToDelete: number) => void;
 };
+
+const DUMMY_SPENDINGS: SpendingListRow[] = Array(25).fill({});
 
 const TableBody: FC<TableBodyProps> = ({
   isLoading,
+  timestamp,
   spendings,
-  parentRefetch,
+  resetSearchParams,
+  setSearchParams,
   setSpendingId,
 }) => {
   return (
-    <tbody>
-      {spendings.map((spending: SpendingListRow, idx: number) => {
-        return (
-          <TableRow
-            isLoading={isLoading}
-            key={idx}
-            spending={spending}
-            parentRefetch={parentRefetch}
-            setSpendingId={setSpendingId}
-          />
-        );
-      })}
-    </tbody>
+    <Card className="p-7">
+      <TableTitle />
+
+      <TableFilter
+        isLoading={isLoading}
+        resetSearchParams={resetSearchParams}
+        setSearchParams={setSearchParams}
+      />
+
+      <SpendingsTable
+        isLoading={isLoading}
+        key={timestamp}
+        spendings={isLoading ? DUMMY_SPENDINGS : spendings}
+        setSpendingId={setSpendingId}
+      />
+    </Card>
   );
 };
 

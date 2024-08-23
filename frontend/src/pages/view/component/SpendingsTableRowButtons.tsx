@@ -2,13 +2,13 @@ import { FC } from "react";
 import DeleteIcon from "../../../assets/components/DeleteIcon";
 import EditIcon from "../../../assets/components/EditIcon";
 
-type TableRowButtonsProps = {
+type SpendingsTableRowButtonsProps = {
   spendingId: number;
   setSpendingId: (spendingId: number) => void;
   handleEdit: () => void;
 };
 
-const TableRowButtons: FC<TableRowButtonsProps> = ({
+const SpendingsTableRowButtons: FC<SpendingsTableRowButtonsProps> = ({
   spendingId,
   handleEdit,
   setSpendingId,
@@ -28,4 +28,4 @@ const TableRowButtons: FC<TableRowButtonsProps> = ({
   );
 };
 
-export default TableRowButtons;
+export default SpendingsTableRowButtons;
