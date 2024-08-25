@@ -20,7 +20,7 @@ const SaveSpendingsTitleDateInput: FC<SaveSpendingsTitleDateInputProps> = ({
 
   return (
     <input
-      className="w-fit mr-auto rounded-lg px-2 py-1 text-theme-brand-secondary text-center text-lg -mt-2 -ml-3 md:-mt-8 md:-ml-5 font-semibold mb-7"
+      className="w-fit mr-auto rounded-lg px-2 py-1 text-theme-brand-secondary text-center text-lg -mt-2 -ml-3 md:-mt-8 md:-ml-5 font-semibold mb-7 hover:cursor-pointer"
       type="date"
       id="spending-date"
       defaultValue={date}

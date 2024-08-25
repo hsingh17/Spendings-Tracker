@@ -11,7 +11,6 @@ This repository holds the code for my spendings tracker app built with Java and 
 - dashboard -> graphs
 
 - settings
-
   - preferred currency type -> list and save spendings page will need to return the preferred currency types so UI can render correctly
   - preferred date format
   - delete account functionality -> in reality, we're going to simply set IS_ACTIVE to N

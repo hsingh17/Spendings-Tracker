@@ -10,7 +10,12 @@ const ViewSpendings = () => {
   const [spendingId, setSpendingId] = useState<Nullable<number>>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  const { data: response, refetch, isLoading } = useSpendings(searchParams);
+  const {
+    data: response,
+    refetch,
+    isLoading,
+    isError,
+  } = useSpendings(searchParams);
   const metadata: Nullable<ApiMetadata> | undefined = response?.metadata;
 
   const setSearchParamsWrapper = (urlSearchParams: URLSearchParams) => {
@@ -29,7 +34,12 @@ const ViewSpendings = () => {
     setSpendingId(spendingIdToDelete);
     setShowModal(true);
   };
-  response?.data?.spendingPage.content;
+
+  if (isError) {
+    alert("TODO");
+    return <></>;
+  }
+
   return (
     <div className="p-3">
       <TableBody

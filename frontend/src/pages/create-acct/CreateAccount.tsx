@@ -15,6 +15,7 @@ const CreateAccount = () => {
     const newPassword = inputMap.get("password");
     const confirmPassword = inputMap.get("confirm-password");
     if (newPassword !== confirmPassword) {
+      // TODO
       alert("Passwords must match!");
       return;
     }

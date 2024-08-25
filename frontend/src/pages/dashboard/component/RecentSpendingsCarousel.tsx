@@ -15,6 +15,7 @@ const RecentSpendingsCarousel = () => {
 
   if (!response || !response.ok) {
     return (
+      // TODO
       <h1 className="font-medium text-2xl text-red-600">
         Error fetching recent spending activity!
       </h1>

@@ -19,8 +19,6 @@ const Bars: FC<BarsProps> = ({
   setTooltipIdx,
   onMouseOver,
 }) => {
-  console.log(categoricalSpendings);
-
   return (
     <>
       {categoricalSpendings.map((categoricalSpending, i) => {

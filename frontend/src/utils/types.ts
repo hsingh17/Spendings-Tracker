@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 
 export type Nullable<T> = T | null | undefined;
 
@@ -107,7 +107,7 @@ export type NavbarListItem = {
 export type NavbarSublistItem = {
   iconPath: string;
   name: string;
-  onClick: (e: React.MouseEvent) => void;
+  onClick: () => void;
 };
 
 export type NavbarSublistProps = {

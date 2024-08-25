@@ -1,14 +1,10 @@
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
-import QueryClientConfig from "../../config/QueryClientConfig";
 import useDetectMobile from "../../hooks/useDetectMobile";
 import useLogout from "../../hooks/useLogout";
-import useUser from "../../hooks/useUser";
 import {
   DASHBOARD_PAGE,
   HOME_PAGE,
-  LOGIN_PAGE,
   METRICS_PAGE,
   SETTINGS_PAGE,
   UNAUTHENTICATED_PAGES,
@@ -41,20 +37,8 @@ function transitionState(action: NavbarAction): NavbarState {
 
 const Navbar = () => {
   const location = useLocation();
-  const { data: response } = useUser();
   const navigate = useNavigate();
-  const { mutate: logout } = useLogout(
-    () => {
-      navigate(LOGIN_PAGE);
-      // Invalidate the user key from cache so we don't keep any cached user data
-      QueryClientConfig.removeQueries(["user"]);
-    },
-    () => {
-      toast.error("An unexpected error occurred while logging out!", {
-        position: "bottom-center",
-      });
-    },
-  );
+  const { mutate: logout } = useLogout();
 
   const isMobile = useDetectMobile();
   const [state, setState] = useState<NavbarState>(
@@ -65,7 +49,6 @@ const Navbar = () => {
     setState(transitionState(action));
   };
 
-  // TODO: Somehow get this out of this component
   const getNavList = (): NavbarListItem[] => {
     const navigateToPage = (page: string) => {
       navigate(page);
@@ -119,9 +102,7 @@ const Navbar = () => {
   };
 
   const doNotRender = (): boolean => {
-    const path = location.pathname.substring(1); // Have to ignore the '/'
-    const onUnauthenticatedPage = UNAUTHENTICATED_PAGES.indexOf(path) !== -1;
-    return !response || !response.data || !response.ok || onUnauthenticatedPage;
+    return UNAUTHENTICATED_PAGES.indexOf(location.pathname) !== -1;
   };
 
   useEffect(

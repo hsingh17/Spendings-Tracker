@@ -62,10 +62,6 @@ const GraphFilter: FC<GraphFilterProps> = ({
 
   const switchCompOnGraphsFilterState = () => {
     switch (graphFilterState) {
-      case GraphFilterState.COLLAPSED:
-        return (
-          <GraphFilterCollapsed setGraphFilterState={setGraphFilterState} />
-        );
       case GraphFilterState.EXPANDED:
         return (
           <GraphFilterExpanded
@@ -78,8 +74,9 @@ const GraphFilter: FC<GraphFilterProps> = ({
           />
         );
       default:
-        //  return collapsed as default?
-        return <h1>No such state!</h1>; // TODO
+        return (
+          <GraphFilterCollapsed setGraphFilterState={setGraphFilterState} />
+        );
     }
   };
 
@@ -105,12 +102,10 @@ const GraphFilter: FC<GraphFilterProps> = ({
     clientY: number,
   ) => {
     if (!parentElement) {
-      // TODO
       return;
     }
 
     const parentBoundingRect = parentElement.getBoundingClientRect();
-
     const yOffset = clientY - parentBoundingRect.y;
     const xOffset = clientX - parentBoundingRect.x;
 

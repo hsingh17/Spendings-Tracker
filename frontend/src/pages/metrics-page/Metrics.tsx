@@ -16,7 +16,7 @@ export const Metrics = () => {
     DEFAULT_URL_SEARCH_PARAMS,
   );
 
-  const { data: response } = useSpendings(searchParams);
+  const { data: response, isError } = useSpendings(searchParams);
   const spendings = response?.data?.spendingPage.content;
 
   const setSearchParamsResetPage = (urlSearchParams: URLSearchParams) => {
@@ -49,7 +49,7 @@ export const Metrics = () => {
   };
 
   // TODO: Error handling
-  if (!response || !response.ok || !response.data) {
+  if (isError || !response || !response.ok || !response.data) {
     return <h1>Error!</h1>;
   }
 

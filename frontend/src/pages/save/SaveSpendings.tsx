@@ -10,7 +10,7 @@ type SaveSpendingProps = {
 const SaveSpendings = () => {
   const navigate = useNavigate();
   const params = useParams<SaveSpendingProps>();
-  const { data: response } = useSpending(params.date as string);
+  const { data: response, isError } = useSpending(params.date as string);
   const spendings = response?.data?.spendings;
   const isCreateMode = !spendings || spendings.length === 0;
   const handleDateChange = (spendingDate: string) =>
@@ -18,8 +18,8 @@ const SaveSpendings = () => {
       replace: true,
     });
 
-  if (!response || !response.ok || !response.data) {
-    <h1>Error!</h1>; // TODO
+  if (isError) {
+    return <h1>Error!</h1>; // TODO
   }
 
   return (
