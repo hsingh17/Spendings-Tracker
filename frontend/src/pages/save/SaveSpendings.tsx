@@ -1,6 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
+import LoadingSpinner from "../../common/LoadingSpinner";
 import useSpending from "../../hooks/useSpending";
 import { SAVE_SPENDINGS_PAGE } from "../../utils/constants";
+import Error from "../error/Error";
 import SaveSpendingsForm from "./component/SaveSpendingsForm";
 
 type SaveSpendingProps = {
@@ -10,7 +12,11 @@ type SaveSpendingProps = {
 const SaveSpendings = () => {
   const navigate = useNavigate();
   const params = useParams<SaveSpendingProps>();
-  const { data: response, isError } = useSpending(params.date as string);
+  const {
+    data: response,
+    isError,
+    isLoading,
+  } = useSpending(params.date as string);
   const spendings = response?.data?.spendings;
   const isCreateMode = !spendings || spendings.length === 0;
   const handleDateChange = (spendingDate: string) =>
@@ -19,7 +25,11 @@ const SaveSpendings = () => {
     });
 
   if (isError) {
-    return <h1>Error!</h1>; // TODO
+    return <Error />;
+  }
+
+  if (isLoading) {
+    return <LoadingSpinner />;
   }
 
   return (

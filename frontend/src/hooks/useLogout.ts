@@ -13,16 +13,30 @@ export default function useLogout() {
   const navigate = useNavigate();
 
   return useMutation({
-    mutationFn: () => postLogout(),
-    onSuccess: () => {
-      navigate(LOGIN_PAGE);
-      // Invalidate the user key from cache so we don't keep any cached user data
-      QueryClientConfig.removeQueries(["user"]);
-    },
-    onError: () => {
-      toast.error("An unexpected error occurred while logging out!", {
-        position: "bottom-center",
-      });
+    mutationFn: () => {
+      const promise = postLogout();
+      toast.promise(
+        promise,
+        {
+          loading: "Logging out",
+          error: () => {
+            return "We were unable to log you out.\nTry again later!";
+          },
+          success: () => {
+            navigate(LOGIN_PAGE);
+            // Invalidate the user key from cache so we don't keep any cached user data
+            QueryClientConfig.removeQueries(["user"]);
+
+            return "Succesfully logged out";
+          },
+        },
+        {
+          position: "bottom-center",
+          className: "text-center",
+        },
+      );
+
+      return promise;
     },
   });
 }

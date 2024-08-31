@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import useSpendings from "../../hooks/useSpendings";
 import { ApiMetadata, Nullable } from "../../utils/types";
+import Error from "../error/Error";
 import DeleteSpendingModal from "./component/DeleteSpendingModal";
 import TableBody from "./component/TableBody";
 import TableFooterContainer from "./component/TableFooterContainer";
@@ -36,8 +37,7 @@ const ViewSpendings = () => {
   };
 
   if (isError) {
-    alert("TODO");
-    return <></>;
+    return <Error />;
   }
 
   return (

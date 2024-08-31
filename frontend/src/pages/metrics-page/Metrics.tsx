@@ -1,8 +1,10 @@
 import { useSearchParams } from "react-router-dom";
 import GraphEmptyState from "../../common/graph/GraphEmptyState";
 import GraphsContainer from "../../common/graph/GraphsContainer";
+import LoadingSpinner from "../../common/LoadingSpinner";
 import useSpendings from "../../hooks/useSpendings";
 import { GRANULARITY, GRAPH_TYPES } from "../../utils/constants";
+import Error from "../error/Error";
 import GraphFilter from "./GraphFilter";
 
 const DEFAULT_URL_SEARCH_PARAMS = new URLSearchParams([
@@ -16,7 +18,7 @@ export const Metrics = () => {
     DEFAULT_URL_SEARCH_PARAMS,
   );
 
-  const { data: response, isError } = useSpendings(searchParams);
+  const { data: response, isError, isLoading } = useSpendings(searchParams);
   const spendings = response?.data?.spendingPage.content;
 
   const setSearchParamsResetPage = (urlSearchParams: URLSearchParams) => {
@@ -50,7 +52,11 @@ export const Metrics = () => {
 
   // TODO: Error handling
   if (isError || !response || !response.ok || !response.data) {
-    return <h1>Error!</h1>;
+    return <Error />;
+  }
+
+  if (isLoading) {
+    return <LoadingSpinner />;
   }
 
   return (
