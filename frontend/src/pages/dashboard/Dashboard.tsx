@@ -1,3 +1,4 @@
+import LoadingSpinner from "../../common/LoadingSpinner";
 import useUser from "../../hooks/useUser";
 import RecentSpendings from "./component/RecentSpendings";
 
@@ -13,6 +14,7 @@ const Dashboard = () => {
       </h1>
 
       <RecentSpendings />
+      <LoadingSpinner />
       {/* <DashboardChartsContainer /> */}
     </div>
   );

@@ -50,7 +50,6 @@ export const Metrics = () => {
     return GRAPH_TYPES[graphType as keyof typeof GRAPH_TYPES];
   };
 
-  // TODO: Error handling
   if (isError || !response || !response.ok || !response.data) {
     return <Error />;
   }
