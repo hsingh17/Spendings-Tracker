@@ -64,32 +64,40 @@ const LineChart: FC<LineChartProps> = ({
   const moveTracer = (
     clientX: number,
     clientY: number,
-    currentTarget: EventTarget
+    currentTarget: EventTarget,
   ) => {
     const domPoint = new DOMPointReadOnly(clientX, clientY);
     const svgNode = currentTarget as SVGGraphicsElement;
     const svgPoint = domPoint.matrixTransform(
-      svgNode.getScreenCTM()?.inverse()
+      svgNode.getScreenCTM()?.inverse(),
     );
     setTracerX(svgPoint.x);
 
     // If tracer hovers over a circle then show tooltip
     let pos: Nullable<TooltipPosition> = null;
 
-    let i = 0;
-    for (; i < data!.length; i++) {
+    let idx = -1;
+    let minDist = POINT_RADIUS * 3;
+
+    for (let i = 0; i < data!.length; i++) {
       const spendingListRow = data![i];
-      const d = Math.floor(xScale(parser(spendingListRow.date)!) - svgPoint.x);
-      if (Math.abs(d) <= POINT_RADIUS * 3) {
+      const d = Math.abs(
+        Math.floor(xScale(parser(spendingListRow.date)!) - svgPoint.x),
+      );
+
+      console.log(d, minDist);
+
+      if (d <= POINT_RADIUS * 3 && Math.min(minDist, d) === d) {
+        minDist = d;
+        idx = i;
         pos = {
           left: svgPoint.x,
           top: yScale(spendingListRow.total),
         };
-        break;
       }
     }
 
-    setTooltipIdx(i == data!.length ? null : i);
+    setTooltipIdx(idx === -1 ? null : idx);
     setTooltipPosition(pos);
   };
 
@@ -103,7 +111,7 @@ const LineChart: FC<LineChartProps> = ({
     }
 
     const queryParams = new URLSearchParams(
-      link.substring(link.indexOf("?") + 1)
+      link.substring(link.indexOf("?") + 1),
     );
 
     setSearchParams(queryParams);
@@ -111,7 +119,7 @@ const LineChart: FC<LineChartProps> = ({
 
   const xScale = scaleTime()
     .domain(
-      extent(data!, (d: SpendingListRow) => parser(d.date)) as [Date, Date]
+      extent(data!, (d: SpendingListRow) => parser(d.date)) as [Date, Date],
     )
     .range([margins.left, width - margins.right]);
 
@@ -129,7 +137,7 @@ const LineChart: FC<LineChartProps> = ({
   // Display at least 2
   const xTicksToShow = Math.max(
     2,
-    Math.floor(xScale.ticks().length * Math.min(width / 2000, 1))
+    Math.floor(xScale.ticks().length * Math.min(width / 2000, 1)),
   );
 
   const xTicks = ArrayUtils.spreadEvenly<Date>(xScale.ticks(), xTicksToShow);

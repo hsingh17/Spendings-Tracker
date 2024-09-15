@@ -33,7 +33,7 @@ const TableFilter: FC<TableFilterProps> = ({
   );
 
   if (isLoading) {
-    return null;
+    return <></>;
   }
 
   return (

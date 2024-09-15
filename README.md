@@ -8,8 +8,10 @@ This repository holds the code for my spendings tracker app built with Java and 
   - update/save button should be disabled when making API calls on savespendingsform
   - add fontawesome icons to relevant areas (signin button, username/password icons)
   - add empty state and error states everywhere
+  - use Date instead of strings in frontend
 
 - dashboard -> graphs
+- zoom in/out in line charts
 
 - settings
   - preferred currency type -> list and save spendings page will need to return the preferred currency types so UI can render correctly
