@@ -19,7 +19,6 @@ const SpendingsTableRow: FC<SpendingsTableRowProps> = ({
   setSpendingId,
 }) => {
   const navigate = useNavigate();
-
   const handleEdit = () => navigate(`${SAVE_SPENDINGS_PAGE}/${spending.date}`);
 
   if (isLoading) {
