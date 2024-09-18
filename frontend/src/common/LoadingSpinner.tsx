@@ -23,7 +23,6 @@ const LoadingSpinner = () => {
 
     // Tigthen the SVG's width and height to exactly fit it's contents
     const boundingBox = ref.current.getBBox();
-    console.log(boundingBox);
     setSvgHeight(boundingBox.height);
     setSvgWidth(boundingBox.width);
   }, [ref]);

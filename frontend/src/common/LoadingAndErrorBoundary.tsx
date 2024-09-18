@@ -1,16 +1,20 @@
 import { UseQueryResult } from "@tanstack/react-query";
-import React, { FC, ReactNode } from "react";
+import React, { FC, ReactElement, ReactNode } from "react";
+import { ApiResponse } from "../utils/types";
 
 type LoadingAndErrorBoundaryProps = {
   errorFallback: ReactNode;
   loadingFallback: ReactNode;
   children: ReactNode;
-  useApiCall: () => UseQueryResult<unknown, unknown>;
+  useApiCall: () => UseQueryResult<ApiResponse<unknown>, unknown>;
   [prop: string]: unknown; // Unknown props
 };
-
 type ChildrenComponentProps = {
-  data: unknown;
+  children: ReactNode;
+};
+
+type GrandchildrenComponentProps = {
+  response: ApiResponse<unknown>;
 };
 
 // Will need to inject the response of the useApiCall into "children" just like it was done in GenericForm
@@ -28,13 +32,29 @@ const LoadingAndErrorBoundary: FC<LoadingAndErrorBoundaryProps> = ({
       return children;
     }
 
-    const grandChildren: React.FunctionComponentElement<ChildrenComponentProps>[] =
+    let grandChildren: React.FunctionComponentElement<GrandchildrenComponentProps>[] =
       children.props?.children;
 
-    // Pass the idx as a key, the loaded data from useApiCall(), and the remaining unknown props to our child component
-    return grandChildren.map((child, idx) => {
-      return React.cloneElement(child, { key: idx, data: data, ...rest });
-    });
+    if (!grandChildren) {
+      return children;
+    }
+
+    if (!Array.isArray(grandChildren)) {
+      grandChildren = [grandChildren];
+    }
+
+    return React.cloneElement<ChildrenComponentProps>(
+      children as ReactElement<ChildrenComponentProps>,
+      {
+        children: grandChildren.map((child, idx) => {
+          return React.cloneElement(child, {
+            key: idx,
+            response: data,
+            ...rest,
+          });
+        }),
+      },
+    );
   };
 
   const render = (): ReactNode => {

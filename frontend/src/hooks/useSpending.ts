@@ -3,7 +3,7 @@ import { GET, SPENDINGS_API_ROUTE } from "../utils/constants";
 import fetchRequestWrapper from "../utils/fetch-utils";
 import { Spending } from "../utils/types";
 
-type SpendingDetailResponse = {
+export type SpendingDetailResponse = {
   spendings: Spending[];
 };
 

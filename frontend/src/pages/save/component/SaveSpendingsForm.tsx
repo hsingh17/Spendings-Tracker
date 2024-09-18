@@ -2,10 +2,11 @@ import React, { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "../../../common/Card";
 import useSaveSpendings from "../../../hooks/useSaveSpendings";
+import { SpendingDetailResponse } from "../../../hooks/useSpending";
 import useSpendingCategories from "../../../hooks/useSpendingCategories";
 import { MAX_SPENDINGS_FOR_A_DAY } from "../../../utils/constants";
 import DateUtils from "../../../utils/date-utils";
-import { Nullable, Spending } from "../../../utils/types";
+import { ApiResponse, Nullable, Spending } from "../../../utils/types";
 import SaveSpendingsAddRowButton from "./SaveSpendingsAddRowButton";
 import SaveSpendingsFooterButtons from "./SaveSpendingsFormFooterButtons";
 import SaveSpendingsFormList from "./SaveSpendingsFormList";
@@ -14,25 +15,24 @@ import SaveSpendingsTitle from "./SaveSpendingsTitle";
 
 type SaveSpendingsFormProps = {
   date: string;
-  initialSpendings: Nullable<Spending[]>;
-  isCreateMode: boolean;
+  response?: ApiResponse<SpendingDetailResponse>;
   handleDateChange: (date: string) => void;
 };
 
 const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
   date,
-  isCreateMode,
-  initialSpendings,
+  response,
   handleDateChange,
 }) => {
-  const [modalSpendingIdx, setModalSpendingIdx] = useState<number>();
-  const { data: response } = useSpendingCategories();
-  const categoriesMap = response?.data?.categoryToS3UrlMap || {};
-
-  const [spendings, setSpendings] = useState<Spending[]>(
-    initialSpendings || [],
-  );
   const navigate = useNavigate();
+  const fetchedSpendings = response?.data?.spendings;
+  const isCreateMode = !fetchedSpendings || fetchedSpendings.length === 0;
+  const [modalSpendingIdx, setModalSpendingIdx] = useState<number>();
+  const { data: categoriesResponse } = useSpendingCategories();
+  const categoriesMap = categoriesResponse?.data?.categoryToS3UrlMap || {};
+  const [spendings, setSpendings] = useState<Spending[]>(
+    fetchedSpendings || [],
+  );
   const { mutate: saveSpendings } = useSaveSpendings(date, isCreateMode, () =>
     navigate(-1),
   );
@@ -114,8 +114,8 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
   };
 
   useEffect(() => {
-    setSpendings(initialSpendings || []);
-  }, [initialSpendings]);
+    setSpendings(fetchedSpendings || []);
+  }, [fetchedSpendings]);
 
   return (
     <div className="flex flex-col items-center md:mt-7 w-full md:w-fit">

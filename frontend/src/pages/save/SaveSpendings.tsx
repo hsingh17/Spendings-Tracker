@@ -31,13 +31,17 @@ const SaveSpendings = () => {
       loadingFallback={<LoadingSpinner />}
       useApiCall={() => useSpending(params.date as string)}
     >
-      {/* TODO: Remove unnecessary props from SaveSpendingsForm */}
-      <SaveSpendingsForm
-        date={params.date as string}
-        handleDateChange={handleDateChange}
-      />
+      <div className="md:p-3 flex flex-col items-center">
+        <SaveSpendingsForm
+          date={params.date as string}
+          handleDateChange={handleDateChange}
+          // undefined since LoadingAndErrorBoundary will inject it after api call is completed
+          response={undefined}
+        />
+      </div>
     </LoadingAndErrorBoundary>
   );
+
   // if (isError) {
   //   return <Error />;
   // }
