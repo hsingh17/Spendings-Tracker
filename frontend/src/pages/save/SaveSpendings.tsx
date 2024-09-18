@@ -13,13 +13,6 @@ type SaveSpendingProps = {
 const SaveSpendings = () => {
   const navigate = useNavigate();
   const params = useParams<SaveSpendingProps>();
-  // const {
-  //   data: response,
-  //   isError,
-  //   isLoading,
-  // } = useSpending(params.date as string);
-  // const spendings = response?.data?.spendings;
-  // const isCreateMode = !spendings || spendings.length === 0;
   const handleDateChange = (spendingDate: string) =>
     navigate(`${SAVE_SPENDINGS_PAGE}/${spendingDate}`, {
       replace: true,
@@ -41,25 +34,6 @@ const SaveSpendings = () => {
       </div>
     </LoadingAndErrorBoundary>
   );
-
-  // if (isError) {
-  //   return <Error />;
-  // }
-
-  // if (isLoading) {
-  //   return <LoadingSpinner />;
-  // }
-
-  // return (
-  //   <div className="md:p-3 flex flex-col items-center">
-  //     <SaveSpendingsForm
-  //       date={params.date as string}
-  //       isCreateMode={isCreateMode}
-  //       initialSpendings={spendings ? spendings : null}
-  //       handleDateChange={handleDateChange}
-  //     />
-  //   </div>
-  // );
 };
 
 export default SaveSpendings;
