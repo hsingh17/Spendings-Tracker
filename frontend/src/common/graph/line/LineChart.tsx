@@ -85,8 +85,6 @@ const LineChart: FC<LineChartProps> = ({
         Math.floor(xScale(parser(spendingListRow.date)!) - svgPoint.x),
       );
 
-      console.log(d, minDist);
-
       if (d <= POINT_RADIUS * 3 && Math.min(minDist, d) === d) {
         minDist = d;
         idx = i;

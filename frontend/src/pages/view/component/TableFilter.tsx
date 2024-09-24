@@ -5,13 +5,11 @@ import TableFilterButton from "./TableFilterButton";
 import TableFilterForm from "./TableFilterForm";
 
 type TableFilterProps = {
-  isLoading: boolean;
   setSearchParams: (searchParams: URLSearchParams) => void;
   resetSearchParams: () => void;
 };
 
 const TableFilter: FC<TableFilterProps> = ({
-  isLoading,
   setSearchParams,
   resetSearchParams,
 }) => {
@@ -31,10 +29,6 @@ const TableFilter: FC<TableFilterProps> = ({
     [filterButtonRef, filterFormRef],
     setIsOpenWrapper,
   );
-
-  if (isLoading) {
-    return <></>;
-  }
 
   return (
     <div className="mt-5 relative">

@@ -1,22 +1,23 @@
 import { FC } from "react";
-import { ApiMetadata, Nullable } from "../../../utils/types";
+import { ApiResponse, SpendingsPage } from "../../../utils/types";
 import TableButtonsContainer from "./TableButtonsContainer";
 import TableFooterPageData from "./TableFooterPageData";
 import TablePageDropdown from "./TablePageDropdown";
 
 type TableFooterContainerProps = {
-  isLoading: boolean;
-  apiMetaData: Nullable<ApiMetadata>;
+  response?: ApiResponse<SpendingsPage>;
+
   setSearchParams: (searchParams: URLSearchParams) => void;
 };
 
 const TableFooterContainer: FC<TableFooterContainerProps> = ({
-  isLoading,
-  apiMetaData,
+  response,
   setSearchParams,
 }) => {
-  if (!apiMetaData || isLoading) {
-    return null;
+  const apiMetaData = response?.metadata;
+
+  if (!apiMetaData) {
+    return <></>;
   }
 
   return (

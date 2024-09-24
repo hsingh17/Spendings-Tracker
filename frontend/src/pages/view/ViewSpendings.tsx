@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import ApiCallBoundary from "../../common/ApiCallBoundary";
 import useSpendings from "../../hooks/useSpendings";
-import { ApiMetadata, Nullable } from "../../utils/types";
+import { Nullable } from "../../utils/types";
 import Error from "../error/Error";
 import DeleteSpendingModal from "./component/DeleteSpendingModal";
+import SpendingsTableLoadingShimmer from "./component/SpendingsTableLoadingShimmer";
 import TableBody from "./component/TableBody";
 import TableFooterContainer from "./component/TableFooterContainer";
 
@@ -11,17 +13,9 @@ const ViewSpendings = () => {
   const [spendingId, setSpendingId] = useState<Nullable<number>>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  const {
-    data: response,
-    refetch,
-    isLoading,
-    isError,
-  } = useSpendings(searchParams);
-  const metadata: Nullable<ApiMetadata> | undefined = response?.metadata;
 
   const setSearchParamsWrapper = (urlSearchParams: URLSearchParams) => {
-    urlSearchParams.forEach((value, key) => searchParams.set(key, value));
-    setSearchParams(searchParams);
+    setSearchParams(urlSearchParams);
   };
 
   const resetSearchParamsWrapper = () => {
@@ -36,35 +30,29 @@ const ViewSpendings = () => {
     setShowModal(true);
   };
 
-  if (isError) {
-    return <Error />;
-  }
-
   return (
-    <div className="p-3">
-      <TableBody
-        isLoading={isLoading}
-        timestamp={response?.timestamp}
-        spendings={response?.data?.spendingPage.content}
-        resetSearchParams={resetSearchParamsWrapper}
-        setSearchParams={setSearchParamsWrapper}
-        setSpendingId={setSpendingIdWrapper}
-      />
+    <ApiCallBoundary
+      errorFallback={<Error />}
+      loadingFallback={<SpendingsTableLoadingShimmer />}
+      useApiCall={() => useSpendings(searchParams)}
+      needRefetch={true}
+    >
+      <div className="p-3">
+        <TableBody
+          resetSearchParams={resetSearchParamsWrapper}
+          setSearchParams={setSearchParamsWrapper}
+          setSpendingId={setSpendingIdWrapper}
+        />
 
-      <TableFooterContainer
-        isLoading={isLoading}
-        key={response?.timestamp}
-        apiMetaData={metadata}
-        setSearchParams={setSearchParamsWrapper}
-      />
+        <TableFooterContainer setSearchParams={setSearchParamsWrapper} />
 
-      <DeleteSpendingModal
-        show={showModal}
-        spendingId={spendingId}
-        refetch={refetch}
-        setShow={setShowModalWrapper}
-      />
-    </div>
+        <DeleteSpendingModal
+          show={showModal}
+          spendingId={spendingId}
+          setShow={setShowModalWrapper}
+        />
+      </div>
+    </ApiCallBoundary>
   );
 };
 

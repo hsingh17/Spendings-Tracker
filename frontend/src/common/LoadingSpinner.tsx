@@ -28,7 +28,7 @@ const LoadingSpinner = () => {
   }, [ref]);
 
   return (
-    <div className="flex flex-col justify-center items-center w-full h-full">
+    <div className="flex flex-col justify-center items-center w-full h-full bg-transparent">
       <svg width={svgWidth} height={svgHeight} ref={ref}>
         <g
           style={{

@@ -1,5 +1,8 @@
 import React, { FC } from "react";
 import { ReactComponent as CloseIcon } from "../../../assets/raw/close-icon.svg";
+import GenericDatePicker from "../../../common/form/GenericDatePicker";
+import GenericForm from "../../../common/form/GenericForm";
+import TableFilterFormButtons from "./TableFilterFormButtons";
 
 type TableFilterFormProps = {
   isOpen: boolean;
@@ -8,86 +11,67 @@ type TableFilterFormProps = {
   setOpen: (e: React.MouseEvent, open: boolean) => void;
 };
 
+function getStartAndEndDateFromUrlParams(): (string | null | undefined)[] {
+  const urlSearchParams = new URLSearchParams(location.search);
+  return [urlSearchParams.get("start-date"), urlSearchParams.get("end-date")];
+}
+
 const TableFilterForm: FC<TableFilterFormProps> = ({
   isOpen,
   resetSearchParams,
   setOpen,
   setSearchParams,
 }) => {
-  const processFilterForm = (e: React.FormEvent) => {
-    e.preventDefault();
+  const [startDate, endDate] = getStartAndEndDateFromUrlParams();
 
-    const target = e.target as typeof e.target & {
-      "start-date": { value: string };
-      "end-date": { value: string };
-    };
-
-    const urlSearchParams: URLSearchParams = new URLSearchParams();
-
-    if (target["start-date"].value) {
-      urlSearchParams.append("start-date", target["start-date"].value);
+  const onSubmit = (inputMap: Map<string, string>) => {
+    const startDate = inputMap.get("start-date");
+    const endDate = inputMap.get("end-date");
+    const urlSearchParams = new URLSearchParams();
+    if (startDate) {
+      urlSearchParams.append("start-date", startDate);
     }
 
-    if (target["end-date"].value) {
-      urlSearchParams.append("end-date", target["end-date"].value);
+    if (endDate) {
+      urlSearchParams.append("end-date", endDate);
     }
 
     setSearchParams(urlSearchParams);
   };
 
-  // TODO: Maybe attempt to use GenericForm
   return (
     <div
-      className="top-12 w-full md:w-72 h-fit shadow-2xl border border-gray-300 rounded-xl bg-white absolute z-10"
+      className="top-12 w-full md:w-72 h-fit shadow-2xl border bg-white absolute z-10"
       hidden={!isOpen}
     >
-      <CloseIcon
-        className="ml-auto w-7 h-7 absolute right-4 top-2 hover:cursor-pointer"
-        onClick={(e: React.MouseEvent<SVGElement>) => setOpen(e, false)}
+      <GenericForm
+        formClassName="flex flex-col mt-1"
+        title={""}
+        beforeFormChildren={
+          <CloseIcon
+            className="ml-auto w-7 h-7 absolute right-4 top-2 hover:cursor-pointer"
+            onClick={(e: React.MouseEvent<SVGElement>) => setOpen(e, false)}
+          />
+        }
+        formChildren={
+          <>
+            <GenericDatePicker
+              defaultDate={startDate}
+              labelText={"From"}
+              inputName={"start-date"}
+            />
+
+            <GenericDatePicker
+              defaultDate={endDate}
+              className="mt-5"
+              labelText={"To"}
+              inputName={"end-date"}
+            />
+            <TableFilterFormButtons resetSearchParams={resetSearchParams} />
+          </>
+        }
+        onSubmit={onSubmit}
       />
-
-      <form
-        className="flex flex-col p-5 mt-1"
-        onSubmit={(e: React.FormEvent) => processFilterForm(e)}
-        onReset={() => resetSearchParams()}
-      >
-        <div>
-          <label className="block text-sm font-semibold" htmlFor="start-date">
-            From
-          </label>
-
-          <input
-            className="mt-1 w-full border border-gray-300 p-2 rounded"
-            type="date"
-            id={"start-date"}
-            name={"start-date"}
-          />
-        </div>
-
-        <div className="mt-5">
-          <label className="block text-sm font-semibold" htmlFor="end-date">
-            To
-          </label>
-
-          <input
-            className="mt-1 w-full border border-gray-300 p-2 rounded"
-            type="date"
-            id={"end-date"}
-            name={"end-date"}
-          />
-        </div>
-
-        <button
-          className="mt-6 w-full text-white bg-theme-cta py-2 font-semibold rounded-md"
-          type="submit"
-        >
-          Apply Filters
-        </button>
-
-        <button className="mt-2 w-full" type="reset">
-          Reset filters
-        </button>
-      </form>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import LoadingAndErrorBoundary from "../../common/LoadingAndErrorBoundary";
+import ApiCallBoundary from "../../common/ApiCallBoundary";
 import LoadingSpinner from "../../common/LoadingSpinner";
 import useSpending from "../../hooks/useSpending";
 import { SAVE_SPENDINGS_PAGE } from "../../utils/constants";
@@ -19,7 +19,7 @@ const SaveSpendings = () => {
     });
 
   return (
-    <LoadingAndErrorBoundary
+    <ApiCallBoundary
       errorFallback={<Error />}
       loadingFallback={<LoadingSpinner />}
       useApiCall={() => useSpending(params.date as string)}
@@ -28,11 +28,9 @@ const SaveSpendings = () => {
         <SaveSpendingsForm
           date={params.date as string}
           handleDateChange={handleDateChange}
-          // undefined since LoadingAndErrorBoundary will inject it after api call is completed
-          response={undefined}
         />
       </div>
-    </LoadingAndErrorBoundary>
+    </ApiCallBoundary>
   );
 };
 

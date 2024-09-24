@@ -3,12 +3,13 @@ import useDetectMobile from "../../hooks/useDetectMobile";
 import { GRAPH_TYPES } from "../../utils/constants";
 import { ApiResponse, SpendingsPage } from "../../utils/types";
 import BarChart from "./bar/BarChart";
+import GraphEmptyState from "./GraphEmptyState";
 import LineChart from "./line/LineChart";
 import PieChart from "./pie/PieChart";
 
 type MetricsGraphContainerProps = {
   graphType: GRAPH_TYPES;
-  response: ApiResponse<SpendingsPage>;
+  response?: ApiResponse<SpendingsPage>;
   setSearchParams: (urlSearchParams: URLSearchParams) => void;
 };
 
@@ -19,6 +20,7 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({
   response,
   setSearchParams,
 }) => {
+  const spendings = response?.data?.spendingPage.content;
   const isMobile = useDetectMobile();
   const ref = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState<number>(-1);
@@ -34,11 +36,14 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({
   };
 
   const getGraph = () => {
+    // If response is ever null, ApiCallBoundary would never render this component.
+    const responseNotNull = response!;
+
     switch (graphType) {
       case GRAPH_TYPES.Line:
         return (
           <LineChart
-            response={response}
+            response={responseNotNull}
             height={height}
             width={width}
             setSearchParams={setSearchParams}
@@ -47,7 +52,7 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({
       case GRAPH_TYPES.Pie:
         return (
           <PieChart
-            response={response}
+            response={responseNotNull}
             height={height}
             width={width}
             setSearchParams={setSearchParams}
@@ -56,7 +61,7 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({
       case GRAPH_TYPES.Bar:
         return (
           <BarChart
-            response={response}
+            response={responseNotNull}
             height={height}
             width={width}
             setSearchParams={setSearchParams}
@@ -78,6 +83,10 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({
 
     return () => resizeObserver.disconnect();
   }, [isMobile]);
+
+  if (!spendings || !spendings.length) {
+    return <GraphEmptyState />;
+  }
 
   return (
     <div

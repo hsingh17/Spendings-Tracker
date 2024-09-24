@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import GraphEmptyState from "../../common/graph/GraphEmptyState";
+import ApiCallBoundary from "../../common/ApiCallBoundary";
 import GraphsContainer from "../../common/graph/GraphsContainer";
 import LoadingSpinner from "../../common/LoadingSpinner";
 import useSpendings from "../../hooks/useSpendings";
@@ -17,9 +17,6 @@ export const Metrics = () => {
   const [searchParams, setSearchParams] = useSearchParams(
     DEFAULT_URL_SEARCH_PARAMS,
   );
-
-  const { data: response, isError, isLoading } = useSpendings(searchParams);
-  const spendings = response?.data?.spendingPage.content;
 
   const setSearchParamsResetPage = (urlSearchParams: URLSearchParams) => {
     urlSearchParams.delete("page"); // Reset page
@@ -50,34 +47,27 @@ export const Metrics = () => {
     return GRAPH_TYPES[graphType as keyof typeof GRAPH_TYPES];
   };
 
-  if (isError || !response || !response.ok || !response.data) {
-    return <Error />;
-  }
-
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
-
   return (
-    <div className="md:relative w-full h-full flex flex-col">
-      {spendings?.length ? (
+    <ApiCallBoundary
+      errorFallback={<Error />}
+      loadingFallback={<LoadingSpinner />}
+      useApiCall={() => useSpendings(searchParams)}
+    >
+      <div className="md:relative w-full h-full flex flex-col">
         <GraphsContainer
           graphType={getGraphType()}
-          response={response}
           setSearchParams={setSearchParamsKeepPage}
         />
-      ) : (
-        <GraphEmptyState />
-      )}
 
-      <GraphFilter
-        granularity={getGranularity()}
-        graphType={getGraphType()}
-        searchParams={searchParams}
-        defaultUrlSearchParams={DEFAULT_URL_SEARCH_PARAMS}
-        setSearchParams={setSearchParamsResetPage}
-      />
-    </div>
+        <GraphFilter
+          granularity={getGranularity()}
+          graphType={getGraphType()}
+          searchParams={searchParams}
+          defaultUrlSearchParams={DEFAULT_URL_SEARCH_PARAMS}
+          setSearchParams={setSearchParamsResetPage}
+        />
+      </div>
+    </ApiCallBoundary>
   );
 };
 

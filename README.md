@@ -4,7 +4,6 @@ This repository holds the code for my spendings tracker app built with Java and 
 
 ## TODO
 - various updates
-  - address TODOs in frontend
   - update/save button should be disabled when making API calls on savespendingsform
   - add fontawesome icons to relevant areas (signin button, username/password icons)
   - add empty state and error states everywhere
@@ -26,6 +25,7 @@ This repository holds the code for my spendings tracker app built with Java and 
 - update ERD -> export from dbeaver
   - add junit tests for repo layer at minimum
 - test from scratch
+- add sitemap stuff https://stackoverflow.com/a/62976735
 
 ## Known issues
 

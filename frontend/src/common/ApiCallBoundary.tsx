@@ -1,11 +1,12 @@
 import { UseQueryResult } from "@tanstack/react-query";
 import React, { FC, ReactElement, ReactNode } from "react";
-import { ApiResponse } from "../utils/types";
+import { ApiResponse, Nullable } from "../utils/types";
 
-type LoadingAndErrorBoundaryProps = {
+type ApiCallBoundaryProps = {
   errorFallback: ReactNode;
   loadingFallback: ReactNode;
   children: ReactNode;
+  needRefetch?: boolean;
   useApiCall: () => UseQueryResult<ApiResponse<unknown>, unknown>;
   [prop: string]: unknown; // Unknown props
 };
@@ -14,18 +15,44 @@ type ChildrenComponentProps = {
 };
 
 type GrandchildrenComponentProps = {
-  response: ApiResponse<unknown>;
+  key: number;
+  response: Nullable<ApiResponse<unknown>>;
+  refetch?: () => void;
 };
 
 // Will need to inject the response of the useApiCall into "children" just like it was done in GenericForm
-const LoadingAndErrorBoundary: FC<LoadingAndErrorBoundaryProps> = ({
+const ApiCallBoundary: FC<ApiCallBoundaryProps> = ({
   children,
   errorFallback,
   loadingFallback,
+  needRefetch = false,
   useApiCall,
   ...rest // Unknown props
 }) => {
-  const { data, isError, isLoading, isSuccess } = useApiCall();
+  const { data, isError, isLoading, isSuccess, refetch } = useApiCall();
+
+  const injectPropsAndClone = (
+    grandChildren: React.FunctionComponentElement<GrandchildrenComponentProps>[],
+  ): ReactNode => {
+    return React.cloneElement<ChildrenComponentProps>(
+      children as ReactElement<ChildrenComponentProps>,
+      {
+        children: grandChildren.map((child, idx) => {
+          const props: GrandchildrenComponentProps = {
+            key: idx,
+            response: data,
+            ...rest,
+          };
+
+          if (needRefetch) {
+            props.refetch = refetch;
+          }
+
+          return React.cloneElement(child, props);
+        }),
+      },
+    );
+  };
 
   const injectPropsAndRender = (): ReactNode => {
     if (!React.isValidElement(children)) {
@@ -43,18 +70,7 @@ const LoadingAndErrorBoundary: FC<LoadingAndErrorBoundaryProps> = ({
       grandChildren = [grandChildren];
     }
 
-    return React.cloneElement<ChildrenComponentProps>(
-      children as ReactElement<ChildrenComponentProps>,
-      {
-        children: grandChildren.map((child, idx) => {
-          return React.cloneElement(child, {
-            key: idx,
-            response: data,
-            ...rest,
-          });
-        }),
-      },
-    );
+    return injectPropsAndClone(grandChildren);
   };
 
   const render = (): ReactNode => {
@@ -70,4 +86,4 @@ const LoadingAndErrorBoundary: FC<LoadingAndErrorBoundaryProps> = ({
   return render();
 };
 
-export default LoadingAndErrorBoundary;
+export default ApiCallBoundary;

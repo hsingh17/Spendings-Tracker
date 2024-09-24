@@ -11,7 +11,6 @@ import SpendingsTableHeader from "./SpendingsTableHeader";
 import TableEmptyState from "./TableEmptyState";
 
 type SpendingsTableProps = {
-  isLoading: boolean;
   spendings: Nullable<SpendingListRow[]>;
   setSpendingId: (spendingId: number) => void;
 };
@@ -40,7 +39,6 @@ const SORTERS: Map<SortType, SortFunc> = new Map([
 ]);
 
 const SpendingsTable: FC<SpendingsTableProps> = ({
-  isLoading,
   spendings,
   setSpendingId,
 }) => {
@@ -77,7 +75,7 @@ const SpendingsTable: FC<SpendingsTableProps> = ({
     });
   }, [spendings]);
 
-  if (spendingsCopy.length === 0) {
+  if (!spendingsCopy || !spendingsCopy.length) {
     return <TableEmptyState />;
   }
 
@@ -86,7 +84,6 @@ const SpendingsTable: FC<SpendingsTableProps> = ({
       <table className="mt-5 table-fixed w-[750px] md:w-full border-collapse">
         <SpendingsTableHeader handleSort={handleSort} sort={sort} />
         <SpendingsTableBody
-          isLoading={isLoading}
           spendings={spendings}
           setSpendingId={setSpendingId}
         />

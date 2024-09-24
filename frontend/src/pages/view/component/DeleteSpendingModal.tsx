@@ -9,7 +9,7 @@ type DeleteModalProps = {
   show: boolean;
   spendingId: Nullable<number>;
   setShow: (show: boolean) => void;
-  refetch: () => void;
+  refetch?: () => void;
 };
 
 const DeleteSpendingModal: FC<DeleteModalProps> = ({
