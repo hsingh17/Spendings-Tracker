@@ -23,7 +23,7 @@ const SaveSpendingsFooterButtons: FC<SaveSpendingsFooterButtonsProps> = ({
         Cancel
       </button>
       <button
-        className="bg-theme-cta px-5 py-2 text-white font-semibold rounded-xl hover:cursor-pointer text-lg disabled:opacity-25"
+        className="bg-theme-cta px-5 py-2 text-white font-semibold rounded-xl hover:cursor-pointer hover:brightness-110 text-lg disabled:opacity-25"
         disabled={isDisabled}
         onClick={(e: React.MouseEvent) => handleSubmit(e)}
       >

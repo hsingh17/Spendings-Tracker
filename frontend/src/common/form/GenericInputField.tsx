@@ -10,11 +10,8 @@ type GenericInputFieldProps = {
   onChange?: Dispatch<SetStateAction<string>> | ((val: string) => void);
 };
 
-const DEFAULT_CLASS_NAME =
-  "font-semibold mt-1 p-1 border-2 focus:outline-none focus:border-theme-cta rounded-lg w-full";
-
 const GenericInputField: FC<GenericInputFieldProps> = ({
-  className,
+  className = "font-semibold mt-1 p-1 border-2 focus:outline-none focus:border-theme-cta rounded-lg w-full",
   name,
   type,
   errs,
@@ -34,12 +31,14 @@ const GenericInputField: FC<GenericInputFieldProps> = ({
     }
   };
 
+  console.log(className);
+
   return (
     <>
       <input
         type={type}
         name={name}
-        className={className || DEFAULT_CLASS_NAME}
+        className={className}
         onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) =>
           handleKeyDown(e)
         }

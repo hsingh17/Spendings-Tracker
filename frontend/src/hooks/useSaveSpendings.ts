@@ -20,11 +20,7 @@ async function postOrPutSpendings(
   );
 }
 
-export default function useSaveSpendings(
-  date: string,
-  isCreate: boolean,
-  onSuccess: () => void,
-) {
+export default function useSaveSpendings(date: string, isCreate: boolean) {
   return useMutation({
     mutationFn: (spendings: SpendingSaveRequest) => {
       const promise = postOrPutSpendings(spendings, date, isCreate);
@@ -36,6 +32,5 @@ export default function useSaveSpendings(
 
       return promise;
     },
-    onSuccess: onSuccess,
   });
 }

@@ -33,9 +33,7 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
   const [spendings, setSpendings] = useState<Spending[]>(
     fetchedSpendings || [],
   );
-  const { mutate: saveSpendings } = useSaveSpendings(date, isCreateMode, () =>
-    navigate(-1),
-  );
+  const { mutate: saveSpendings } = useSaveSpendings(date, isCreateMode);
 
   const countSpendingsToDisplay = () =>
     spendings.filter((spending) => !spending.delete).length;
@@ -52,6 +50,9 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
     saveSpendings({
       spendingRequests: mappedSpendings,
     });
+
+    // Optimistic update. Assume spending will save
+    navigate(-1);
   };
 
   const addNewSpending = (inputMap: Map<string, string>) => {
