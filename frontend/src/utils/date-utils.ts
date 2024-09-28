@@ -1,7 +1,7 @@
 import { Nullable } from "./types";
 
 const DateUtils = {
-  formatDateUS(date: Nullable<string>): Nullable<string> {
+  formatDateUS(date: Nullable<Date>): Nullable<Date> {
     if (!date) {
       return null;
     }

@@ -65,7 +65,7 @@ export type SpendingsPage = {
 
 export type SpendingListRow = {
   spendingUserAggrId: number;
-  date: string;
+  date: Date;
   category: string;
   total: number;
 };
