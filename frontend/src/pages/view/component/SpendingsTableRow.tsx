@@ -16,7 +16,6 @@ const SpendingsTableRow: FC<SpendingsTableRowProps> = ({
 }) => {
   const navigate = useNavigate();
   const handleEdit = () => navigate(`${SAVE_SPENDINGS_PAGE}/${spending.date}`);
-  console.log(typeof spending.date);
 
   return (
     <tr className="border-b-2 leading-[3rem]">
