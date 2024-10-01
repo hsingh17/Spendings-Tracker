@@ -14,7 +14,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigInteger;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @MappedSuperclass
 @Data
@@ -26,7 +26,7 @@ public abstract class AuditableEntity {
 
     @CreatedDate
     @Column(name = "CREATED_ON", updatable = false)
-    private LocalDateTime createdOn;
+    private Instant createdOn;
 
     @LastModifiedBy
     @Column(name = "LAST_MODIFIED_BY")
@@ -34,7 +34,7 @@ public abstract class AuditableEntity {
 
     @LastModifiedDate
     @Column(name = "LAST_MODIFIED_ON")
-    private LocalDateTime lastModifiedOn;
+    private Instant lastModifiedOn;
 
     @Version
     @Column(name = "OPTIMISTIC_LOCK")

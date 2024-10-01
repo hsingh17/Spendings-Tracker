@@ -19,7 +19,9 @@ const GraphEmptyState = () => {
         <button
           className="hover:opacity-50 text-theme-neutral font-semibold md:ml-auto bg-theme-cta px-5 py-3 mt-5 rounded-xl"
           onClick={() =>
-            navigate(`${SAVE_SPENDINGS_PAGE}/${DateUtils.getCurrentDate()}`)
+            navigate(
+              `${SAVE_SPENDINGS_PAGE}/${DateUtils.getCurrentDateAsRFC3339()}`,
+            )
           }
         >
           Create Spending

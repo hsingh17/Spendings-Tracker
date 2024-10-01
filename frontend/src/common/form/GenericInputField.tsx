@@ -31,8 +31,6 @@ const GenericInputField: FC<GenericInputFieldProps> = ({
     }
   };
 
-  console.log(className);
-
   return (
     <>
       <input

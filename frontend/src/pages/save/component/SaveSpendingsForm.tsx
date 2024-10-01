@@ -14,9 +14,9 @@ import SaveSpendingsModal from "./SaveSpendingsModal";
 import SaveSpendingsTitle from "./SaveSpendingsTitle";
 
 type SaveSpendingsFormProps = {
-  date: string;
+  date: Date;
   response?: ApiResponse<SpendingDetailResponse>;
-  handleDateChange: (date: string) => void;
+  handleDateChange: (date: Date) => void;
 };
 
 const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({

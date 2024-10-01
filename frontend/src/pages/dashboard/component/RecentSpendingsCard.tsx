@@ -16,11 +16,15 @@ const RecentSpendingsCard: FC<RecentSpendingsCardProps> = ({
   const navigate = useNavigate();
   return (
     <div
-      onClick={() => navigate(`${SAVE_SPENDINGS_PAGE}/${spendingListRow.date}`)}
+      onClick={() =>
+        navigate(
+          `${SAVE_SPENDINGS_PAGE}/${DateUtils.formatDateToRFC3339(spendingListRow.date)}`,
+        )
+      }
     >
       <Card className="mr-5 w-48 h-fit p-3 hover:cursor-pointer hover:opacity-50">
         <p className="font-medium text-theme-brand mb-auto">
-          {DateUtils.formatDateUS(spendingListRow.date)}
+          {spendingListRow.date.toLocaleDateString()}
         </p>
         <p className="font-semibold text-theme-cta text-xl mb-auto break-words">
           {MoneyUtils.formatMoney(spendingListRow.total)}

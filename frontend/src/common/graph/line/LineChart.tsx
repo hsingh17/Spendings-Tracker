@@ -1,7 +1,6 @@
-import { extent, line, scaleLinear, scaleTime, timeParse } from "d3";
+import { extent, line, scaleLinear, scaleTime } from "d3";
 import React, { FC, useState } from "react";
 import ArrayUtils from "../../../utils/array-utils";
-import { ISO_FORMAT } from "../../../utils/constants";
 import {
   ApiResponse,
   Nullable,
@@ -45,7 +44,6 @@ const LineChart: FC<LineChartProps> = ({
   const data = response.data?.spendingPage.content;
   const prev = response.metadata?.links.prev;
   const next = response.metadata?.links.next;
-  const parser = timeParse(ISO_FORMAT);
   const margins = calculateMargins(height, width);
   const [tracerX, setTracerX] = useState<number>(TRACER_X_INITIAL);
   const [tooltipIdx, setTooltipIdx] = useState<Nullable<number>>(null);
@@ -81,9 +79,7 @@ const LineChart: FC<LineChartProps> = ({
 
     for (let i = 0; i < data!.length; i++) {
       const spendingListRow = data![i];
-      const d = Math.abs(
-        Math.floor(xScale(parser(spendingListRow.date)!) - svgPoint.x),
-      );
+      const d = Math.abs(Math.floor(xScale(spendingListRow.date) - svgPoint.x));
 
       if (d <= POINT_RADIUS * 3 && Math.min(minDist, d) === d) {
         minDist = d;
@@ -116,9 +112,7 @@ const LineChart: FC<LineChartProps> = ({
   };
 
   const xScale = scaleTime()
-    .domain(
-      extent(data!, (d: SpendingListRow) => parser(d.date)) as [Date, Date],
-    )
+    .domain(extent(data!, (d: SpendingListRow) => d.date) as [Date, Date])
     .range([margins.left, width - margins.right]);
 
   const yScale = scaleLinear()
@@ -126,7 +120,7 @@ const LineChart: FC<LineChartProps> = ({
     .range([height - margins.top, margins.bottom]);
 
   const lineFn = line<SpendingListRow>()
-    .x((d) => xScale(parser(d.date)!))
+    .x((d) => xScale(d.date))
     .y((d) => yScale(d.total));
 
   const d = lineFn(data!);
@@ -170,7 +164,7 @@ const LineChart: FC<LineChartProps> = ({
           {data!.map((spendingListRow, idx) => (
             <Point
               idx={idx}
-              key={spendingListRow.date}
+              key={spendingListRow.date.getTime()}
               spendingListRow={spendingListRow}
               setTooltipIdx={setTooltipIdx}
               xScale={xScale}
@@ -183,7 +177,7 @@ const LineChart: FC<LineChartProps> = ({
       </svg>
 
       <LineChartTooltip
-        date={tooltipIdx || tooltipIdx === 0 ? data[tooltipIdx].date : ""}
+        date={tooltipIdx || tooltipIdx === 0 ? data[tooltipIdx].date : null}
         total={tooltipIdx || tooltipIdx === 0 ? data[tooltipIdx].total : NaN}
         tooltipPosition={tooltipPosition}
       />

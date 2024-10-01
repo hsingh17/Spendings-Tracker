@@ -18,7 +18,7 @@ async function getSpendingCategories() {
 export default function useSpendingCategories() {
   return useQuery({
     // Use current day as query key so we don't keep calling route
-    queryKey: ["spending-categories", DateUtils.getCurrentDate()],
+    queryKey: ["spending-categories", DateUtils.getCurrentDateAsRFC3339()],
     queryFn: () => getSpendingCategories(),
   });
 }

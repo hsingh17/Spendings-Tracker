@@ -10,7 +10,9 @@ const NoSpendingActivity = () => {
       <a
         className="text-theme-cta font-semibold hover:cursor-pointer underline"
         onClick={() =>
-          navigate(`${SAVE_SPENDINGS_PAGE}/${DateUtils.getCurrentDate()}`)
+          navigate(
+            `${SAVE_SPENDINGS_PAGE}/${DateUtils.getCurrentDateAsRFC3339()}`,
+          )
         }
       >
         Let's fix that!

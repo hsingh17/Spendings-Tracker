@@ -1,34 +1,31 @@
 import { Nullable } from "./types";
 
 const DateUtils = {
-  formatDateUS(date: Nullable<Date>): Nullable<Date> {
-    if (!date) {
-      return null;
-    }
-
-    // Can't pass date string into the Date object since JS will convert to UTC
-    const split = date.split("-");
-    const yearNum = parseInt(split[0]);
-    const monthIdx = parseInt(split[1]) - 1;
-    const dateNum = parseInt(split[2]);
-
-    const dateObj: Date = new Date(yearNum, monthIdx, dateNum);
-    if (isNaN(dateObj.getTime())) {
-      // NaN check
-      return null;
-    }
-
-    const monthRaw: number = dateObj.getMonth() + 1;
-    const month: string = monthRaw < 10 ? `0${monthRaw}` : `${monthRaw}`;
-
-    const dayRaw: number = dateObj.getDate();
-    const day: string = dayRaw < 10 ? `0${dayRaw}` : `${dayRaw}`;
-
-    return `${month}/${day}/${dateObj.getFullYear()}`;
+  localDateFromString(date: Nullable<string | Date>): Date {
+    return !date ? this.getCurrentDate() : new Date(date);
   },
 
-  getCurrentDate(): string {
-    return new Date().toISOString().split("T")[0];
+  formatDateToRFC3339(date: Date): string {
+    function padToTwoDigits(n: number): string {
+      return n < 10 ? `0${n}` : n.toString();
+    }
+
+    return `${date.getFullYear()}-${padToTwoDigits(date.getMonth() + 1)}-${padToTwoDigits(date.getDate())}`;
+  },
+
+  getUTCDateAsRFC3339(date: Nullable<Date>): string {
+    const dateStr = !date
+      ? this.getCurrentDate().toISOString()
+      : date.toISOString();
+    return dateStr.split("T")[0];
+  },
+
+  getCurrentDate(): Date {
+    return new Date(new Date().toLocaleString());
+  },
+
+  getCurrentDateAsRFC3339(): string {
+    return this.formatDateToRFC3339(this.getCurrentDate());
   },
 };
 

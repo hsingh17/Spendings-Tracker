@@ -12,11 +12,11 @@ const GraphDateFilter: FC<GraphDateFilterProps> = ({
   searchParams,
   setSearchParams,
 }) => {
-  const spStartDate: Nullable<string> = DateUtils.formatDateUS(
-    searchParams.get("start-date")
+  const spStartDate: Date = DateUtils.localDateFromString(
+    searchParams.get("start-date"),
   );
-  const spEndDate: Nullable<string> = DateUtils.formatDateUS(
-    searchParams.get("end-date")
+  const spEndDate: Date = DateUtils.localDateFromString(
+    searchParams.get("end-date"),
   );
 
   const startDateObj: Nullable<Date> =
@@ -48,7 +48,7 @@ const GraphDateFilter: FC<GraphDateFilterProps> = ({
         range
         rangeHover
         inputClass="p-2 mb-2 w-full rounded-lg border-slate border-2 text-wrap bg-gray-200"
-        format="MM/DD/YYYY"
+        format="P"
         dateSeparator=" - "
         onChange={onChange}
         calendarPosition="bottom-center"

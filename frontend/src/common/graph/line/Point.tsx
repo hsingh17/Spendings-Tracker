@@ -1,7 +1,6 @@
-import { ScaleLinear, ScaleTime, timeParse } from "d3";
+import { ScaleLinear, ScaleTime } from "d3";
 import { FC } from "react";
 import useDetectMobile from "../../../hooks/useDetectMobile";
-import { ISO_FORMAT } from "../../../utils/constants";
 import { Nullable, SpendingListRow } from "../../../utils/types";
 import { POINT_RADIUS } from "./LineChart";
 
@@ -20,7 +19,6 @@ const Point: FC<PointProps> = ({
   xScale,
   yScale,
 }) => {
-  const parser = timeParse(ISO_FORMAT);
   const isMobile = useDetectMobile();
   if (isMobile) {
     return <></>;
@@ -28,14 +26,14 @@ const Point: FC<PointProps> = ({
 
   return (
     <circle
-      key={spendingListRow.date}
+      key={spendingListRow.date.getTime()}
       className="hover:cursor-pointer animate-[point-fade-in_0.5s_linear_forwards]"
       onMouseOver={() => setTooltipIdx(idx)}
       onMouseLeave={() => setTooltipIdx(null)}
       fill="white"
       stroke="#374151"
       strokeWidth={5}
-      cx={xScale(parser(spendingListRow.date)!)}
+      cx={xScale(spendingListRow.date)}
       cy={yScale(spendingListRow.total)}
       r={POINT_RADIUS}
     />

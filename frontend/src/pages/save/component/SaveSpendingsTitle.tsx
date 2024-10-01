@@ -4,9 +4,9 @@ import SaveSpendingsTitleDateInput from "./SaveSpendingsTitleDateInput";
 import SaveSpendingsTitleTotal from "./SaveSpendingsTitleTotal";
 
 type SaveSpendingsTitleProps = {
-  date: string;
+  date: Date;
   spendings: Spending[];
-  handleDateChange: (date: string) => void;
+  handleDateChange: (date: Date) => void;
 };
 
 const SaveSpendingsTitle: FC<SaveSpendingsTitleProps> = ({

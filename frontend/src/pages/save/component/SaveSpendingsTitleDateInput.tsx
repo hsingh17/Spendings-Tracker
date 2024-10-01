@@ -1,8 +1,9 @@
 import { FC } from "react";
+import DateUtils from "../../../utils/date-utils";
 
 type SaveSpendingsTitleDateInputProps = {
-  date: string;
-  handleDateChange: (date: string) => void;
+  date: Date;
+  handleDateChange: (date: Date) => void;
 };
 
 const SaveSpendingsTitleDateInput: FC<SaveSpendingsTitleDateInputProps> = ({
@@ -15,7 +16,7 @@ const SaveSpendingsTitleDateInput: FC<SaveSpendingsTitleDateInputProps> = ({
       value: string;
     };
 
-    handleDateChange(target.value);
+    handleDateChange(DateUtils.localDateFromString(target.value));
   };
 
   return (
@@ -23,7 +24,7 @@ const SaveSpendingsTitleDateInput: FC<SaveSpendingsTitleDateInputProps> = ({
       className="w-fit mr-auto rounded-lg px-2 py-1 text-theme-brand-secondary text-center text-lg -mt-2 -ml-3 md:-mt-8 md:-ml-5 font-semibold mb-7 hover:cursor-pointer"
       type="date"
       id="spending-date"
-      defaultValue={date}
+      defaultValue={DateUtils.formatDateToRFC3339(date)}
       onChange={(e: React.FormEvent) => handleChange(e)}
     />
   );

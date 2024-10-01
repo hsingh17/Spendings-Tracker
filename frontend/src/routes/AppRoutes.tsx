@@ -35,7 +35,7 @@ const AppRoutes = () => {
       <Route path={VIEW_SPENDINGS_PAGE} element={<ViewSpendings />} />
 
       <Route
-        path={`${SAVE_SPENDINGS_PAGE}/:date`}
+        path={`${SAVE_SPENDINGS_PAGE}/:dateStr`}
         element={<SaveSpendings />}
       />
 

@@ -10,7 +10,7 @@ type SpendingSaveRequest = {
 
 async function postOrPutSpendings(
   spendingSaveRequest: SpendingSaveRequest,
-  spendingDate: string,
+  spendingDate: Date,
   isCreate: boolean,
 ) {
   return await fetchRequestWrapper(
@@ -20,7 +20,7 @@ async function postOrPutSpendings(
   );
 }
 
-export default function useSaveSpendings(date: string, isCreate: boolean) {
+export default function useSaveSpendings(date: Date, isCreate: boolean) {
   return useMutation({
     mutationFn: (spendings: SpendingSaveRequest) => {
       const promise = postOrPutSpendings(spendings, date, isCreate);

@@ -75,7 +75,7 @@ public class SpendingUserJdbcRepository {
             int total, String sql, Pageable pageable, SqlParameterSource params) {
         log.debug("Running SQL: {}", sql);
         List<SpendingListProjection> projsList = jdbcTemplate.query(sql, params, rowMapper);
-        return new PageImpl<>(projsList, pageable, total); // TODO
+        return new PageImpl<>(projsList, pageable, total);
     }
 
     private SqlParameterSource buildParams(
