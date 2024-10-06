@@ -4,7 +4,7 @@ import ApiCallBoundary from "../../common/ApiCallBoundary";
 import LoadingSpinner from "../../common/LoadingSpinner";
 import CustomDayJs from "../../config/DayJsConfig";
 import useSpending from "../../hooks/useSpending";
-import { SAVE_SPENDINGS_PAGE } from "../../utils/constants";
+import { DATE_ISO_FORMAT, SAVE_SPENDINGS_PAGE } from "../../utils/constants";
 import Error from "../error/Error";
 import SaveSpendingsForm from "./component/SaveSpendingsForm";
 
@@ -18,7 +18,7 @@ const SaveSpendings = () => {
   const date = CustomDayJs(params.dateStr);
 
   const handleDateChange = (spendingDate: Dayjs) =>
-    navigate(`${SAVE_SPENDINGS_PAGE}/${spendingDate.format()}`, {
+    navigate(`${SAVE_SPENDINGS_PAGE}/${spendingDate.format(DATE_ISO_FORMAT)}`, {
       replace: true,
     });
 

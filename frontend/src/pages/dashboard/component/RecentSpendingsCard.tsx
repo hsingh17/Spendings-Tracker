@@ -23,7 +23,7 @@ const RecentSpendingsCard: FC<RecentSpendingsCardProps> = ({
     >
       <Card className="mr-5 w-48 h-fit p-3 hover:cursor-pointer hover:opacity-50">
         <p className="font-medium text-theme-brand mb-auto">
-          {spendingListRow.date.local().format("L")}
+          {spendingListRow.date.format("L")}
         </p>
         <p className="font-semibold text-theme-cta text-xl mb-auto break-words">
           {MoneyUtils.formatMoney(spendingListRow.total)}

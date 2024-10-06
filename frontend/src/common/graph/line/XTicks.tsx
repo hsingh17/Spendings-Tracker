@@ -13,7 +13,7 @@ const XTicks: FC<XTicksProps> = ({ xTicks, xScale, y }) => {
       {xTicks.map((date) => {
         return (
           <text
-            key={date.toDateString()}
+            key={date.toISOString()}
             className="font-semibold"
             fill="#EEEEEE"
             x={xScale(date)}

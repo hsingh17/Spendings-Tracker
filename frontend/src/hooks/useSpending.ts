@@ -10,7 +10,7 @@ export type SpendingDetailResponse = {
 
 async function getSpending(spendingDate: Dayjs) {
   return await fetchRequestWrapper<SpendingDetailResponse>(
-    `${SPENDINGS_API_ROUTE}/${spendingDate.utc().format(DATE_ISO_FORMAT)}`,
+    `${SPENDINGS_API_ROUTE}/${spendingDate.format(DATE_ISO_FORMAT)}`,
     GET,
   );
 }

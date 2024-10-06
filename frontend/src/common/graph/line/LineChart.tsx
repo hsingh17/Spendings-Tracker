@@ -1,4 +1,5 @@
 import { extent, line, scaleLinear, scaleTime } from "d3";
+import { Dayjs } from "dayjs";
 import React, { FC, useState } from "react";
 import ArrayUtils from "../../../utils/array-utils";
 import {
@@ -112,7 +113,7 @@ const LineChart: FC<LineChartProps> = ({
   };
 
   const xScale = scaleTime()
-    .domain(extent(data!, (d: SpendingListRow) => d.date) as [Date, Date])
+    .domain(extent(data!, (d: SpendingListRow) => d.date) as [Dayjs, Dayjs])
     .range([margins.left, width - margins.right]);
 
   const yScale = scaleLinear()
@@ -164,7 +165,7 @@ const LineChart: FC<LineChartProps> = ({
           {data!.map((spendingListRow, idx) => (
             <Point
               idx={idx}
-              key={spendingListRow.date.getTime()}
+              key={spendingListRow.date.toISOString()}
               spendingListRow={spendingListRow}
               setTooltipIdx={setTooltipIdx}
               xScale={xScale}

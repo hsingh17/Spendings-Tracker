@@ -20,7 +20,7 @@ async function postOrPutSpendings(
   isCreate: boolean,
 ) {
   return await fetchRequestWrapper(
-    `${SPENDINGS_API_ROUTE}/${spendingDate.utc().format(DATE_ISO_FORMAT)}`,
+    `${SPENDINGS_API_ROUTE}/${spendingDate.format(DATE_ISO_FORMAT)}`,
     isCreate ? POST : PUT,
     JSON.stringify(spendingSaveRequest),
   );

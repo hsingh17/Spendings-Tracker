@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
-import { SAVE_SPENDINGS_PAGE } from "../../../utils/constants";
+import { DATE_ISO_FORMAT, SAVE_SPENDINGS_PAGE } from "../../../utils/constants";
 import MoneyUtils from "../../../utils/money-utils";
 import { SpendingListRow } from "../../../utils/types";
 import SpendingsTableRowButtons from "./SpendingsTableRowButtons";
@@ -16,12 +16,12 @@ const SpendingsTableRow: FC<SpendingsTableRowProps> = ({
 }) => {
   const navigate = useNavigate();
   const handleEdit = () =>
-    navigate(`${SAVE_SPENDINGS_PAGE}/${spending.date.local().format()}`);
+    navigate(`${SAVE_SPENDINGS_PAGE}/${spending.date.format(DATE_ISO_FORMAT)}`);
 
   return (
     <tr className="border-b-2 leading-[3rem]">
       <td>
-        <p>{spending.date.local().format("L")}</p>
+        <p>{spending.date.format("L")}</p>
       </td>
 
       <td className="text-center">

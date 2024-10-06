@@ -11,7 +11,7 @@ function mapStringDateToDateObj(response: ApiResponse<SpendingsPage>) {
   }
 
   for (const content of contents) {
-    content.date = CustomDayJs.utc(content.date);
+    content.date = CustomDayJs(content.date);
   }
 
   return response;
