@@ -1,3 +1,4 @@
+import { Dayjs } from "dayjs";
 import { FC } from "react";
 import DatePicker, { DateObject } from "react-multi-date-picker";
 import DateUtils from "../../utils/date-utils";
@@ -12,10 +13,10 @@ const GraphDateFilter: FC<GraphDateFilterProps> = ({
   searchParams,
   setSearchParams,
 }) => {
-  const spStartDate: Date = DateUtils.localDateFromString(
+  const spStartDate: Dayjs = DateUtils.localDateFromString(
     searchParams.get("start-date"),
   );
-  const spEndDate: Date = DateUtils.localDateFromString(
+  const spEndDate: Dayjs = DateUtils.localDateFromString(
     searchParams.get("end-date"),
   );
 

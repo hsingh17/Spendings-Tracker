@@ -25,8 +25,7 @@ const SORTERS: Map<SortType, SortFunc> = new Map([
     SortType.DATE,
     (spendings: SpendingListRow[], sortOrder: SortOrder) => {
       return spendings.sort(
-        (a, b) =>
-          sortOrder * (new Date(a.date).getTime() - new Date(b.date).getTime()),
+        (a, b) => sortOrder * (a.date.isAfter(b.date) ? 1 : -1),
       );
     },
   ],

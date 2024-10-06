@@ -1,11 +1,12 @@
+import { Dayjs } from "dayjs";
 import React, { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "../../../common/Card";
+import CustomDayJs from "../../../config/DayJsConfig";
 import useSaveSpendings from "../../../hooks/useSaveSpendings";
 import { SpendingDetailResponse } from "../../../hooks/useSpending";
 import useSpendingCategories from "../../../hooks/useSpendingCategories";
 import { MAX_SPENDINGS_FOR_A_DAY } from "../../../utils/constants";
-import DateUtils from "../../../utils/date-utils";
 import { ApiResponse, Nullable, Spending } from "../../../utils/types";
 import SaveSpendingsAddRowButton from "./SaveSpendingsAddRowButton";
 import SaveSpendingsFooterButtons from "./SaveSpendingsFormFooterButtons";
@@ -14,9 +15,9 @@ import SaveSpendingsModal from "./SaveSpendingsModal";
 import SaveSpendingsTitle from "./SaveSpendingsTitle";
 
 type SaveSpendingsFormProps = {
-  date: Date;
+  date: Dayjs;
   response?: ApiResponse<SpendingDetailResponse>;
-  handleDateChange: (date: Date) => void;
+  handleDateChange: (date: Dayjs) => void;
 };
 
 const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
@@ -122,7 +123,7 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
     <div className="flex flex-col items-center md:mt-7 w-full md:w-fit">
       <Card className="items-center pb-5 md:p-7 w-full md:w-[500px]">
         <SaveSpendingsTitle
-          date={date || DateUtils.getCurrentDate()}
+          date={date || CustomDayJs()}
           handleDateChange={handleDateChange}
           spendings={spendings}
         />

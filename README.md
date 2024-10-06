@@ -5,7 +5,7 @@ This repository holds the code for my spendings tracker app built with Java and 
 ## TODO
 - various updates
   - use Date instead of strings in frontend
-
+  - show currency based on user's locale
 - dashboard -> graphs
 - zoom in/out in line charts
 

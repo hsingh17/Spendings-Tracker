@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import CustomDayJs from "../config/DayJsConfig";
 import { GET, SPENDINGS_API_ROUTE } from "../utils/constants";
 import fetchRequestWrapper from "../utils/fetch-utils";
 import { ApiResponse, Nullable, SpendingsPage } from "../utils/types";
@@ -10,7 +11,7 @@ function mapStringDateToDateObj(response: ApiResponse<SpendingsPage>) {
   }
 
   for (const content of contents) {
-    content.date = new Date(content.date);
+    content.date = CustomDayJs.utc(content.date);
   }
 
   return response;

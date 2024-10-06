@@ -1,3 +1,4 @@
+import { Dayjs } from "dayjs";
 import { ReactNode } from "react";
 
 export type Nullable<T> = T | null | undefined;
@@ -65,7 +66,7 @@ export type SpendingsPage = {
 
 export type SpendingListRow = {
   spendingUserAggrId: number;
-  date: Date;
+  date: Dayjs;
   category: string;
   total: number;
 };

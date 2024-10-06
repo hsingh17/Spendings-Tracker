@@ -31,7 +31,7 @@ const RecentSpendingsCarousel = () => {
       {spendings.map((spendingListRow: SpendingListRow) => {
         return (
           <RecentSpendingsCard
-            key={spendingListRow.date}
+            key={spendingListRow.date.format()}
             spendingListRow={spendingListRow}
           />
         );
