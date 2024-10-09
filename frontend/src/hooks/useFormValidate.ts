@@ -11,7 +11,7 @@ export default function useFormValidate(
   const [val, setVal] = useState<string>("");
   const [errs, setErrs] = useState<FormError[]>([]);
 
-  // TODO: This kind of hacky. The only reason this is needed
+  // This kind of hacky. The only reason this is needed
   // is because PasswordInput needs realtime validation
   // and calling validate() after setVal() uses old value of val
   const validate = useCallback(

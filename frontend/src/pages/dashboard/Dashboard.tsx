@@ -13,6 +13,7 @@ const Dashboard = () => {
       </h1>
 
       <RecentSpendings />
+
       {/* <DashboardChartsContainer /> */}
     </div>
   );

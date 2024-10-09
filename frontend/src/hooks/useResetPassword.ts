@@ -2,7 +2,11 @@ import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { PASSWORD_RESET_ROUTE, PATCH } from "../utils/constants";
 import fetchRequestWrapper from "../utils/fetch-utils";
-import { ResetPasswordRequest } from "../utils/types";
+
+type ResetPasswordRequest = {
+  password: string;
+  uuid: string;
+};
 
 async function patchResetPassword(
   username: string,

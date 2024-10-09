@@ -1,4 +1,5 @@
 import { FC, useState } from "react";
+import PasswordIcon from "../../assets/components/PasswordIcon";
 import useFormValidate from "../../hooks/useFormValidate";
 import PasswordRequirements from "../../pages/create-acct/component/PasswordRequirements";
 import {
@@ -40,18 +41,22 @@ const PASSWORD_VALIDATORS: FormValidator[] = [
 ];
 
 type PasswordInputProps = GenericFormInputProps & {
+  inputFieldStyle?: string;
   showForgotPassword?: boolean;
   showPasswordReq?: boolean;
   showConfirmPassword?: boolean;
+  withIcon?: boolean;
 };
 
 const PasswordInput: FC<PasswordInputProps> = ({
   name = "password",
   title = "Password",
   customStyles = "",
+  inputFieldStyle,
   showForgotPassword = false,
   showPasswordReq = false,
   showConfirmPassword = false,
+  withIcon = false,
   addformvalidators: addFormValidators,
 }) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -71,14 +76,24 @@ const PasswordInput: FC<PasswordInputProps> = ({
     <>
       <div className={`relative ${customStyles}`}>
         <PasswordInputLabel title={title} show={showForgotPassword} />
-
-        <GenericInputField
-          name={name}
-          type={showPassword ? "text" : "password"}
-          onChange={onChange}
-        />
+        <div
+          className={
+            withIcon
+              ? "flex flex-row items-center border-slate-500 border-2 p-1 rounded-xl focus-within:border-theme-cta focus-within:border-4"
+              : ""
+          }
+        >
+          {withIcon && <PasswordIcon className="scale-75" />}
+          <GenericInputField
+            className={inputFieldStyle}
+            name={name}
+            type={showPassword ? "text" : "password"}
+            onChange={onChange}
+          />
+        </div>
 
         <ShowPasswordIcon
+          withIcon={withIcon}
           showPassword={showPassword}
           setShowPassword={setShowPassword}
         />

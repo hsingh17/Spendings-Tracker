@@ -1,8 +1,10 @@
 import { useSearchParams } from "react-router-dom";
-import GraphEmptyState from "../../common/graph/GraphEmptyState";
+import ApiCallBoundary from "../../common/ApiCallBoundary";
 import GraphsContainer from "../../common/graph/GraphsContainer";
+import LoadingSpinner from "../../common/LoadingSpinner";
 import useSpendings from "../../hooks/useSpendings";
 import { GRANULARITY, GRAPH_TYPES } from "../../utils/constants";
+import Error from "../error/Error";
 import GraphFilter from "./GraphFilter";
 
 const DEFAULT_URL_SEARCH_PARAMS = new URLSearchParams([
@@ -15,9 +17,6 @@ export const Metrics = () => {
   const [searchParams, setSearchParams] = useSearchParams(
     DEFAULT_URL_SEARCH_PARAMS,
   );
-
-  const { data: response } = useSpendings(searchParams);
-  const spendings = response?.data?.spendingPage.content;
 
   const setSearchParamsResetPage = (urlSearchParams: URLSearchParams) => {
     urlSearchParams.delete("page"); // Reset page
@@ -48,31 +47,27 @@ export const Metrics = () => {
     return GRAPH_TYPES[graphType as keyof typeof GRAPH_TYPES];
   };
 
-  // TODO: Error handling
-  if (!response || !response.ok || !response.data) {
-    return <h1>Error!</h1>;
-  }
   return (
-    <div className="md:relative w-full h-full flex flex-col">
-      {spendings?.length ? (
-        <>
-          <GraphsContainer
-            graphType={getGraphType()}
-            response={response}
-            setSearchParams={setSearchParamsKeepPage}
-          />
-          <GraphFilter
-            granularity={getGranularity()}
-            graphType={getGraphType()}
-            searchParams={searchParams}
-            defaultUrlSearchParams={DEFAULT_URL_SEARCH_PARAMS}
-            setSearchParams={setSearchParamsResetPage}
-          />
-        </>
-      ) : (
-        <GraphEmptyState />
-      )}
-    </div>
+    <ApiCallBoundary
+      errorFallback={<Error />}
+      loadingFallback={<LoadingSpinner />}
+      useApiCall={() => useSpendings(searchParams)}
+    >
+      <div className="md:relative w-full h-full flex flex-col">
+        <GraphsContainer
+          graphType={getGraphType()}
+          setSearchParams={setSearchParamsKeepPage}
+        />
+
+        <GraphFilter
+          granularity={getGranularity()}
+          graphType={getGraphType()}
+          searchParams={searchParams}
+          defaultUrlSearchParams={DEFAULT_URL_SEARCH_PARAMS}
+          setSearchParams={setSearchParamsResetPage}
+        />
+      </div>
+    </ApiCallBoundary>
   );
 };
 

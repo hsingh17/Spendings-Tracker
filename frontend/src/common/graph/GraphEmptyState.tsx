@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import GraphEmptyStateIcon from "../../assets/components/GraphEmptyStateIcon";
-import { SAVE_SPENDINGS_PAGE } from "../../utils/constants";
-import DateUtils from "../../utils/date-utils";
+import CustomDayJs from "../../config/DayJsConfig";
+import { DATE_ISO_FORMAT, SAVE_SPENDINGS_PAGE } from "../../utils/constants";
 
 const GraphEmptyState = () => {
   const navigate = useNavigate();
@@ -19,7 +19,9 @@ const GraphEmptyState = () => {
         <button
           className="hover:opacity-50 text-theme-neutral font-semibold md:ml-auto bg-theme-cta px-5 py-3 mt-5 rounded-xl"
           onClick={() =>
-            navigate(`${SAVE_SPENDINGS_PAGE}/${DateUtils.getCurrentDate()}`)
+            navigate(
+              `${SAVE_SPENDINGS_PAGE}/${CustomDayJs().format(DATE_ISO_FORMAT)}`,
+            )
           }
         >
           Create Spending

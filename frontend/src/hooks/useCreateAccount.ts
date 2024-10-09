@@ -4,7 +4,12 @@ import { useNavigate } from "react-router-dom";
 import HttpError from "../error/HttpError";
 import { CREATE_ACCT_ROUTE, POST, VERIFY_ACCT_PAGE } from "../utils/constants";
 import fetchRequestWrapper from "../utils/fetch-utils";
-import { CreateAccountRequest } from "../utils/types";
+
+type CreateAccountRequest = {
+  username: string;
+  password: string;
+  email: string;
+};
 
 async function postCreateAccount(createAccountRequest: CreateAccountRequest) {
   return await fetchRequestWrapper(

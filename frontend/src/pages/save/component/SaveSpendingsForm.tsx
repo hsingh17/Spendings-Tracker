@@ -1,11 +1,13 @@
+import { Dayjs } from "dayjs";
 import React, { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "../../../common/Card";
+import CustomDayJs from "../../../config/DayJsConfig";
 import useSaveSpendings from "../../../hooks/useSaveSpendings";
+import { SpendingDetailResponse } from "../../../hooks/useSpending";
 import useSpendingCategories from "../../../hooks/useSpendingCategories";
 import { MAX_SPENDINGS_FOR_A_DAY } from "../../../utils/constants";
-import DateUtils from "../../../utils/date-utils";
-import { Nullable, Spending } from "../../../utils/types";
+import { ApiResponse, Nullable, Spending } from "../../../utils/types";
 import SaveSpendingsAddRowButton from "./SaveSpendingsAddRowButton";
 import SaveSpendingsFooterButtons from "./SaveSpendingsFormFooterButtons";
 import SaveSpendingsFormList from "./SaveSpendingsFormList";
@@ -13,29 +15,26 @@ import SaveSpendingsModal from "./SaveSpendingsModal";
 import SaveSpendingsTitle from "./SaveSpendingsTitle";
 
 type SaveSpendingsFormProps = {
-  date: string;
-  initialSpendings: Nullable<Spending[]>;
-  isCreateMode: boolean;
-  handleDateChange: (date: string) => void;
+  date: Dayjs;
+  response?: ApiResponse<SpendingDetailResponse>;
+  handleDateChange: (date: Dayjs) => void;
 };
 
 const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
   date,
-  isCreateMode,
-  initialSpendings,
+  response,
   handleDateChange,
 }) => {
-  const [modalSpendingIdx, setModalSpendingIdx] = useState<number>();
-  const { data: response } = useSpendingCategories();
-  const categoriesMap = response?.data?.categoryToS3UrlMap || {};
-
-  const [spendings, setSpendings] = useState<Spending[]>(
-    initialSpendings || [],
-  );
   const navigate = useNavigate();
-  const { mutate: saveSpendings } = useSaveSpendings(date, isCreateMode, () =>
-    navigate(-1),
+  const fetchedSpendings = response?.data?.spendings;
+  const isCreateMode = !fetchedSpendings || fetchedSpendings.length === 0;
+  const [modalSpendingIdx, setModalSpendingIdx] = useState<number>();
+  const { data: categoriesResponse } = useSpendingCategories();
+  const categoriesMap = categoriesResponse?.data?.categoryToS3UrlMap || {};
+  const [spendings, setSpendings] = useState<Spending[]>(
+    fetchedSpendings || [],
   );
+  const { mutate: saveSpendings } = useSaveSpendings(date, isCreateMode);
 
   const countSpendingsToDisplay = () =>
     spendings.filter((spending) => !spending.delete).length;
@@ -49,11 +48,12 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
       delete: spending.delete,
     }));
 
-    console.log(mappedSpendings);
-
     saveSpendings({
       spendingRequests: mappedSpendings,
     });
+
+    // Optimistic update. Assume spending will save
+    navigate(-1);
   };
 
   const addNewSpending = (inputMap: Map<string, string>) => {
@@ -116,14 +116,14 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
   };
 
   useEffect(() => {
-    setSpendings(initialSpendings || []);
-  }, [initialSpendings]);
+    setSpendings(fetchedSpendings || []);
+  }, [fetchedSpendings]);
 
   return (
     <div className="flex flex-col items-center md:mt-7 w-full md:w-fit">
       <Card className="items-center pb-5 md:p-7 w-full md:w-[500px]">
         <SaveSpendingsTitle
-          date={date || DateUtils.getCurrentDate()}
+          date={date || CustomDayJs()}
           handleDateChange={handleDateChange}
           spendings={spendings}
         />
@@ -140,11 +140,13 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
           setModalSpendingIdx={setModalSpendingIdx}
         />
       </Card>
+
       <SaveSpendingsFooterButtons
         isDisabled={spendings.length === 0}
         isCreateMode={isCreateMode}
         handleSubmit={handleSubmit}
       />
+
       <SaveSpendingsModal
         categoriesMap={categoriesMap}
         spending={getSpendingForModal()}

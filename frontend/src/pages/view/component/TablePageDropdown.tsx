@@ -1,20 +1,20 @@
 import React, { FC } from "react";
 import { PAGE_LIMITS } from "../../../utils/constants";
-import { Nullable, TablePageDropdownProps } from "../../../utils/types";
 
-const TablePageDropdown: FC<TablePageDropdownProps> = ({
-  parentSetSearchParams,
-}) => {
+type TablePageDropdownProps = {
+  setSearchParams: (searchParams: URLSearchParams) => void;
+};
+
+const TablePageDropdown: FC<TablePageDropdownProps> = ({ setSearchParams }) => {
   const handleChange = (e: React.FormEvent) => {
     e.preventDefault();
     const target = e.target as typeof e.target & { value: string };
-    parentSetSearchParams(new URLSearchParams(`limit=${target.value}`));
+    setSearchParams(new URLSearchParams([["limit", target.value]]));
   };
 
   const getCurrentLimit = (): number => {
     const params = new URLSearchParams(document.location.search);
-    const limitStr: Nullable<string> = params.get("limit");
-    return limitStr ? parseInt(limitStr) : 25;
+    return parseInt(params.get("limit") || "25");
   };
 
   return (

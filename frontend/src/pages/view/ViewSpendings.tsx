@@ -1,26 +1,21 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import Card from "../../common/Card";
+import ApiCallBoundary from "../../common/ApiCallBoundary";
 import useSpendings from "../../hooks/useSpendings";
-import { ApiMetadata, Nullable, SpendingListRow } from "../../utils/types";
-import DeleteModal from "./component/DeleteModal";
-import SpendingsTable from "./component/SpendingsTable";
-import TableFilter from "./component/TableFilter";
+import { Nullable } from "../../utils/types";
+import Error from "../error/Error";
+import DeleteSpendingModal from "./component/DeleteSpendingModal";
+import SpendingsTableLoadingShimmer from "./component/SpendingsTableLoadingShimmer";
+import TableBody from "./component/TableBody";
 import TableFooterContainer from "./component/TableFooterContainer";
-import TableTitle from "./component/TableTitle";
-
-const DUMMY_SPENDINGS: Array<SpendingListRow> = Array(25).fill({});
 
 const ViewSpendings = () => {
   const [spendingId, setSpendingId] = useState<Nullable<number>>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  const { data: response, refetch, isLoading } = useSpendings(searchParams);
-  const metadata: Nullable<ApiMetadata> | undefined = response?.metadata;
 
   const setSearchParamsWrapper = (urlSearchParams: URLSearchParams) => {
-    urlSearchParams.forEach((value, key) => searchParams.set(key, value));
-    setSearchParams(searchParams);
+    setSearchParams(urlSearchParams);
   };
 
   const resetSearchParamsWrapper = () => {
@@ -35,45 +30,29 @@ const ViewSpendings = () => {
     setShowModal(true);
   };
 
-  const refetchWrapper = () => refetch();
-
   return (
-    <div className="p-3">
-      <Card className="p-7">
-        {/* TODO: Make this a TableBody component and then rename existing to SpendingsTableBody */}
-        <TableTitle />
-
-        <TableFilter
-          isLoading={isLoading}
-          parentResetSearchParams={resetSearchParamsWrapper}
-          parentSetSearchParams={setSearchParamsWrapper}
+    <ApiCallBoundary
+      errorFallback={<Error />}
+      loadingFallback={<SpendingsTableLoadingShimmer />}
+      useApiCall={() => useSpendings(searchParams)}
+      needRefetch={true}
+    >
+      <div className="p-3">
+        <TableBody
+          resetSearchParams={resetSearchParamsWrapper}
+          setSearchParams={setSearchParamsWrapper}
+          setSpendingId={setSpendingIdWrapper}
         />
 
-        <SpendingsTable
-          isLoading={isLoading}
-          key={response?.timestamp}
-          spendings={
-            isLoading ? DUMMY_SPENDINGS : response?.data?.spendingPage.content
-          }
-          parentRefetch={refetchWrapper}
-          parentSetSpendingId={setSpendingIdWrapper}
+        <TableFooterContainer setSearchParams={setSearchParamsWrapper} />
+
+        <DeleteSpendingModal
+          show={showModal}
+          spendingId={spendingId}
+          setShow={setShowModalWrapper}
         />
-      </Card>
-
-      <TableFooterContainer
-        isLoading={isLoading}
-        key={response?.timestamp}
-        apiMetaData={metadata}
-        parentSetSearchParams={setSearchParamsWrapper}
-      />
-
-      <DeleteModal
-        show={showModal}
-        spendingId={spendingId}
-        parentRefetch={refetch}
-        parentSetShow={setShowModalWrapper}
-      />
-    </div>
+      </div>
+    </ApiCallBoundary>
   );
 };
 

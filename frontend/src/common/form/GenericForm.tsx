@@ -72,7 +72,7 @@ const GenericForm: FC<GenericFormProps> = ({
     setValidators((prev) => prev.set(formFieldName, validate));
   };
 
-  const renderFormChildren = () => {
+  const injectPropsAndRender = () => {
     if (!React.isValidElement(formChildren)) {
       return formChildren;
     }
@@ -105,7 +105,7 @@ const GenericForm: FC<GenericFormProps> = ({
           className={`w-full ${formClassName}`}
           onSubmit={(e: React.FormEvent) => preOnSubmit(e)}
         >
-          {renderFormChildren()}
+          {injectPropsAndRender()}
         </form>
         {afterFormChildren}
       </Card>

@@ -1,7 +1,7 @@
-import { extent, line, scaleLinear, scaleTime, timeParse } from "d3";
+import { extent, line, scaleLinear, scaleTime } from "d3";
+import { Dayjs } from "dayjs";
 import React, { FC, useState } from "react";
 import ArrayUtils from "../../../utils/array-utils";
-import { ISO_FORMAT } from "../../../utils/constants";
 import {
   ApiResponse,
   Nullable,
@@ -45,7 +45,6 @@ const LineChart: FC<LineChartProps> = ({
   const data = response.data?.spendingPage.content;
   const prev = response.metadata?.links.prev;
   const next = response.metadata?.links.next;
-  const parser = timeParse(ISO_FORMAT);
   const margins = calculateMargins(height, width);
   const [tracerX, setTracerX] = useState<number>(TRACER_X_INITIAL);
   const [tooltipIdx, setTooltipIdx] = useState<Nullable<number>>(null);
@@ -64,32 +63,36 @@ const LineChart: FC<LineChartProps> = ({
   const moveTracer = (
     clientX: number,
     clientY: number,
-    currentTarget: EventTarget
+    currentTarget: EventTarget,
   ) => {
     const domPoint = new DOMPointReadOnly(clientX, clientY);
     const svgNode = currentTarget as SVGGraphicsElement;
     const svgPoint = domPoint.matrixTransform(
-      svgNode.getScreenCTM()?.inverse()
+      svgNode.getScreenCTM()?.inverse(),
     );
     setTracerX(svgPoint.x);
 
     // If tracer hovers over a circle then show tooltip
     let pos: Nullable<TooltipPosition> = null;
 
-    let i = 0;
-    for (; i < data!.length; i++) {
+    let idx = -1;
+    let minDist = POINT_RADIUS * 3;
+
+    for (let i = 0; i < data!.length; i++) {
       const spendingListRow = data![i];
-      const d = Math.floor(xScale(parser(spendingListRow.date)!) - svgPoint.x);
-      if (Math.abs(d) <= POINT_RADIUS * 3) {
+      const d = Math.abs(Math.floor(xScale(spendingListRow.date) - svgPoint.x));
+
+      if (d <= POINT_RADIUS * 3 && Math.min(minDist, d) === d) {
+        minDist = d;
+        idx = i;
         pos = {
           left: svgPoint.x,
           top: yScale(spendingListRow.total),
         };
-        break;
       }
     }
 
-    setTooltipIdx(i == data!.length ? null : i);
+    setTooltipIdx(idx === -1 ? null : idx);
     setTooltipPosition(pos);
   };
 
@@ -103,16 +106,14 @@ const LineChart: FC<LineChartProps> = ({
     }
 
     const queryParams = new URLSearchParams(
-      link.substring(link.indexOf("?") + 1)
+      link.substring(link.indexOf("?") + 1),
     );
 
     setSearchParams(queryParams);
   };
 
   const xScale = scaleTime()
-    .domain(
-      extent(data!, (d: SpendingListRow) => parser(d.date)) as [Date, Date]
-    )
+    .domain(extent(data!, (d: SpendingListRow) => d.date) as [Dayjs, Dayjs])
     .range([margins.left, width - margins.right]);
 
   const yScale = scaleLinear()
@@ -120,7 +121,7 @@ const LineChart: FC<LineChartProps> = ({
     .range([height - margins.top, margins.bottom]);
 
   const lineFn = line<SpendingListRow>()
-    .x((d) => xScale(parser(d.date)!))
+    .x((d) => xScale(d.date))
     .y((d) => yScale(d.total));
 
   const d = lineFn(data!);
@@ -129,7 +130,7 @@ const LineChart: FC<LineChartProps> = ({
   // Display at least 2
   const xTicksToShow = Math.max(
     2,
-    Math.floor(xScale.ticks().length * Math.min(width / 2000, 1))
+    Math.floor(xScale.ticks().length * Math.min(width / 2000, 1)),
   );
 
   const xTicks = ArrayUtils.spreadEvenly<Date>(xScale.ticks(), xTicksToShow);
@@ -164,7 +165,7 @@ const LineChart: FC<LineChartProps> = ({
           {data!.map((spendingListRow, idx) => (
             <Point
               idx={idx}
-              key={spendingListRow.date}
+              key={spendingListRow.date.toISOString()}
               spendingListRow={spendingListRow}
               setTooltipIdx={setTooltipIdx}
               xScale={xScale}
@@ -177,7 +178,7 @@ const LineChart: FC<LineChartProps> = ({
       </svg>
 
       <LineChartTooltip
-        date={tooltipIdx || tooltipIdx === 0 ? data[tooltipIdx].date : ""}
+        date={tooltipIdx || tooltipIdx === 0 ? data[tooltipIdx].date : null}
         total={tooltipIdx || tooltipIdx === 0 ? data[tooltipIdx].total : NaN}
         tooltipPosition={tooltipPosition}
       />

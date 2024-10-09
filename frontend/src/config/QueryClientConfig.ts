@@ -10,7 +10,12 @@ const QueryClientConfig = new QueryClient({
       }
 
       const curPath: string = window.location.pathname;
-      if (!UNAUTHENTICATED_PAGES.includes(curPath) && error.status === 401) {
+      // Trying to access a page that requires authentication but user not authenticated
+      if (
+        !UNAUTHENTICATED_PAGES.includes(curPath) &&
+        error.status >= 400 &&
+        error.status < 500
+      ) {
         // 401 -> Redirect back to login page if not already there
         window.location.replace(LOGIN_PAGE);
       }

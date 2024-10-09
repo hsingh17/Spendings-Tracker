@@ -45,6 +45,7 @@ const GraphFilterExpanded: FC<GraphFilterExpandedProps> = ({
       />
 
       <GraphGranularityFilter
+        graphType={graphType}
         granularity={granularity}
         searchParams={searchParams}
         setSearchParams={setSearchParams}

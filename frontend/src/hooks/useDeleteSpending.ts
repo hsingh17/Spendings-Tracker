@@ -10,7 +10,7 @@ async function deleteSpending(spendingId: number) {
   );
 }
 
-export default function useDeleteSpending(onSuccess: () => void) {
+export default function useDeleteSpending(onSuccess?: () => void) {
   return useMutation({
     mutationFn: (spendingId: number) => {
       const promise = deleteSpending(spendingId);
@@ -22,6 +22,6 @@ export default function useDeleteSpending(onSuccess: () => void) {
 
       return promise;
     },
-    onSuccess: onSuccess,
+    onSuccess: () => onSuccess?.(),
   });
 }

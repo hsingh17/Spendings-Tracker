@@ -1,4 +1,5 @@
 import { FC } from "react";
+import UserIcon from "../../assets/components/UserIcon";
 import useFormValidate from "../../hooks/useFormValidate";
 import { MAX_USERNAME_LENGTH } from "../../utils/constants";
 import { FormValidator, GenericFormInputProps } from "../../utils/types";
@@ -16,10 +17,15 @@ const USERNAME_VALIDATORS: FormValidator[] = [
   },
 ];
 
-const UsernameInput: FC<GenericFormInputProps> = ({
+type UsernameInputProps = GenericFormInputProps & {
+  withIcon?: boolean;
+};
+
+const UsernameInput: FC<UsernameInputProps> = ({
   title = "Username",
   name = "username",
   customStyles,
+  withIcon = false,
   addformvalidators: addFormValidators,
 }) => {
   const { setVal, errs } = useFormValidate(
@@ -29,14 +35,24 @@ const UsernameInput: FC<GenericFormInputProps> = ({
   );
 
   return (
-    <div className={`mt-5 ${customStyles}`}>
+    <div className={"mt-5"}>
       <label className="font-semibold text-slate-500">{title}</label>
-      <GenericInputField
-        type="text"
-        name={name}
-        errs={errs}
-        onChange={setVal}
-      />
+      <div
+        className={
+          withIcon
+            ? "flex flex-row items-center border-slate-500 border-2 p-1 rounded-xl focus-within:border-theme-cta focus-within:border-4"
+            : ""
+        }
+      >
+        {withIcon && <UserIcon className="scale-75" />}
+        <GenericInputField
+          className={customStyles}
+          type="text"
+          name={name}
+          errs={errs}
+          onChange={setVal}
+        />
+      </div>
     </div>
   );
 };

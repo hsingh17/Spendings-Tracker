@@ -1,9 +1,9 @@
 package com.spendingstracker.app.service.spending;
 
 import com.spendingstracker.app.cache.SpendingCategoryJpaCache;
-import com.spendingstracker.app.constants.Granularity;
 import com.spendingstracker.app.constants.GraphType;
 import com.spendingstracker.app.constants.SpendingCategoryEnum;
+import com.spendingstracker.app.dto.requests.GetSpendingsRequestFilters;
 import com.spendingstracker.app.dto.requests.SpendingRequest;
 import com.spendingstracker.app.dto.requests.SpendingsSaveRequest;
 import com.spendingstracker.app.dto.response.SpendingDetailsResponse;
@@ -14,7 +14,6 @@ import com.spendingstracker.app.entity.Spending;
 import com.spendingstracker.app.entity.SpendingCategory;
 import com.spendingstracker.app.entity.SpendingUserAggr;
 import com.spendingstracker.app.entity.User;
-import com.spendingstracker.app.exception.NoSuchGranularityException;
 import com.spendingstracker.app.exception.NoSuchGraphTypeException;
 import com.spendingstracker.app.exception.SpendingNotFoundException;
 import com.spendingstracker.app.projection.SpendingListProjection;
@@ -60,16 +59,11 @@ public class SpendingServiceImpl implements SpendingService {
     }
 
     public SpendingPageResponse getSpendings(
-            BigInteger userId,
-            LocalDate startDate,
-            LocalDate endDate,
-            int page,
-            int limit,
-            Granularity granularity,
-            GraphType type) {
-        PageRequest pageRequest = PageRequest.of(page, limit);
+            BigInteger userId, GetSpendingsRequestFilters filters) {
+
+        PageRequest pageRequest = PageRequest.of(filters.getPage(), filters.getLimit());
         Page<SpendingListProjection> spendingsListProjs =
-                getSpendingListProj(userId, startDate, endDate, granularity, type, pageRequest);
+                getSpendingListProj(userId, filters, pageRequest);
 
         // No spendings
         if (!spendingsListProjs.hasContent()) {
@@ -85,7 +79,8 @@ public class SpendingServiceImpl implements SpendingService {
         }
 
         Page<SpendingPageItem> spendingPageItemPage =
-                new PageImpl<>(spendingPageItemList, pageRequest, spendingsListProjs.getTotalElements());
+                new PageImpl<>(
+                        spendingPageItemList, pageRequest, spendingsListProjs.getTotalElements());
 
         return SpendingPageResponse.builder().spendingPage(spendingPageItemPage).build();
     }
@@ -187,19 +182,21 @@ public class SpendingServiceImpl implements SpendingService {
     }
 
     private Page<SpendingListProjection> getSpendingListProj(
-            BigInteger userId,
-            LocalDate startDate,
-            LocalDate endDate,
-            Granularity granularity,
-            GraphType type,
-            PageRequest pageRequest) {
+            BigInteger userId, GetSpendingsRequestFilters filters, PageRequest pageRequest) {
+        GraphType type = filters.getGraphType();
+
         switch (type) {
             case BAR, PIE -> {
-                return getSpendingListProjCategorical(userId, startDate, endDate, pageRequest);
+                return spendingUserAggrRepository.findSpendingsCategorical(
+                        userId, filters.getStartDate(), filters.getEndDate(), pageRequest);
             }
             case LINE -> {
-                return getSpendingListProjLine(
-                        userId, startDate, endDate, granularity, pageRequest);
+                return spendingUserAggrRepository.findSpendingsNumericalGroupBy(
+                        userId,
+                        filters.getStartDate(),
+                        filters.getEndDate(),
+                        filters.getGranularity(),
+                        pageRequest);
             }
 
             default -> {
@@ -210,50 +207,13 @@ public class SpendingServiceImpl implements SpendingService {
         }
     }
 
-    private Page<SpendingListProjection> getSpendingListProjLine(
-            BigInteger userId,
-            LocalDate startDate,
-            LocalDate endDate,
-            Granularity granularity,
-            PageRequest pageRequest) {
-        switch (granularity) {
-            case DAY -> {
-                return spendingUserAggrRepository.findSpendingsNumericalGroupByDay(
-                        userId, startDate, endDate, pageRequest);
-            }
-            case WEEK -> {
-                return spendingUserAggrRepository.findSpendingsNumericalGroupByWeek(
-                        userId, startDate, endDate, pageRequest);
-            }
-            case MONTH -> {
-                return spendingUserAggrRepository.findSpendingsNumericalGroupByMonth(
-                        userId, startDate, endDate, pageRequest);
-            }
-            case YEAR -> {
-                return spendingUserAggrRepository.findSpendingsNumericalGroupByYear(
-                        userId, startDate, endDate, pageRequest);
-            }
-            default -> {
-                String errMsg = "No such granularity " + granularity;
-                log.error(errMsg);
-                throw new NoSuchGranularityException(errMsg);
-            }
-        }
-    }
-
-    private Page<SpendingListProjection> getSpendingListProjCategorical(
-            BigInteger userId, LocalDate startDate, LocalDate endDate, PageRequest pageRequest) {
-        return spendingUserAggrRepository.findSpendingsCategorical(
-                userId, startDate, endDate, pageRequest);
-    }
-
     private SpendingPageItem buildSpendingPageItemFromSpendingListProj(
             SpendingListProjection spendingListProj) {
         return SpendingPageItem.builder()
-                .spendingUserAggrId(spendingListProj.getSpendingUserAggrId())
-                .date(spendingListProj.getDate())
-                .category(spendingListProj.getCategory())
-                .total(spendingListProj.getTotal())
+                .spendingUserAggrId(spendingListProj.spendingUserAggrId())
+                .date(spendingListProj.date())
+                .category(spendingListProj.category())
+                .total(spendingListProj.total())
                 .build();
     }
 }

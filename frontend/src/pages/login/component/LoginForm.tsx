@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import toast from "react-hot-toast";
 import GenericForm from "../../../common/form/GenericForm";
 import GenericFormButton from "../../../common/form/GenericFormButton";
@@ -6,13 +6,17 @@ import PasswordInput from "../../../common/form/PasswordInput";
 import UsernameInput from "../../../common/form/UsernameInput";
 import useLogin from "../../../hooks/useLogin";
 import CreateAccountRedirect from "./CreateAccountRedirect";
-import GoogleSignInButton from "./GoogleSignInButton";
+import ExternalAuthProviders from "./ExternalAuthProviders";
 
 const LoginForm: FC = () => {
+  const [loginDisabled, setLoginDisabled] = useState<boolean>(false);
+
   const { mutate: login } = useLogin(() => {
     toast.error("Invalid login credentials!", {
       position: "bottom-center",
     });
+
+    setLoginDisabled(false);
   });
 
   const onSubmit = (inputMap: Map<string, string>) => {
@@ -23,6 +27,8 @@ const LoginForm: FC = () => {
         username: username,
         password: password,
       });
+
+      setLoginDisabled(true);
     }
   };
 
@@ -35,11 +41,20 @@ const LoginForm: FC = () => {
         onSubmit={onSubmit}
         formChildren={
           <>
-            <UsernameInput />
+            <UsernameInput
+              customStyles="outline-none font-semibold text-lg mt-1 p-1 border-0 w-full"
+              withIcon={true}
+            />
             <div className="mt-5">
-              <PasswordInput showForgotPassword={true} />
-              <GenericFormButton value="Log in" />
-              <GoogleSignInButton />
+              <PasswordInput
+                inputFieldStyle="outline-none font-semibold text-lg mt-1 p-1 border-0 w-full"
+                withIcon={true}
+                showForgotPassword={true}
+              />
+              <GenericFormButton
+                value={loginDisabled ? "Logging in" : "Log in"}
+              />
+              <ExternalAuthProviders />
             </div>
           </>
         }

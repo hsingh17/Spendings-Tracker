@@ -1,13 +1,17 @@
 import React, { FC, useRef, useState } from "react";
 import useDetectClickOutsideComponent from "../../../hooks/useDetectOutsideComponent";
-import { Nullable, TableFilterProps } from "../../../utils/types";
+import { Nullable } from "../../../utils/types";
 import TableFilterButton from "./TableFilterButton";
 import TableFilterForm from "./TableFilterForm";
 
+type TableFilterProps = {
+  setSearchParams: (searchParams: URLSearchParams) => void;
+  resetSearchParams: () => void;
+};
+
 const TableFilter: FC<TableFilterProps> = ({
-  isLoading,
-  parentSetSearchParams,
-  parentResetSearchParams,
+  setSearchParams,
+  resetSearchParams,
 }) => {
   const filterFormRef = useRef<HTMLDivElement>(null);
   const filterButtonRef = useRef<HTMLDivElement>(null);
@@ -26,22 +30,18 @@ const TableFilter: FC<TableFilterProps> = ({
     setIsOpenWrapper,
   );
 
-  if (isLoading) {
-    return null;
-  }
-
   return (
     <div className="mt-5 relative">
       <div className="h-fit w-fit" ref={filterButtonRef}>
-        <TableFilterButton isOpen={isOpen} parentSetOpen={setIsOpenWrapper} />
+        <TableFilterButton isOpen={isOpen} setOpen={setIsOpenWrapper} />
       </div>
 
       <div ref={filterFormRef}>
         <TableFilterForm
           isOpen={isOpen}
-          parentSetOpen={setIsOpenWrapper}
-          parentResetSearchParams={parentResetSearchParams}
-          parentSetSearchParams={parentSetSearchParams}
+          setOpen={setIsOpenWrapper}
+          resetSearchParams={resetSearchParams}
+          setSearchParams={setSearchParams}
         />
       </div>
     </div>

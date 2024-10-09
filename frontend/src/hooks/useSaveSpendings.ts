@@ -1,26 +1,32 @@
 import { useMutation } from "@tanstack/react-query";
+import { Dayjs } from "dayjs";
 import toast from "react-hot-toast";
-import { POST, PUT, SPENDINGS_API_ROUTE } from "../utils/constants";
+import {
+  DATE_ISO_FORMAT,
+  POST,
+  PUT,
+  SPENDINGS_API_ROUTE,
+} from "../utils/constants";
 import fetchRequestWrapper from "../utils/fetch-utils";
-import { SpendingSaveRequest } from "../utils/types";
+import { Spending } from "../utils/types";
+
+type SpendingSaveRequest = {
+  spendingRequests: Spending[];
+};
 
 async function postOrPutSpendings(
   spendingSaveRequest: SpendingSaveRequest,
-  spendingDate: string,
+  spendingDate: Dayjs,
   isCreate: boolean,
 ) {
   return await fetchRequestWrapper(
-    `${SPENDINGS_API_ROUTE}/${spendingDate}`,
+    `${SPENDINGS_API_ROUTE}/${spendingDate.format(DATE_ISO_FORMAT)}`,
     isCreate ? POST : PUT,
     JSON.stringify(spendingSaveRequest),
   );
 }
 
-export default function useSaveSpendings(
-  date: string,
-  isCreate: boolean,
-  onSuccess: () => void,
-) {
+export default function useSaveSpendings(date: Dayjs, isCreate: boolean) {
   return useMutation({
     mutationFn: (spendings: SpendingSaveRequest) => {
       const promise = postOrPutSpendings(spendings, date, isCreate);
@@ -32,6 +38,5 @@ export default function useSaveSpendings(
 
       return promise;
     },
-    onSuccess: onSuccess,
   });
 }

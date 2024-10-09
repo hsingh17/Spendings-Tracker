@@ -1,51 +1,67 @@
 import { FC, useEffect, useState } from "react";
 import {
+  Nullable,
   Sort,
   SortOrder,
   SortType,
   SpendingListRow,
-  SpendingsTableProps,
 } from "../../../utils/types";
-import TableBody from "./TableBody";
+import SpendingsTableBody from "./SpendingsTableBody";
+import SpendingsTableHeader from "./SpendingsTableHeader";
 import TableEmptyState from "./TableEmptyState";
-import TableHeader from "./TableHeader";
+
+type SpendingsTableProps = {
+  spendings: Nullable<SpendingListRow[]>;
+  setSpendingId: (spendingId: number) => void;
+};
+
+// https://www.typescriptlang.org/docs/handbook/2/functions.html#call-signatures
+type SortFunc = {
+  (spendings: SpendingListRow[], sortOrder: SortOrder): SpendingListRow[];
+};
+
+const SORTERS: Map<SortType, SortFunc> = new Map([
+  [
+    SortType.DATE,
+    (spendings: SpendingListRow[], sortOrder: SortOrder) => {
+      return spendings.sort(
+        (a, b) => sortOrder * (a.date.isAfter(b.date) ? 1 : -1),
+      );
+    },
+  ],
+  [
+    SortType.TOTAL,
+    (spendings: SpendingListRow[], sortOrder: SortOrder) => {
+      return spendings.sort((a, b) => -sortOrder * (a.total - b.total));
+    },
+  ],
+]);
 
 const SpendingsTable: FC<SpendingsTableProps> = ({
-  isLoading,
   spendings,
-  parentRefetch,
-  parentSetSpendingId,
+  setSpendingId,
 }) => {
   if (!spendings) {
     return null;
   }
 
   const [spendingsCopy, setSpendingCopy] =
-    useState<Array<SpendingListRow>>(spendings);
+    useState<SpendingListRow[]>(spendings);
 
   const [sort, setSort] = useState<Sort>({
     sortType: SortType.DATE,
     sortOrder: SortOrder.DESC,
   });
 
-  // TODO: Maybe better way
   const handleSort = (sortType: SortType) => {
-    let newSpendingsCopy: SpendingListRow[] = spendingsCopy;
-    const sortOrder: SortOrder = getSortOrder(sortType);
-
-    if (sortType === SortType.DATE) {
-      newSpendingsCopy = spendingsCopy.sort(
-        (a, b) =>
-          sortOrder * (new Date(a.date).getTime() - new Date(b.date).getTime()),
-      );
-    } else if (sortType === SortType.TOTAL) {
-      newSpendingsCopy = spendingsCopy.sort(
-        (a, b) => -sortOrder * (a.total - b.total),
-      );
+    const sortOrder = getSortOrder(sortType);
+    const sortFunc = SORTERS.get(sortType);
+    if (!sortFunc) {
+      return;
     }
 
     setSort({ sortType: sortType, sortOrder: sortOrder });
-    setSpendingCopy(newSpendingsCopy);
+    setSpendingCopy(sortFunc(spendings, sortOrder));
   };
 
   const getSortOrder = (sortOn: SortType) =>
@@ -58,19 +74,17 @@ const SpendingsTable: FC<SpendingsTableProps> = ({
     });
   }, [spendings]);
 
-  if (spendingsCopy.length === 0) {
+  if (!spendingsCopy || !spendingsCopy.length) {
     return <TableEmptyState />;
   }
 
   return (
     <div className="overflow-x-scroll">
       <table className="mt-5 table-fixed w-[750px] md:w-full border-collapse">
-        <TableHeader parentHandleSort={handleSort} sort={sort} />
-        <TableBody
-          isLoading={isLoading}
+        <SpendingsTableHeader handleSort={handleSort} sort={sort} />
+        <SpendingsTableBody
           spendings={spendings}
-          parentRefetch={parentRefetch}
-          parentSetSpendingId={parentSetSpendingId}
+          setSpendingId={setSpendingId}
         />
       </table>
     </div>

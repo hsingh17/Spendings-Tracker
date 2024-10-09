@@ -1,27 +1,41 @@
 import { FC } from "react";
-import { SpendingListRow, TableBodyProps } from "../../../utils/types";
-import TableRow from "./TableRow";
+import Card from "../../../common/Card";
+import { ApiResponse, SpendingsPage } from "../../../utils/types";
+import SpendingsTable from "./SpendingsTable";
+import TableFilter from "./TableFilter";
+import TableTitle from "./TableTitle";
+
+type TableBodyProps = {
+  response?: ApiResponse<SpendingsPage>;
+  resetSearchParams: () => void;
+  setSearchParams: (urlSearchParams: URLSearchParams) => void;
+  setSpendingId: (spendingIdToDelete: number) => void;
+};
 
 const TableBody: FC<TableBodyProps> = ({
-  isLoading,
-  spendings,
-  parentRefetch,
-  parentSetSpendingId,
+  response,
+  resetSearchParams,
+  setSearchParams,
+  setSpendingId,
 }) => {
+  const timestamp = response?.timestamp;
+  const spendings = response?.data?.spendingPage.content;
+
   return (
-    <tbody>
-      {spendings.map((spending: SpendingListRow, idx: number) => {
-        return (
-          <TableRow
-            isLoading={isLoading}
-            key={idx}
-            spending={spending}
-            parentRefetch={parentRefetch}
-            parentSetSpendingId={parentSetSpendingId}
-          />
-        );
-      })}
-    </tbody>
+    <Card className="p-7">
+      <TableTitle />
+
+      <TableFilter
+        resetSearchParams={resetSearchParams}
+        setSearchParams={setSearchParams}
+      />
+
+      <SpendingsTable
+        key={timestamp}
+        spendings={spendings}
+        setSpendingId={setSpendingId}
+      />
+    </Card>
   );
 };
 

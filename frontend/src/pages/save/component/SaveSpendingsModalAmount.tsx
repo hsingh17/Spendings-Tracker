@@ -4,12 +4,12 @@ import useFormValidate from "../../../hooks/useFormValidate";
 import {
   FormValidator,
   GenericFormInputProps,
-  SpendingFormInput,
+  Spending,
 } from "../../../utils/types";
 import SaveSpendingsModalAmountInput from "./SaveSpendingsModalAmountInput";
 
 type SaveSpendingsModalFormProps = GenericFormInputProps & {
-  spending: SpendingFormInput;
+  spending: Spending;
 };
 
 const AMOUNT_VALIDATORS: FormValidator[] = [

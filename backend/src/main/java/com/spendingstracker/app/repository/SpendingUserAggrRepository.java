@@ -1,5 +1,6 @@
 package com.spendingstracker.app.repository;
 
+import com.spendingstracker.app.constants.Granularity;
 import com.spendingstracker.app.entity.SpendingUserAggr;
 import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.projection.SpendingListProjection;
@@ -7,9 +8,6 @@ import com.spendingstracker.app.projection.SpendingProjection;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
@@ -22,268 +20,51 @@ import java.util.Optional;
  * table.
  *
  * @see SpendingUserAggr
+ * @see SpendingUserAggrRepositoryImpl
  */
 @Repository
-public interface SpendingUserAggrRepository extends JpaRepository<SpendingUserAggr, BigInteger> {
+public interface SpendingUserAggrRepository {
+    /**
+     * Save's <code>spendingUserAggr</code> to database
+     *
+     * @param spendingUserAggr <code>SpendingUserAggr</code> object to save
+     * @return <code>SpendingUserAggr</code> object after saving (with primary key)
+     */
+    SpendingUserAggr save(SpendingUserAggr spendingUserAggr);
 
+    /**
+     * Deletes the <code>SpendingUserAggr</code> record with primary key <code>spendingUserAggrId
+     * </code>
+     */
+    void deleteById(BigInteger spendingUserAggrId);
+
+    /**
+     * Finds the <code>SpendingUserAggr</code> record with <code>user</code> and <code>date</code>
+     *
+     * @return <code>Optional{@literal <SpendingUserAggr>}</code> that may contain a <code>
+     *     SpendingUserAggr</code> record
+     */
     Optional<SpendingUserAggr> findSpendingUserAggrByUserAndDate(User user, LocalDate date);
 
-    @Query(
-            value =
-                    """
-                    SELECT
-                        S.SPENDING_ID AS spendingId,
-                        SC.NAME AS category,
-                        S.AMOUNT AS amount
-                    FROM
-                        APP.SPENDING_USER_AGGR SUA,
-                        APP.SPENDING S,
-                        APP.SPENDING_CATEGORY SC
-                    WHERE
-                            SUA.SPENDING_USER_AGGR_ID = S.SPENDING_USER_AGGR_ID
-                        AND S.SPENDING_CATEGORY_ID = SC.SPENDING_CATEGORY_ID
-                        AND SUA.USER_ID = :userId
-                        AND SUA.DATE = :date
-                """,
-            nativeQuery = true)
-    List<SpendingProjection> findSpendingDetailsByUserIdAndDate(
-            @Param("date") LocalDate date, @Param("userId") BigInteger userId);
+    /**
+     * Find's all the spendings associated to a particular spending date by <code>user</code> and
+     * <code>date</code>
+     *
+     * @return <code>List{@literal <SpendingProjection>}</code> that contains the specific spendings
+     *     for a day
+     * @see SpendingProjection
+     */
+    List<SpendingProjection> findSpendingDetailsByUserIdAndDate(LocalDate date, BigInteger userId);
 
-    @Query(
-            value =
-                    """
-                    SELECT
-                        MAX(SUA.SPENDING_USER_AGGR_ID) AS spendingUserAggrId,
-                        DATE_FORMAT (SUA.DATE, "%Y-%m-%d") AS date,
-                        SUM(S.AMOUNT) AS total
-                    FROM
-                        APP.SPENDING_USER_AGGR SUA,
-                        APP.SPENDING S
-                    WHERE
-                            SUA.SPENDING_USER_AGGR_ID = S.SPENDING_USER_AGGR_ID
-                        AND SUA.USER_ID = :userId
-                        AND SUA.DATE >= :startDate
-                        AND SUA.DATE <= :endDate
-                    GROUP BY
-                        DATE_FORMAT (SUA.DATE, "%Y-%m-%d")
-                    ORDER BY
-                        DATE_FORMAT (SUA.DATE, "%Y-%m-%d") DESC
-                    """,
-            countQuery =
-                    """
-                    SELECT
-                        COUNT(*)
-                    FROM
-                        APP.SPENDING_USER_AGGR SUA,
-                        APP.SPENDING S
-                    WHERE
-                            SUA.SPENDING_USER_AGGR_ID = S.SPENDING_USER_AGGR_ID
-                        AND SUA.USER_ID = :userId
-                        AND SUA.DATE >= :startDate
-                        AND SUA.DATE <= :endDate
-                    GROUP BY
-                        DATE_FORMAT (SUA.DATE, "%Y-%m-%d")
-                    ORDER BY
-                        DATE_FORMAT (SUA.DATE, "%Y-%m-%d") DESC
-                    """,
-            nativeQuery = true)
-    Page<SpendingListProjection> findSpendingsNumericalGroupByDay(
-            @Param("userId") BigInteger userId,
-            @Param("startDate") LocalDate startDate,
-            @Param("endDate") LocalDate endDate,
+    /** Find's spendings by grouping them by <code>granularity</code> */
+    Page<SpendingListProjection> findSpendingsNumericalGroupBy(
+            BigInteger userId,
+            LocalDate startDate,
+            LocalDate endDate,
+            Granularity granularity,
             Pageable pageable);
 
-    @Query(
-            value =
-                    """
-                    SELECT
-                        MAX(SUA.SPENDING_USER_AGGR_ID) AS spendingUserAggrId,
-                        DATE_FORMAT (
-                            DATE_SUB(SUA.DATE, INTERVAL WEEKDAY (SUA.DATE) DAY),
-                            "%Y-%m-%d"
-                        ) AS date,
-                        SUM(S.AMOUNT) AS total
-                    FROM
-                        APP.SPENDING_USER_AGGR SUA,
-                        APP.SPENDING S
-                    WHERE
-                            SUA.SPENDING_USER_AGGR_ID = S.SPENDING_USER_AGGR_ID
-                        AND SUA.USER_ID = :userId
-                        AND SUA.DATE >= :startDate
-                        AND SUA.DATE <= :endDate
-                    GROUP BY
-                        DATE_FORMAT (
-                            DATE_SUB(SUA.DATE, INTERVAL WEEKDAY (SUA.DATE) DAY),
-                            "%Y-%m-%d"
-                        )
-                    ORDER BY
-                        DATE_FORMAT (
-                            DATE_SUB(SUA.DATE, INTERVAL WEEKDAY (SUA.DATE) DAY),
-                            "%Y-%m-%d"
-                        ) DESC
-                    """,
-            countQuery =
-                    """
-                    SELECT
-                        COUNT(*)
-                    FROM
-                        APP.SPENDING_USER_AGGR SUA,
-                        APP.SPENDING S
-                    WHERE
-                            SUA.SPENDING_USER_AGGR_ID = S.SPENDING_USER_AGGR_ID
-                        AND SUA.USER_ID = :userId
-                        AND SUA.DATE >= :startDate
-                        AND SUA.DATE <= :endDate
-                    GROUP BY
-                        DATE_FORMAT (
-                            DATE_SUB(SUA.DATE, INTERVAL WEEKDAY (SUA.DATE) DAY),
-                            "%Y-%m-%d"
-                        )
-                    ORDER BY
-                        DATE_FORMAT (
-                            DATE_SUB(SUA.DATE, INTERVAL WEEKDAY (SUA.DATE) DAY),
-                            "%Y-%m-%d"
-                        ) DESC
-                    """,
-            nativeQuery = true)
-    Page<SpendingListProjection> findSpendingsNumericalGroupByWeek(
-            @Param("userId") BigInteger userId,
-            @Param("startDate") LocalDate startDate,
-            @Param("endDate") LocalDate endDate,
-            Pageable pageable);
-
-    @Query(
-            value =
-                    """
-                    SELECT
-                        MAX(SUA.SPENDING_USER_AGGR_ID) AS spendingUserAggrId,
-                        DATE_FORMAT(SUA.DATE, "%Y-%m-01") AS date,
-                        SUM(S.AMOUNT) AS total
-                    FROM
-                        APP.SPENDING_USER_AGGR SUA,
-                        APP.SPENDING S
-                    WHERE
-                            SUA.SPENDING_USER_AGGR_ID = S.SPENDING_USER_AGGR_ID
-                        AND SUA.USER_ID = :userId
-                        AND SUA.DATE >= :startDate
-                        AND SUA.DATE <= :endDate
-                    GROUP BY
-                        DATE_FORMAT(SUA.DATE, "%Y-%m-01")
-                    ORDER BY
-                        DATE_FORMAT(SUA.DATE, "%Y-%m-01") DESC
-                    """,
-            countQuery =
-                    """
-                    SELECT
-                        COUNT(*)
-                    FROM
-                        APP.SPENDING_USER_AGGR SUA,
-                        APP.SPENDING S
-                    WHERE
-                            SUA.SPENDING_USER_AGGR_ID = S.SPENDING_USER_AGGR_ID
-                        AND SUA.USER_ID = :userId
-                        AND SUA.DATE >= :startDate
-                        AND SUA.DATE <= :endDate
-                    GROUP BY
-                        DATE_FORMAT(SUA.DATE, "%Y-%m-01")
-                    ORDER BY
-                        DATE_FORMAT(SUA.DATE, "%Y-%m-01") DESC
-                    """,
-            nativeQuery = true)
-    Page<SpendingListProjection> findSpendingsNumericalGroupByMonth(
-            @Param("userId") BigInteger userId,
-            @Param("startDate") LocalDate startDate,
-            @Param("endDate") LocalDate endDate,
-            Pageable pageable);
-
-    @Query(
-            value =
-                    """
-                    SELECT
-                        MAX(SUA.SPENDING_USER_AGGR_ID) AS spendingUserAggrId,
-                        DATE_FORMAT(SUA.DATE, "%Y-01-01") AS date,
-                        SUM(S.AMOUNT) AS total
-                    FROM
-                        APP.SPENDING_USER_AGGR SUA,
-                        APP.SPENDING S
-                    WHERE
-                            SUA.SPENDING_USER_AGGR_ID = S.SPENDING_USER_AGGR_ID
-                        AND SUA.USER_ID = :userId
-                        AND SUA.DATE >= :startDate
-                        AND SUA.DATE <= :endDate
-                    GROUP BY
-                        DATE_FORMAT(SUA.DATE, "%Y-01-01")
-                    ORDER BY
-                        DATE_FORMAT(SUA.DATE, "%Y-01-01") DESC
-                    """,
-            countQuery =
-                    """
-                    SELECT
-                        COUNT(*)
-                    FROM
-                        APP.SPENDING_USER_AGGR SUA,
-                        APP.SPENDING S
-                    WHERE
-                            SUA.SPENDING_USER_AGGR_ID = S.SPENDING_USER_AGGR_ID
-                        AND SUA.USER_ID = :userId
-                        AND SUA.DATE >= :startDate
-                        AND SUA.DATE <= :endDate
-                    GROUP BY
-                        DATE_FORMAT(SUA.DATE, "%Y-01-01")
-                    ORDER BY
-                        DATE_FORMAT(SUA.DATE, "%Y-01-01") DESC
-                    """,
-            nativeQuery = true)
-    Page<SpendingListProjection> findSpendingsNumericalGroupByYear(
-            @Param("userId") BigInteger userId,
-            @Param("startDate") LocalDate startDate,
-            @Param("endDate") LocalDate endDate,
-            Pageable pageable);
-
-    @Query(
-            value =
-                    """
-                    SELECT
-                        SC.NAME as category,
-                        SUM(S.AMOUNT) as total
-                    FROM
-                        APP.SPENDING_USER_AGGR SUA,
-                        APP.SPENDING S,
-                        APP.SPENDING_CATEGORY SC
-                    WHERE
-                            SUA.SPENDING_USER_AGGR_ID = S.SPENDING_USER_AGGR_ID
-                        AND S.SPENDING_CATEGORY_ID = SC.SPENDING_CATEGORY_ID
-                        AND SUA.USER_ID = :userId
-                        AND SUA.DATE >= :startDate
-                        AND SUA.DATE <= :endDate
-                    GROUP BY
-                        SC.NAME
-                    ORDER BY
-                        SUM(S.AMOUNT) DESC
-                    """,
-            countQuery =
-                    """
-                    SELECT
-                        COUNT(*)
-                    FROM
-                        APP.SPENDING_USER_AGGR SUA,
-                        APP.SPENDING S,
-                        APP.SPENDING_CATEGORY SC
-                    WHERE
-                            SUA.SPENDING_USER_AGGR_ID = S.SPENDING_USER_AGGR_ID
-                        AND S.SPENDING_CATEGORY_ID = SC.SPENDING_CATEGORY_ID
-                        AND SUA.USER_ID = :userId
-                        AND SUA.DATE >= :startDate
-                        AND SUA.DATE <= :endDate
-                    GROUP BY
-                        SC.NAME
-                    ORDER BY
-                        SUM(S.AMOUNT) DESC
-                    """,
-            nativeQuery = true)
+    /** Find spendings by grouping by them by their category */
     Page<SpendingListProjection> findSpendingsCategorical(
-            @Param("userId") BigInteger userId,
-            @Param("startDate") LocalDate startDate,
-            @Param("endDate") LocalDate endDate,
-            Pageable pageable);
+            BigInteger userId, LocalDate startDate, LocalDate endDate, Pageable pageable);
 }

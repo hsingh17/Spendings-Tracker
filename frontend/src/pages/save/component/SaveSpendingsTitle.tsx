@@ -1,12 +1,13 @@
+import { Dayjs } from "dayjs";
 import { FC } from "react";
 import { Spending } from "../../../utils/types";
 import SaveSpendingsTitleDateInput from "./SaveSpendingsTitleDateInput";
 import SaveSpendingsTitleTotal from "./SaveSpendingsTitleTotal";
 
 type SaveSpendingsTitleProps = {
-  date: string;
+  date: Dayjs;
   spendings: Spending[];
-  handleDateChange: (date: string) => void;
+  handleDateChange: (date: Dayjs) => void;
 };
 
 const SaveSpendingsTitle: FC<SaveSpendingsTitleProps> = ({

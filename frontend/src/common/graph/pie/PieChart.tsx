@@ -41,8 +41,8 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
   const [tooltipPosition, setTooltipPosition] =
     useState<Nullable<TooltipPosition>>(null);
   const [arcStyle, setArcStyle] = useState<string>();
-
   const data = response.data?.spendingPage.content;
+
   if (!data || !data.length) {
     // This component won't get rendered if there's no data.
     // So just doing this to satisfy Typescript.
@@ -56,9 +56,7 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
     .interpolator(interpolateRgb("#EEEEEE", "#00ADB5"))
     .domain([0, data.length]);
 
-  const pieGenerator = pie<CategoricalSpendings>()
-    .padAngle(0)
-    .value((d) => d.total);
+  const pieGenerator = pie<CategoricalSpendings>().value((d) => d.total);
 
   const arcGenerator = arc<PieArcDatum<CategoricalSpendings>>()
     .innerRadius(innerRadius)

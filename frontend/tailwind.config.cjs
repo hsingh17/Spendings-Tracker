@@ -16,7 +16,8 @@ module.exports = {
           "100%": { transform: "translate(-50%, -1000%)" }
         },
         "draw-stroke": {
-          "100%": { "stroke-dashoffset": "0"}
+          "100%": { "stroke-dashoffset": "10000"},
+          "0%": { "stroke-dashoffset": "0"},
         },
         "point-fade-in": {
           "0%": { "opacity": "0%"},

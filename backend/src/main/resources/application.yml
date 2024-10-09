@@ -23,6 +23,12 @@ ses:
   from-email: spendingstracker.no.reply@gmail.com
 s3:
   presigned-url-expiration-minutes: 10
+classpath-resources:
+  sql-resources:
+    - /sql/findSpendingsCategorical.sql
+    - /sql/findSpendingsNumericalGroupBy.sql
+    - /sql/countSpendingsNumericalGroupBy.sql
+    - /sql/countSpendingsCategorical.sql
 --- # Local Profile
 spring:
   config:

@@ -13,13 +13,6 @@ const CreateAccount = () => {
     const email = inputMap.get("email");
     const username = inputMap.get("username");
     const newPassword = inputMap.get("password");
-    const confirmPassword = inputMap.get("confirm-password");
-    if (newPassword !== confirmPassword) {
-      alert("Passwords must match!");
-      return;
-    }
-
-    // Using '!' because isFormValid can only be true if all conditions are met
     createAccount({
       email: email!,
       username: username!,

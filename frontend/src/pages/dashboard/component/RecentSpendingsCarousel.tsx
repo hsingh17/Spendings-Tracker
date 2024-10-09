@@ -15,6 +15,7 @@ const RecentSpendingsCarousel = () => {
 
   if (!response || !response.ok) {
     return (
+      // TODO
       <h1 className="font-medium text-2xl text-red-600">
         Error fetching recent spending activity!
       </h1>
@@ -30,7 +31,7 @@ const RecentSpendingsCarousel = () => {
       {spendings.map((spendingListRow: SpendingListRow) => {
         return (
           <RecentSpendingsCard
-            key={spendingListRow.date}
+            key={spendingListRow.date.format()}
             spendingListRow={spendingListRow}
           />
         );

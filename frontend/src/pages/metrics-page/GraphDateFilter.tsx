@@ -1,7 +1,7 @@
+import dayjs, { Dayjs } from "dayjs";
 import { FC } from "react";
 import DatePicker, { DateObject } from "react-multi-date-picker";
-import DateUtils from "../../utils/date-utils";
-import { Nullable } from "../../utils/types";
+import CustomDayJs from "../../config/DayJsConfig";
 
 type GraphDateFilterProps = {
   searchParams: URLSearchParams;
@@ -12,20 +12,8 @@ const GraphDateFilter: FC<GraphDateFilterProps> = ({
   searchParams,
   setSearchParams,
 }) => {
-  const spStartDate: Nullable<string> = DateUtils.formatDateUS(
-    searchParams.get("start-date")
-  );
-  const spEndDate: Nullable<string> = DateUtils.formatDateUS(
-    searchParams.get("end-date")
-  );
-
-  const startDateObj: Nullable<Date> =
-    spStartDate !== null && spStartDate !== undefined
-      ? new Date(spStartDate)
-      : null;
-
-  const endDateObj: Nullable<Date> =
-    spEndDate !== null && spEndDate !== undefined ? new Date(spEndDate) : null;
+  const startDate: Dayjs = CustomDayJs(searchParams.get("start-date"));
+  const endDate: Dayjs = CustomDayJs(searchParams.get("end-date"));
 
   const onChange = (dates: DateObject[]) => {
     if (dates.length != 2) {
@@ -48,15 +36,11 @@ const GraphDateFilter: FC<GraphDateFilterProps> = ({
         range
         rangeHover
         inputClass="p-2 mb-2 w-full rounded-lg border-slate border-2 text-wrap bg-gray-200"
-        format="MM/DD/YYYY"
+        format={dayjs.Ls.en.formats.L} // Use dayjs to get local date format string
         dateSeparator=" - "
         onChange={onChange}
         calendarPosition="bottom-center"
-        value={
-          startDateObj === null || endDateObj === null
-            ? []
-            : [startDateObj, endDateObj]
-        }
+        value={[startDate.toDate(), endDate.toDate()]}
       />
     </>
   );

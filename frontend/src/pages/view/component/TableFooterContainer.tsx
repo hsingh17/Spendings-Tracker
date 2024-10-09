@@ -1,16 +1,23 @@
 import { FC } from "react";
-import { TableFooterContainerProps } from "../../../utils/types";
+import { ApiResponse, SpendingsPage } from "../../../utils/types";
 import TableButtonsContainer from "./TableButtonsContainer";
 import TableFooterPageData from "./TableFooterPageData";
 import TablePageDropdown from "./TablePageDropdown";
 
+type TableFooterContainerProps = {
+  response?: ApiResponse<SpendingsPage>;
+
+  setSearchParams: (searchParams: URLSearchParams) => void;
+};
+
 const TableFooterContainer: FC<TableFooterContainerProps> = ({
-  isLoading,
-  apiMetaData,
-  parentSetSearchParams,
+  response,
+  setSearchParams,
 }) => {
-  if (!apiMetaData || isLoading) {
-    return null;
+  const apiMetaData = response?.metadata;
+
+  if (!apiMetaData) {
+    return <></>;
   }
 
   return (
@@ -18,10 +25,10 @@ const TableFooterContainer: FC<TableFooterContainerProps> = ({
       <TableFooterPageData apiMetaData={apiMetaData} />
 
       <div className="flex w-fit ml-auto items-center">
-        <TablePageDropdown parentSetSearchParams={parentSetSearchParams} />
+        <TablePageDropdown setSearchParams={setSearchParams} />
 
         <TableButtonsContainer
-          parentSetSearchParams={parentSetSearchParams}
+          setSearchParams={setSearchParams}
           apiLinks={apiMetaData?.links}
         />
       </div>
