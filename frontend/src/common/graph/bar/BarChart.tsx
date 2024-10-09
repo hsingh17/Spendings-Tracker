@@ -41,7 +41,7 @@ const BarChart: FC<BarChartProps> = ({ response, height, width }) => {
     setTooltipIdx(idx);
     setTooltipPosition({
       left: x,
-      top: y - 50,
+      top: y - 75,
     });
   };
 
