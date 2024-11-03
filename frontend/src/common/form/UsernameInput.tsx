@@ -31,7 +31,7 @@ const UsernameInput: FC<UsernameInputProps> = ({
   const { setVal, errs } = useFormValidate(
     name,
     USERNAME_VALIDATORS,
-    addFormValidators,
+    addFormValidators
   );
 
   return (

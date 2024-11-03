@@ -31,7 +31,7 @@ const ConfirmPasswordInput: FC<ConfirmPasswordInputProps> = ({
   const { errs, setVal, setValidators } = useFormValidate(
     name,
     getValidators(password),
-    addFormValidators,
+    addFormValidators
   );
 
   useEffect(() => {
@@ -54,7 +54,7 @@ const ConfirmPasswordInput: FC<ConfirmPasswordInputProps> = ({
       <ShowPasswordIcon
         showPassword={showPassword}
         setShowPassword={setShowPassword}
-        withIcon={true}
+        withIcon={false}
       />
     </div>
   );

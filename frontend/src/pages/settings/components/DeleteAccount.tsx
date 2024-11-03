@@ -8,7 +8,7 @@ const DeleteAccount = () => {
     "Are you sure you want to delete your account?",
     "Delete Account",
     "This action is not recoverable!",
-    () => deleteAccount()
+    deleteAccount
   );
 
   return (

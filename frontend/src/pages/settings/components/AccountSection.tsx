@@ -31,8 +31,6 @@ const ACCOUNT_SUBSECTIONS: SettingsSubsectionProps[] = [
 ];
 
 const AccountSection = () => {
-  console.log(ACCOUNT_SUBSECTIONS);
-
   return (
     <SettingsSection sectionTitle={""} subsections={ACCOUNT_SUBSECTIONS} />
   );

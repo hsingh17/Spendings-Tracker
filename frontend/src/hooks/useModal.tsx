@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import Modal from "../common/modal/Modal";
 import { CallbackFn } from "../common/modal/ModalButtons";
 import { Nullable } from "../utils/types";
@@ -10,7 +10,7 @@ export type ModalState = {
 
 export type UseModalReturnType = {
   modal: React.ReactNode;
-  setModalState: Dispatch<SetStateAction<ModalState>>;
+  setModalState: (newState: ModalState) => void;
 };
 
 export function useModal(
@@ -38,8 +38,16 @@ export function useModal(
     </Modal>
   );
 
+  const setModalStateWrapper = (newState: ModalState) => {
+    // TODO: better way?
+    setModalState({
+      show: modalState.show || newState.show,
+      callbackFn: modalState.callbackFn || newState.callbackFn,
+    });
+  };
+
   return {
     modal: modal,
-    setModalState: setModalState,
+    setModalState: setModalStateWrapper,
   };
 }
