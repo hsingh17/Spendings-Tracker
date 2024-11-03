@@ -128,6 +128,7 @@ const GraphFilter: FC<GraphFilterProps> = ({
       isMobile ? GraphFilterState.EXPANDED : GraphFilterState.COLLAPSED,
     );
   }, [isMobile]);
+
   return (
     <div
       className="md:absolute w-full md:w-fit h-full md:h-fit"

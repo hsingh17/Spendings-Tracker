@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import QueryClientConfig from "../config/QueryClientConfig";
+import queryClient from "../config/QueryClientConfig";
 import { AUTH_LOGIN_ROUTE, DASHBOARD_PAGE, POST } from "../utils/constants";
 import fetchRequestWrapper from "../utils/fetch-utils";
 import { ExternalUserType, User } from "../utils/types";
@@ -34,7 +34,7 @@ export default function useLogin(
     onSuccess: () => {
       navigate(DASHBOARD_PAGE);
       // Invalidate the user key from cache so we get the new logged in user
-      QueryClientConfig.removeQueries(["user"]);
+      queryClient.removeQueries(["user"]);
     },
     onError: onError,
   });

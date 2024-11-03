@@ -30,6 +30,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
+
 /**
  * Implementation of the <code>AuthService</code> interface
  *
@@ -168,6 +170,12 @@ public class AuthServiceImpl implements AuthService {
         String message = "Successfully reset password for " + username;
         log.info(message);
         return new ResetPasswordResponse(message);
+    }
+
+    @Override
+    public void deleteUser(HttpServletResponse response, BigInteger userId) {
+        userService.deleteUser(userId);
+        setCookie(response, null, 0);
     }
 
     private OAuthPayload attemptOAuthLoginFlow(

@@ -4,6 +4,7 @@ CREATE TABLE
         EMAIL VARCHAR(255) NOT NULL COMMENT "User's email",
         USERNAME VARCHAR(128) NOT NULL COMMENT "User's name",
         PASSWORD VARCHAR(64) NULL DEFAULT NULL COMMENT "User's password. Nullable since external users don't have a password",
+        IS_ACTIVE CHAR(1) NOT NULL DEFAULT "Y" COMMENT "Indicates if user is active. N is No, Y is Yes",
         IS_VERIFIED CHAR(1) NOT NULL DEFAULT "N" COMMENT "Indicates if user has verified their account. N is No, Y is Yes",
         CREATED_BY BIGINT UNSIGNED NOT NULL DEFAULT 1 COMMENT "ID of who/what created this record",
         CREATED_ON DATETIME (0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "Datetime of creation",

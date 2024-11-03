@@ -12,7 +12,7 @@ import TableEmptyState from "./TableEmptyState";
 
 type SpendingsTableProps = {
   spendings: Nullable<SpendingListRow[]>;
-  setSpendingId: (spendingId: number) => void;
+  setSpendingToDelete: (spending: SpendingListRow) => void;
 };
 
 // https://www.typescriptlang.org/docs/handbook/2/functions.html#call-signatures
@@ -39,7 +39,7 @@ const SORTERS: Map<SortType, SortFunc> = new Map([
 
 const SpendingsTable: FC<SpendingsTableProps> = ({
   spendings,
-  setSpendingId,
+  setSpendingToDelete,
 }) => {
   if (!spendings) {
     return null;
@@ -84,7 +84,7 @@ const SpendingsTable: FC<SpendingsTableProps> = ({
         <SpendingsTableHeader handleSort={handleSort} sort={sort} />
         <SpendingsTableBody
           spendings={spendings}
-          setSpendingId={setSpendingId}
+          setSpendingToDelete={setSpendingToDelete}
         />
       </table>
     </div>

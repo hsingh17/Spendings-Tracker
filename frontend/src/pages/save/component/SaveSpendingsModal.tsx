@@ -1,6 +1,6 @@
 import { Dispatch, FC, SetStateAction } from "react";
 import GenericForm from "../../../common/form/GenericForm";
-import Modal from "../../../common/Modal";
+import Modal from "../../../common/modal/Modal";
 import { CategoriesMap, Nullable, Spending } from "../../../utils/types";
 import SaveSpendingsModalAmount from "./SaveSpendingsModalAmount";
 import SaveSpendingsModalCategory from "./SaveSpendingsModalCategory";

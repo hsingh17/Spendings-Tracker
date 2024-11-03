@@ -102,6 +102,7 @@ const PasswordInput: FC<PasswordInputProps> = ({
       <PasswordRequirements errs={errs} showPasswordReq={showPasswordReq} />
 
       <ConfirmPasswordInput
+        title={`Confirm ${title}`}
         customStyles={customStyles}
         show={showConfirmPassword}
         password={password}

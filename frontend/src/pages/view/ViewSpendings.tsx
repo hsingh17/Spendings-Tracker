@@ -1,18 +1,23 @@
-import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import ApiCallBoundary from "../../common/ApiCallBoundary";
+import useDeleteSpending from "../../hooks/useDeleteSpending";
 import useSpendings from "../../hooks/useSpendings";
-import { Nullable } from "../../utils/types";
+import useWarningModal from "../../hooks/useWarningModal";
+import { SpendingListRow } from "../../utils/types";
 import Error from "../error/Error";
-import DeleteSpendingModal from "./component/DeleteSpendingModal";
 import SpendingsTableLoadingShimmer from "./component/SpendingsTableLoadingShimmer";
 import TableBody from "./component/TableBody";
 import TableFooterContainer from "./component/TableFooterContainer";
 
 const ViewSpendings = () => {
-  const [spendingId, setSpendingId] = useState<Nullable<number>>(null);
-  const [showModal, setShowModal] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useSearchParams();
+  const { mutate: deleteSpending } = useDeleteSpending(searchParams);
+  const { modal, setModalState } = useWarningModal(
+    "Delete Spending",
+    "Are you sure you want to delete the spending?",
+    "Delete Spending",
+    "This action is not recoverable!",
+  );
 
   const setSearchParamsWrapper = (urlSearchParams: URLSearchParams) => {
     setSearchParams(urlSearchParams);
@@ -24,10 +29,13 @@ const ViewSpendings = () => {
     setSearchParams(searchParams);
   };
 
-  const setShowModalWrapper = (show: boolean) => setShowModal(show);
-  const setSpendingIdWrapper = (spendingIdToDelete: number) => {
-    setSpendingId(spendingIdToDelete);
-    setShowModal(true);
+  const deleteSpendingWrapper = (spending: SpendingListRow) => {
+    setModalState({
+      show: true,
+      callbackFn: () => {
+        deleteSpending(spending.spendingUserAggrId);
+      },
+    });
   };
 
   return (
@@ -35,22 +43,17 @@ const ViewSpendings = () => {
       errorFallback={<Error />}
       loadingFallback={<SpendingsTableLoadingShimmer />}
       useApiCall={() => useSpendings(searchParams)}
-      needRefetch={true}
     >
       <div className="p-3">
         <TableBody
           resetSearchParams={resetSearchParamsWrapper}
           setSearchParams={setSearchParamsWrapper}
-          setSpendingId={setSpendingIdWrapper}
+          setSpendingToDelete={deleteSpendingWrapper}
         />
 
         <TableFooterContainer setSearchParams={setSearchParamsWrapper} />
 
-        <DeleteSpendingModal
-          show={showModal}
-          spendingId={spendingId}
-          setShow={setShowModalWrapper}
-        />
+        {modal}
       </div>
     </ApiCallBoundary>
   );

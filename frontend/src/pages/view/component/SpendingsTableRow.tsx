@@ -7,12 +7,12 @@ import SpendingsTableRowButtons from "./SpendingsTableRowButtons";
 
 type SpendingsTableRowProps = {
   spending: SpendingListRow;
-  setSpendingId: (spendingId: number) => void;
+  setSpendingToDelete: (spending: SpendingListRow) => void;
 };
 
 const SpendingsTableRow: FC<SpendingsTableRowProps> = ({
   spending,
-  setSpendingId,
+  setSpendingToDelete,
 }) => {
   const navigate = useNavigate();
   const handleEdit = () =>
@@ -31,8 +31,8 @@ const SpendingsTableRow: FC<SpendingsTableRowProps> = ({
       </td>
 
       <SpendingsTableRowButtons
-        spendingId={spending.spendingUserAggrId}
-        setSpendingId={setSpendingId}
+        spending={spending}
+        setSpendingToDelete={setSpendingToDelete}
         handleEdit={handleEdit}
       />
     </tr>

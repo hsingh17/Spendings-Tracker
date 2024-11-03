@@ -121,7 +121,7 @@ public class SpendingsController {
      * @see ApiResponse
      */
     @PostMapping("/spendings/{spending-date}")
-    public ResponseEntity<ApiResponse<Object>> createSpending(
+    public ResponseEntity<ApiResponse<Void>> createSpending(
             @RequestBody SpendingsSaveRequest spendingsSaveRequest,
             @PathVariable("spending-date") LocalDate spendingDate) {
         log.info("POST /spendings/" + spendingDate);
@@ -129,7 +129,7 @@ public class SpendingsController {
         spendingService.createSpending(spendingsSaveRequest, spendingDate, getUserId());
 
         int N = spendingsSaveRequest.spendingRequests().size();
-        ApiResponse<Object> response =
+        ApiResponse<Void> response =
                 buildOkApiResponse(
                         null, "Created " + N + " spendings for date " + spendingDate, null);
 
@@ -147,13 +147,13 @@ public class SpendingsController {
      * @see ApiResponse
      */
     @PutMapping("/spendings/{spending-date}")
-    public ResponseEntity<ApiResponse<Object>> updateSpending(
+    public ResponseEntity<ApiResponse<Void>> updateSpending(
             @RequestBody SpendingsSaveRequest spendingsSaveRequest,
             @PathVariable("spending-date") LocalDate spendingDate) {
         log.info("PUT /spendings/" + spendingDate);
 
         spendingService.updateSpending(spendingsSaveRequest, spendingDate, getUserId());
-        ApiResponse<Object> response =
+        ApiResponse<Void> response =
                 buildOkApiResponse(
                         null, "Updated spending for spending date: " + spendingDate, null);
 
@@ -170,12 +170,12 @@ public class SpendingsController {
      * @see ApiResponse
      */
     @DeleteMapping("/spendings/{spending-user-aggr-id}")
-    public ResponseEntity<ApiResponse<Object>> deleteSpending(
+    public ResponseEntity<ApiResponse<Void>> deleteSpending(
             @PathVariable("spending-user-aggr-id") BigInteger spendingUserAggrId) {
         log.info("DELETE /spendings/" + spendingUserAggrId);
 
         spendingService.deleteSpending(spendingUserAggrId);
-        ApiResponse<Object> response =
+        ApiResponse<Void> response =
                 buildOkApiResponse(null, "Deleted spending for id: " + spendingUserAggrId, null);
 
         return ResponseEntity.ok(response);

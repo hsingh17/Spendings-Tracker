@@ -18,9 +18,13 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.math.BigInteger;
 
 /** Controller class that contains routes related to user authentication and authorization */
 @RestController
@@ -201,6 +205,21 @@ public class AuthController {
                 buildOkAuthApiResponse(response, response.message());
 
         return ResponseEntity.ok(apiResponse);
+    }
+
+    @DeleteMapping("/delete-user")
+    public ResponseEntity<ApiResponse<Void>> deleteUser(HttpServletResponse response) {
+        authService.deleteUser(response, getUserId());
+        return ResponseEntity.ok(buildOkAuthApiResponse(null, "Deleted account"));
+    }
+
+    /**
+     * @return the user ID of the authenticated user
+     */
+    private BigInteger getUserId() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+        return userDetails.getUserId();
     }
 
     /**

@@ -106,6 +106,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User findUserByUsername(String username) {
         return findUserByUsernameOrThrow(username);
     }
@@ -126,6 +127,18 @@ public class UserServiceImpl implements UserService {
         // Valid password reset request, so change user's password
         user.setPassword(bCryptPasswordEncoder.encode(resetPasswordReq.password()));
         passwordReset.setUsed(true);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUser(BigInteger userId) {
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) {
+            return;
+        }
+
+        User user = userOpt.get();
+        user.setActive(false);
         userRepository.save(user);
     }
 
@@ -161,7 +174,7 @@ public class UserServiceImpl implements UserService {
 
     private User findUserByUsernameOrThrow(String username) {
         Optional<User> userOpt = maybeFindUserByUsername(username);
-        if (userOpt.isEmpty()) {
+        if (userOpt.isEmpty() || !userOpt.get().isActive()) {
             String errMsg = "No username found with USERNAME " + username;
             log.error(errMsg);
             throw new UsernameNotFoundException(errMsg);

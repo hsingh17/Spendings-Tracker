@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Toaster } from "react-hot-toast";
 import AppContainer from "./common/AppContainer";
 import MainContentContainer from "./common/MainContentContainer";
-import QueryClientConfig from "./config/QueryClientConfig";
+import queryClient from "./config/QueryClientConfig";
 import UserContext from "./context/UserContext";
 import Navbar from "./pages/navbar/Navbar";
 import AppRoutes from "./routes/AppRoutes";
@@ -14,7 +14,7 @@ const App = () => {
   const [user, setUser] = useState<User | null>(null);
 
   return (
-    <QueryClientProvider client={QueryClientConfig}>
+    <QueryClientProvider client={queryClient}>
       <UserContext.Provider value={{ user, setUser }}>
         <AppContainer>
           <Navbar />

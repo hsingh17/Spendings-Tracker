@@ -33,6 +33,9 @@ public class User extends AuditableEntity {
     @Column(name = "IS_VERIFIED")
     private boolean isVerified;
 
+    @Column(name = "IS_ACTIVE")
+    private boolean isActive;
+
     @Column(name = "PASSWORD")
     @JsonIgnore // Don't want to send password (even if it's encrypted)
     private String password;

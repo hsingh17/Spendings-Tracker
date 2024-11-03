@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import queryClient from "../config/QueryClientConfig";
 import { DELETE, SPENDINGS_API_ROUTE } from "../utils/constants";
 import fetchRequestWrapper from "../utils/fetch-utils";
 
@@ -10,7 +11,7 @@ async function deleteSpending(spendingId: number) {
   );
 }
 
-export default function useDeleteSpending(onSuccess?: () => void) {
+export default function useDeleteSpending(searchParams: URLSearchParams) {
   return useMutation({
     mutationFn: (spendingId: number) => {
       const promise = deleteSpending(spendingId);
@@ -22,6 +23,12 @@ export default function useDeleteSpending(onSuccess?: () => void) {
 
       return promise;
     },
-    onSuccess: () => onSuccess?.(),
+    onSuccess: () => {
+      // Refetch list page query when spending deleted
+      queryClient.invalidateQueries([
+        "list-spendings",
+        searchParams.toString(),
+      ]);
+    },
   });
 }

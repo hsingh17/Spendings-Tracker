@@ -34,13 +34,13 @@ const ConfirmPasswordInput: FC<ConfirmPasswordInputProps> = ({
     addFormValidators,
   );
 
-  if (!show) {
-    return <></>;
-  }
-
   useEffect(() => {
     setValidators(getValidators(password));
   }, [password]);
+
+  if (!show) {
+    return <></>;
+  }
 
   return (
     <div className={`relative ${customStyles}`}>
@@ -54,6 +54,7 @@ const ConfirmPasswordInput: FC<ConfirmPasswordInputProps> = ({
       <ShowPasswordIcon
         showPassword={showPassword}
         setShowPassword={setShowPassword}
+        withIcon={true}
       />
     </div>
   );

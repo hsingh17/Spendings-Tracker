@@ -13,6 +13,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
+
 /**
  * Service class for implementing logic related to authentication and authorization
  *
@@ -94,7 +96,7 @@ public interface AuthService {
     SendPasswordResetEmailResponse sendPasswordResetEmail(String username);
 
     /**
-     * Reset's a user's password
+     * Resets a user's password
      *
      * @param resetPasswordReq request object containing data needed to reset password.
      * @param username
@@ -102,4 +104,12 @@ public interface AuthService {
      * @see ResetPasswordResponse
      */
     ResetPasswordResponse resetPassword(ResetPasswordRequest resetPasswordReq, String username);
+
+    /**
+     * Deletes user with id <code>userId</code>
+     *
+     * @param response response object for removing user's cookie
+     * @param userId
+     */
+    void deleteUser(HttpServletResponse response, BigInteger userId);
 }

@@ -61,4 +61,11 @@ public interface UserService extends UserDetailsService {
      * @see ResetPasswordRequest
      */
     void resetPassword(ResetPasswordRequest resetPasswordReq, String username);
+
+    /**
+     * Delete's a user with <code>USER_ID=userId</code>
+     *
+     * @param userId
+     */
+    void deleteUser(BigInteger userId);
 }

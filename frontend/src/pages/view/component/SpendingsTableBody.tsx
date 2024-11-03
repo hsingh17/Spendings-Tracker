@@ -4,12 +4,12 @@ import SpendingsTableRow from "./SpendingsTableRow";
 
 type SpendingsTableBodyProps = {
   spendings: SpendingListRow[];
-  setSpendingId: (spendingId: number) => void;
+  setSpendingToDelete: (spending: SpendingListRow) => void;
 };
 
 const SpendingsTableBody: FC<SpendingsTableBodyProps> = ({
   spendings,
-  setSpendingId,
+  setSpendingToDelete,
 }) => {
   return (
     <tbody>
@@ -18,7 +18,7 @@ const SpendingsTableBody: FC<SpendingsTableBodyProps> = ({
           <SpendingsTableRow
             key={idx}
             spending={spending}
-            setSpendingId={setSpendingId}
+            setSpendingToDelete={setSpendingToDelete}
           />
         );
       })}

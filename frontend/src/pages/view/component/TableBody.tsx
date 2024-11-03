@@ -1,6 +1,10 @@
 import { FC } from "react";
 import Card from "../../../common/Card";
-import { ApiResponse, SpendingsPage } from "../../../utils/types";
+import {
+  ApiResponse,
+  SpendingListRow,
+  SpendingsPage,
+} from "../../../utils/types";
 import SpendingsTable from "./SpendingsTable";
 import TableFilter from "./TableFilter";
 import TableTitle from "./TableTitle";
@@ -9,14 +13,14 @@ type TableBodyProps = {
   response?: ApiResponse<SpendingsPage>;
   resetSearchParams: () => void;
   setSearchParams: (urlSearchParams: URLSearchParams) => void;
-  setSpendingId: (spendingIdToDelete: number) => void;
+  setSpendingToDelete: (spending: SpendingListRow) => void;
 };
 
 const TableBody: FC<TableBodyProps> = ({
   response,
   resetSearchParams,
   setSearchParams,
-  setSpendingId,
+  setSpendingToDelete,
 }) => {
   const timestamp = response?.timestamp;
   const spendings = response?.data?.spendingPage.content;
@@ -33,7 +37,7 @@ const TableBody: FC<TableBodyProps> = ({
       <SpendingsTable
         key={timestamp}
         spendings={spendings}
-        setSpendingId={setSpendingId}
+        setSpendingToDelete={setSpendingToDelete}
       />
     </Card>
   );
