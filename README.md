@@ -25,6 +25,5 @@ This repository holds the code for my spendings tracker app built with Java and 
 
 ## Known issues
 
-- the username input on login has funky looking error state
 - the eyeball has problems when there it's in an error state
 - google sign in button randomly resizes

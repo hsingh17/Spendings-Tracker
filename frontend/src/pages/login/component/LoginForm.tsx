@@ -41,16 +41,9 @@ const LoginForm: FC = () => {
         onSubmit={onSubmit}
         formChildren={
           <>
-            <UsernameInput
-              customStyles="outline-none font-semibold text-lg mt-1 p-1 border-0 w-full"
-              withIcon={true}
-            />
+            <UsernameInput withIcon={true} />
             <div className="mt-5">
-              <PasswordInput
-                inputFieldStyle="outline-none font-semibold text-lg mt-1 p-1 border-0 w-full"
-                withIcon={true}
-                showForgotPassword={true}
-              />
+              <PasswordInput withIcon={true} showForgotPassword={true} />
               <GenericFormButton
                 value={loginDisabled ? "Logging in" : "Log in"}
               />

@@ -39,7 +39,6 @@ export function useModal(
   );
 
   const setModalStateWrapper = (newState: ModalState) => {
-    // TODO: better way?
     setModalState({
       show: modalState.show || newState.show,
       callbackFn: modalState.callbackFn || newState.callbackFn,
