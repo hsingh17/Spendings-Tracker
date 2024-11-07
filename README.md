@@ -7,9 +7,12 @@ This repository holds the code for my spendings tracker app built with Java and 
 - settings
 
   - preferred currency type -> list and save spendings page will need to return the preferred currency types so UI can render correctly
-
-- maybe add a notes/memo field when adding spendings (would need to remove the unique category constraint)
+- maybe add a notes/memo field when adding spendings
 - make navbar items smaller by a little
+
+- possible cutover to cognito(?)
+
+
 - dashboard -> graphs
 - zoom in/out in line charts
 
