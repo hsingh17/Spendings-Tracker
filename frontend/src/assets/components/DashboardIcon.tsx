@@ -1,7 +1,9 @@
+import { FC } from "react";
 import { ReactComponent as Icon } from "../raw/dashboard-icon.svg";
+import { IconTypeProps } from "./icon-props";
 
-const DashboardIcon = () => {
-  return <Icon className="w-10 h-10" stroke="white" fill="none" />;
+const DashboardIcon: FC<IconTypeProps> = ({ className }) => {
+  return <Icon className={className} stroke="white" fill="none" />;
 };
 
 export default DashboardIcon;

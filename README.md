@@ -8,7 +8,6 @@ This repository holds the code for my spendings tracker app built with Java and 
 
   - preferred currency type -> list and save spendings page will need to return the preferred currency types so UI can render correctly
 - maybe add a notes/memo field when adding spendings
-- make navbar items smaller by a little
 
 - possible cutover to cognito(?)
 
@@ -28,5 +27,5 @@ This repository holds the code for my spendings tracker app built with Java and 
 
 ## Known issues
 
-- the eyeball has problems when there it's in an error state
+- the eyeball has problems when it's in an error state
 - google sign in button randomly resizes
