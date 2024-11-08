@@ -2,10 +2,7 @@ package com.spendingstracker.app.controller.auth;
 
 import com.spendingstracker.app.constants.ExternalUserType;
 import com.spendingstracker.app.dto.CustomUserDetails;
-import com.spendingstracker.app.dto.requests.LoginRequest;
-import com.spendingstracker.app.dto.requests.RegisterAcctRequest;
-import com.spendingstracker.app.dto.requests.ResetPasswordRequest;
-import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
+import com.spendingstracker.app.dto.requests.*;
 import com.spendingstracker.app.dto.response.*;
 import com.spendingstracker.app.dto.response.ApiResponse;
 import com.spendingstracker.app.service.auth.AuthService;
@@ -16,6 +13,7 @@ import jakarta.validation.Valid;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -205,6 +203,12 @@ public class AuthController {
                 buildOkAuthApiResponse(response, response.message());
 
         return ResponseEntity.ok(apiResponse);
+    }
+
+    @PatchMapping("/change-password")
+    public ResponseEntity<Void> changePassword(
+            @RequestBody ChangePasswordRequest changePasswordReq) {
+        return null;
     }
 
     @DeleteMapping("/delete-user")

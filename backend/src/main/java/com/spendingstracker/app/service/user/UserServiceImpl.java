@@ -11,7 +11,6 @@ import com.spendingstracker.app.exception.InvalidPasswordResetRequest;
 import com.spendingstracker.app.exception.UserNotVerified;
 import com.spendingstracker.app.exception.UsernameAlreadyExists;
 import com.spendingstracker.app.repository.UserRepository;
-import com.spendingstracker.app.service.password.UserPasswordResetService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,23 +37,19 @@ import java.util.UUID;
 @Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final UserPasswordResetService userPasswordResetService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /**
      * Initialize <code>UserDetailsServiceImpl</code>
      *
      * @param userRepository <code>UserRepository</code> bean
-     * @param userPasswordResetService
      * @param bCryptPasswordEncoder
      * @see UserRepository
      */
     public UserServiceImpl(
             UserRepository userRepository,
-            UserPasswordResetService userPasswordResetService,
             BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
-        this.userPasswordResetService = userPasswordResetService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
