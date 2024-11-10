@@ -5,7 +5,7 @@ package com.spendingstracker.app.exception;
  *
  * @see com.spendingstracker.app.constants.GraphType
  */
-public class NoSuchGraphTypeException extends RuntimeException {
+public class NoSuchGraphTypeException extends AppBadRequestException {
     public NoSuchGraphTypeException(String message) {
         super(message);
     }

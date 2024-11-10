@@ -11,13 +11,20 @@ const ChangePassword = () => {
       overrideClassName={true}
       formChildren={
         <>
-          <PasswordInput title={"Old Password"} showConfirmPassword={false} />
+          <PasswordInput
+            title={"Old Password"}
+            showConfirmPassword={false}
+            name="old-password"
+          />
+
           <PasswordInput
             customStyles="mt-2"
+            name="new-password"
             title={"New Password"}
             showPasswordReq={true}
             showConfirmPassword={true}
           />
+
           <GenericFormButton
             className="mt-5 w-fit bg-theme-cta rounded-lg text-white font-bold px-3 py-2 hover:brightness-75 hover:cursor-pointer"
             value={"Change password"}

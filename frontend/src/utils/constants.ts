@@ -55,6 +55,7 @@ export const VERIFY_ACCT_ROUTE = `${BASE_API_URL}${API_VERSION}/auth/verify-acct
 export const SPENDINGS_API_ROUTE = `${BASE_API_URL}${API_VERSION}/api/spendings`;
 export const SPENDING_CATEGORIES_ROUTE = `${BASE_API_URL}${API_VERSION}/api/spending-categories`;
 export const DELETE_ACCT_ROUTE = `${BASE_API_URL}${API_VERSION}/auth/delete-user`;
+export const CHANGE_PASSWORD_ROUTE = `${BASE_API_URL}${API_VERSION}/auth/change-password`;
 
 // #######################################################################################
 // #######################################################################################

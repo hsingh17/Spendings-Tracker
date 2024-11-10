@@ -22,6 +22,7 @@ import com.spendingstracker.app.repository.SpendingRepository;
 import com.spendingstracker.app.repository.SpendingUserAggrRepository;
 import com.spendingstracker.app.service.user.UserService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Page;
@@ -41,22 +42,12 @@ import java.util.*;
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class SpendingServiceImpl implements SpendingService {
     private final SpendingRepository spendingRepository;
     private final SpendingUserAggrRepository spendingUserAggrRepository;
     private final UserService userService;
     private final SpendingCategoryJpaCache spendingCategoryJpaCache;
-
-    public SpendingServiceImpl(
-            SpendingRepository spendingRepository,
-            SpendingUserAggrRepository spendingUserAggrRepository,
-            UserService userService,
-            SpendingCategoryJpaCache spendingCategoryJpaCache) {
-        this.spendingRepository = spendingRepository;
-        this.spendingUserAggrRepository = spendingUserAggrRepository;
-        this.userService = userService;
-        this.spendingCategoryJpaCache = spendingCategoryJpaCache;
-    }
 
     public SpendingPageResponse getSpendings(
             BigInteger userId, GetSpendingsRequestFilters filters) {
@@ -102,7 +93,7 @@ public class SpendingServiceImpl implements SpendingService {
             SpendingsSaveRequest spendingsSaveRequest, LocalDate spendingDate, BigInteger userId) {
         User user = userService.getUserById(userId);
         SpendingUserAggr spendingUserAggr = findSpendingUserAggrByUserAndDate(user, spendingDate);
-        mergeExistingSpendingsWithRequest(
+        mergeWithExistingSpending(
                 spendingUserAggr, spendingsSaveRequest.spendingRequests());
         spendingUserAggrRepository.save(spendingUserAggr);
     }
@@ -126,7 +117,7 @@ public class SpendingServiceImpl implements SpendingService {
         spendingUserAggrRepository.deleteById(spendingUserAggrId);
     }
 
-    private void mergeExistingSpendingsWithRequest(
+    private void mergeWithExistingSpending(
             SpendingUserAggr spendingUserAggr, List<SpendingRequest> spendingReqs) {
         for (SpendingRequest spendingRequest : spendingReqs) {
             SpendingCategoryEnum category = spendingRequest.getCategory();

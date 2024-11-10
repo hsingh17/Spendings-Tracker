@@ -5,18 +5,16 @@ import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.entity.UserRegistration;
 import com.spendingstracker.app.repository.UserRegistrationRepository;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserRegistrationServiceImpl implements UserRegistrationService {
     private final UserRegistrationRepository userRegistrationRepository;
-
-    public UserRegistrationServiceImpl(UserRegistrationRepository userRegistrationRepository) {
-        this.userRegistrationRepository = userRegistrationRepository;
-    }
 
     @Override
     public String findOrGeneratePin(User user) {

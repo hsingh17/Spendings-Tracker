@@ -11,6 +11,7 @@ import com.spendingstracker.app.service.spending.SpendingService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Page;
@@ -27,21 +28,10 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping("/v1/api")
 @Slf4j
+@RequiredArgsConstructor
 public class SpendingsController {
     private final SpendingService spendingService;
     private final SpendingCategoryService spendingCategoryService;
-
-    /**
-     * Instantiate the <code>SpendingsController</code> from a <code>SpendingService</code> object.
-     *
-     * @param spendingService <code>SpendingService</code> object
-     * @see SpendingService
-     */
-    public SpendingsController(
-            SpendingService spendingService, SpendingCategoryService spendingCategoryService) {
-        this.spendingService = spendingService;
-        this.spendingCategoryService = spendingCategoryService;
-    }
 
     /**
      * Route for returning the user's spendings based on the query params passed in.

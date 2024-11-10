@@ -1,6 +1,7 @@
 import React, { Dispatch, FC, SetStateAction } from "react";
 import { FormError } from "../../utils/types";
-import GenericInputFieldError from "./GenericInputFieldError";
+import GenericInputFieldErrors from "./GenericInputFieldErrors";
+import GenericInputFieldIcon from "./GenericInputFieldIcon";
 
 type GenericInputFieldProps = {
   type: string;
@@ -42,7 +43,7 @@ const GenericInputField: FC<GenericInputFieldProps> = ({
             : ""
         }
       >
-        {icon}
+        <GenericInputFieldIcon icon={icon} />
         <input
           type={type}
           name={name}
@@ -58,11 +59,7 @@ const GenericInputField: FC<GenericInputFieldProps> = ({
         />
       </div>
 
-      <ol>
-        {errs?.map((err, idx) => {
-          return <GenericInputFieldError key={idx + err.errMsg} err={err} />;
-        })}
-      </ol>
+      <GenericInputFieldErrors errs={errs} />
     </>
   );
 };

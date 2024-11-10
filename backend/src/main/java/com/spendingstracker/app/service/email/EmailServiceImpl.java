@@ -10,6 +10,7 @@ import com.spendingstracker.app.proxy.aws.AwsSesProxyService;
 import com.spendingstracker.app.service.password.UserPasswordResetService;
 import com.spendingstracker.app.service.registration.UserRegistrationService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
@@ -28,25 +29,13 @@ import java.util.UUID;
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
     private final SesTemplateNames sesTemplateNames;
     private final UserRegistrationService userRegistrationService;
     private final UserPasswordResetService userPasswordResetService;
     private final AwsSesProxyService awsSesProxyService;
     private final WebsiteRedirects websiteRedirects;
-
-    public EmailServiceImpl(
-            SesTemplateNames sesTemplateNames,
-            UserRegistrationService userRegistrationService,
-            UserPasswordResetService userPasswordResetService,
-            AwsSesProxyService awsSesProxyService,
-            WebsiteRedirects websiteRedirects) {
-        this.sesTemplateNames = sesTemplateNames;
-        this.userRegistrationService = userRegistrationService;
-        this.userPasswordResetService = userPasswordResetService;
-        this.awsSesProxyService = awsSesProxyService;
-        this.websiteRedirects = websiteRedirects;
-    }
 
     @Override
     public void sendRegistrationEmail(User user) {

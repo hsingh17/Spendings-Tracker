@@ -2,18 +2,14 @@ package com.spendingstracker.app.service.auth;
 
 import com.spendingstracker.app.constants.ExternalUserType;
 import com.spendingstracker.app.dto.CustomUserDetails;
-import com.spendingstracker.app.dto.requests.LoginRequest;
-import com.spendingstracker.app.dto.requests.RegisterAcctRequest;
-import com.spendingstracker.app.dto.requests.ResetPasswordRequest;
-import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
+import com.spendingstracker.app.dto.requests.*;
 import com.spendingstracker.app.dto.response.*;
+import com.spendingstracker.app.dto.response.ChangePasswordResponse;
 
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigInteger;
 
 /**
  * Service class for implementing logic related to authentication and authorization
@@ -22,16 +18,6 @@ import java.math.BigInteger;
  */
 @Transactional
 public interface AuthService {
-    /**
-     * Return <code><code>UserDetails</code></code> object for the currently authenticated user's
-     * details.
-     *
-     * @return <code>UserDetails</code> object containing details about the authenticated user.
-     * @see UserDetails
-     * @see CustomUserDetails
-     */
-    UserDetails getUserDetailsForAuthenticatedUser();
-
     /**
      * Attempts to log the user in with the credentials passed in.
      *
@@ -109,7 +95,15 @@ public interface AuthService {
      * Deletes user with id <code>userId</code>
      *
      * @param response response object for removing user's cookie
-     * @param userId
      */
-    void deleteUser(HttpServletResponse response, BigInteger userId);
+    void deleteUser(HttpServletResponse response);
+
+    /**
+     * Changes a user's password
+     *
+     * @param changePasswordReq request object containing data needed to change user's password
+     * @see ChangePasswordRequest
+     * @see ChangePasswordResponse
+     */
+    ChangePasswordResponse changePassword(ChangePasswordRequest changePasswordReq);
 }

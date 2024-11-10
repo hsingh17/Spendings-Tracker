@@ -1,3 +1,13 @@
 package com.spendingstracker.app.dto.response;
 
-public record VerifyAcctResponse(String username, String message) {}
+import lombok.Getter;
+
+@Getter
+public class VerifyAcctResponse extends GenericResponse {
+    private final String username;
+
+    public VerifyAcctResponse(String username, String message) {
+        super(message);
+        this.username = username;
+    }
+}

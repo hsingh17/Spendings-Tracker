@@ -1,4 +1,8 @@
 package com.spendingstracker.app.dto.response;
 
 /** Response object for reset password requests */
-public record ResetPasswordResponse(String message) {}
+public class ResetPasswordResponse extends GenericResponse {
+    public ResetPasswordResponse(String message) {
+        super(message);
+    }
+}

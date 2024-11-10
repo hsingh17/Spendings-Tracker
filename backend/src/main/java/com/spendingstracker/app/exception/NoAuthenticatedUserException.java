@@ -5,7 +5,7 @@ package com.spendingstracker.app.exception;
  *
  * @see com.spendingstracker.app.constants.GraphType
  */
-public class NoAuthenticatedUserException extends RuntimeException {
+public class NoAuthenticatedUserException extends AppBadRequestException {
     public NoAuthenticatedUserException(String message) {
         super(message);
     }

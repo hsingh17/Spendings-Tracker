@@ -1,5 +1,6 @@
 package com.spendingstracker.app.service.user;
 
+import com.spendingstracker.app.dto.requests.ChangePasswordRequest;
 import com.spendingstracker.app.dto.requests.ResetPasswordRequest;
 import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
 import com.spendingstracker.app.entity.User;
@@ -61,6 +62,15 @@ public interface UserService extends UserDetailsService {
      * @see ResetPasswordRequest
      */
     void resetPassword(ResetPasswordRequest resetPasswordReq, String username);
+
+    /**
+     * Change a user's password if criteria is met
+     *
+     * @param changePasswordReq
+     * @param userId
+     * @see ChangePasswordRequest
+     */
+    void changePassword(ChangePasswordRequest changePasswordReq, BigInteger userId);
 
     /**
      * Delete's a user with <code>USER_ID=userId</code>
