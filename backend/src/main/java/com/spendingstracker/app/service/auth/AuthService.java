@@ -102,8 +102,10 @@ public interface AuthService {
      * Changes a user's password
      *
      * @param changePasswordReq request object containing data needed to change user's password
+     * @param httpResponse for deleting cookie
      * @see ChangePasswordRequest
      * @see ChangePasswordResponse
      */
-    ChangePasswordResponse changePassword(ChangePasswordRequest changePasswordReq);
+    ChangePasswordResponse changePassword(
+            ChangePasswordRequest changePasswordReq, HttpServletResponse httpResponse);
 }

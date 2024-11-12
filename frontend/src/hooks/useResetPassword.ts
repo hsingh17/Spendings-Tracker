@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { PASSWORD_RESET_ROUTE, PATCH } from "../utils/constants";
+import { useNavigate } from "react-router-dom";
+import { LOGIN_PAGE, PASSWORD_RESET_ROUTE, PATCH } from "../utils/constants";
 import fetchRequestWrapper from "../utils/fetch-utils";
 
 type ResetPasswordRequest = {
@@ -21,8 +22,9 @@ async function patchResetPassword(
 
 export default function useResetPassword(
   username: string,
-  onSuccess: () => void,
 ) {
+  const navigate = useNavigate();
+
   return useMutation({
     mutationFn: (resetPasswordRequest: ResetPasswordRequest) => {
       const promise = patchResetPassword(username, resetPasswordRequest);
@@ -40,6 +42,6 @@ export default function useResetPassword(
 
       return promise;
     },
-    onSuccess: onSuccess,
+    onSuccess: () => navigate(LOGIN_PAGE),
   });
 }

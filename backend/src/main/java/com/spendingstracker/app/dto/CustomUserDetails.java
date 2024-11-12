@@ -25,9 +25,10 @@ public class CustomUserDetails extends User {
     public CustomUserDetails(
             String username,
             String password,
+            boolean isActive,
             Collection<? extends GrantedAuthority> authorities,
             BigInteger userId) {
-        super(username, password, authorities);
+        super(username, password, isActive, isActive, isActive, isActive, authorities);
         this.userId = userId;
     }
 

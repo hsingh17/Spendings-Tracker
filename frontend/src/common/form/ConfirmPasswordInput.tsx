@@ -51,6 +51,7 @@ const ConfirmPasswordInput: FC<ConfirmPasswordInputProps> = ({
         errs={errs}
         onChange={setVal}
       />
+
       <ShowPasswordIcon
         showPassword={showPassword}
         setShowPassword={setShowPassword}

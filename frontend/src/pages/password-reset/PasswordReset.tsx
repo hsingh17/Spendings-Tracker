@@ -12,10 +12,7 @@ const PasswordReset = () => {
   const [searchParams] = useSearchParams();
   const username = searchParams.get("username");
   const uuid = searchParams.get("uuid");
-
-  const { mutate: resetPassword } = useResetPassword(username!, () =>
-    navigate(LOGIN_PAGE),
-  );
+  const { mutate: resetPassword } = useResetPassword(username!);
 
   const onSubmit = (inputMap: Map<string, string>) => {
     const newPassword = inputMap.get("new-password");

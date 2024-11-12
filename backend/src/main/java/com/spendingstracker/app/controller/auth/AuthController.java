@@ -199,17 +199,36 @@ public class AuthController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    /**
+     * Route for changing a user's password
+     *
+     * @param httpResponse
+     * @param changePasswordReq
+     * @return
+     * @see ApiResponse
+     * @see ChangePasswordRequest
+     * @see ChangePasswordResponse
+     */
     @PatchMapping("/change-password")
     public ResponseEntity<ApiResponse<ChangePasswordResponse>> changePassword(
+            HttpServletResponse httpResponse,
             @RequestBody ChangePasswordRequest changePasswordReq) {
         log.info("PATCH /v1/auth/change-password");
 
-        ChangePasswordResponse response = authService.changePassword(changePasswordReq);
+        ChangePasswordResponse response =
+                authService.changePassword(changePasswordReq, httpResponse);
         ApiResponse<ChangePasswordResponse> apiResponse =
                 buildOkAuthApiResponse(response, response.getMessage());
         return ResponseEntity.ok(apiResponse);
     }
 
+    /**
+     * Route for deleting a user's account
+     *
+     * @param response
+     * @return
+     * @see ApiResponse
+     */
     @DeleteMapping("/delete-user")
     public ResponseEntity<ApiResponse<Void>> deleteUser(HttpServletResponse response) {
         log.info("DELETE /v1/auth/delete-user");

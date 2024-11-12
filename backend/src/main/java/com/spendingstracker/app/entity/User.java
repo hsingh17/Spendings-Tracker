@@ -86,4 +86,10 @@ public class User extends AuditableEntity {
 
         return null;
     }
+
+    /** Simply sets <code>isActive</code> and <code>isVerified</code> to <code>true</code> */
+    public void setActiveAndVerified() {
+        isActive = true;
+        isVerified = true;
+    }
 }

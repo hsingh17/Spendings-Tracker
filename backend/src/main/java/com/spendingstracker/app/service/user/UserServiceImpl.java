@@ -83,17 +83,17 @@ public class UserServiceImpl implements UserService {
     public void verifyUser(VerifyAcctRequest verifyAcctReq, String username) {
         User user = findUserByUsernameOrThrow(username);
         UserRegistration userRegistration = user.getUserRegistration();
-
         String actualPin = verifyAcctReq.pin();
         String expectedPin = userRegistration.getPin();
+
         if (!actualPin.equals(expectedPin)) {
             String errMsg = actualPin + " is not the correct pin for user " + username;
             log.error(errMsg);
             throw new IncorrectPinException(errMsg);
         }
 
-        // Pins match. User is verified now.
-        user.setVerified(true);
+        // Pins match. User is verified and active now.
+        user.setActiveAndVerified();
         userRepository.save(user);
     }
 
@@ -160,18 +160,22 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username)
-            throws UsernameNotFoundException, UserNotVerified {
+            throws UsernameNotFoundException, InvalidUser {
         User user = findUserByUsernameOrThrow(username);
 
         if (!user.isVerified()) {
-            String errMsg = "User with USERNAME " + username + " is not yet verified!";
+            String errMsg = "User with USERNAME " + username + " is not verified!";
             log.error(errMsg);
-            throw new UserNotVerified(errMsg);
+            throw new InvalidUser(errMsg);
         }
 
         // A CustomUserDetails object since userId must be saved
         return new CustomUserDetails(
-                username, user.getPassword(), Collections.emptyList(), user.getUserId());
+                username,
+                user.getPassword(),
+                user.isActive(),
+                Collections.emptyList(),
+                user.getUserId());
     }
 
     private Optional<User> maybeFindUserByUsername(String username) {
@@ -180,7 +184,7 @@ public class UserServiceImpl implements UserService {
 
     private User findUserByUsernameOrThrow(String username) {
         Optional<User> userOpt = maybeFindUserByUsername(username);
-        if (userOpt.isEmpty() || !userOpt.get().isActive()) {
+        if (userOpt.isEmpty()) {
             String errMsg = "No username found with USERNAME " + username;
             log.error(errMsg);
             throw new UsernameNotFoundException(errMsg);
@@ -197,7 +201,6 @@ public class UserServiceImpl implements UserService {
      *     DB. This is done by comparing the encrypted values of both
      */
     private boolean isSamePassword(String expectedPassword, String actualPassword) {
-        String encryptedActualPassword = bCryptPasswordEncoder.encode(actualPassword);
-        return expectedPassword.equals(encryptedActualPassword);
+        return bCryptPasswordEncoder.matches(actualPassword, expectedPassword);
     }
 }

@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
      * @see NoSuchGraphTypeException
      * @see SpendingNotFoundException
      * @see NoAuthenticatedUserException
-     * @see UserNotVerified
+     * @see InvalidUser
      * @see UsernameAlreadyExists
      * @see IncorrectPinException
      * @see InvalidGoogleOAuthToken

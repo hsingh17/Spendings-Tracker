@@ -151,13 +151,15 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ChangePasswordResponse changePassword(ChangePasswordRequest changePasswordReq) {
+    public ChangePasswordResponse changePassword(
+            ChangePasswordRequest changePasswordReq, HttpServletResponse httpResponse) {
         CustomUserDetails curUserDetails = curUserService.getCurrentUserDetails();
         BigInteger userId = curUserDetails.getUserId();
         userService.changePassword(changePasswordReq, userId);
 
         String message = "Successfully changed password for " + curUserDetails.getUsername();
         log.info(message);
+        setCookie(httpResponse, null, 0);
         return new ChangePasswordResponse(message);
     }
 
