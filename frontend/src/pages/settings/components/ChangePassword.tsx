@@ -26,7 +26,6 @@ const ChangePassword = () => {
             name="old-password"
           />
 
-          {/* TODO: Something weird going on with confirm password of new password. For some reason, you need to re-enter it to hit API, so must be validation bugging out */}
           <PasswordInput
             customStyles="mt-2"
             name="new-password"

@@ -95,6 +95,7 @@ const PasswordInput: FC<PasswordInputProps> = ({
 
       <ConfirmPasswordInput
         title={`Confirm ${title}`}
+        name={`confirm-${name}`}
         customStyles={customStyles}
         show={showConfirmPassword}
         password={password}
