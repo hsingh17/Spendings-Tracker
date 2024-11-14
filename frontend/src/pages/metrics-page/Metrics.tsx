@@ -2,8 +2,9 @@ import { useSearchParams } from "react-router-dom";
 import ApiCallBoundary from "../../common/ApiCallBoundary";
 import GraphsContainer from "../../common/graph/GraphsContainer";
 import LoadingSpinner from "../../common/LoadingSpinner";
+import { Granularity } from "../../enums/Granularity";
+import { GraphTypes } from "../../enums/GraphTypes";
 import useSpendings from "../../hooks/useSpendings";
-import { GRANULARITY, GRAPH_TYPES } from "../../utils/constants";
 import Error from "../error/Error";
 import GraphFilter from "./GraphFilter";
 
@@ -15,7 +16,7 @@ const DEFAULT_URL_SEARCH_PARAMS = new URLSearchParams([
 
 export const Metrics = () => {
   const [searchParams, setSearchParams] = useSearchParams(
-    DEFAULT_URL_SEARCH_PARAMS,
+    DEFAULT_URL_SEARCH_PARAMS
   );
 
   const setSearchParamsResetPage = (urlSearchParams: URLSearchParams) => {
@@ -27,24 +28,24 @@ export const Metrics = () => {
     setSearchParams(urlSearchParams);
   };
 
-  const getGranularity = (): GRANULARITY => {
+  const getGranularity = (): Granularity => {
     const graphType = searchParams.get("granularity");
 
     if (!graphType) {
-      return GRANULARITY.Day;
+      return Granularity.Day;
     }
 
-    return GRANULARITY[graphType as keyof typeof GRANULARITY];
+    return Granularity[graphType as keyof typeof Granularity];
   };
 
-  const getGraphType = (): GRAPH_TYPES => {
+  const getGraphType = (): GraphTypes => {
     const graphType = searchParams.get("graph-type");
 
     if (!graphType) {
-      return GRAPH_TYPES.Line;
+      return GraphTypes.Line;
     }
 
-    return GRAPH_TYPES[graphType as keyof typeof GRAPH_TYPES];
+    return GraphTypes[graphType as keyof typeof GraphTypes];
   };
 
   return (

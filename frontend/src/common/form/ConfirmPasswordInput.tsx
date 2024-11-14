@@ -13,11 +13,8 @@ function getValidators(password: string): FormValidator[] {
   return [
     {
       msg: "Passwords must match",
-      validate: (confirmPassword: string): boolean => {
-        console.log(confirmPassword);
-
-        return confirmPassword === password;
-      },
+      validate: (confirmPassword: string): boolean =>
+        confirmPassword === password,
     },
   ];
 }
@@ -38,7 +35,6 @@ const ConfirmPasswordInput: FC<ConfirmPasswordInputProps> = ({
   );
 
   useEffect(() => {
-    console.log(password);
     setValidators(getValidators(password));
   }, [password]);
 

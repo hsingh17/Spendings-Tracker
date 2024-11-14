@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef, useState } from "react";
+import { GraphTypes } from "../../enums/GraphTypes";
 import useDetectMobile from "../../hooks/useDetectMobile";
-import { GRAPH_TYPES } from "../../utils/constants";
 import { ApiResponse, SpendingsPage } from "../../utils/types";
 import BarChart from "./bar/BarChart";
 import GraphEmptyState from "./GraphEmptyState";
@@ -8,7 +8,7 @@ import LineChart from "./line/LineChart";
 import PieChart from "./pie/PieChart";
 
 type MetricsGraphContainerProps = {
-  graphType: GRAPH_TYPES;
+  graphType: GraphTypes;
   response?: ApiResponse<SpendingsPage>;
   setSearchParams: (urlSearchParams: URLSearchParams) => void;
 };
@@ -40,7 +40,7 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({
     const responseNotNull = response!;
 
     switch (graphType) {
-      case GRAPH_TYPES.Line:
+      case GraphTypes.Line:
         return (
           <LineChart
             response={responseNotNull}
@@ -49,7 +49,7 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({
             setSearchParams={setSearchParams}
           />
         );
-      case GRAPH_TYPES.Pie:
+      case GraphTypes.Pie:
         return (
           <PieChart
             response={responseNotNull}
@@ -58,7 +58,7 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({
             setSearchParams={setSearchParams}
           />
         );
-      case GRAPH_TYPES.Bar:
+      case GraphTypes.Bar:
         return (
           <BarChart
             response={responseNotNull}

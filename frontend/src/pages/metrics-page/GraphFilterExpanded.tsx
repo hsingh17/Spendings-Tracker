@@ -1,5 +1,6 @@
 import { Dispatch, FC, SetStateAction } from "react";
-import { GRANULARITY, GRAPH_TYPES } from "../../utils/constants";
+import { Granularity } from "../../enums/Granularity";
+import { GraphTypes } from "../../enums/GraphTypes";
 import GraphDataPointFilter from "./GraphDataPointFilter";
 import GraphDateFilter from "./GraphDateFilter";
 import { GraphFilterState } from "./GraphFilter";
@@ -8,8 +9,8 @@ import GraphGranularityFilter from "./GraphGranularityFilter";
 import GraphTypeFilter from "./GraphTypeFilter";
 
 type GraphFilterExpandedProps = {
-  granularity: GRANULARITY;
-  graphType: GRAPH_TYPES;
+  granularity: Granularity;
+  graphType: GraphTypes;
   searchParams: URLSearchParams;
   defaultUrlSearchParams: URLSearchParams;
   setSearchParams: (urlSearchParams: URLSearchParams) => void;

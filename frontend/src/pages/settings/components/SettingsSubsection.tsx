@@ -19,7 +19,7 @@ const SettingsSubsection: FC<SettingsSubsectionProps> = ({
       <h1 className="text-sm text-gray-500 font-semibold">{description}</h1>
       {children}
       {showHorizontalRule && (
-        <hr className="mt-5 mb-3 border-slate-300 w-full md:w-3/4" />
+        <hr className="mt-5 mb-3 border-slate-300 w-full" />
       )}
     </>
   );
