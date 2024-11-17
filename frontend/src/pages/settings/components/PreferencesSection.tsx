@@ -6,7 +6,7 @@ const PREFERENCES_SUBSECTIONS: SettingsSubsectionProps[] = [
     subsectionTitle: "Currency",
     description:
       "Change your preferred currency type. This will change what currency is displayed when displaying your spendings",
-    children: <>{"&#x1f602;"}</>,
+    children: <> &#x1F1F3; </>,
   },
 ];
 

@@ -5,7 +5,6 @@ import com.spendingstracker.app.dto.response.SpendingCategoriesResponse;
 import com.spendingstracker.app.entity.SpendingCategory;
 import com.spendingstracker.app.proxy.aws.AwsS3ProxyService;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -32,7 +31,7 @@ public class SpendingCategoryServiceImpl implements SpendingCategoryService {
     @Override
     public SpendingCategoriesResponse getSpendingCategories() {
         Collection<SpendingCategory> activeSpendingCategories =
-                spendingCategoryJpaCache.getActiveSpendingCategories();
+                spendingCategoryJpaCache.getAllValues();
 
         Map<String, String> categoryToS3SvgUrlMap = new HashMap<>();
 
