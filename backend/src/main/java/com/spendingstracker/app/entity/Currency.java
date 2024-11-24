@@ -10,7 +10,7 @@ import lombok.Setter;
 
 import java.math.BigInteger;
 
-/** An entity class that maps to the table <code>APP.SPENDING_CATEGORY</code> */
+/** An entity class that maps to the table <code>APP.CURRENCY</code> */
 @NoArgsConstructor
 @Getter
 @Setter

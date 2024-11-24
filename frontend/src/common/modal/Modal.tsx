@@ -14,6 +14,7 @@ type ModalRenderProps = ModalProps & {
 
 const Modal: FC<ModalRenderProps> = ({
   children,
+  showModalButtons = true,
   actionButtonClassName,
   actionButtonText,
   className = "",
@@ -33,6 +34,7 @@ const Modal: FC<ModalRenderProps> = ({
         {children}
 
         <ModalButtons
+          showModalButtons={showModalButtons}
           actionButtonClassName={actionButtonClassName}
           actionButtonText={actionButtonText}
           setModalState={setModalState}

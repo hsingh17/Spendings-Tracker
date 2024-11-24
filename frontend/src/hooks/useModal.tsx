@@ -15,10 +15,11 @@ export type UseModalReturnType = {
 
 export function useModal(
   children: React.ReactNode,
-  actionButtonClassName: string,
-  actionButtonText: string,
+  actionButtonClassName?: Nullable<string>,
+  actionButtonText?: Nullable<string>,
   className: string = "",
-  callbackFnArg?: CallbackFn
+  callbackFnArg?: Nullable<CallbackFn>,
+  showModalButtons: boolean = true
 ): UseModalReturnType {
   const [modalState, setModalState] = useState<ModalState>({
     show: false,
@@ -33,6 +34,7 @@ export function useModal(
       show={modalState.show}
       setModalState={setModalState}
       callbackFn={modalState.callbackFn}
+      showModalButtons={showModalButtons}
     >
       {children}
     </Modal>
@@ -40,7 +42,7 @@ export function useModal(
 
   const setModalStateWrapper = (newState: ModalState) => {
     setModalState({
-      show: modalState.show || newState.show,
+      show: newState.show,
       callbackFn: modalState.callbackFn || newState.callbackFn,
     });
   };

@@ -7,8 +7,9 @@ export type CallbackFn = {
 };
 
 export type ModalActionButtonProps = {
-  actionButtonClassName: string;
-  actionButtonText: string;
+  showModalButtons?: Nullable<boolean>;
+  actionButtonClassName?: Nullable<string>;
+  actionButtonText?: Nullable<string>;
   callbackFn: Nullable<CallbackFn>;
 };
 
@@ -17,6 +18,7 @@ type ModalButtonsProps = ModalActionButtonProps & {
 };
 
 export const ModalButtons: FC<ModalButtonsProps> = ({
+  showModalButtons,
   actionButtonClassName,
   actionButtonText,
   callbackFn,
@@ -39,6 +41,10 @@ export const ModalButtons: FC<ModalButtonsProps> = ({
     });
   };
 
+  if (!showModalButtons || !actionButtonClassName || !actionButtonText) {
+    return <></>;
+  }
+
   return (
     <div className="flex flex-row justify-end w-full mt-auto">
       <button
@@ -55,6 +61,7 @@ export const ModalButtons: FC<ModalButtonsProps> = ({
         onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
           onActionButtonClick(e)
         }
+        type="submit"
       >
         {actionButtonText}
       </button>
