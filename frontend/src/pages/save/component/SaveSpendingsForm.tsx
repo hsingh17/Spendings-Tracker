@@ -2,7 +2,9 @@ import { Dayjs } from "dayjs";
 import React, { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "../../../common/Card";
+import GenericForm from "../../../common/form/GenericForm";
 import CustomDayJs from "../../../config/DayJsConfig";
+import { useModal } from "../../../hooks/useModal";
 import useSaveSpendings from "../../../hooks/useSaveSpendings";
 import { SpendingDetailResponse } from "../../../hooks/useSpending";
 import useSpendingCategories from "../../../hooks/useSpendingCategories";
@@ -11,7 +13,9 @@ import { ApiResponse, Nullable, Spending } from "../../../utils/types";
 import SaveSpendingsAddRowButton from "./SaveSpendingsAddRowButton";
 import SaveSpendingsFooterButtons from "./SaveSpendingsFormFooterButtons";
 import SaveSpendingsFormList from "./SaveSpendingsFormList";
-import SaveSpendingsModal from "./SaveSpendingsModal";
+import SaveSpendingsModalAmount from "./SaveSpendingsModalAmount";
+import SaveSpendingsModalCategory from "./SaveSpendingsModalCategory";
+import SaveSpendingsModalFormFooter from "./SaveSpendingsModalFormFooter";
 import SaveSpendingsTitle from "./SaveSpendingsTitle";
 
 type SaveSpendingsFormProps = {
@@ -32,7 +36,7 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
   const { data: categoriesResponse } = useSpendingCategories();
   const categoriesMap = categoriesResponse?.data?.categoryToS3UrlMap || {};
   const [spendings, setSpendings] = useState<Spending[]>(
-    fetchedSpendings || [],
+    fetchedSpendings || []
   );
   const { mutate: saveSpendings } = useSaveSpendings(date, isCreateMode);
 
@@ -85,6 +89,7 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
     }
 
     setSpendings(newSpendings);
+    hideModal();
   };
 
   const handleDeleteRow = (idx: number) => {
@@ -115,6 +120,37 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
       : spendings[modalSpendingIdx];
   };
 
+  const setModalSpendingIdxWrapper = (idx: number) => {
+    setModalSpendingIdx(idx);
+    showModal();
+  };
+
+  const showModal = () => setModalState({ show: true, callbackFn: null });
+  const hideModal = () => setModalState({ show: false, callbackFn: null });
+
+  const { modal, setModalState } = useModal(
+    <GenericForm
+      wrapperClassName="h-fit w-full"
+      cardClassName="w-full"
+      formClassName="flex flex-col"
+      title={modalSpendingIdx === -1 ? "Add" : "Edit"}
+      onSubmit={addNewSpending}
+      formChildren={
+        <>
+          <SaveSpendingsModalCategory
+            spending={getSpendingForModal()}
+            categoriesMap={categoriesMap}
+          />
+          <SaveSpendingsModalAmount spending={getSpendingForModal()} />
+          <SaveSpendingsModalFormFooter setShow={hideModal} />
+        </>
+      }
+    />,
+    null,
+    null,
+    "w-full md:w-[600px]"
+  );
+
   useEffect(() => {
     setSpendings(fetchedSpendings || []);
   }, [fetchedSpendings]);
@@ -132,12 +168,12 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
           spendings={spendings}
           categoriesMap={categoriesMap}
           handleDeleteRow={handleDeleteRow}
-          setModalSpendingIdx={setModalSpendingIdx}
+          setModalSpendingIdx={setModalSpendingIdxWrapper}
         />
 
         <SaveSpendingsAddRowButton
           isDisabled={countSpendingsToDisplay() === MAX_SPENDINGS_FOR_A_DAY}
-          setModalSpendingIdx={setModalSpendingIdx}
+          setModalSpendingIdx={setModalSpendingIdxWrapper}
         />
       </Card>
 
@@ -147,12 +183,7 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
         handleSubmit={handleSubmit}
       />
 
-      <SaveSpendingsModal
-        categoriesMap={categoriesMap}
-        spending={getSpendingForModal()}
-        setModalSpendingIdx={setModalSpendingIdx}
-        onSubmit={addNewSpending}
-      />
+      {modal}
     </div>
   );
 };

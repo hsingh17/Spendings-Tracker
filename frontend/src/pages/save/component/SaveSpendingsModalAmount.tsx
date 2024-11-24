@@ -4,12 +4,13 @@ import useFormValidate from "../../../hooks/useFormValidate";
 import {
   FormValidator,
   GenericFormInputProps,
+  Nullable,
   Spending,
 } from "../../../utils/types";
 import SaveSpendingsModalAmountInput from "./SaveSpendingsModalAmountInput";
 
 type SaveSpendingsModalFormProps = GenericFormInputProps & {
-  spending: Spending;
+  spending: Nullable<Spending>;
 };
 
 const AMOUNT_VALIDATORS: FormValidator[] = [
@@ -24,11 +25,11 @@ const SaveSpendingsModalAmount: FC<SaveSpendingsModalFormProps> = ({
   addformvalidators: addFormValidators,
   spending,
 }) => {
-  const [amount, setAmount] = useState<number>(spending.amount || 0);
+  const [amount, setAmount] = useState<number>(spending?.amount || 0);
   const { setVal, errs } = useFormValidate(
     name,
     AMOUNT_VALIDATORS,
-    addFormValidators,
+    addFormValidators
   );
   const hasInputError = errs.length > 0 && !errs[0].valid;
 
@@ -38,8 +39,12 @@ const SaveSpendingsModalAmount: FC<SaveSpendingsModalFormProps> = ({
   };
 
   useEffect(() => {
-    setVal(spending.amount?.toPrecision(2) || "");
+    setVal(spending?.amount?.toPrecision(2) || "");
   }, [spending]);
+
+  if (!spending) {
+    return <></>;
+  }
 
   return (
     <>
