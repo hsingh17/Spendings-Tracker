@@ -7,6 +7,7 @@ const PREFERENCES_SUBSECTIONS: SettingsSubsectionProps[] = [
     subsectionTitle: "Currency",
     description:
       "Change your preferred currency type. This will change what currency is displayed when displaying your spendings",
+    showHorizontalRule: false,
     children: <CurrencySection />,
   },
 ];

@@ -1,5 +1,7 @@
 package com.spendingstracker.app.controller.currency;
 
+import static com.spendingstracker.app.dto.response.ApiResponse.okResponse;
+
 import com.spendingstracker.app.dto.response.*;
 import com.spendingstracker.app.service.currency.CurrencyService;
 
@@ -22,7 +24,7 @@ public class CurrencyController {
         log.info("GET /currencies");
         CurrenciesListResponse currenciesListResponse = currencyService.getCurrencies();
         ApiResponse<CurrenciesListResponse> response =
-                ApiResponse.buildOkApiResponse(currenciesListResponse, null, null);
+                okResponse(currenciesListResponse, null, null);
         return ResponseEntity.ok(response);
     }
 }

@@ -1,5 +1,7 @@
 package com.spendingstracker.app.controller.spending;
 
+import static com.spendingstracker.app.dto.response.ApiResponse.okResponse;
+
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.requests.GetSpendingsRequestFilters;
 import com.spendingstracker.app.dto.requests.SpendingsSaveRequest;
@@ -15,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -73,7 +74,7 @@ public class SpendingsController {
                         spendingsPage.getTotalElements());
 
         ApiResponse<SpendingPageResponse> response =
-                buildOkApiResponse(spendingPageResponse, null, apiMetadata);
+                okResponse(spendingPageResponse, apiMetadata, null);
 
         return ResponseEntity.ok(response);
     }
@@ -94,8 +95,7 @@ public class SpendingsController {
         SpendingDetailsResponse spendingsResponse =
                 spendingService.getSpendingDetails(spendingDate, getUserId());
 
-        ApiResponse<SpendingDetailsResponse> response =
-                buildOkApiResponse(spendingsResponse, null, null);
+        ApiResponse<SpendingDetailsResponse> response = okResponse(spendingsResponse, null, null);
 
         return ResponseEntity.ok(response);
     }
@@ -120,8 +120,7 @@ public class SpendingsController {
 
         int N = spendingsSaveRequest.spendingRequests().size();
         ApiResponse<Void> response =
-                buildOkApiResponse(
-                        null, "Created " + N + " spendings for date " + spendingDate, null);
+                okResponse(null, null, "Created " + N + " spendings for date " + spendingDate);
 
         return ResponseEntity.ok(response);
     }
@@ -144,8 +143,7 @@ public class SpendingsController {
 
         spendingService.updateSpending(spendingsSaveRequest, spendingDate, getUserId());
         ApiResponse<Void> response =
-                buildOkApiResponse(
-                        null, "Updated spending for spending date: " + spendingDate, null);
+                okResponse(null, null, "Updated spending for spending date: " + spendingDate);
 
         return ResponseEntity.ok(response);
     }
@@ -166,7 +164,7 @@ public class SpendingsController {
 
         spendingService.deleteSpending(spendingUserAggrId);
         ApiResponse<Void> response =
-                buildOkApiResponse(null, "Deleted spending for id: " + spendingUserAggrId, null);
+                okResponse(null, null, "Deleted spending for id: " + spendingUserAggrId);
 
         return ResponseEntity.ok(response);
     }
@@ -184,12 +182,12 @@ public class SpendingsController {
         SpendingCategoriesResponse spendingCategoriesResponse =
                 spendingCategoryService.getSpendingCategories();
         ApiResponse<SpendingCategoriesResponse> response =
-                buildOkApiResponse(
+                okResponse(
                         spendingCategoriesResponse,
+                        null,
                         "Returned "
                                 + spendingCategoriesResponse.categoryToS3UrlMap().size()
-                                + " categories",
-                        null);
+                                + " categories");
 
         return ResponseEntity.ok(response);
     }
@@ -218,15 +216,5 @@ public class SpendingsController {
     private ApiLinks buildApiLinks(
             String requestUri, String queryString, int curPage, int lastPage) {
         return new ApiLinks.ApiLinksBuilder(requestUri, queryString, curPage, lastPage).build();
-    }
-
-    private <T> ApiResponse<T> buildOkApiResponse(T data, String message, ApiMetadata metadata) {
-        return new ApiResponse.ApiResponseBuilder<T>()
-                .setHttpStatus(HttpStatus.OK.value())
-                .setOk(true)
-                .setData(data)
-                .setMessage(message)
-                .setMetadata(metadata)
-                .build();
     }
 }

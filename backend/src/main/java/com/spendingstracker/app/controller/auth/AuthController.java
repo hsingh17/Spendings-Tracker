@@ -1,5 +1,7 @@
 package com.spendingstracker.app.controller.auth;
 
+import static com.spendingstracker.app.dto.response.ApiResponse.okResponse;
+
 import com.spendingstracker.app.constants.ExternalUserType;
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.requests.*;
@@ -14,7 +16,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -39,7 +40,7 @@ public class AuthController {
     public ResponseEntity<ApiResponse<UserDetails>> getMe() {
         log.info("GET /me");
         UserDetails userDetails = curUserService.getCurrentUserDetails();
-        ApiResponse<UserDetails> apiResponse = buildOkAuthApiResponse(userDetails, null);
+        ApiResponse<UserDetails> apiResponse = okResponse(userDetails, null, null);
         return ResponseEntity.ok(apiResponse);
     }
 
@@ -70,7 +71,7 @@ public class AuthController {
         log.info("POST /login");
 
         UserDetails userDetails = authService.loginUser(loginRequest, response, externalUserType);
-        ApiResponse<UserDetails> apiResponse = buildOkAuthApiResponse(userDetails, null);
+        ApiResponse<UserDetails> apiResponse = okResponse(userDetails, null, null);
         return ResponseEntity.ok(apiResponse);
     }
 
@@ -87,7 +88,7 @@ public class AuthController {
         log.info("POST /logout");
 
         authService.logoutUser(response);
-        ApiResponse<Object> apiResponse = buildOkAuthApiResponse(null, "Successfully logged out");
+        ApiResponse<Object> apiResponse = okResponse(null, null, "Successfully logged out");
         return ResponseEntity.ok(apiResponse);
     }
 
@@ -107,7 +108,7 @@ public class AuthController {
 
         RegisterAcctResponse registerAcctResponse = authService.registerUser(registerAcctReq);
         ApiResponse<RegisterAcctResponse> apiResponse =
-                buildOkAuthApiResponse(registerAcctResponse, registerAcctResponse.getMessage());
+                okResponse(registerAcctResponse, null, registerAcctResponse.getMessage());
 
         return ResponseEntity.ok(apiResponse);
     }
@@ -132,7 +133,7 @@ public class AuthController {
         VerifyAcctResponse verifyAcctResponse =
                 authService.verifyUser(verifyAcctReq, username, response);
         ApiResponse<VerifyAcctResponse> apiResponse =
-                buildOkAuthApiResponse(verifyAcctResponse, verifyAcctResponse.getMessage());
+                okResponse(verifyAcctResponse, null, verifyAcctResponse.getMessage());
 
         return ResponseEntity.ok(apiResponse);
     }
@@ -152,7 +153,7 @@ public class AuthController {
 
         ResendRegistrationEmailResponse response = authService.resendRegistrationEmail(username);
         ApiResponse<ResendRegistrationEmailResponse> apiResponse =
-                buildOkAuthApiResponse(response, response.getMessage());
+                okResponse(response, null, response.getMessage());
 
         return ResponseEntity.ok(apiResponse);
     }
@@ -172,7 +173,7 @@ public class AuthController {
 
         SendPasswordResetEmailResponse response = authService.sendPasswordResetEmail(username);
         ApiResponse<SendPasswordResetEmailResponse> apiResponse =
-                buildOkAuthApiResponse(response, response.getMessage());
+                okResponse(response, null, response.getMessage());
 
         return ResponseEntity.ok(apiResponse);
     }
@@ -194,7 +195,7 @@ public class AuthController {
 
         ResetPasswordResponse response = authService.resetPassword(resetPasswordReq, username);
         ApiResponse<ResetPasswordResponse> apiResponse =
-                buildOkAuthApiResponse(response, response.getMessage());
+                okResponse(response, null, response.getMessage());
 
         return ResponseEntity.ok(apiResponse);
     }
@@ -218,7 +219,7 @@ public class AuthController {
         ChangePasswordResponse response =
                 authService.changePassword(changePasswordReq, httpResponse);
         ApiResponse<ChangePasswordResponse> apiResponse =
-                buildOkAuthApiResponse(response, response.getMessage());
+                okResponse(response, null, response.getMessage());
         return ResponseEntity.ok(apiResponse);
     }
 
@@ -234,24 +235,6 @@ public class AuthController {
         log.info("DELETE /v1/auth/delete-user");
 
         authService.deleteUser(response);
-        return ResponseEntity.ok(buildOkAuthApiResponse(null, "Deleted account"));
-    }
-
-    /**
-     * Build an <code>OK</code> <code>ApiResponse</code> object from <code>data</code> and <code>
-     * message</code>.
-     *
-     * @param data generic data object
-     * @param message message to return to the frontend
-     * @return <code>{@literal ApiResponse<T>}</code> object contain
-     * @see ApiResponse
-     */
-    private <T> ApiResponse<T> buildOkAuthApiResponse(T data, String message) {
-        return new ApiResponse.ApiResponseBuilder<T>()
-                .setData(data)
-                .setOk(true)
-                .setMessage(message)
-                .setHttpStatus(HttpStatus.OK.value())
-                .build();
+        return ResponseEntity.ok(okResponse(null, null, "Deleted account"));
     }
 }
