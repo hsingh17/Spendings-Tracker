@@ -1,6 +1,5 @@
 import { FC } from "react";
 import { Currency } from "../../../hooks/useCurrencies";
-const SELECTED_CLASS_NAME = "bg-theme-cta bg-opacity-35 p-2 rounded-lg";
 
 const HOVER_CLASS_NAME =
   "hover:bg-theme-cta hover:bg-opacity-20 hover:p-2 hover:rounded-lg hover:cursor-pointer";
@@ -21,16 +20,17 @@ const CurrencyDropdownOption: FC<CurrencyDropdownOptionProps> = ({
   const getClassName = (): string => {
     let ret = "";
 
-    if (isSelected) {
-      ret += SELECTED_CLASS_NAME;
-    }
-
     if (animateHover) {
       ret += HOVER_CLASS_NAME;
     }
 
     return ret;
   };
+
+  if (isSelected) {
+    return <></>;
+  }
+
   return (
     <div className="w-full md:w-fit">
       <div className={getClassName()}>
