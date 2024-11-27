@@ -2,6 +2,7 @@ package com.spendingstracker.app.controller.currency;
 
 import static com.spendingstracker.app.dto.response.ApiResponse.okResponse;
 
+import com.spendingstracker.app.dto.requests.UpdateCurrencyRequest;
 import com.spendingstracker.app.dto.response.*;
 import com.spendingstracker.app.service.currency.CurrencyService;
 
@@ -35,5 +36,12 @@ public class CurrencyController {
         ApiResponse<CurrenciesListResponse> response =
                 okResponse(currenciesListResponse, null, null);
         return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/update-currency")
+    public ResponseEntity<ApiResponse<Void>> updateUserCurrency(
+            @RequestBody UpdateCurrencyRequest updateCurrencyRequest) {
+        //TODO
+        return null;
     }
 }
