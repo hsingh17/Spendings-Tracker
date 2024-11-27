@@ -40,6 +40,10 @@ public class User extends AuditableEntity {
     @JsonIgnore // Don't want to send password (even if it's encrypted)
     private String password;
 
+    @OneToOne
+    @JoinColumn(name = "PREF_CURRENCY_ID", referencedColumnName = "CURRENCY_ID", nullable = false)
+    private Currency prefCurrency;
+
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.ALL,

@@ -19,10 +19,19 @@ import org.springframework.web.bind.annotation.*;
 public class CurrencyController {
     private final CurrencyService currencyService;
 
+    /**
+     * @return all available currencies
+     * @param indicateUserCurrency flag to determine if the user's selected currency should be
+     *     indicated in response
+     */
     @GetMapping("/currencies")
-    public ResponseEntity<ApiResponse<CurrenciesListResponse>> getCurrencies() {
+    public ResponseEntity<ApiResponse<CurrenciesListResponse>> getCurrencies(
+            @RequestParam(value = "indicateUserCurrency", required = false, defaultValue = "false")
+                    boolean indicateUserCurrency) {
         log.info("GET /currencies");
-        CurrenciesListResponse currenciesListResponse = currencyService.getCurrencies();
+        CurrenciesListResponse currenciesListResponse =
+                currencyService.getCurrencies(indicateUserCurrency);
+
         ApiResponse<CurrenciesListResponse> response =
                 okResponse(currenciesListResponse, null, null);
         return ResponseEntity.ok(response);

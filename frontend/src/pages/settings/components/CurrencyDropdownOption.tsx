@@ -9,6 +9,7 @@ type CurrencyDropdownOptionProps = {
   showHorizontalRule?: boolean;
   isSelected: boolean;
   animateHover?: boolean;
+  onClick?: () => void;
 };
 
 const CurrencyDropdownOption: FC<CurrencyDropdownOptionProps> = ({
@@ -16,24 +17,18 @@ const CurrencyDropdownOption: FC<CurrencyDropdownOptionProps> = ({
   showHorizontalRule = true,
   isSelected,
   animateHover = true,
+  onClick,
 }) => {
-  const getClassName = (): string => {
-    let ret = "";
-
-    if (animateHover) {
-      ret += HOVER_CLASS_NAME;
-    }
-
-    return ret;
-  };
-
   if (isSelected) {
     return <></>;
   }
 
   return (
     <div className="w-full md:w-fit">
-      <div className={getClassName()} onClick={() => alert(currency.shortName)}>
+      <div
+        className={animateHover ? HOVER_CLASS_NAME : ""}
+        onClick={() => onClick?.()}
+      >
         <div className="w-fit flex flex-row items-center">
           <img
             src={currency.flagImgUrl}

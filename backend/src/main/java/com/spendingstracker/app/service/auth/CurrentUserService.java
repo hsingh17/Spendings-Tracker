@@ -1,6 +1,7 @@
 package com.spendingstracker.app.service.auth;
 
 import com.spendingstracker.app.dto.CustomUserDetails;
+import com.spendingstracker.app.entity.User;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -19,4 +20,10 @@ public interface CurrentUserService {
      * @see CustomUserDetails
      */
     CustomUserDetails getCurrentUserDetails();
+
+    /**
+     * @return get currently authenticated user's <code>User</code> entity object
+     * @see User
+     */
+    User getUserJpaEntity();
 }

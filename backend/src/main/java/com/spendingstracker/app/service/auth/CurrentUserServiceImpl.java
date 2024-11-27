@@ -1,8 +1,11 @@
 package com.spendingstracker.app.service.auth;
 
 import com.spendingstracker.app.dto.CustomUserDetails;
+import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.exception.NoAuthenticatedUserException;
+import com.spendingstracker.app.service.user.UserService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.security.core.Authentication;
@@ -13,7 +16,10 @@ import java.math.BigInteger;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class CurrentUserServiceImpl implements CurrentUserService {
+    private final UserService userService;
+
     @Override
     public BigInteger getCurrentUserId() {
         CustomUserDetails userDetails = getCurrentUserDetails();
@@ -30,5 +36,10 @@ public class CurrentUserServiceImpl implements CurrentUserService {
         }
 
         return (CustomUserDetails) auth.getPrincipal();
+    }
+
+    @Override
+    public User getUserJpaEntity() {
+        return userService.getUserById(getCurrentUserId());
     }
 }
