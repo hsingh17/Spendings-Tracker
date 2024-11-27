@@ -23,7 +23,7 @@ const CurrencyDropdownOpen: FC<CurrencyDropdownOpenProps> = ({
         {currencies?.map((currency, idx) => (
           <CurrencyDropdownOption
             currency={currency}
-            isSelected={currency.shortName === "USD"}
+            isSelected={currency.isSelected}
             showHorizontalRule={idx !== currencies.length - 1}
           />
         ))}

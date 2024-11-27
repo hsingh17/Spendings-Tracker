@@ -11,11 +11,8 @@ type CurrencyDropdownProps = {
 const CurrencyDropdown: FC<CurrencyDropdownProps> = ({ response }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const currencies = response?.data?.currencies;
-  const getSelectedCurrency = (): Nullable<Currency> => {
-    return currencies?.find((currency) => currency.shortName === "USD");
-  };
-
-  // TODO: Default selection to user's currently selected currency (need boolean flag from api response)
+  const getSelectedCurrency = (): Nullable<Currency> =>
+    currencies?.find((currency) => currency.isSelected);
 
   return (
     <div className="mt-5 relative">

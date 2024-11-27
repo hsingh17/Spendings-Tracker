@@ -8,6 +8,7 @@ export type Currency = {
   shortName: string;
   symbol: string;
   flagImgUrl: string;
+  isSelected: boolean;
 };
 
 export type CurrenciesListResponse = {
