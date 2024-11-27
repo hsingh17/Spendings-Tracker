@@ -33,7 +33,7 @@ const CurrencyDropdownOption: FC<CurrencyDropdownOptionProps> = ({
 
   return (
     <div className="w-full md:w-fit">
-      <div className={getClassName()}>
+      <div className={getClassName()} onClick={() => alert(currency.shortName)}>
         <div className="w-fit flex flex-row items-center">
           <img
             src={currency.flagImgUrl}

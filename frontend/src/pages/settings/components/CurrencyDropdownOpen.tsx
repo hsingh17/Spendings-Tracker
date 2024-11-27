@@ -18,12 +18,13 @@ const CurrencyDropdownOpen: FC<CurrencyDropdownOpenProps> = ({
   }
 
   return (
-    <div className="absolute left-0 top-16 h-52 overflow-y-scroll">
-      <Card className="p-5">
-        {currencies?.map((currency) => (
+    <div className="absolute left-0 top-16 h-80 overflow-y-scroll w-full md:w-fit">
+      <Card className="p-5 border-2">
+        {currencies?.map((currency, idx) => (
           <CurrencyDropdownOption
             currency={currency}
             isSelected={currency.shortName === "USD"}
+            showHorizontalRule={idx !== currencies.length - 1}
           />
         ))}
       </Card>
