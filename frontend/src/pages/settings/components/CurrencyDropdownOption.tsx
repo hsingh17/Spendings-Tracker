@@ -9,7 +9,7 @@ type CurrencyDropdownOptionProps = {
   showHorizontalRule?: boolean;
   isSelected: boolean;
   animateHover?: boolean;
-  onClick?: () => void;
+  onClick?: (currency: Currency) => void;
 };
 
 const CurrencyDropdownOption: FC<CurrencyDropdownOptionProps> = ({
@@ -27,7 +27,7 @@ const CurrencyDropdownOption: FC<CurrencyDropdownOptionProps> = ({
     <div className="w-full md:w-fit">
       <div
         className={animateHover ? HOVER_CLASS_NAME : ""}
-        onClick={() => onClick?.()}
+        onClick={() => onClick?.(currency)}
       >
         <div className="w-fit flex flex-row items-center">
           <img

@@ -7,7 +7,7 @@ import fetchRequestWrapper from "../utils/fetch-utils";
 async function deleteSpending(spendingId: number) {
   return await fetchRequestWrapper(
     `${SPENDINGS_API_ROUTE}/${spendingId}`,
-    DELETE,
+    DELETE
   );
 }
 
@@ -23,12 +23,8 @@ export default function useDeleteSpending(searchParams: URLSearchParams) {
 
       return promise;
     },
-    onSuccess: () => {
+    onSuccess: () =>
       // Refetch list page query when spending deleted
-      queryClient.invalidateQueries([
-        "list-spendings",
-        searchParams.toString(),
-      ]);
-    },
+      queryClient.refetchQueries(["list-spendings", searchParams.toString()]),
   });
 }

@@ -24,7 +24,7 @@ export default function useDeleteAccount() {
           },
           success: () => {
             navigate(LOGIN_PAGE);
-            // Invalidate the user key from cache so we don't keep any cached user data
+            // Remove the user key from cache so we don't keep any cached user data
             queryClient.removeQueries(["user"]);
 
             return "Succesfully deleted your account";

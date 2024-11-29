@@ -1,6 +1,5 @@
 package com.spendingstracker.app.dto.requests;
 
-import jakarta.validation.constraints.Email;
 
 /**
  * Object to store the RequestBody for login requests. Notes:

@@ -38,6 +38,12 @@ public class CurrencyController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Route for updating a user's currency
+     *
+     * @param updateCurrencyRequest
+     * @see UpdateCurrencyRequest
+     */
     @PutMapping("/update-currency")
     public ResponseEntity<ApiResponse<Void>> updateUserCurrency(
             @RequestBody UpdateCurrencyRequest updateCurrencyRequest) {

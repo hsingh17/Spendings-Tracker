@@ -87,5 +87,5 @@ public interface UserService extends UserDetailsService {
      * @param userId
      * @see Currency
      */
-    void changeCurrency(Currency currency, BigInteger userId);
+    void updateCurrency(Currency currency, BigInteger userId);
 }

@@ -93,8 +93,7 @@ public class SpendingServiceImpl implements SpendingService {
             SpendingsSaveRequest spendingsSaveRequest, LocalDate spendingDate, BigInteger userId) {
         User user = userService.getUserById(userId);
         SpendingUserAggr spendingUserAggr = findSpendingUserAggrByUserAndDate(user, spendingDate);
-        mergeWithExistingSpending(
-                spendingUserAggr, spendingsSaveRequest.spendingRequests());
+        mergeWithExistingSpending(spendingUserAggr, spendingsSaveRequest.spendingRequests());
         spendingUserAggrRepository.save(spendingUserAggr);
     }
 

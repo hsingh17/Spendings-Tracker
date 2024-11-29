@@ -57,6 +57,7 @@ export const SPENDING_CATEGORIES_ROUTE = `${BASE_API_URL}${API_VERSION}/api/spen
 export const DELETE_ACCT_ROUTE = `${BASE_API_URL}${API_VERSION}/auth/delete-user`;
 export const CHANGE_PASSWORD_ROUTE = `${BASE_API_URL}${API_VERSION}/auth/change-password`;
 export const LIST_CURRENCIES_ROUTE = `${BASE_API_URL}${API_VERSION}/currency/currencies`;
+export const UPDATE_CURRENCY_ROUTE = `${BASE_API_URL}${API_VERSION}/currency/update-currency`;
 
 // #######################################################################################
 // #######################################################################################

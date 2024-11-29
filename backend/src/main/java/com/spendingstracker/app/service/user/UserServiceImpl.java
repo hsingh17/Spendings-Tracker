@@ -145,7 +145,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changeCurrency(Currency currency, BigInteger userId) {
+    public void updateCurrency(Currency currency, BigInteger userId) {
         User user = getUserById(userId);
         Currency curPrefCurrency = user.getPrefCurrency();
         if (curPrefCurrency.equals(currency)) {

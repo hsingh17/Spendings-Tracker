@@ -43,7 +43,7 @@ export default function useVerifyAccount(username: string) {
 
     onSuccess: () => {
       navigate(DASHBOARD_PAGE);
-      // Invalidate the user key from cache so we get the new logged in user
+      // Remove the user key from cache so we get the new logged in user
       queryClient.removeQueries(["user"]);
     },
   });

@@ -22,7 +22,11 @@ const CurrencyDropdown: FC<CurrencyDropdownProps> = ({ response }) => {
         setOpen={setIsOpen}
       />
 
-      <CurrencyDropdownOpen currencies={currencies} isOpen={isOpen} />
+      <CurrencyDropdownOpen
+        currencies={currencies}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+      />
     </div>
   );
 };

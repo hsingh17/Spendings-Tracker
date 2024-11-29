@@ -54,6 +54,6 @@ public class CurrencyServiceImpl implements CurrencyService {
     public void updateUserCurrency(UpdateCurrencyRequest updateCurrencyRequest) {
         BigInteger userId = currUserService.getCurrentUserId();
         Currency jpaCurrency = currencyJpaCache.getFromCache(updateCurrencyRequest.currency());
-        userService.changeCurrency(jpaCurrency, userId);
+        userService.updateCurrency(jpaCurrency, userId);
     }
 }

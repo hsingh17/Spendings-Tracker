@@ -18,7 +18,7 @@ import java.util.List;
 @Repository
 public interface SpendingCategoryRepositoryApp
         extends CrudRepository<SpendingCategory, BigInteger>,
-        AppCacheLoadingRepository<SpendingCategory> {
+                AppCacheLoadingRepository<SpendingCategory> {
     @Query(
             value =
                     """
