@@ -41,7 +41,11 @@ public class CurrencyController {
     @PutMapping("/update-currency")
     public ResponseEntity<ApiResponse<Void>> updateUserCurrency(
             @RequestBody UpdateCurrencyRequest updateCurrencyRequest) {
-        //TODO
-        return null;
+        log.info("PUT /update-currency");
+        currencyService.updateUserCurrency(updateCurrencyRequest);
+        ApiResponse<Void> response =
+                okResponse(null, null, "Updated currency to " + updateCurrencyRequest.currency());
+
+        return ResponseEntity.ok(response);
     }
 }

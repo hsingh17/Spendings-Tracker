@@ -3,6 +3,7 @@ package com.spendingstracker.app.service.user;
 import com.spendingstracker.app.dto.requests.ChangePasswordRequest;
 import com.spendingstracker.app.dto.requests.ResetPasswordRequest;
 import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
+import com.spendingstracker.app.entity.Currency;
 import com.spendingstracker.app.entity.User;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -78,4 +79,13 @@ public interface UserService extends UserDetailsService {
      * @param userId
      */
     void deleteUser(BigInteger userId);
+
+    /**
+     * Change's a user's currency to <code>currency</code>
+     *
+     * @param currency
+     * @param userId
+     * @see Currency
+     */
+    void changeCurrency(Currency currency, BigInteger userId);
 }

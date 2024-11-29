@@ -4,6 +4,7 @@ import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.requests.ChangePasswordRequest;
 import com.spendingstracker.app.dto.requests.ResetPasswordRequest;
 import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
+import com.spendingstracker.app.entity.Currency;
 import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.entity.UserPasswordReset;
 import com.spendingstracker.app.entity.UserRegistration;
@@ -138,13 +139,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(BigInteger userId) {
-        Optional<User> userOpt = userRepository.findById(userId);
-        if (userOpt.isEmpty()) {
+        User user = getUserById(userId);
+        user.setActive(false);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void changeCurrency(Currency currency, BigInteger userId) {
+        User user = getUserById(userId);
+        Currency curPrefCurrency = user.getPrefCurrency();
+        if (curPrefCurrency.equals(currency)) {
+            // NOOP: Same currency
             return;
         }
 
-        User user = userOpt.get();
-        user.setActive(false);
+        user.setPrefCurrency(currency);
         userRepository.save(user);
     }
 
