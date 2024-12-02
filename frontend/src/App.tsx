@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Toaster } from "react-hot-toast";
 import AppContainer from "./common/AppContainer";
 import MainContentContainer from "./common/MainContentContainer";
+import LocalStorageLoader from "./config/LocalStorageLoader";
 import queryClient from "./config/QueryClientConfig";
 import UserContext from "./context/UserContext";
 import Navbar from "./pages/navbar/Navbar";
@@ -18,6 +19,7 @@ const App = () => {
       <UserContext.Provider value={{ user, setUser }}>
         <AppContainer>
           <Navbar />
+          <LocalStorageLoader />
           <MainContentContainer>
             <AppRoutes />
             <Toaster />

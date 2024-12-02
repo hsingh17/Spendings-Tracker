@@ -26,7 +26,7 @@ export default function useLogout() {
             navigate(LOGIN_PAGE);
             // Remove the user key from cache so we don't keep any cached user data
             queryClient.removeQueries(["user"]);
-
+            localStorage.clear();
             return "Succesfully logged out";
           },
         },

@@ -58,6 +58,7 @@ export const DELETE_ACCT_ROUTE = `${BASE_API_URL}${API_VERSION}/auth/delete-user
 export const CHANGE_PASSWORD_ROUTE = `${BASE_API_URL}${API_VERSION}/auth/change-password`;
 export const LIST_CURRENCIES_ROUTE = `${BASE_API_URL}${API_VERSION}/currency/currencies`;
 export const UPDATE_CURRENCY_ROUTE = `${BASE_API_URL}${API_VERSION}/currency/update-currency`;
+export const GET_CURRENCY_ROUTE = `${BASE_API_URL}${API_VERSION}/currency/current-currency`;
 
 // #######################################################################################
 // #######################################################################################
