@@ -33,18 +33,21 @@ public class CurrencyServiceImpl implements CurrencyService {
     public CurrenciesListResponse getCurrencies(boolean indicateUserCurrency) {
         Collection<Currency> jpaCurrencies = currencyJpaCache.getAllValues();
         List<CurrencyResponse> currencyResponses = new ArrayList<>();
-        User user = currUserService.getUserJpaEntity();
-        Currency prefCurrency = user.getPrefCurrency();
+        CurrencyResponse prefCurrency = getUserCurrency();
+        currencyResponses.add(prefCurrency);
 
         for (Currency jpaCurrency : jpaCurrencies) {
-            boolean isSelected = prefCurrency.getShortName() == jpaCurrency.getShortName();
+            if (prefCurrency.shortName() == jpaCurrency.getShortName()) {
+                continue;
+            }
+
             currencyResponses.add(
                     new CurrencyResponse(
                             jpaCurrency.getLongName(),
                             jpaCurrency.getShortName(),
                             jpaCurrency.getSymbol(),
                             jpaCurrency.getFlagImgUrl(),
-                            isSelected));
+                            false));
         }
 
         return new CurrenciesListResponse(currencyResponses);
@@ -55,5 +58,11 @@ public class CurrencyServiceImpl implements CurrencyService {
         BigInteger userId = currUserService.getCurrentUserId();
         Currency jpaCurrency = currencyJpaCache.getFromCache(updateCurrencyRequest.currency());
         userService.updateCurrency(jpaCurrency, userId);
+    }
+
+    @Override
+    public CurrencyResponse getUserCurrency() {
+        User user = currUserService.getUserJpaEntity();
+        return new CurrencyResponse(user.getPrefCurrency(), true);
     }
 }

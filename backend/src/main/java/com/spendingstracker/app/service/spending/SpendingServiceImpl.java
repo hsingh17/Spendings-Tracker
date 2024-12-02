@@ -51,42 +51,39 @@ public class SpendingServiceImpl implements SpendingService {
 
     public SpendingPageResponse getSpendings(
             BigInteger userId, GetSpendingsRequestFilters filters) {
-
         PageRequest pageRequest = PageRequest.of(filters.getPage(), filters.getLimit());
         Page<SpendingListProjection> spendingsListProjs =
                 getSpendingListProj(userId, filters, pageRequest);
 
         // No spendings
         if (!spendingsListProjs.hasContent()) {
-            return SpendingPageResponse.builder()
-                    .spendingPage(new PageImpl<>(Collections.emptyList(), pageRequest, 0))
-                    .build();
+            return new SpendingPageResponse(
+                    new PageImpl<>(Collections.emptyList(), pageRequest, 0));
         }
 
         List<SpendingPageItem> spendingPageItemList = new ArrayList<>();
 
         for (SpendingListProjection spendingListProj : spendingsListProjs.getContent()) {
-            spendingPageItemList.add(buildSpendingPageItemFromSpendingListProj(spendingListProj));
+            spendingPageItemList.add(new SpendingPageItem(spendingListProj));
         }
 
         Page<SpendingPageItem> spendingPageItemPage =
                 new PageImpl<>(
                         spendingPageItemList, pageRequest, spendingsListProjs.getTotalElements());
 
-        return SpendingPageResponse.builder().spendingPage(spendingPageItemPage).build();
+        return new SpendingPageResponse(spendingPageItemPage);
     }
 
     public SpendingDetailsResponse getSpendingDetails(LocalDate spendingDate, BigInteger userId) {
         List<SpendingProjection> spendings =
                 spendingUserAggrRepository.findSpendingDetailsByUserIdAndDate(spendingDate, userId);
-
         List<SpendingResponse> spendingResponse = new ArrayList<>();
 
         for (SpendingProjection spending : spendings) {
-            spendingResponse.add(buildSpendingResponseFromSpendingProj(spending));
+            spendingResponse.add(new SpendingResponse(spending));
         }
 
-        return SpendingDetailsResponse.builder().spendings(spendingResponse).build();
+        return new SpendingDetailsResponse(spendingResponse);
     }
 
     public void updateSpending(
@@ -141,15 +138,6 @@ public class SpendingServiceImpl implements SpendingService {
         }
     }
 
-    private SpendingResponse buildSpendingResponseFromSpendingProj(
-            SpendingProjection spendingProj) {
-        return SpendingResponse.builder()
-                .spendingId(spendingProj.getSpendingId())
-                .category(spendingProj.getCategory())
-                .amount(spendingProj.getAmount())
-                .build();
-    }
-
     private Spending getSpendingFromId(BigInteger spendingId) {
         log.debug("Finding spending for SPENDING_ID {}", spendingId);
         return spendingRepository
@@ -195,15 +183,5 @@ public class SpendingServiceImpl implements SpendingService {
                 throw new NoSuchGraphTypeException(errMsg);
             }
         }
-    }
-
-    private SpendingPageItem buildSpendingPageItemFromSpendingListProj(
-            SpendingListProjection spendingListProj) {
-        return SpendingPageItem.builder()
-                .spendingUserAggrId(spendingListProj.spendingUserAggrId())
-                .date(spendingListProj.date())
-                .category(spendingListProj.category())
-                .total(spendingListProj.total())
-                .build();
     }
 }

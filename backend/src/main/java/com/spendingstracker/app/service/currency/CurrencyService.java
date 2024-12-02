@@ -2,6 +2,8 @@ package com.spendingstracker.app.service.currency;
 
 import com.spendingstracker.app.dto.requests.UpdateCurrencyRequest;
 import com.spendingstracker.app.dto.response.CurrenciesListResponse;
+import com.spendingstracker.app.dto.response.CurrencyResponse;
+import com.spendingstracker.app.entity.Currency;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,4 +25,10 @@ public interface CurrencyService {
      * @see UpdateCurrencyRequest
      */
     void updateUserCurrency(UpdateCurrencyRequest updateCurrencyRequest);
+
+    /**
+     * @return user's current currency object
+     * @see Currency
+     */
+    CurrencyResponse getUserCurrency();
 }

@@ -5,13 +5,13 @@ import { Currency } from "../../../hooks/useCurrencies";
 import { Nullable } from "../../../utils/types";
 import CurrencyDropdownOption from "./CurrencyDropdownOption";
 
-type CurrencyDropdownClosedProps = {
+type SelectedCurrencyProps = {
   currency: Nullable<Currency>;
   isOpen: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-const CurrencyDropdownClosed: FC<CurrencyDropdownClosedProps> = ({
+const SelectedCurrency: FC<SelectedCurrencyProps> = ({
   currency,
   isOpen,
   setOpen,
@@ -41,4 +41,4 @@ const CurrencyDropdownClosed: FC<CurrencyDropdownClosedProps> = ({
   );
 };
 
-export default CurrencyDropdownClosed;
+export default SelectedCurrency;

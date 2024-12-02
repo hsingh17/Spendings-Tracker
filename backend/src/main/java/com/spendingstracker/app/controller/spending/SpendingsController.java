@@ -56,7 +56,7 @@ public class SpendingsController {
 
         SpendingPageResponse spendingPageResponse =
                 spendingService.getSpendings(getUserId(), filters);
-        Page<SpendingPageItem> spendingsPage = spendingPageResponse.getSpendingPage();
+        Page<SpendingPageItem> spendingsPage = spendingPageResponse.spendingPage();
 
         ApiLinks apiLinks =
                 buildApiLinks(

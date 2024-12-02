@@ -39,6 +39,18 @@ public class CurrencyController {
     }
 
     /**
+     * @return user's currently selected currency
+     * @see CurrencyResponse
+     */
+    @GetMapping("/current-currency")
+    public ResponseEntity<ApiResponse<CurrencyResponse>> getCurrency() {
+        log.info("/current-currency");
+        CurrencyResponse currencyResponse = currencyService.getUserCurrency();
+        ApiResponse<CurrencyResponse> response = okResponse(currencyResponse, null, null);
+        return ResponseEntity.ok(response);
+    }
+
+    /**
      * Route for updating a user's currency
      *
      * @param updateCurrencyRequest

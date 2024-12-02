@@ -2,6 +2,7 @@ package com.spendingstracker.app.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.spendingstracker.app.constants.CurrencyEnum;
+import com.spendingstracker.app.entity.Currency;
 
 /**
  * Response object for a currency
@@ -20,4 +21,13 @@ public record CurrencyResponse(
         CurrencyEnum shortName,
         String symbol,
         String flagImgUrl,
-        boolean isSelected) {}
+        boolean isSelected) {
+    public CurrencyResponse(Currency currency, boolean isSelected) {
+        this(
+                currency.getLongName(),
+                currency.getShortName(),
+                currency.getSymbol(),
+                currency.getFlagImgUrl(),
+                isSelected);
+    }
+}
