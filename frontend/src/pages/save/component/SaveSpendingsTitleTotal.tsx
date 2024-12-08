@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import MoneyUtils, { CurrencyType } from "../../../utils/money-utils";
+import MoneyUtils from "../../../utils/money-utils";
 import { Spending } from "../../../utils/types";
 
 type SaveSpendingsTitleTotalProps = { spendings: Spending[] };
@@ -24,7 +24,7 @@ const SaveSpendingsTitleTotal: FC<SaveSpendingsTitleTotalProps> = ({
 
   return (
     <h1 className="text-theme-cta font-semibold text-4xl md:text-6xl">
-      {MoneyUtils.formatMoney(total, CurrencyType.USD)}
+      {MoneyUtils.formatMoney(total)}
     </h1>
   );
 };

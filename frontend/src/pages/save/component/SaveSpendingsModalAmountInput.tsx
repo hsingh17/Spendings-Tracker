@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { MAX_AMOUNT } from "../../../utils/constants";
-import MoneyUtils, { CurrencyType } from "../../../utils/money-utils";
+import MoneyUtils from "../../../utils/money-utils";
 
 type SaveSpendingsModalAmountInputProps = {
   name: string;
@@ -71,7 +71,7 @@ const SaveSpendingsModalAmountInput: FC<SaveSpendingsModalAmountInputProps> = ({
           type="text"
           id={name}
           name={name}
-          value={MoneyUtils.formatMoney(amount, CurrencyType.USD, false)}
+          value={MoneyUtils.formatMoney(amount, false)}
           readOnly
           onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) =>
             handleChange(e)
