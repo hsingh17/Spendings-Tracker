@@ -4,6 +4,7 @@ CREATE TABLE
         SPENDING_USER_AGGR_ID BIGINT UNSIGNED NOT NULL COMMENT "Foreign key to the SPENDING_USER_AGGR that is associated with this SPENDING record",
         SPENDING_CATEGORY_ID BIGINT UNSIGNED NOT NULL COMMENT "Foreign key to SPENDING_CATEGORY that this SPENDING pertains to",
         AMOUNT DECIMAL(10, 2) NOT NULL COMMENT "Spending amount",
+        MEMO VARCHAR(255) NULL COMMENT "An optional memo field that user can use to further describe this spending",
         CREATED_BY BIGINT UNSIGNED NOT NULL DEFAULT 1 COMMENT "ID of who/what created this record",
         CREATED_ON DATETIME (0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "Datetime of creation",
         LAST_MODIFIED_BY BIGINT UNSIGNED NOT NULL DEFAULT 1 COMMENT "ID of who/what updated this record",
