@@ -44,7 +44,7 @@ public class CurrencyController {
      */
     @GetMapping("/current-currency")
     public ResponseEntity<ApiResponse<CurrencyResponse>> getCurrency() {
-        log.info("/current-currency");
+        log.info("GET /current-currency");
         CurrencyResponse currencyResponse = currencyService.getUserCurrency();
         ApiResponse<CurrencyResponse> response = okResponse(currencyResponse, null, null);
         return ResponseEntity.ok(response);

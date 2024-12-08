@@ -33,8 +33,8 @@ export default function useLogin(
       postLogin(formData, externalUserType),
     onSuccess: () => {
       navigate(DASHBOARD_PAGE);
-      // Remove the user key from cache so we get the new logged in user
       queryClient.refetchQueries(["user"]);
+      queryClient.refetchQueries(["currency"]);
     },
     onError: onError,
   });

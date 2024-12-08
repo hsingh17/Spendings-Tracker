@@ -23,8 +23,8 @@ export default function useDeleteSpending(searchParams: URLSearchParams) {
 
       return promise;
     },
-    onSuccess: () =>
+    onSuccess: async () =>
       // Refetch list page query when spending deleted
-      queryClient.refetchQueries(["list-spendings", searchParams.toString()]),
+      await queryClient.refetchQueries(["list-spendings", searchParams.toString()]),
   });
 }

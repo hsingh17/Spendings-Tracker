@@ -19,6 +19,9 @@ export default function useUpdateCurrency() {
   return useMutation({
     mutationFn: (updateCurrencyRequest: UpdateCurrencyRequest) =>
       putUpdateCurrency(updateCurrencyRequest),
-    onSuccess: () => queryClient.refetchQueries(["currencies"]),
+    onSuccess: async () => {
+      await queryClient.refetchQueries(["currencies"]);
+      await queryClient.refetchQueries(["currency"]);
+    },
   });
 }
