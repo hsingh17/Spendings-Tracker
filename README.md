@@ -7,9 +7,10 @@ This repository holds the code for my spendings tracker app built with Java and 
 - settings
 
   - preferred currency type -> list and save spendings page will need to return the preferred currency types so UI can render correctly
-  - delete account functionality -> in reality, we're going to simply set IS_ACTIVE to N
+- maybe add a notes/memo field when adding spendings
 
-- maybe add a notes/memo field when adding spendings (would need to remove the unique category constraint)
+- possible cutover to cognito(?)
+
 
 - dashboard -> graphs
 - zoom in/out in line charts
@@ -19,10 +20,12 @@ This repository holds the code for my spendings tracker app built with Java and 
 - make custom logo
 - regenerate javadocs
 - update ERD -> export from dbeaver
-  - add junit tests for repo layer at minimum
+- add junit tests for controller, service, repo
+  - user and spendings
 - test from scratch
 - add sitemap stuff https://stackoverflow.com/a/62976735
-
+- create aws architecutre and deploy
 ## Known issues
 
+- the eyeball has problems when it's in an error state
 - google sign in button randomly resizes

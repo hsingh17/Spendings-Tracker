@@ -20,7 +20,6 @@ type GrandchildrenComponentProps = {
   refetch?: () => void;
 };
 
-// Will need to inject the response of the useApiCall into "children" just like it was done in GenericForm
 const ApiCallBoundary: FC<ApiCallBoundaryProps> = ({
   children,
   errorFallback,

@@ -4,13 +4,9 @@ import com.spendingstracker.app.constants.Constants;
 import com.spendingstracker.app.constants.ExternalUserType;
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.oauth.OAuthPayload;
-import com.spendingstracker.app.dto.requests.LoginRequest;
-import com.spendingstracker.app.dto.requests.RegisterAcctRequest;
-import com.spendingstracker.app.dto.requests.ResetPasswordRequest;
-import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
+import com.spendingstracker.app.dto.requests.*;
 import com.spendingstracker.app.dto.response.*;
 import com.spendingstracker.app.entity.User;
-import com.spendingstracker.app.exception.NoAuthenticatedUserException;
 import com.spendingstracker.app.service.email.EmailService;
 import com.spendingstracker.app.service.oauth.OAuthService;
 import com.spendingstracker.app.service.user.ExternalUserService;
@@ -19,6 +15,7 @@ import com.spendingstracker.app.util.JwtUtil;
 
 import jakarta.servlet.http.HttpServletResponse;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpHeaders;
@@ -26,9 +23,10 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import java.math.BigInteger;
 
 /**
  * Implementation of the <code>AuthService</code> interface
@@ -37,6 +35,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private static final long MAX_AGE_SECONDS_DEFAULT = 3600L;
     private final JwtUtil jwtUtil;
@@ -45,33 +44,7 @@ public class AuthServiceImpl implements AuthService {
     private final EmailService emailService;
     private final OAuthService oAuthService;
     private final ExternalUserService externalUserService;
-
-    public AuthServiceImpl(
-            JwtUtil jwtUtil,
-            AuthenticationManager authManager,
-            UserService userService,
-            EmailService emailService,
-            OAuthService oAuthService,
-            ExternalUserService externalUserService) {
-        this.jwtUtil = jwtUtil;
-        this.authManager = authManager;
-        this.userService = userService;
-        this.emailService = emailService;
-        this.oAuthService = oAuthService;
-        this.externalUserService = externalUserService;
-    }
-
-    @Override
-    public CustomUserDetails getUserDetailsForAuthenticatedUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !auth.isAuthenticated()) {
-            String errMsg = "No authenticated user in the context!";
-            log.error(errMsg);
-            throw new NoAuthenticatedUserException(errMsg);
-        }
-
-        return (CustomUserDetails) auth.getPrincipal();
-    }
+    private final CurrentUserService curUserService;
 
     @Override
     public UserDetails loginUser(
@@ -168,6 +141,26 @@ public class AuthServiceImpl implements AuthService {
         String message = "Successfully reset password for " + username;
         log.info(message);
         return new ResetPasswordResponse(message);
+    }
+
+    @Override
+    public void deleteUser(HttpServletResponse response) {
+        BigInteger userId = curUserService.getCurrentUserId();
+        userService.deleteUser(userId);
+        setCookie(response, null, 0);
+    }
+
+    @Override
+    public ChangePasswordResponse changePassword(
+            ChangePasswordRequest changePasswordReq, HttpServletResponse httpResponse) {
+        CustomUserDetails curUserDetails = curUserService.getCurrentUserDetails();
+        BigInteger userId = curUserDetails.getUserId();
+        userService.changePassword(changePasswordReq, userId);
+
+        String message = "Successfully changed password for " + curUserDetails.getUsername();
+        log.info(message);
+        setCookie(httpResponse, null, 0);
+        return new ChangePasswordResponse(message);
     }
 
     private OAuthPayload attemptOAuthLoginFlow(

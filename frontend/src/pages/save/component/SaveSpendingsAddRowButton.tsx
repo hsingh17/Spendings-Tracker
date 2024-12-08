@@ -3,7 +3,9 @@ import AddIcon from "../../../assets/components/AddIcon";
 
 type SaveSpendingsAddRowButtonProps = {
   isDisabled: boolean;
-  setModalSpendingIdx: Dispatch<SetStateAction<number | undefined>>;
+  setModalSpendingIdx:
+    | Dispatch<SetStateAction<number | undefined>>
+    | ((idx: number) => void);
 };
 
 const ENABLED_STYLE = "bg-theme-cta opacity-60";

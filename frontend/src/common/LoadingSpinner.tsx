@@ -12,10 +12,6 @@ const LoadingSpinner = () => {
   const [svgHeight, setSvgHeight] = useState<number>(INITIAL_SVG_HEIGHT_WIDTH);
   const [svgWidth, setSvgWidth] = useState<number>(INITIAL_SVG_HEIGHT_WIDTH);
 
-  if (!svgWidth || !svgHeight) {
-    return <></>;
-  }
-
   useEffect(() => {
     if (!ref.current) {
       return;
@@ -26,6 +22,10 @@ const LoadingSpinner = () => {
     setSvgHeight(boundingBox.height);
     setSvgWidth(boundingBox.width);
   }, [ref]);
+
+  if (!svgWidth || !svgHeight) {
+    return <></>;
+  }
 
   return (
     <div className="flex flex-col justify-center items-center w-full h-full bg-transparent">

@@ -1,7 +1,9 @@
+import { FC } from "react";
 import { ReactComponent as Icon } from "../raw/table-icon.svg";
+import { IconTypeProps } from "./icon-props";
 
-const TableIcon = () => {
-  return <Icon className="w-10 h-10" stroke="white" />;
+const TableIcon: FC<IconTypeProps> = ({ className }) => {
+  return <Icon className={className} stroke="white" />;
 };
 
 export default TableIcon;

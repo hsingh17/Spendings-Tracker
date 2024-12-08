@@ -76,21 +76,13 @@ const PasswordInput: FC<PasswordInputProps> = ({
     <>
       <div className={`relative ${customStyles}`}>
         <PasswordInputLabel title={title} show={showForgotPassword} />
-        <div
-          className={
-            withIcon
-              ? "flex flex-row items-center border-slate-500 border-2 p-1 rounded-xl focus-within:border-theme-cta focus-within:border-4"
-              : ""
-          }
-        >
-          {withIcon && <PasswordIcon className="scale-75" />}
-          <GenericInputField
-            className={inputFieldStyle}
-            name={name}
-            type={showPassword ? "text" : "password"}
-            onChange={onChange}
-          />
-        </div>
+        <GenericInputField
+          className={inputFieldStyle}
+          name={name}
+          type={showPassword ? "text" : "password"}
+          onChange={onChange}
+          icon={withIcon && <PasswordIcon className="scale-75" />}
+        />
 
         <ShowPasswordIcon
           withIcon={withIcon}
@@ -102,6 +94,8 @@ const PasswordInput: FC<PasswordInputProps> = ({
       <PasswordRequirements errs={errs} showPasswordReq={showPasswordReq} />
 
       <ConfirmPasswordInput
+        title={`Confirm ${title}`}
+        name={`confirm-${name}`}
         customStyles={customStyles}
         show={showConfirmPassword}
         password={password}

@@ -10,11 +10,11 @@ const NavbarSublistItem: FC<NavbarSublistItemProps> = ({ state, item }) => {
         className="flex flex-row py-3 px-3 rounded-lg opacity-70 items-center hover:cursor-pointer hover:opacity-100 hover:bg-slate-700 first:mt-2"
         onClick={item.onClick}
       >
-        <IconComponent />
+        <IconComponent className="w-9 h-9" />
         {state === NavbarState.NON_MOBILE_COLLAPSED ? (
           <></>
         ) : (
-          <h3 className="ml-2 text-lg font-normal">{item.name}</h3>
+          <h3 className="ml-2 text-lg font-medium">{item.name}</h3>
         )}
       </li>
     </Suspense>

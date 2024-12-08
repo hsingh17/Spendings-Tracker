@@ -1,16 +1,14 @@
 package com.spendingstracker.app.dto.response;
 
-import lombok.Builder;
-import lombok.Data;
+import com.spendingstracker.app.projection.SpendingProjection;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /** Object returned to client with relevant spending information */
-@Builder
-@Data
-public class SpendingResponse {
-    private BigInteger spendingId;
-    private String category;
-    private BigDecimal amount;
+public record SpendingResponse(BigInteger spendingId, String category, BigDecimal amount) {
+    public SpendingResponse(SpendingProjection spendingProj) {
+        this(spendingProj.getSpendingId(), spendingProj.getCategory(), spendingProj.getAmount());
+    }
 }
+;

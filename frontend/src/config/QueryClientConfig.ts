@@ -2,7 +2,7 @@ import { QueryCache, QueryClient } from "@tanstack/react-query";
 import HttpError from "../error/HttpError";
 import { LOGIN_PAGE, UNAUTHENTICATED_PAGES } from "../utils/constants";
 
-const QueryClientConfig = new QueryClient({
+const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error) => {
       if (!(error instanceof HttpError)) {
@@ -37,4 +37,4 @@ const QueryClientConfig = new QueryClient({
   },
 });
 
-export default QueryClientConfig;
+export default queryClient;

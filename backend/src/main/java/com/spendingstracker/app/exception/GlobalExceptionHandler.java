@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
      * @see NoSuchGraphTypeException
      * @see SpendingNotFoundException
      * @see NoAuthenticatedUserException
-     * @see UserNotVerified
+     * @see InvalidUser
      * @see UsernameAlreadyExists
      * @see IncorrectPinException
      * @see InvalidGoogleOAuthToken
@@ -41,13 +41,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
         IllegalArgumentException.class,
         ConversionFailedException.class,
-        NoSuchGraphTypeException.class,
-        SpendingNotFoundException.class,
-        NoAuthenticatedUserException.class,
-        UserNotVerified.class,
-        UsernameAlreadyExists.class,
-        IncorrectPinException.class,
-        InvalidGoogleOAuthToken.class
+        AppBadRequestException.class,
     })
     public ResponseEntity<ApiResponse<Object>> handleBadRequestException(Exception e) {
         return new ResponseEntity<>(

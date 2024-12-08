@@ -3,6 +3,8 @@ package com.spendingstracker.app.dto.response;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.springframework.http.HttpStatus;
+
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
@@ -70,5 +72,24 @@ public class ApiResponse<T> {
         public ApiResponse<T> build() {
             return new ApiResponse<>(this);
         }
+    }
+
+    /**
+     * Build an <code>OK</code> <code>ApiResponse</code> object from <code>data</code> and <code>
+     * message</code>.
+     *
+     * @param data generic data object
+     * @param message message to return to the frontend
+     * @return <code>{@literal ApiResponse<T>}</code> object contain
+     * @see ApiResponse
+     */
+    public static <T> ApiResponse<T> okResponse(T data, ApiMetadata metadata, String message) {
+        return new ApiResponse.ApiResponseBuilder<T>()
+                .setData(data)
+                .setOk(true)
+                .setMessage(message)
+                .setMetadata(metadata)
+                .setHttpStatus(HttpStatus.OK.value())
+                .build();
     }
 }

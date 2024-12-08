@@ -9,7 +9,9 @@ export type SpendingsFormRowProps = {
   spending: Spending;
   categoriesMap: CategoriesMap;
   handleDeleteRow: (idx: number) => void;
-  setModalSpendingIdx: Dispatch<SetStateAction<number | undefined>>;
+  setModalSpendingIdx:
+    | Dispatch<SetStateAction<number | undefined>>
+    | ((idx: number) => void);
 };
 
 const SaveSpendingsFormRow: FC<SpendingsFormRowProps> = ({

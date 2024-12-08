@@ -74,7 +74,10 @@ public class JwtFilter extends OncePerRequestFilter {
         // Validate the token
         String userName = jwtUtil.extractUsername(token);
         UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
-        if (userName == null || !jwtUtil.validateToken(token, userDetails)) { // Invalid token
+        // Invalid token or user no longer active
+        if (userName == null
+                || !jwtUtil.validateToken(token, userDetails)
+                || !userDetails.isEnabled()) {
             doFilterWrapper(request, response, filterChain);
             return;
         }

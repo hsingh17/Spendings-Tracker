@@ -2,6 +2,9 @@ package com.spendingstracker.app.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
@@ -14,15 +17,18 @@ import java.util.Collection;
  *
  * @see User
  */
+@Getter
+@Setter
 public class CustomUserDetails extends User {
     private BigInteger userId;
 
     public CustomUserDetails(
             String username,
             String password,
+            boolean isActive,
             Collection<? extends GrantedAuthority> authorities,
             BigInteger userId) {
-        super(username, password, authorities);
+        super(username, password, isActive, isActive, isActive, isActive, authorities);
         this.userId = userId;
     }
 
@@ -43,14 +49,6 @@ public class CustomUserDetails extends User {
                 credentialsNonExpired,
                 accountNonLocked,
                 authorities);
-        this.userId = userId;
-    }
-
-    public BigInteger getUserId() {
-        return userId;
-    }
-
-    public void setUserId(BigInteger userId) {
         this.userId = userId;
     }
 

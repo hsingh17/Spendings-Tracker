@@ -31,7 +31,7 @@ public class SpendingCategoryServiceImpl implements SpendingCategoryService {
     @Override
     public SpendingCategoriesResponse getSpendingCategories() {
         Collection<SpendingCategory> activeSpendingCategories =
-                spendingCategoryJpaCache.getActiveSpendingCategories();
+                spendingCategoryJpaCache.getAllValues();
 
         Map<String, String> categoryToS3SvgUrlMap = new HashMap<>();
 

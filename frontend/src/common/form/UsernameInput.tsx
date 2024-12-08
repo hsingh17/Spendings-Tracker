@@ -31,28 +31,20 @@ const UsernameInput: FC<UsernameInputProps> = ({
   const { setVal, errs } = useFormValidate(
     name,
     USERNAME_VALIDATORS,
-    addFormValidators,
+    addFormValidators
   );
 
   return (
     <div className={"mt-5"}>
       <label className="font-semibold text-slate-500">{title}</label>
-      <div
-        className={
-          withIcon
-            ? "flex flex-row items-center border-slate-500 border-2 p-1 rounded-xl focus-within:border-theme-cta focus-within:border-4"
-            : ""
-        }
-      >
-        {withIcon && <UserIcon className="scale-75" />}
-        <GenericInputField
-          className={customStyles}
-          type="text"
-          name={name}
-          errs={errs}
-          onChange={setVal}
-        />
-      </div>
+      <GenericInputField
+        className={customStyles}
+        type="text"
+        name={name}
+        errs={errs}
+        onChange={setVal}
+        icon={withIcon && <UserIcon className="scale-75" />}
+      />
     </div>
   );
 };

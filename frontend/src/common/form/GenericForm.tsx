@@ -8,6 +8,7 @@ type GenericFormProps = {
   afterFormChildren?: ReactNode;
   wrapperClassName?: string;
   cardClassName?: string;
+  overrideClassName?: boolean;
   formClassName?: string;
   onSubmit: (inputMap: Map<string, string>) => void;
 };
@@ -24,10 +25,11 @@ const GenericForm: FC<GenericFormProps> = ({
   wrapperClassName,
   cardClassName,
   formClassName,
+  overrideClassName = false,
   onSubmit,
 }) => {
   const [validators, setValidators] = useState<Map<string, () => boolean>>(
-    new Map(),
+    new Map()
   );
 
   const preOnSubmit = (e: React.FormEvent) => {
@@ -67,7 +69,7 @@ const GenericForm: FC<GenericFormProps> = ({
 
   const addFormValidators = (
     formFieldName: string,
-    validate: () => boolean,
+    validate: () => boolean
   ) => {
     setValidators((prev) => prev.set(formFieldName, validate));
   };
@@ -84,13 +86,13 @@ const GenericForm: FC<GenericFormProps> = ({
     return formInputs.map(
       (
         formInput: React.FunctionComponentElement<FormInputFunctionalComponentProps>,
-        idx,
+        idx
       ) => {
         return React.cloneElement(formInput, {
           key: idx,
           addformvalidators: addFormValidators,
         });
-      },
+      }
     );
   };
 
@@ -98,7 +100,13 @@ const GenericForm: FC<GenericFormProps> = ({
     <div
       className={`flex flex-col lg:justify-center lg:items-center lg:w-full ${wrapperClassName}`}
     >
-      <Card className={`items-center w-full h-fit p-7 ${cardClassName}`}>
+      <Card
+        className={
+          overrideClassName
+            ? cardClassName
+            : `items-center w-full h-fit p-7 ${cardClassName}`
+        }
+      >
         <h1 className="mr-auto text-3xl font-bold">{title}</h1>
         {beforeFormChildren}
         <form

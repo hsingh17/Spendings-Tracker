@@ -1,18 +1,21 @@
 package com.spendingstracker.app.dto.response;
 
-import lombok.Builder;
-import lombok.Data;
+import com.spendingstracker.app.projection.SpendingListProjection;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 
 /** Stores information about a particular spending day */
-@Data
-@Builder
-public class SpendingPageItem {
-    private final BigInteger spendingUserAggrId;
-    private final String category;
-    private final LocalDate date;
-    private final BigDecimal total;
+public record SpendingPageItem(
+        BigInteger spendingUserAggrId, String category, LocalDate date, BigDecimal total) {
+
+    public SpendingPageItem(SpendingListProjection spendingListProj) {
+        this(
+                spendingListProj.spendingUserAggrId(),
+                spendingListProj.category(),
+                spendingListProj.date(),
+                spendingListProj.total());
+    }
 }
+;

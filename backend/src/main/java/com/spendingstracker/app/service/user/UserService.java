@@ -1,7 +1,9 @@
 package com.spendingstracker.app.service.user;
 
+import com.spendingstracker.app.dto.requests.ChangePasswordRequest;
 import com.spendingstracker.app.dto.requests.ResetPasswordRequest;
 import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
+import com.spendingstracker.app.entity.Currency;
 import com.spendingstracker.app.entity.User;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -61,4 +63,29 @@ public interface UserService extends UserDetailsService {
      * @see ResetPasswordRequest
      */
     void resetPassword(ResetPasswordRequest resetPasswordReq, String username);
+
+    /**
+     * Change a user's password if criteria is met
+     *
+     * @param changePasswordReq
+     * @param userId
+     * @see ChangePasswordRequest
+     */
+    void changePassword(ChangePasswordRequest changePasswordReq, BigInteger userId);
+
+    /**
+     * Delete's a user with <code>USER_ID=userId</code>
+     *
+     * @param userId
+     */
+    void deleteUser(BigInteger userId);
+
+    /**
+     * Change's a user's currency to <code>currency</code>
+     *
+     * @param currency
+     * @param userId
+     * @see Currency
+     */
+    void updateCurrency(Currency currency, BigInteger userId);
 }

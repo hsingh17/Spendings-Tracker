@@ -33,9 +33,16 @@ public class User extends AuditableEntity {
     @Column(name = "IS_VERIFIED")
     private boolean isVerified;
 
+    @Column(name = "IS_ACTIVE")
+    private boolean isActive;
+
     @Column(name = "PASSWORD")
     @JsonIgnore // Don't want to send password (even if it's encrypted)
     private String password;
+
+    @OneToOne
+    @JoinColumn(name = "PREF_CURRENCY_ID", referencedColumnName = "CURRENCY_ID", nullable = false)
+    private Currency prefCurrency;
 
     @OneToMany(
             mappedBy = "user",
@@ -82,5 +89,11 @@ public class User extends AuditableEntity {
         }
 
         return null;
+    }
+
+    /** Simply sets <code>isActive</code> and <code>isVerified</code> to <code>true</code> */
+    public void setActiveAndVerified() {
+        isActive = true;
+        isVerified = true;
     }
 }

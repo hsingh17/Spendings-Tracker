@@ -7,6 +7,7 @@ services:
       - db-data:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - LANG=C.UTF-8
     ports:
       - "3306:3306"
     healthcheck:
@@ -15,6 +16,7 @@ services:
       timeout: 30s
       retries: 7
       start_period: 30s
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
   backend:
     container_name: Spring-Backend
     build:

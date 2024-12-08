@@ -1,8 +1,5 @@
 package com.spendingstracker.app.dto.response;
 
-import lombok.Builder;
-import lombok.Data;
-
 import java.util.List;
 
 /**
@@ -10,8 +7,4 @@ import java.util.List;
  *
  * @see SpendingResponse
  */
-@Builder
-@Data
-public class SpendingDetailsResponse {
-    private final List<SpendingResponse> spendings;
-}
+public record SpendingDetailsResponse(List<SpendingResponse> spendings) {}

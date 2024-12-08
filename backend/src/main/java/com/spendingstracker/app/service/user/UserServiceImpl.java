@@ -1,17 +1,15 @@
 package com.spendingstracker.app.service.user;
 
 import com.spendingstracker.app.dto.CustomUserDetails;
+import com.spendingstracker.app.dto.requests.ChangePasswordRequest;
 import com.spendingstracker.app.dto.requests.ResetPasswordRequest;
 import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
+import com.spendingstracker.app.entity.Currency;
 import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.entity.UserPasswordReset;
 import com.spendingstracker.app.entity.UserRegistration;
-import com.spendingstracker.app.exception.IncorrectPinException;
-import com.spendingstracker.app.exception.InvalidPasswordResetRequest;
-import com.spendingstracker.app.exception.UserNotVerified;
-import com.spendingstracker.app.exception.UsernameAlreadyExists;
+import com.spendingstracker.app.exception.*;
 import com.spendingstracker.app.repository.UserRepository;
-import com.spendingstracker.app.service.password.UserPasswordResetService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,23 +36,18 @@ import java.util.UUID;
 @Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final UserPasswordResetService userPasswordResetService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /**
      * Initialize <code>UserDetailsServiceImpl</code>
      *
      * @param userRepository <code>UserRepository</code> bean
-     * @param userPasswordResetService
      * @param bCryptPasswordEncoder
      * @see UserRepository
      */
     public UserServiceImpl(
-            UserRepository userRepository,
-            UserPasswordResetService userPasswordResetService,
-            BCryptPasswordEncoder bCryptPasswordEncoder) {
+            UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
-        this.userPasswordResetService = userPasswordResetService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
@@ -91,21 +84,22 @@ public class UserServiceImpl implements UserService {
     public void verifyUser(VerifyAcctRequest verifyAcctReq, String username) {
         User user = findUserByUsernameOrThrow(username);
         UserRegistration userRegistration = user.getUserRegistration();
-
         String actualPin = verifyAcctReq.pin();
         String expectedPin = userRegistration.getPin();
+
         if (!actualPin.equals(expectedPin)) {
             String errMsg = actualPin + " is not the correct pin for user " + username;
             log.error(errMsg);
             throw new IncorrectPinException(errMsg);
         }
 
-        // Pins match. User is verified now.
-        user.setVerified(true);
+        // Pins match. User is verified and active now.
+        user.setActiveAndVerified();
         userRepository.save(user);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User findUserByUsername(String username) {
         return findUserByUsernameOrThrow(username);
     }
@@ -129,6 +123,40 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public void changePassword(ChangePasswordRequest changePasswordReq, BigInteger userId) {
+        User user = getUserById(userId);
+        if (!isSamePassword(user.getPassword(), changePasswordReq.oldPassword())) {
+            String errMsg = "Invalid password reset request for " + user.getUsername();
+            log.error(errMsg);
+            throw new InvalidPasswordChangeRequest(errMsg);
+        }
+
+        // Succesfully change password
+        user.setPassword(bCryptPasswordEncoder.encode(changePasswordReq.newPassword()));
+        userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUser(BigInteger userId) {
+        User user = getUserById(userId);
+        user.setActive(false);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void updateCurrency(Currency currency, BigInteger userId) {
+        User user = getUserById(userId);
+        Currency curPrefCurrency = user.getPrefCurrency();
+        if (curPrefCurrency.equals(currency)) {
+            // NOOP: Same currency
+            return;
+        }
+
+        user.setPrefCurrency(currency);
+        userRepository.save(user);
+    }
+
     /**
      * Finds user's <code>UserDetails</code> object by their <code>username</code>.
      *
@@ -141,18 +169,22 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username)
-            throws UsernameNotFoundException, UserNotVerified {
+            throws UsernameNotFoundException, InvalidUser {
         User user = findUserByUsernameOrThrow(username);
 
         if (!user.isVerified()) {
-            String errMsg = "User with USERNAME " + username + " is not yet verified!";
+            String errMsg = "User with USERNAME " + username + " is not verified!";
             log.error(errMsg);
-            throw new UserNotVerified(errMsg);
+            throw new InvalidUser(errMsg);
         }
 
         // A CustomUserDetails object since userId must be saved
         return new CustomUserDetails(
-                username, user.getPassword(), Collections.emptyList(), user.getUserId());
+                username,
+                user.getPassword(),
+                user.isActive(),
+                Collections.emptyList(),
+                user.getUserId());
     }
 
     private Optional<User> maybeFindUserByUsername(String username) {
@@ -168,5 +200,16 @@ public class UserServiceImpl implements UserService {
         }
 
         return userOpt.get();
+    }
+
+    /**
+     * @param expectedPassword real password of user. NOTE: this password is straight from the DB,
+     *     so it's encrypted
+     * @param actualPassword password the user entered. NOTE: this password is plaintext
+     * @return if the password entered by user is the same as the password they have stored in the
+     *     DB. This is done by comparing the encrypted values of both
+     */
+    private boolean isSamePassword(String expectedPassword, String actualPassword) {
+        return bCryptPasswordEncoder.matches(actualPassword, expectedPassword);
     }
 }

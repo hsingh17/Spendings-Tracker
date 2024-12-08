@@ -5,12 +5,13 @@ import {
   CategoriesMap,
   FormValidator,
   GenericFormInputProps,
+  Nullable,
   Spending,
 } from "../../../utils/types";
 import SpendingCategoryDropdown from "./SpendingCategoryDropdown";
 
 type SaveSpendingsModalFormProps = GenericFormInputProps & {
-  spending: Spending;
+  spending: Nullable<Spending>;
   categoriesMap: CategoriesMap;
   addformvalidators?: (formFieldName: string, validate: () => boolean) => void;
 };
@@ -35,12 +36,12 @@ const SaveSpendingsModalCategory: FC<SaveSpendingsModalFormProps> = ({
   const { setVal, errs } = useFormValidate(
     name,
     getValidators(categoriesMap),
-    addFormValidators,
+    addFormValidators
   );
   const hasInputError = errs.length > 0 && !errs[0].valid;
 
   const [selectClassName, setSelectClassName] = useState<string>(
-    spending.category || DEFAULT_SELECT_CLASS_NAME,
+    spending?.category || DEFAULT_SELECT_CLASS_NAME
   );
 
   const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -55,8 +56,12 @@ const SaveSpendingsModalCategory: FC<SaveSpendingsModalFormProps> = ({
   };
 
   useEffect(() => {
-    setVal(spending.category || "");
+    setVal(spending?.category || "");
   }, [spending]);
+
+  if (!spending) {
+    return <></>;
+  }
 
   return (
     <div className="flex flex-col mb-3 mt-3">

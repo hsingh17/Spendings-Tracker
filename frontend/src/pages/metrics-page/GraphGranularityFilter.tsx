@@ -1,9 +1,10 @@
 import React, { FC } from "react";
-import { GRANULARITY, GRAPH_TYPES } from "../../utils/constants";
+import { Granularity } from "../../enums/Granularity";
+import { GraphTypes } from "../../enums/GraphTypes";
 
 type GraphGranularityFilter = {
-  graphType: GRAPH_TYPES;
-  granularity: GRANULARITY;
+  graphType: GraphTypes;
+  granularity: Granularity;
   searchParams: URLSearchParams;
   setSearchParams: (urlSearchParams: URLSearchParams) => void;
 };
@@ -17,8 +18,8 @@ const GraphGranularityFilter: FC<GraphGranularityFilter> = ({
   // Objects.keys(GRANULARITY) returns:
   // [ "0", "1", "2", "3", "Day", "Week", "Month", "Year" ]
   // Only want the Day, Week, etc
-  const granularities = Object.keys(GRANULARITY).filter((val) =>
-    isNaN(Number(val)),
+  const granularities = Object.keys(Granularity).filter((val) =>
+    isNaN(Number(val))
   );
 
   const onChange = (e: React.ChangeEvent) => {
@@ -31,7 +32,7 @@ const GraphGranularityFilter: FC<GraphGranularityFilter> = ({
   };
 
   // Don't render for anything but line charts
-  if (graphType !== GRAPH_TYPES.Line) {
+  if (graphType !== GraphTypes.Line) {
     return <></>;
   }
 
@@ -41,7 +42,7 @@ const GraphGranularityFilter: FC<GraphGranularityFilter> = ({
       <select
         className="p-2 mb-2 rounded-lg"
         name="granularity"
-        value={GRANULARITY[granularity]}
+        value={Granularity[granularity]}
         onChange={(e: React.ChangeEvent) => onChange(e)}
       >
         {granularities.map((type) => {

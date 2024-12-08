@@ -18,16 +18,13 @@ const TableFilter: FC<TableFilterProps> = ({
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const setIsOpenWrapper = (e: Nullable<React.MouseEvent>, open: boolean) => {
-    if (e) {
-      e.preventDefault();
-    }
-
+    e?.preventDefault();
     setIsOpen(open);
   };
 
   useDetectClickOutsideComponent(
     [filterButtonRef, filterFormRef],
-    setIsOpenWrapper,
+    setIsOpenWrapper
   );
 
   return (

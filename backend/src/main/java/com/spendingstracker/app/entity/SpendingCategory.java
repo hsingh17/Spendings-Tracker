@@ -16,7 +16,8 @@ import java.math.BigInteger;
 @Setter
 @Entity
 @Table(schema = "APP", name = "SPENDING_CATEGORY")
-public class SpendingCategory extends AuditableEntity {
+public class SpendingCategory extends AuditableEntity
+        implements CacheableEntity<SpendingCategoryEnum> {
     @Id
     @Column(name = "SPENDING_CATEGORY_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,5 +34,10 @@ public class SpendingCategory extends AuditableEntity {
 
     public SpendingCategory(SpendingCategoryEnum name) {
         this.name = name;
+    }
+
+    @Override
+    public SpendingCategoryEnum getCacheKey() {
+        return name;
     }
 }

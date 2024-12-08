@@ -1,22 +1,21 @@
 package com.spendingstracker.app.controller.auth;
 
+import static com.spendingstracker.app.dto.response.ApiResponse.okResponse;
+
 import com.spendingstracker.app.constants.ExternalUserType;
 import com.spendingstracker.app.dto.CustomUserDetails;
-import com.spendingstracker.app.dto.requests.LoginRequest;
-import com.spendingstracker.app.dto.requests.RegisterAcctRequest;
-import com.spendingstracker.app.dto.requests.ResetPasswordRequest;
-import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
+import com.spendingstracker.app.dto.requests.*;
 import com.spendingstracker.app.dto.response.*;
 import com.spendingstracker.app.dto.response.ApiResponse;
 import com.spendingstracker.app.service.auth.AuthService;
-import com.spendingstracker.app.util.JwtUtil;
+import com.spendingstracker.app.service.auth.CurrentUserService;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,18 +25,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/v1/auth")
 @Slf4j
+@RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
-
-    /**
-     * Initialize the <code>AuthController</code> with dependency injection
-     *
-     * @see com.spendingstracker.app.config.SecurityConfig
-     * @see JwtUtil
-     */
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
+    private final CurrentUserService curUserService;
 
     /**
      * Route for returning the <b>authenticated</b> user's details.
@@ -48,8 +39,8 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<UserDetails>> getMe() {
         log.info("GET /me");
-        UserDetails userDetails = authService.getUserDetailsForAuthenticatedUser();
-        ApiResponse<UserDetails> apiResponse = buildOkAuthApiResponse(userDetails, null);
+        UserDetails userDetails = curUserService.getCurrentUserDetails();
+        ApiResponse<UserDetails> apiResponse = okResponse(userDetails, null, null);
         return ResponseEntity.ok(apiResponse);
     }
 
@@ -80,7 +71,7 @@ public class AuthController {
         log.info("POST /login");
 
         UserDetails userDetails = authService.loginUser(loginRequest, response, externalUserType);
-        ApiResponse<UserDetails> apiResponse = buildOkAuthApiResponse(userDetails, null);
+        ApiResponse<UserDetails> apiResponse = okResponse(userDetails, null, null);
         return ResponseEntity.ok(apiResponse);
     }
 
@@ -97,7 +88,7 @@ public class AuthController {
         log.info("POST /logout");
 
         authService.logoutUser(response);
-        ApiResponse<Object> apiResponse = buildOkAuthApiResponse(null, "Successfully logged out");
+        ApiResponse<Object> apiResponse = okResponse(null, null, "Successfully logged out");
         return ResponseEntity.ok(apiResponse);
     }
 
@@ -117,7 +108,7 @@ public class AuthController {
 
         RegisterAcctResponse registerAcctResponse = authService.registerUser(registerAcctReq);
         ApiResponse<RegisterAcctResponse> apiResponse =
-                buildOkAuthApiResponse(registerAcctResponse, registerAcctResponse.message());
+                okResponse(registerAcctResponse, null, registerAcctResponse.getMessage());
 
         return ResponseEntity.ok(apiResponse);
     }
@@ -142,7 +133,7 @@ public class AuthController {
         VerifyAcctResponse verifyAcctResponse =
                 authService.verifyUser(verifyAcctReq, username, response);
         ApiResponse<VerifyAcctResponse> apiResponse =
-                buildOkAuthApiResponse(verifyAcctResponse, verifyAcctResponse.message());
+                okResponse(verifyAcctResponse, null, verifyAcctResponse.getMessage());
 
         return ResponseEntity.ok(apiResponse);
     }
@@ -158,9 +149,11 @@ public class AuthController {
     @PostMapping("/resend-registration-email/{username}")
     public ResponseEntity<ApiResponse<ResendRegistrationEmailResponse>> resendRegistrationEmail(
             @PathVariable("username") String username) {
+        log.info("POST /v1/auth/resend-registration/{}", username);
+
         ResendRegistrationEmailResponse response = authService.resendRegistrationEmail(username);
         ApiResponse<ResendRegistrationEmailResponse> apiResponse =
-                buildOkAuthApiResponse(response, response.message());
+                okResponse(response, null, response.getMessage());
 
         return ResponseEntity.ok(apiResponse);
     }
@@ -176,9 +169,11 @@ public class AuthController {
     @PostMapping("/send-password-reset-email/{username}")
     public ResponseEntity<ApiResponse<SendPasswordResetEmailResponse>> sendPasswordResetEmail(
             @PathVariable("username") String username) {
+        log.info("POST /v1/auth/send-password-reset-email/{}", username);
+
         SendPasswordResetEmailResponse response = authService.sendPasswordResetEmail(username);
         ApiResponse<SendPasswordResetEmailResponse> apiResponse =
-                buildOkAuthApiResponse(response, response.message());
+                okResponse(response, null, response.getMessage());
 
         return ResponseEntity.ok(apiResponse);
     }
@@ -196,28 +191,50 @@ public class AuthController {
     public ResponseEntity<ApiResponse<ResetPasswordResponse>> resetPassword(
             @PathVariable("username") String username,
             @RequestBody ResetPasswordRequest resetPasswordReq) {
+        log.info("PATCH /v1/auth/reset-password/{}", username);
+
         ResetPasswordResponse response = authService.resetPassword(resetPasswordReq, username);
         ApiResponse<ResetPasswordResponse> apiResponse =
-                buildOkAuthApiResponse(response, response.message());
+                okResponse(response, null, response.getMessage());
 
         return ResponseEntity.ok(apiResponse);
     }
 
     /**
-     * Build an <code>OK</code> <code>ApiResponse</code> object from <code>data</code> and <code>
-     * message</code>.
+     * Route for changing a user's password
      *
-     * @param data generic data object
-     * @param message message to return to the frontend
-     * @return <code>{@literal ApiResponse<T>}</code> object contain
+     * @param httpResponse
+     * @param changePasswordReq
+     * @return
+     * @see ApiResponse
+     * @see ChangePasswordRequest
+     * @see ChangePasswordResponse
+     */
+    @PatchMapping("/change-password")
+    public ResponseEntity<ApiResponse<ChangePasswordResponse>> changePassword(
+            HttpServletResponse httpResponse,
+            @RequestBody ChangePasswordRequest changePasswordReq) {
+        log.info("PATCH /v1/auth/change-password");
+
+        ChangePasswordResponse response =
+                authService.changePassword(changePasswordReq, httpResponse);
+        ApiResponse<ChangePasswordResponse> apiResponse =
+                okResponse(response, null, response.getMessage());
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    /**
+     * Route for deleting a user's account
+     *
+     * @param response
+     * @return
      * @see ApiResponse
      */
-    private <T> ApiResponse<T> buildOkAuthApiResponse(T data, String message) {
-        return new ApiResponse.ApiResponseBuilder<T>()
-                .setData(data)
-                .setOk(true)
-                .setMessage(message)
-                .setHttpStatus(HttpStatus.OK.value())
-                .build();
+    @DeleteMapping("/delete-user")
+    public ResponseEntity<ApiResponse<Void>> deleteUser(HttpServletResponse response) {
+        log.info("DELETE /v1/auth/delete-user");
+
+        authService.deleteUser(response);
+        return ResponseEntity.ok(okResponse(null, null, "Deleted account"));
     }
 }

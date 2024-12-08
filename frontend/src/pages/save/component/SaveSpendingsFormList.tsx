@@ -6,7 +6,9 @@ type SaveSpendingsFormListProps = {
   spendings: Spending[];
   categoriesMap: CategoriesMap;
   handleDeleteRow: (idx: number) => void;
-  setModalSpendingIdx: Dispatch<SetStateAction<number | undefined>>;
+  setModalSpendingIdx:
+    | Dispatch<SetStateAction<number | undefined>>
+    | ((idx: number) => void);
 };
 
 const SaveSpendingsFormList: FC<SaveSpendingsFormListProps> = ({

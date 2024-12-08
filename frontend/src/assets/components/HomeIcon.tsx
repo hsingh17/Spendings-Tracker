@@ -1,7 +1,9 @@
+import { FC } from "react";
 import { ReactComponent as Icon } from "../raw/home-icon.svg";
+import { IconTypeProps } from "./icon-props";
 
-const HomeIcon = () => {
-  return <Icon className="w-10 h-10" fill="white" />;
+const HomeIcon: FC<IconTypeProps> = ({ className }) => {
+  return <Icon className={className} fill="white" />;
 };
 
 export default HomeIcon;

@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import QueryClientConfig from "../config/QueryClientConfig";
+import queryClient from "../config/QueryClientConfig";
 import { AUTH_LOGOUT_ROUTE, LOGIN_PAGE, POST } from "../utils/constants";
 import fetchRequestWrapper from "../utils/fetch-utils";
 
@@ -24,9 +24,9 @@ export default function useLogout() {
           },
           success: () => {
             navigate(LOGIN_PAGE);
-            // Invalidate the user key from cache so we don't keep any cached user data
-            QueryClientConfig.removeQueries(["user"]);
-
+            // Remove the user key from cache so we don't keep any cached user data
+            queryClient.removeQueries(["user"]);
+            localStorage.clear();
             return "Succesfully logged out";
           },
         },

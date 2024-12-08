@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import QueryClientConfig from "../config/QueryClientConfig";
+import queryClient from "../config/QueryClientConfig";
 import { DASHBOARD_PAGE, PUT, VERIFY_ACCT_ROUTE } from "../utils/constants";
 import fetchRequestWrapper from "../utils/fetch-utils";
 
@@ -43,8 +43,8 @@ export default function useVerifyAccount(username: string) {
 
     onSuccess: () => {
       navigate(DASHBOARD_PAGE);
-      // Invalidate the user key from cache so we get the new logged in user
-      QueryClientConfig.removeQueries(["user"]);
+      // Remove the user key from cache so we get the new logged in user
+      queryClient.removeQueries(["user"]);
     },
   });
 }

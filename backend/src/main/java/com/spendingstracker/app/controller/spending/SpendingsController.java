@@ -1,5 +1,7 @@
 package com.spendingstracker.app.controller.spending;
 
+import static com.spendingstracker.app.dto.response.ApiResponse.okResponse;
+
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.requests.GetSpendingsRequestFilters;
 import com.spendingstracker.app.dto.requests.SpendingsSaveRequest;
@@ -11,10 +13,10 @@ import com.spendingstracker.app.service.spending.SpendingService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,21 +29,10 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping("/v1/api")
 @Slf4j
+@RequiredArgsConstructor
 public class SpendingsController {
     private final SpendingService spendingService;
     private final SpendingCategoryService spendingCategoryService;
-
-    /**
-     * Instantiate the <code>SpendingsController</code> from a <code>SpendingService</code> object.
-     *
-     * @param spendingService <code>SpendingService</code> object
-     * @see SpendingService
-     */
-    public SpendingsController(
-            SpendingService spendingService, SpendingCategoryService spendingCategoryService) {
-        this.spendingService = spendingService;
-        this.spendingCategoryService = spendingCategoryService;
-    }
 
     /**
      * Route for returning the user's spendings based on the query params passed in.
@@ -65,7 +56,7 @@ public class SpendingsController {
 
         SpendingPageResponse spendingPageResponse =
                 spendingService.getSpendings(getUserId(), filters);
-        Page<SpendingPageItem> spendingsPage = spendingPageResponse.getSpendingPage();
+        Page<SpendingPageItem> spendingsPage = spendingPageResponse.spendingPage();
 
         ApiLinks apiLinks =
                 buildApiLinks(
@@ -83,7 +74,7 @@ public class SpendingsController {
                         spendingsPage.getTotalElements());
 
         ApiResponse<SpendingPageResponse> response =
-                buildOkApiResponse(spendingPageResponse, null, apiMetadata);
+                okResponse(spendingPageResponse, apiMetadata, null);
 
         return ResponseEntity.ok(response);
     }
@@ -104,8 +95,7 @@ public class SpendingsController {
         SpendingDetailsResponse spendingsResponse =
                 spendingService.getSpendingDetails(spendingDate, getUserId());
 
-        ApiResponse<SpendingDetailsResponse> response =
-                buildOkApiResponse(spendingsResponse, null, null);
+        ApiResponse<SpendingDetailsResponse> response = okResponse(spendingsResponse, null, null);
 
         return ResponseEntity.ok(response);
     }
@@ -121,7 +111,7 @@ public class SpendingsController {
      * @see ApiResponse
      */
     @PostMapping("/spendings/{spending-date}")
-    public ResponseEntity<ApiResponse<Object>> createSpending(
+    public ResponseEntity<ApiResponse<Void>> createSpending(
             @RequestBody SpendingsSaveRequest spendingsSaveRequest,
             @PathVariable("spending-date") LocalDate spendingDate) {
         log.info("POST /spendings/" + spendingDate);
@@ -129,9 +119,8 @@ public class SpendingsController {
         spendingService.createSpending(spendingsSaveRequest, spendingDate, getUserId());
 
         int N = spendingsSaveRequest.spendingRequests().size();
-        ApiResponse<Object> response =
-                buildOkApiResponse(
-                        null, "Created " + N + " spendings for date " + spendingDate, null);
+        ApiResponse<Void> response =
+                okResponse(null, null, "Created " + N + " spendings for date " + spendingDate);
 
         return ResponseEntity.ok(response);
     }
@@ -147,15 +136,14 @@ public class SpendingsController {
      * @see ApiResponse
      */
     @PutMapping("/spendings/{spending-date}")
-    public ResponseEntity<ApiResponse<Object>> updateSpending(
+    public ResponseEntity<ApiResponse<Void>> updateSpending(
             @RequestBody SpendingsSaveRequest spendingsSaveRequest,
             @PathVariable("spending-date") LocalDate spendingDate) {
         log.info("PUT /spendings/" + spendingDate);
 
         spendingService.updateSpending(spendingsSaveRequest, spendingDate, getUserId());
-        ApiResponse<Object> response =
-                buildOkApiResponse(
-                        null, "Updated spending for spending date: " + spendingDate, null);
+        ApiResponse<Void> response =
+                okResponse(null, null, "Updated spending for spending date: " + spendingDate);
 
         return ResponseEntity.ok(response);
     }
@@ -170,13 +158,13 @@ public class SpendingsController {
      * @see ApiResponse
      */
     @DeleteMapping("/spendings/{spending-user-aggr-id}")
-    public ResponseEntity<ApiResponse<Object>> deleteSpending(
+    public ResponseEntity<ApiResponse<Void>> deleteSpending(
             @PathVariable("spending-user-aggr-id") BigInteger spendingUserAggrId) {
         log.info("DELETE /spendings/" + spendingUserAggrId);
 
         spendingService.deleteSpending(spendingUserAggrId);
-        ApiResponse<Object> response =
-                buildOkApiResponse(null, "Deleted spending for id: " + spendingUserAggrId, null);
+        ApiResponse<Void> response =
+                okResponse(null, null, "Deleted spending for id: " + spendingUserAggrId);
 
         return ResponseEntity.ok(response);
     }
@@ -194,12 +182,12 @@ public class SpendingsController {
         SpendingCategoriesResponse spendingCategoriesResponse =
                 spendingCategoryService.getSpendingCategories();
         ApiResponse<SpendingCategoriesResponse> response =
-                buildOkApiResponse(
+                okResponse(
                         spendingCategoriesResponse,
+                        null,
                         "Returned "
                                 + spendingCategoriesResponse.categoryToS3UrlMap().size()
-                                + " categories",
-                        null);
+                                + " categories");
 
         return ResponseEntity.ok(response);
     }
@@ -228,15 +216,5 @@ public class SpendingsController {
     private ApiLinks buildApiLinks(
             String requestUri, String queryString, int curPage, int lastPage) {
         return new ApiLinks.ApiLinksBuilder(requestUri, queryString, curPage, lastPage).build();
-    }
-
-    private <T> ApiResponse<T> buildOkApiResponse(T data, String message, ApiMetadata metadata) {
-        return new ApiResponse.ApiResponseBuilder<T>()
-                .setHttpStatus(HttpStatus.OK.value())
-                .setOk(true)
-                .setData(data)
-                .setMessage(message)
-                .setMetadata(metadata)
-                .build();
     }
 }

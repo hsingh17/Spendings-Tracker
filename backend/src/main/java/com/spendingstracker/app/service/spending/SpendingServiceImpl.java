@@ -22,6 +22,7 @@ import com.spendingstracker.app.repository.SpendingRepository;
 import com.spendingstracker.app.repository.SpendingUserAggrRepository;
 import com.spendingstracker.app.service.user.UserService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Page;
@@ -41,69 +42,55 @@ import java.util.*;
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class SpendingServiceImpl implements SpendingService {
     private final SpendingRepository spendingRepository;
     private final SpendingUserAggrRepository spendingUserAggrRepository;
     private final UserService userService;
     private final SpendingCategoryJpaCache spendingCategoryJpaCache;
 
-    public SpendingServiceImpl(
-            SpendingRepository spendingRepository,
-            SpendingUserAggrRepository spendingUserAggrRepository,
-            UserService userService,
-            SpendingCategoryJpaCache spendingCategoryJpaCache) {
-        this.spendingRepository = spendingRepository;
-        this.spendingUserAggrRepository = spendingUserAggrRepository;
-        this.userService = userService;
-        this.spendingCategoryJpaCache = spendingCategoryJpaCache;
-    }
-
     public SpendingPageResponse getSpendings(
             BigInteger userId, GetSpendingsRequestFilters filters) {
-
         PageRequest pageRequest = PageRequest.of(filters.getPage(), filters.getLimit());
         Page<SpendingListProjection> spendingsListProjs =
                 getSpendingListProj(userId, filters, pageRequest);
 
         // No spendings
         if (!spendingsListProjs.hasContent()) {
-            return SpendingPageResponse.builder()
-                    .spendingPage(new PageImpl<>(Collections.emptyList(), pageRequest, 0))
-                    .build();
+            return new SpendingPageResponse(
+                    new PageImpl<>(Collections.emptyList(), pageRequest, 0));
         }
 
         List<SpendingPageItem> spendingPageItemList = new ArrayList<>();
 
         for (SpendingListProjection spendingListProj : spendingsListProjs.getContent()) {
-            spendingPageItemList.add(buildSpendingPageItemFromSpendingListProj(spendingListProj));
+            spendingPageItemList.add(new SpendingPageItem(spendingListProj));
         }
 
         Page<SpendingPageItem> spendingPageItemPage =
                 new PageImpl<>(
                         spendingPageItemList, pageRequest, spendingsListProjs.getTotalElements());
 
-        return SpendingPageResponse.builder().spendingPage(spendingPageItemPage).build();
+        return new SpendingPageResponse(spendingPageItemPage);
     }
 
     public SpendingDetailsResponse getSpendingDetails(LocalDate spendingDate, BigInteger userId) {
         List<SpendingProjection> spendings =
                 spendingUserAggrRepository.findSpendingDetailsByUserIdAndDate(spendingDate, userId);
-
         List<SpendingResponse> spendingResponse = new ArrayList<>();
 
         for (SpendingProjection spending : spendings) {
-            spendingResponse.add(buildSpendingResponseFromSpendingProj(spending));
+            spendingResponse.add(new SpendingResponse(spending));
         }
 
-        return SpendingDetailsResponse.builder().spendings(spendingResponse).build();
+        return new SpendingDetailsResponse(spendingResponse);
     }
 
     public void updateSpending(
             SpendingsSaveRequest spendingsSaveRequest, LocalDate spendingDate, BigInteger userId) {
         User user = userService.getUserById(userId);
         SpendingUserAggr spendingUserAggr = findSpendingUserAggrByUserAndDate(user, spendingDate);
-        mergeExistingSpendingsWithRequest(
-                spendingUserAggr, spendingsSaveRequest.spendingRequests());
+        mergeWithExistingSpending(spendingUserAggr, spendingsSaveRequest.spendingRequests());
         spendingUserAggrRepository.save(spendingUserAggr);
     }
 
@@ -126,7 +113,7 @@ public class SpendingServiceImpl implements SpendingService {
         spendingUserAggrRepository.deleteById(spendingUserAggrId);
     }
 
-    private void mergeExistingSpendingsWithRequest(
+    private void mergeWithExistingSpending(
             SpendingUserAggr spendingUserAggr, List<SpendingRequest> spendingReqs) {
         for (SpendingRequest spendingRequest : spendingReqs) {
             SpendingCategoryEnum category = spendingRequest.getCategory();
@@ -149,15 +136,6 @@ public class SpendingServiceImpl implements SpendingService {
                 spendingUserAggr.addSpending(spending);
             }
         }
-    }
-
-    private SpendingResponse buildSpendingResponseFromSpendingProj(
-            SpendingProjection spendingProj) {
-        return SpendingResponse.builder()
-                .spendingId(spendingProj.getSpendingId())
-                .category(spendingProj.getCategory())
-                .amount(spendingProj.getAmount())
-                .build();
     }
 
     private Spending getSpendingFromId(BigInteger spendingId) {
@@ -205,15 +183,5 @@ public class SpendingServiceImpl implements SpendingService {
                 throw new NoSuchGraphTypeException(errMsg);
             }
         }
-    }
-
-    private SpendingPageItem buildSpendingPageItemFromSpendingListProj(
-            SpendingListProjection spendingListProj) {
-        return SpendingPageItem.builder()
-                .spendingUserAggrId(spendingListProj.spendingUserAggrId())
-                .date(spendingListProj.date())
-                .category(spendingListProj.category())
-                .total(spendingListProj.total())
-                .build();
     }
 }
