@@ -4,11 +4,7 @@ This repository holds the code for my spendings tracker app built with Java and 
 
 ## TODO
 
-- settings
-
-  - preferred currency type -> list and save spendings page will need to return the preferred currency types so UI can render correctly
 - maybe add a notes/memo field when adding spendings
-
 - possible cutover to cognito(?)
 
 
