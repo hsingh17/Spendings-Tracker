@@ -3,7 +3,6 @@
 This repository holds the code for my spendings tracker app built with Java and React.js
 
 ## TODO
-- possible cutover to cognito(?)
 
 
 - dashboard -> graphs
@@ -18,8 +17,7 @@ This repository holds the code for my spendings tracker app built with Java and 
   - user and spendings
 - test from scratch
 - add sitemap stuff https://stackoverflow.com/a/62976735
+- possible cutover to cognito(?)
 - create aws architecutre and deploy
 ## Known issues
 
-- the eyeball has problems when it's in an error state
-- google sign in button randomly resizes
