@@ -32,7 +32,8 @@ public interface SpendingUserAggrJpaRepository extends JpaRepository<SpendingUse
                     SELECT
                         S.SPENDING_ID AS spendingId,
                         SC.NAME AS category,
-                        S.AMOUNT AS amount
+                        S.AMOUNT AS amount,
+                        S.MEMO AS memo
                     FROM
                         APP.SPENDING_USER_AGGR SUA,
                         APP.SPENDING S,

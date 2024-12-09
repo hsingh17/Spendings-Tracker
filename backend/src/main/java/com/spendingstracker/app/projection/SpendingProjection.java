@@ -10,4 +10,6 @@ public interface SpendingProjection {
     String getCategory();
 
     BigDecimal getAmount();
+
+    String getMemo();
 }

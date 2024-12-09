@@ -58,13 +58,13 @@ const SaveSpendingsModalAmountInput: FC<SaveSpendingsModalAmountInputProps> = ({
   };
 
   return (
-    <>
+    <div className="mb-3">
       <label className="font-semibold text-slate-500">Amount</label>
       <div
         className={`flex flex-row w-full mt-2 ${hasInputError ? "border-red-500 rounded-xl p-[1px] border-2" : ""}`}
       >
         <span className="py-1 px-5 flex flex-col justify-center items-center font-semibold text-lg rounded-s-xl bg-slate-300 bg-opacity-80 drop-shadow-xl">
-          $
+          {MoneyUtils.getUserCurrencySymbol()}
         </span>
         <input
           className="w-full text-right rounded-r-md p-2 border-slate-300 border-2 border-opacity-50 outline-none focus:border-slate-500"
@@ -78,7 +78,7 @@ const SaveSpendingsModalAmountInput: FC<SaveSpendingsModalAmountInputProps> = ({
           }
         />
       </div>
-    </>
+    </div>
   );
 };
 

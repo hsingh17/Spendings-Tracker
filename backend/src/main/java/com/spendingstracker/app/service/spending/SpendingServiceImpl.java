@@ -99,10 +99,13 @@ public class SpendingServiceImpl implements SpendingService {
         User user = userService.getUserById(userId);
 
         List<Spending> spendings = new ArrayList<>();
-        for (SpendingRequest spendingReq : spendingsSaveRequest.spendingRequests()) {
+        for (SpendingRequest spendingRequest : spendingsSaveRequest.spendingRequests()) {
             SpendingCategory spendingCategory =
-                    spendingCategoryJpaCache.getFromCache(spendingReq.getCategory());
-            spendings.add(new Spending(spendingCategory, spendingReq.getAmount()));
+                    spendingCategoryJpaCache.getFromCache(spendingRequest.category());
+
+            spendings.add(
+                    new Spending(
+                            spendingCategory, spendingRequest.amount(), spendingRequest.memo()));
         }
 
         SpendingUserAggr spendingUserAggr = new SpendingUserAggr(user, spendingDate, spendings);
@@ -116,21 +119,24 @@ public class SpendingServiceImpl implements SpendingService {
     private void mergeWithExistingSpending(
             SpendingUserAggr spendingUserAggr, List<SpendingRequest> spendingReqs) {
         for (SpendingRequest spendingRequest : spendingReqs) {
-            SpendingCategoryEnum category = spendingRequest.getCategory();
-            BigDecimal amount = spendingRequest.getAmount();
+            SpendingCategoryEnum category = spendingRequest.category();
+            BigDecimal amount = spendingRequest.amount();
+            String memo = spendingRequest.memo();
+
             SpendingCategory spendingCategory = spendingCategoryJpaCache.getFromCache(category);
 
             // Brand new spending added
-            if (spendingRequest.getSpendingId() == null) {
-                spendingUserAggr.addSpending(new Spending(spendingCategory, amount));
+            if (spendingRequest.spendingId() == null) {
+                spendingUserAggr.addSpending(new Spending(spendingCategory, amount, memo));
                 continue;
             }
 
             // Update/Delete existing spending
-            Spending spending = getSpendingFromId(spendingRequest.getSpendingId());
-            if (spendingRequest.isDelete()) {
+            Spending spending = getSpendingFromId(spendingRequest.spendingId());
+            if (spendingRequest.delete()) {
                 spendingUserAggr.removeSpending(spending);
             } else {
+                spending.setMemo(memo);
                 spending.setSpendingCategory(spendingCategory);
                 spending.setAmount(amount);
                 spendingUserAggr.addSpending(spending);
