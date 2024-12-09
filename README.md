@@ -3,8 +3,6 @@
 This repository holds the code for my spendings tracker app built with Java and React.js
 
 ## TODO
-
-- maybe add a notes/memo field when adding spendings
 - possible cutover to cognito(?)
 
 

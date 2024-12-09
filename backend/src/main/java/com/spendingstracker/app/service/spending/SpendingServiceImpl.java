@@ -136,6 +136,7 @@ public class SpendingServiceImpl implements SpendingService {
             if (spendingRequest.delete()) {
                 spendingUserAggr.removeSpending(spending);
             } else {
+                spending.setMemo(memo);
                 spending.setSpendingCategory(spendingCategory);
                 spending.setAmount(amount);
                 spendingUserAggr.addSpending(spending);

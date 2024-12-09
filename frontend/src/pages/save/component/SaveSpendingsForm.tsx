@@ -16,6 +16,7 @@ import SaveSpendingsFormList from "./SaveSpendingsFormList";
 import SaveSpendingsModalAmount from "./SaveSpendingsModalAmount";
 import SaveSpendingsModalCategory from "./SaveSpendingsModalCategory";
 import SaveSpendingsModalFormFooter from "./SaveSpendingsModalFormFooter";
+import SaveSpendingsModalMemo from "./SaveSpendingsModalMemo";
 import SaveSpendingsTitle from "./SaveSpendingsTitle";
 
 type SaveSpendingsFormProps = {
@@ -50,6 +51,7 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
       amount: spending.amount,
       category: spending.category?.trim(),
       delete: spending.delete,
+      memo: spending.memo,
     }));
 
     saveSpendings({
@@ -73,14 +75,17 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
           delete: false,
           categoryError: null,
           amountError: null,
+          memo: null,
         };
     const newCategory = inputMap.get("category");
     const newAmountStr = inputMap.get("amount") || "0";
     const newAmount = Number.parseFloat(newAmountStr.replaceAll(",", ""));
+    const newMemo = inputMap.get("memo");
 
     // Do updates
     spending.category = newCategory;
     spending.amount = newAmount;
+    spending.memo = newMemo !== "Optional" ? newMemo : null;
 
     if (isValidIdx) {
       newSpendings[modalSpendingIdx!] = spending;
@@ -116,6 +121,7 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
           category: null,
           delete: false,
           spendingId: null,
+          memo: null,
         }
       : spendings[modalSpendingIdx];
   };
@@ -142,6 +148,7 @@ const SaveSpendingsForm: FC<SaveSpendingsFormProps> = ({
             categoriesMap={categoriesMap}
           />
           <SaveSpendingsModalAmount spending={getSpendingForModal()} />
+          <SaveSpendingsModalMemo spending={getSpendingForModal()} />
           <SaveSpendingsModalFormFooter setShow={hideModal} />
         </>
       }

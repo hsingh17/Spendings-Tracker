@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { Dayjs } from "dayjs";
 import toast from "react-hot-toast";
+import queryClient from "../config/QueryClientConfig";
 import {
   DATE_ISO_FORMAT,
   POST,
@@ -17,12 +18,12 @@ type SpendingSaveRequest = {
 async function postOrPutSpendings(
   spendingSaveRequest: SpendingSaveRequest,
   spendingDate: Dayjs,
-  isCreate: boolean,
+  isCreate: boolean
 ) {
   return await fetchRequestWrapper(
     `${SPENDINGS_API_ROUTE}/${spendingDate.format(DATE_ISO_FORMAT)}`,
     isCreate ? POST : PUT,
-    JSON.stringify(spendingSaveRequest),
+    JSON.stringify(spendingSaveRequest)
   );
 }
 
@@ -37,6 +38,9 @@ export default function useSaveSpendings(date: Dayjs, isCreate: boolean) {
       });
 
       return promise;
+    },
+    onSuccess: async () => {
+      await queryClient.refetchQueries(["list-spendings"]);
     },
   });
 }

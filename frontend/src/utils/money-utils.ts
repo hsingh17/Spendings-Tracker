@@ -6,7 +6,7 @@ const MoneyUtils = {
     amount: Nullable<number>,
     withCurrencySign: boolean = true
   ): string {
-    if (!amount) {
+    if (amount === null || amount === undefined) {
       return "";
     }
 
@@ -34,6 +34,16 @@ const MoneyUtils = {
 
     const obj: Currency = JSON.parse(json);
     return obj ? obj.shortName : "USD";
+  },
+
+  getUserCurrencySymbol(): string {
+    const json = localStorage.getItem("preferredCurrency");
+    if (!json) {
+      return "$";
+    }
+
+    const obj: Currency = JSON.parse(json);
+    return obj ? obj.symbol : "$";
   },
 };
 

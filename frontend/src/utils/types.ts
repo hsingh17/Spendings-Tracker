@@ -50,6 +50,7 @@ export type Spending = {
   spendingId: Nullable<number>;
   category: Nullable<string>;
   amount: Nullable<number>;
+  memo: Nullable<string>;
   delete: Nullable<boolean>;
 };
 
