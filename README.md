@@ -3,7 +3,9 @@
 This repository holds the code for my spendings tracker app built with Java and React.js
 
 ## TODO
+
 - possible cutover to cognito(?)
+  - created cognito user pool
 - dashboard -> graphs
 - zoom in/out in line charts
 - home page -> cool parallax effect
@@ -16,5 +18,5 @@ This repository holds the code for my spendings tracker app built with Java and 
 - test from scratch
 - add sitemap stuff https://stackoverflow.com/a/62976735
 - create aws architecture and deploy
-## Known issues
 
+## Known issues
