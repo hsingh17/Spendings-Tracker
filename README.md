@@ -26,7 +26,7 @@ This repository holds the code for my spendings tracker app built with Java and 
   - need to enhance JWT Filter/JWT token svc for validating cognito id tokens (https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-verifying-a-jwt.html)
   - setup google idp
 
-- Use CF dist. for static S3 images
+- Use CF dist. for spending category images (maybe, need to consider how to keep images private)
 - dashboard -> graphs
 - zoom in/out in line charts
 - home page -> cool parallax effect
