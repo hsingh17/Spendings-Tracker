@@ -8,12 +8,12 @@ This repository holds the code for my spendings tracker app built with Java and 
 
   - create cognito user pool -> DONE
   - sign up/create user:
-    - SignUp (https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_SignUp.html#CognitoUserPools-SignUp-request-ClientId)-> for user sign page, sends code to user's email
-    - ResendConfirmationCode (https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_ResendConfirmationCode.html) -> resend code
-    - ConfirmSignUp (https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_ConfirmSignUp.html) -> verify sign up using emailed code. then follow remaining steps under login
+    - SignUp (https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_SignUp.html#CognitoUserPools-SignUp-request-ClientId)-> for user sign page, sends code to user's email -> DONE
+    - ResendConfirmationCode (https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_ResendConfirmationCode.html) -> resend code -> DONE
+    - ConfirmSignUp (https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_ConfirmSignUp.html) -> verify sign up using emailed code. then follow remaining steps under login -> DONE
   - login:
 
-    - AdminInitiateAuth (https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_AdminInitiateAuth.html) -> initiate login
+    - AdminInitiateAuth (https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_AdminInitiateAuth.html) -> initiate login -> DONE
     - if AdminInitiateAuth -> returns ChallengeName = MFA_SETUP:
       - AssociateSoftwareToken (https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_AssociateSoftwareToken.html) -> show QR code using react qr code library of SecretCode
       - VerifySoftwareToken (https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_VerifySoftwareToken.html) -> verify mfa setup -> pass Session to AdminRespondToAuthChallenge with Challenge = MFA_SETUP to complete sign in
