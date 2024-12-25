@@ -15,15 +15,21 @@ This repository holds the code for my spendings tracker app built with Java and 
 
     - AdminInitiateAuth (https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_AdminInitiateAuth.html) -> initiate login -> DONE
     - if AdminInitiateAuth -> returns ChallengeName = MFA_SETUP:
-      - AssociateSoftwareToken (https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_AssociateSoftwareToken.html) -> show QR code using react qr code library of SecretCode
-      - VerifySoftwareToken (https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_VerifySoftwareToken.html) -> verify mfa setup -> pass Session to AdminRespondToAuthChallenge with Challenge = MFA_SETUP to complete sign in
-    - AdminRespondToAuthChallenge (https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_AdminRespondToAuthChallenge.html) -> respond to MFA challenge and returns JWTs
+      - AssociateSoftwareToken (https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_AssociateSoftwareToken.html) -> show QR code using react qr code library of SecretCode -> DONE
+        - https://github.com/google/google-authenticator/wiki/Key-Uri-Format
+        - https://www.npmjs.com/package/otpauth
+      - VerifySoftwareToken (https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_VerifySoftwareToken.html) -> verify mfa setup -> pass Session to AdminRespondToAuthChallenge with Challenge = MFA_SETUP/SOFTWARE_TOKEN_MFA (depending on if new or existing user) to complete sign in -> DONE
+    - AdminRespondToAuthChallenge (https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_AdminRespondToAuthChallenge.html) -> respond to MFA challenge and returns JWTs -> DONE
+
+  - Sign out:
+
+    - AdminUserGlobalSignOut (https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_AdminUserGlobalSignOut.html)
 
   - need to migrate tables from using USER_ID to USER_SUB in cognito
   - maybe make a cache for storing 250 cognito users
   - can drop unnecessary tables and scripts (USER, USER_PASSWORD_RESET, etc.)
   - may need a new test user script
-  - need to enhance JWT Filter/JWT token svc for validating cognito id tokens (https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-verifying-a-jwt.html)
+  - need to enhance JWT Filter/JWT token svc for validating cognito ID TOKENS (NOT ACCESS) (https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-verifying-a-jwt.html)
   - setup google idp
 
 - Use CF dist. for spending category images (maybe, need to consider how to keep images private)

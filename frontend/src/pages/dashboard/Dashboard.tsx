@@ -1,3 +1,4 @@
+import { QRCode } from "react-qrcode-logo";
 import useUser from "../../hooks/useUser";
 import RecentSpendings from "./component/RecentSpendings";
 
@@ -11,9 +12,9 @@ const Dashboard = () => {
       <h1 className="text-3xl mt-3 font-semibold">
         Welcome back <span className="text-theme-cta">{user?.username}</span>
       </h1>
-
       <RecentSpendings />
-
+      {/* TODO REMOVE */}
+      <QRCode value="otpauth://totp/spendings-tracker:<user>?secret=<secret>" />
       {/* <DashboardChartsContainer /> */}
     </div>
   );
