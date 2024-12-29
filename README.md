@@ -23,14 +23,15 @@ This repository holds the code for my spendings tracker app built with Java and 
 
   - Sign out:
 
-    - AdminUserGlobalSignOut (https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_AdminUserGlobalSignOut.html)
+    - AdminUserGlobalSignOut (https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_AdminUserGlobalSignOut.html) -> DONE
 
+  - setup google idp
   - need to migrate tables from using USER_ID to USER_SUB in cognito
   - maybe make a cache for storing 250 cognito users
   - can drop unnecessary tables and scripts (USER, USER_PASSWORD_RESET, etc.)
   - may need a new test user script
   - need to enhance JWT Filter/JWT token svc for validating cognito ID TOKENS (NOT ACCESS) (https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-verifying-a-jwt.html)
-  - setup google idp
+  - Setup up frontend code for on 4xx failures, use refresh token to get new access and id tokens (means need to store refresh token as an HTTP only cookie)
 
 - Use CF dist. for spending category images (maybe, need to consider how to keep images private)
 - dashboard -> graphs

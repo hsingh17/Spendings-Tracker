@@ -15,6 +15,7 @@ const GoogleSignInButton = () => {
   }, ExternalUserType.GOOGLE);
 
   const handleGoogleLogin = (credentialResponse: CredentialResponse) => {
+    console.log(credentialResponse); // TODO: Remove
     login({ oAuthCredential: credentialResponse.credential });
   };
 
