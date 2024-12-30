@@ -4,7 +4,10 @@ This repository holds the code for my spendings tracker app built with Java and 
 
 ## TODO
 
-- mfa ?
+- mfa
+  - https://github.com/samdjstevens/java-totp
+  - need new column on USER -> HAS_MFA
+  - new new table to store recovery codes -> USER_RECOVERY_CODES -> encrypted!
 - dashboard -> graphs
 - zoom in/out in line charts
 - home page -> cool parallax effect
