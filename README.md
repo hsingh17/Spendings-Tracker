@@ -7,7 +7,9 @@ This repository holds the code for my spendings tracker app built with Java and 
 - mfa
   - https://github.com/samdjstevens/java-totp
   - need new column on USER -> HAS_MFA
-  - new new table to store recovery codes -> USER_RECOVERY_CODES -> encrypted!
+    - will likely need some sort of frontend check on HAS_MFA and if no MFA setup, show MFA setup screens
+  - new table to store recovery codes -> USER_RECOVERY_CODES -> encrypt recovery codes
+  - new table to store mfa user secret string -> USER_MFA_STRING -> encrypt secret string
 - dashboard -> graphs
 - zoom in/out in line charts
 - home page -> cool parallax effect
