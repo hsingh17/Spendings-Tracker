@@ -21,15 +21,22 @@ import java.util.Collection;
 @Setter
 public class CustomUserDetails extends User {
     private BigInteger userId;
+    private boolean hasMfa;
 
     public CustomUserDetails(
-            String username,
-            String password,
-            boolean isActive,
-            Collection<? extends GrantedAuthority> authorities,
-            BigInteger userId) {
-        super(username, password, isActive, isActive, isActive, isActive, authorities);
-        this.userId = userId;
+            com.spendingstracker.app.entity.User user,
+            Collection<? extends GrantedAuthority> authorities) {
+        super(
+                user.getUsername(),
+                user.getPassword(),
+                user.isActive(),
+                user.isActive(),
+                user.isActive(),
+                user.isActive(),
+                authorities);
+
+        this.userId = user.getUserId();
+        this.hasMfa = user.isHasMfa();
     }
 
     public CustomUserDetails(

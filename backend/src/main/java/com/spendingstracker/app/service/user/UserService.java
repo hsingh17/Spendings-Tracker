@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
+import java.util.List;
 
 /**
  * Interface to define a service that performs operations on the <code>USER</code> table
@@ -21,7 +22,6 @@ public interface UserService extends UserDetailsService {
     /**
      * Return <code>User</code> by looking up via its <code>userId</code>
      *
-     * @param userId
      * @return the found <code>User</code> object.
      */
     @Transactional(readOnly = true)
@@ -30,9 +30,6 @@ public interface UserService extends UserDetailsService {
     /**
      * Create and save a <code>User</code> object to store into the database
      *
-     * @param username
-     * @param email
-     * @param password
      * @return <code>BigInteger</code> of user's <code>USER_ID</code> after saving into the
      *     database.
      * @see User
@@ -58,8 +55,6 @@ public interface UserService extends UserDetailsService {
     /**
      * Reset's a user's password if criteria is met
      *
-     * @param resetPasswordReq
-     * @param username
      * @see ResetPasswordRequest
      */
     void resetPassword(ResetPasswordRequest resetPasswordReq, String username);
@@ -67,25 +62,20 @@ public interface UserService extends UserDetailsService {
     /**
      * Change a user's password if criteria is met
      *
-     * @param changePasswordReq
-     * @param userId
      * @see ChangePasswordRequest
      */
     void changePassword(ChangePasswordRequest changePasswordReq, BigInteger userId);
 
-    /**
-     * Delete's a user with <code>USER_ID=userId</code>
-     *
-     * @param userId
-     */
+    /** Delete's a user with <code>USER_ID=userId</code> */
     void deleteUser(BigInteger userId);
 
     /**
      * Change's a user's currency to <code>currency</code>
      *
-     * @param currency
-     * @param userId
      * @see Currency
      */
     void updateCurrency(Currency currency, BigInteger userId);
+
+    /** Add MFA to a user */
+    void addMfa(String username, String secretString, List<String> recoveryCodes);
 }

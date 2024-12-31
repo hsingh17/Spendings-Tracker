@@ -96,7 +96,6 @@ public class AuthController {
      * Controller endpoint for registering a user
      *
      * @param registerAcctReq object containing user data for account registration
-     * @return
      * @see ApiResponse
      * @see RegisterAcctRequest
      * @see RegisterAcctResponse
@@ -117,8 +116,6 @@ public class AuthController {
      * Controller endpoint for verifying a user with their input pin
      *
      * @param verifyAcctReq object containing user info for verification process
-     * @param username
-     * @return
      * @see ApiResponse
      * @see VerifyAcctRequest
      * @see VerifyAcctResponse
@@ -132,6 +129,7 @@ public class AuthController {
 
         VerifyAcctResponse verifyAcctResponse =
                 authService.verifyUser(verifyAcctReq, username, response);
+
         ApiResponse<VerifyAcctResponse> apiResponse =
                 okResponse(verifyAcctResponse, null, verifyAcctResponse.getMessage());
 
@@ -142,7 +140,6 @@ public class AuthController {
      * Controller endpoint for resending the registration email.
      *
      * @param username user to resend registration email to
-     * @return
      * @see ApiResponse
      * @see ResendRegistrationEmailResponse
      */
@@ -161,8 +158,6 @@ public class AuthController {
     /**
      * Controller endpoint for sending a password reset email to <code>username</code>
      *
-     * @param username
-     * @return
      * @see ApiResponse
      * @see SendPasswordResetEmailResponse
      */
@@ -181,8 +176,6 @@ public class AuthController {
     /**
      * Controller endpoint for resetting user's password
      *
-     * @param resetPasswordReq
-     * @return
      * @see ApiResponse
      * @see ResetPasswordRequest
      * @see ResetPasswordResponse
@@ -203,9 +196,6 @@ public class AuthController {
     /**
      * Route for changing a user's password
      *
-     * @param httpResponse
-     * @param changePasswordReq
-     * @return
      * @see ApiResponse
      * @see ChangePasswordRequest
      * @see ChangePasswordResponse
@@ -226,8 +216,6 @@ public class AuthController {
     /**
      * Route for deleting a user's account
      *
-     * @param response
-     * @return
      * @see ApiResponse
      */
     @DeleteMapping("/delete-user")

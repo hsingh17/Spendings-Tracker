@@ -36,6 +36,9 @@ public class User extends AuditableEntity {
     @Column(name = "IS_ACTIVE")
     private boolean isActive;
 
+    @Column(name = "HAS_MFA")
+    private boolean hasMfa;
+
     @Column(name = "PASSWORD")
     @JsonIgnore // Don't want to send password (even if it's encrypted)
     private String password;
@@ -57,6 +60,12 @@ public class User extends AuditableEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserPasswordReset> userPasswordReset;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserMfaString> userMfaStrings;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserRecoveryCode> userRecoveryCodes;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private ExternalUser externalUser;
@@ -95,5 +104,65 @@ public class User extends AuditableEntity {
     public void setActiveAndVerified() {
         isActive = true;
         isVerified = true;
+    }
+
+    /**
+     * Add new MFA to a user by setting the secret string and recovery codes. Note, this does
+     * invalidate any previous MFA associated with the user.
+     *
+     * @see UserMfaString
+     * @see UserRecoveryCode
+     */
+    public void addMfa(UserMfaString mfaString, List<UserRecoveryCode> recoveryCodes) {
+        // Invalidate old MFA string and recovery codes
+        invalidateMfaStrings();
+        invalidateMfaRecoveryCodes();
+
+        // Add new methods AFTER invalidating the previous methods
+        userMfaStrings.add(mfaString);
+        userRecoveryCodes.addAll(recoveryCodes);
+    }
+
+    /**
+     * @return the MFA object that is active, if not found, return <code>null</code>
+     * @see UserMfaString
+     */
+    public UserMfaString getActiveUserMfaString() {
+        for (UserMfaString mfaString : userMfaStrings) {
+            if (mfaString.isActive()) {
+                return mfaString;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return all active MFA recovery codes
+     * @see UserRecoveryCode
+     */
+    public List<UserRecoveryCode> getActiveRecoveryCodes() {
+        List<UserRecoveryCode> activeRecoveryCodes = new ArrayList<>();
+        for (UserRecoveryCode userRecoveryCode : userRecoveryCodes) {
+            if (userRecoveryCode.isActive()) {
+                activeRecoveryCodes.add(userRecoveryCode);
+            }
+        }
+
+        return activeRecoveryCodes;
+    }
+
+    /** Invalidates any current MFA strings associated with a user */
+    private void invalidateMfaStrings() {
+        for (UserMfaString mfaString : userMfaStrings) {
+            mfaString.setActive(false);
+        }
+    }
+
+    /** Invalidates any current MFA recovery codes associated with a user */
+    private void invalidateMfaRecoveryCodes() {
+        for (UserRecoveryCode recoveryCode : userRecoveryCodes) {
+            recoveryCode.setActive(false);
+        }
     }
 }
