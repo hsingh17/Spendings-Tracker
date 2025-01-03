@@ -2,7 +2,11 @@ package com.spendingstracker.app.service.mfa;
 
 import static dev.samstevens.totp.util.Utils.getDataUriForImage;
 
+import com.spendingstracker.app.dto.response.RecoveryCodesResponse;
 import com.spendingstracker.app.dto.response.SetupMfaResponse;
+import com.spendingstracker.app.entity.User;
+import com.spendingstracker.app.entity.UserRecoveryCode;
+import com.spendingstracker.app.service.auth.CurrentUserService;
 import com.spendingstracker.app.service.user.UserService;
 
 import dev.samstevens.totp.code.CodeVerifier;
@@ -30,21 +34,30 @@ public class MfaServiceImpl implements MfaService {
     private final QrGenerator qrGenerator;
     private final CodeVerifier codeVerifier;
     private final RecoveryCodeGenerator recoveryCodeGenerator;
+    private final CurrentUserService currentUserService;
     private final UserService userService;
 
     @Override
-    public SetupMfaResponse setupMfa(String username) {
+    public SetupMfaResponse setupMfa() {
+        User user = currentUserService.getUserJpaEntity();
+        String username = user.getUsername();
         String secret = secretGenerator.generate();
         List<String> recoveryCodes = generateRecoveryCodes();
 
-        userService.addMfa(username, secret, recoveryCodes); // Store secret associated with user
+        userService.addMfa(user, secret, recoveryCodes); // Store secret associated with user
 
         return new SetupMfaResponse(generateQrCodeImg(username, secret), secret);
     }
 
     @Override
-    public void getRecoveryCodes() {
-        userService.findUserByUsername("");
+    public RecoveryCodesResponse getRecoveryCodes() {
+        User user = currentUserService.getUserJpaEntity();
+        List<String> userRecoveryCodes =
+                user.getActiveRecoveryCodes().stream()
+                        .map(UserRecoveryCode::getRecoveryCode)
+                        .toList();
+
+        return new RecoveryCodesResponse(userRecoveryCodes);
     }
 
     @Override

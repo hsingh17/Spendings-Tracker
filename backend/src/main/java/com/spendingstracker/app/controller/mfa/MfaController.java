@@ -3,6 +3,7 @@ package com.spendingstracker.app.controller.mfa;
 import static com.spendingstracker.app.dto.response.ApiResponse.okResponse;
 
 import com.spendingstracker.app.dto.response.ApiResponse;
+import com.spendingstracker.app.dto.response.RecoveryCodesResponse;
 import com.spendingstracker.app.dto.response.SetupMfaResponse;
 import com.spendingstracker.app.service.mfa.MfaService;
 
@@ -27,22 +28,30 @@ public class MfaController {
      * @see ApiResponse
      */
     @GetMapping("/setup")
-    public ResponseEntity<ApiResponse<SetupMfaResponse>> setupMfa(
-            @RequestParam("username") String username) {
-        log.info("GET /setup?username={}", username);
-        SetupMfaResponse setupMfaResponse = mfaService.setupMfa(username);
+    public ResponseEntity<ApiResponse<SetupMfaResponse>> setupMfa() {
+        log.info("GET /setup");
+        SetupMfaResponse setupMfaResponse = mfaService.setupMfa();
 
-        ApiResponse<SetupMfaResponse> apiResponse =
-                okResponse(setupMfaResponse, null, "Initiated MFA setup for " + username);
+        ApiResponse<SetupMfaResponse> apiResponse = okResponse(setupMfaResponse, null, null);
 
         return ResponseEntity.ok(apiResponse);
     }
 
+    /**
+     * Endpoint to retrieve a user's MFA recovery codes
+     *
+     * @see RecoveryCodesResponse
+     * @see ApiResponse
+     */
     @GetMapping("/recovery-codes")
-    public ResponseEntity<Void> getRecoveryCodes(@RequestParam("username") String username) {
+    public ResponseEntity<ApiResponse<RecoveryCodesResponse>> getRecoveryCodes(
+            @RequestParam("username") String username) {
         log.info("GET /recovery-codes?username={}", username);
+        RecoveryCodesResponse recoveryCodesResponse = mfaService.getRecoveryCodes();
+        ApiResponse<RecoveryCodesResponse> apiResponse =
+                okResponse(recoveryCodesResponse, null, null);
 
-        return null;
+        return ResponseEntity.ok(apiResponse);
     }
 
     @PostMapping("/verify")

@@ -77,5 +77,5 @@ public interface UserService extends UserDetailsService {
     void updateCurrency(Currency currency, BigInteger userId);
 
     /** Add MFA to a user */
-    void addMfa(String username, String secretString, List<String> recoveryCodes);
+    void addMfa(User user, String secretString, List<String> recoveryCodes);
 }

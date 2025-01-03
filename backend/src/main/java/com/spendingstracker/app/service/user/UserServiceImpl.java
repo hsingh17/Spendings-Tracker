@@ -154,8 +154,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addMfa(String username, String secretString, List<String> recoveryCodes) {
-        User user = findUserByUsernameOrThrow(username);
+    public void addMfa(User user, String secretString, List<String> recoveryCodes) {
         UserMfaString mfaString =
                 new UserMfaString(user, bCryptPasswordEncoder.encode(secretString));
         List<UserRecoveryCode> userRecoveryCodes = new ArrayList<>();

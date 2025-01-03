@@ -1,5 +1,6 @@
 package com.spendingstracker.app.service.mfa;
 
+import com.spendingstracker.app.dto.response.RecoveryCodesResponse;
 import com.spendingstracker.app.dto.response.SetupMfaResponse;
 
 /**
@@ -14,10 +15,14 @@ public interface MfaService {
      *
      * @see SetupMfaResponse
      */
-    SetupMfaResponse setupMfa(String username);
+    SetupMfaResponse setupMfa();
 
-    /** Return's a user recovery codes */
-    void getRecoveryCodes();
+    /**
+     * Returns a user recovery codes
+     *
+     * @see RecoveryCodesResponse
+     */
+    RecoveryCodesResponse getRecoveryCodes();
 
     void verifyMfa();
 }
