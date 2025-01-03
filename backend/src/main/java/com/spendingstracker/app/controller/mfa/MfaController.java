@@ -2,6 +2,7 @@ package com.spendingstracker.app.controller.mfa;
 
 import static com.spendingstracker.app.dto.response.ApiResponse.okResponse;
 
+import com.spendingstracker.app.dto.requests.VerifyMfaRequest;
 import com.spendingstracker.app.dto.response.ApiResponse;
 import com.spendingstracker.app.dto.response.RecoveryCodesResponse;
 import com.spendingstracker.app.dto.response.SetupMfaResponse;
@@ -54,9 +55,14 @@ public class MfaController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    /** Endpoint for verifying MFA totp code or recovery code */
     @PostMapping("/verify")
-    public ResponseEntity<Void> verifyMfa() {
+    public ResponseEntity<ApiResponse<Void>> verifyMfa(
+            @RequestBody VerifyMfaRequest verifyMfaRequest) {
         // Must consider both recovery code and totp code
-        return null;
+        mfaService.verifyMfa(verifyMfaRequest);
+        ApiResponse<Void> apiResponse = okResponse(null, null, "Validated MFA");
+
+        return ResponseEntity.ok(apiResponse);
     }
 }

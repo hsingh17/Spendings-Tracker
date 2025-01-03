@@ -2,10 +2,13 @@ package com.spendingstracker.app.service.mfa;
 
 import static dev.samstevens.totp.util.Utils.getDataUriForImage;
 
+import com.spendingstracker.app.dto.requests.VerifyMfaRequest;
 import com.spendingstracker.app.dto.response.RecoveryCodesResponse;
 import com.spendingstracker.app.dto.response.SetupMfaResponse;
 import com.spendingstracker.app.entity.User;
+import com.spendingstracker.app.entity.UserMfaString;
 import com.spendingstracker.app.entity.UserRecoveryCode;
+import com.spendingstracker.app.exception.MfaNotValidatedException;
 import com.spendingstracker.app.service.auth.CurrentUserService;
 import com.spendingstracker.app.service.user.UserService;
 
@@ -20,6 +23,7 @@ import dev.samstevens.totp.secret.SecretGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -36,6 +40,7 @@ public class MfaServiceImpl implements MfaService {
     private final RecoveryCodeGenerator recoveryCodeGenerator;
     private final CurrentUserService currentUserService;
     private final UserService userService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public SetupMfaResponse setupMfa() {
@@ -61,7 +66,16 @@ public class MfaServiceImpl implements MfaService {
     }
 
     @Override
-    public void verifyMfa() {}
+    public void verifyMfa(VerifyMfaRequest verifyMfaRequest) {
+        User user = currentUserService.getUserJpaEntity();
+        if (verifyMfaRequest.totpCode() != null) {
+            verifyTotpCode(user, verifyMfaRequest.totpCode());
+        } else if (verifyMfaRequest.recoveryCode() != null) {
+            verifyRecoveryCode(user, verifyMfaRequest.recoveryCode());
+        } else {
+            throw new MfaNotValidatedException("No recovery code or TOTP code provided");
+        }
+    }
 
     /**
      * @return QR code as a data image URI. If unable to generate one, just return null
@@ -86,5 +100,27 @@ public class MfaServiceImpl implements MfaService {
     private List<String> generateRecoveryCodes() {
         return Arrays.stream(recoveryCodeGenerator.generateCodes(8)).toList();
     }
+
+    /** Verifies if <code>totpCode</code> is valid for the current user */
+    private void verifyTotpCode(User user, String totpCode) {
+        UserMfaString userMfaString = user.getActiveUserMfaString();
+        if (!codeVerifier.isValidCode(userMfaString.getSecretString(), totpCode)) {
+            throw new MfaNotValidatedException("Invalid TOTP code provided");
+        }
+    }
+
+    /** Verifies if <code>recoveryCode</code> is valid for the current user */
+    private void verifyRecoveryCode(User user, String recoveryCode) {
+        List<UserRecoveryCode> userRecoveryCodes = user.getActiveRecoveryCodes();
+
+        for (UserRecoveryCode userRecoveryCode : userRecoveryCodes) {
+            // Found recovery code, can exit function
+            if (bCryptPasswordEncoder.matches(recoveryCode, userRecoveryCode.getRecoveryCode())) {
+                return;
+            }
+        }
+
+        // Recovery code not found
+        throw new MfaNotValidatedException("Invalid recovery code provided");
+    }
 }
-;

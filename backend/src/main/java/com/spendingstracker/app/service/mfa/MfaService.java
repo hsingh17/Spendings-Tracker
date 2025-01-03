@@ -1,5 +1,6 @@
 package com.spendingstracker.app.service.mfa;
 
+import com.spendingstracker.app.dto.requests.VerifyMfaRequest;
 import com.spendingstracker.app.dto.response.RecoveryCodesResponse;
 import com.spendingstracker.app.dto.response.SetupMfaResponse;
 
@@ -24,5 +25,10 @@ public interface MfaService {
      */
     RecoveryCodesResponse getRecoveryCodes();
 
-    void verifyMfa();
+    /**
+     * Verifies if the totp code or recovery code provided is valid
+     *
+     * @see VerifyMfaRequest
+     */
+    void verifyMfa(VerifyMfaRequest verifyMfaRequest);
 }
