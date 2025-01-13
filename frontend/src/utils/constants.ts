@@ -15,6 +15,7 @@ export const SAVE_SPENDINGS_PAGE = "/save";
 export const METRICS_PAGE = "/metrics";
 export const SETTINGS_PAGE = "/settings";
 export const VERIFY_ACCT_PAGE = "/verify-acct";
+export const MFA_SETUP_PAGE = "/mfa-setup";
 export const UNAUTHENTICATED_PAGES = [
   HOME_PAGE,
   LOGIN_PAGE,
@@ -23,6 +24,10 @@ export const UNAUTHENTICATED_PAGES = [
   SEND_PASSWORD_RESET_EMAIL_PAGE,
   VERIFY_ACCT_PAGE,
 ];
+
+export const NO_SHOW_NAVBAR_PAGES = UNAUTHENTICATED_PAGES.concat([
+  MFA_SETUP_PAGE,
+]);
 
 // #######################################################################################
 // #######################################################################################

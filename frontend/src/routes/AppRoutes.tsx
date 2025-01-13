@@ -5,6 +5,7 @@ import NotFound from "../pages/error/NotFound";
 import Home from "../pages/home/Home";
 import Login from "../pages/login/Login";
 import Metrics from "../pages/metrics-page/Metrics";
+import MfaSetup from "../pages/mfa/setup/MfaSetup";
 import PasswordReset from "../pages/password-reset/PasswordReset";
 import SaveSpendings from "../pages/save/SaveSpendings";
 import SendPasswordReset from "../pages/send-password-reset/SendPasswordReset";
@@ -17,6 +18,7 @@ import {
   HOME_PAGE,
   LOGIN_PAGE,
   METRICS_PAGE,
+  MFA_SETUP_PAGE,
   PASSWORD_RESET_PAGE,
   SAVE_SPENDINGS_PAGE,
   SEND_PASSWORD_RESET_EMAIL_PAGE,
@@ -45,6 +47,7 @@ const AppRoutes = () => {
       <Route path={CREATE_ACCT_PAGE} element={<CreateAccount />} />
       <Route path={VERIFY_ACCT_PAGE} element={<VerifyAccount />} />
       <Route path={SETTINGS_PAGE} element={<Settings />} />
+      <Route path={MFA_SETUP_PAGE} element={<MfaSetup />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
