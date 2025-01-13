@@ -59,6 +59,9 @@ export const CHANGE_PASSWORD_ROUTE = `${BASE_API_URL}${API_VERSION}/auth/change-
 export const LIST_CURRENCIES_ROUTE = `${BASE_API_URL}${API_VERSION}/currency/currencies`;
 export const UPDATE_CURRENCY_ROUTE = `${BASE_API_URL}${API_VERSION}/currency/update-currency`;
 export const GET_CURRENCY_ROUTE = `${BASE_API_URL}${API_VERSION}/currency/current-currency`;
+export const SETUP_MFA_ROUTE = `${BASE_API_URL}${API_VERSION}/mfa/setup`;
+export const GET_RECOVERY_CODES_ROUTE = `${BASE_API_URL}${API_VERSION}/mfa/recovery-codes`;
+export const VERIFY_MFA_ROUTE = `${BASE_API_URL}${API_VERSION}/mfa/verify`;
 
 // #######################################################################################
 // #######################################################################################

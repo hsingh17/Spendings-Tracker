@@ -55,11 +55,16 @@ public class MfaController {
         return ResponseEntity.ok(apiResponse);
     }
 
-    /** Endpoint for verifying MFA totp code or recovery code */
+    /**
+     * Endpoint for verifying MFA totp code or recovery code
+     *
+     * @see ApiResponse
+     */
     @PostMapping("/verify")
     public ResponseEntity<ApiResponse<Void>> verifyMfa(
             @RequestBody VerifyMfaRequest verifyMfaRequest) {
-        // Must consider both recovery code and totp code
+        log.info("POST /verify");
+
         mfaService.verifyMfa(verifyMfaRequest);
         ApiResponse<Void> apiResponse = okResponse(null, null, "Validated MFA");
 
