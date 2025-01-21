@@ -1,9 +1,11 @@
 import { FC } from "react";
+import { useNavigate } from "react-router-dom";
 import GenericForm from "../../../common/form/GenericForm";
-import GenericFormButton from "../../../common/form/GenericFormButton";
-import GenericInputField from "../../../common/form/GenericInputField";
 import { SetupMfaResponse } from "../../../hooks/useMfaSetup";
+import useVerifyMfa from "../../../hooks/useVerifyMfa";
+import { DASHBOARD_PAGE } from "../../../utils/constants";
 import { ApiResponse } from "../../../utils/types";
+import MfaSetupFormChildren from "./MfaSetupFormChildren";
 import MfaSetupInstructions from "./MfaSetupInstructions";
 
 type MfaSetupFormProps = {
@@ -11,18 +13,17 @@ type MfaSetupFormProps = {
 };
 
 const MfaSetupForm: FC<MfaSetupFormProps> = ({ response }) => {
+  const navigate = useNavigate();
+  const { mutate: verifyMfa } = useVerifyMfa(() => navigate(DASHBOARD_PAGE));
   const mfaResponse = response?.data;
-  const onSubmit = (inputMap: Map<string, string>) => {
-    // TODO
-    console.log(inputMap);
-  };
-
-  const copySecretStringToClipboard = () =>
-    navigator.clipboard.writeText(mfaResponse?.secretString || "");
+  const onSubmit = (inputMap: Map<string, string>) =>
+    verifyMfa({ totpCode: inputMap.get("totp-code") });
 
   if (!mfaResponse) {
     return <></>;
   }
+
+  // Verify mfa no work since server run on utc and sending code from pst
 
   return (
     <>
@@ -33,21 +34,7 @@ const MfaSetupForm: FC<MfaSetupFormProps> = ({ response }) => {
         beforeFormChildren={<MfaSetupInstructions />}
         formChildren={
           <>
-            <img className="ml-auto mr-auto" src={mfaResponse.qrCodeDataUri} />
-            <span
-              onClick={copySecretStringToClipboard}
-              className="cursor-pointer"
-            >
-              <p className="text-center w-full mb-5 font-semibold text-slate-400 text-lg">
-                {mfaResponse.secretString}
-                TODO copy icon
-              </p>
-            </span>
-
-            <label className="font-semibold text-slate-500">TOTP Code</label>
-            <GenericInputField type="text" name="totp-code" />
-
-            <GenericFormButton value="Set up" />
+            <MfaSetupFormChildren mfaResponse={mfaResponse} />
           </>
         }
         onSubmit={onSubmit}
