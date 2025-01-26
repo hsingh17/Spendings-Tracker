@@ -15,6 +15,7 @@ export type User = {
   accountNonLocked: Nullable<boolean>;
   credentialsNonExpired: Nullable<boolean>;
   enabled: Nullable<boolean>;
+  hasMfa: boolean;
 };
 
 export type ApiLinks = {

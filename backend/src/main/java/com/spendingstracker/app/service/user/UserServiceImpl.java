@@ -166,6 +166,12 @@ public class UserServiceImpl implements UserService {
         user.addMfa(mfaString, userRecoveryCodes);
     }
 
+    @Override
+    public void setHasMfa(User user) {
+        user.setHasMfa(true);
+        userRepository.save(user);
+    }
+
     /**
      * Finds user's <code>UserDetails</code> object by their <code>username</code>.
      *

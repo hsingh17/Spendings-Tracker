@@ -75,6 +75,8 @@ public class MfaServiceImpl implements MfaService {
         } else {
             throw new MfaNotValidatedException("No recovery code or TOTP code provided");
         }
+
+        userService.setHasMfa(user);
     }
 
     /**

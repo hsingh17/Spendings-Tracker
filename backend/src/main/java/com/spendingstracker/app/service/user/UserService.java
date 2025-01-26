@@ -78,4 +78,7 @@ public interface UserService extends UserDetailsService {
 
     /** Add MFA to a user */
     void addMfa(User user, String secretString, List<String> recoveryCodes);
+
+    /** Set's <code>hasMfa</code> to <code>true</code> */
+    void setHasMfa(User user);
 }

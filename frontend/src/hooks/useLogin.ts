@@ -1,9 +1,14 @@
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import queryClient from "../config/QueryClientConfig";
-import { AUTH_LOGIN_ROUTE, DASHBOARD_PAGE, POST } from "../utils/constants";
+import {
+  AUTH_LOGIN_ROUTE,
+  DASHBOARD_PAGE,
+  MFA_SETUP_PAGE,
+  POST,
+} from "../utils/constants";
 import fetchRequestWrapper from "../utils/fetch-utils";
-import { ExternalUserType, User } from "../utils/types";
+import { ApiResponse, ExternalUserType, User } from "../utils/types";
 
 type LoginRequest = {
   username?: string;
@@ -31,10 +36,17 @@ export default function useLogin(
   return useMutation({
     mutationFn: (formData: LoginRequest) =>
       postLogin(formData, externalUserType),
-    onSuccess: () => {
-      navigate(DASHBOARD_PAGE);
+    onSuccess: (data: ApiResponse<User>) => {
       queryClient.refetchQueries(["user"]);
       queryClient.refetchQueries(["currency"]);
+      const hasMfa = data.data?.hasMfa;
+
+      if (!hasMfa) {
+        navigate(MFA_SETUP_PAGE);
+      } else {
+        // TODO: go to mfa verify page
+        navigate(DASHBOARD_PAGE);
+      }
     },
     onError: onError,
   });

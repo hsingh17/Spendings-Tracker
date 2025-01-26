@@ -205,7 +205,8 @@ public class AuthServiceImpl implements AuthService {
         return ResponseCookie.from(Constants.TOKEN_KEY, token)
                 .httpOnly(true)
                 .maxAge(maxAge)
-                .path("/v1/")
+                .path("/v1/") // TODO: for initial login via user and password -> set path to be only /v1/mfa/verify and /v1/mfa/setup
+                // then for after verify MFA, all all the apis
                 .secure(true) // If SameSite is "None", then secure must be true (it's fine
                 // if localhost uses http though as it is an exception)
                 .sameSite("None") // None because eventually backend and frontend will be on

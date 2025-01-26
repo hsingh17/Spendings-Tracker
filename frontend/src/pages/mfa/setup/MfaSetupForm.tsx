@@ -23,8 +23,6 @@ const MfaSetupForm: FC<MfaSetupFormProps> = ({ response }) => {
     return <></>;
   }
 
-  // Verify mfa no work since server run on utc and sending code from pst
-
   return (
     <>
       <GenericForm
