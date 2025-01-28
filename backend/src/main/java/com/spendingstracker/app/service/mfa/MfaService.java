@@ -4,6 +4,8 @@ import com.spendingstracker.app.dto.requests.VerifyMfaRequest;
 import com.spendingstracker.app.dto.response.RecoveryCodesResponse;
 import com.spendingstracker.app.dto.response.SetupMfaResponse;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 /**
  * Service for setting up and verifying MFA
  *
@@ -29,6 +31,7 @@ public interface MfaService {
      * Verifies if the totp code or recovery code provided is valid
      *
      * @see VerifyMfaRequest
+     * @param response response object for setting cookie after successful verification
      */
-    void verifyMfa(VerifyMfaRequest verifyMfaRequest);
+    void verifyMfa(HttpServletResponse response, VerifyMfaRequest verifyMfaRequest);
 }

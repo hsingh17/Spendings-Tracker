@@ -108,4 +108,12 @@ public interface AuthService {
      */
     ChangePasswordResponse changePassword(
             ChangePasswordRequest changePasswordReq, HttpServletResponse httpResponse);
+
+    /** Sets JWT token as cookie for <code>path</code> */
+    void setAuthenticatedCookie(
+            HttpServletResponse response,
+            String name,
+            CustomUserDetails userDetails,
+            String path,
+            long maxAge);
 }

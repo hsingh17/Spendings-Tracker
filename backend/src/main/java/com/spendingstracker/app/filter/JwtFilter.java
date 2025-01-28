@@ -1,7 +1,8 @@
 package com.spendingstracker.app.filter;
 
+import static com.spendingstracker.app.constants.Constants.API_TOKEN_KEY;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.spendingstracker.app.constants.Constants;
 import com.spendingstracker.app.dto.response.ApiResponse;
 import com.spendingstracker.app.util.JwtUtil;
 
@@ -59,9 +60,10 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
+        // TODO: Upgrade filter/security to look at different tokens (mfa requires mfa-token anything else requires api-token)
         String token =
                 Arrays.stream(cookies)
-                        .filter(cookie -> Constants.TOKEN_KEY.equals(cookie.getName()))
+                        .filter(cookie -> API_TOKEN_KEY.equals(cookie.getName()))
                         .map(Cookie::getValue)
                         .findFirst()
                         .orElse(null);

@@ -8,6 +8,8 @@ import com.spendingstracker.app.dto.response.RecoveryCodesResponse;
 import com.spendingstracker.app.dto.response.SetupMfaResponse;
 import com.spendingstracker.app.service.mfa.MfaService;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -62,10 +64,10 @@ public class MfaController {
      */
     @PostMapping("/verify")
     public ResponseEntity<ApiResponse<Void>> verifyMfa(
-            @RequestBody VerifyMfaRequest verifyMfaRequest) {
+            HttpServletResponse response, @RequestBody VerifyMfaRequest verifyMfaRequest) {
         log.info("POST /verify");
 
-        mfaService.verifyMfa(verifyMfaRequest);
+        mfaService.verifyMfa(response, verifyMfaRequest);
         ApiResponse<Void> apiResponse = okResponse(null, null, "Validated MFA");
 
         return ResponseEntity.ok(apiResponse);

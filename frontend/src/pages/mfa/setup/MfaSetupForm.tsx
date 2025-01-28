@@ -1,9 +1,7 @@
 import { FC } from "react";
-import { useNavigate } from "react-router-dom";
 import GenericForm from "../../../common/form/GenericForm";
 import { SetupMfaResponse } from "../../../hooks/useMfaSetup";
 import useVerifyMfa from "../../../hooks/useVerifyMfa";
-import { DASHBOARD_PAGE } from "../../../utils/constants";
 import { ApiResponse } from "../../../utils/types";
 import MfaSetupFormChildren from "./MfaSetupFormChildren";
 import MfaSetupInstructions from "./MfaSetupInstructions";
@@ -13,8 +11,7 @@ type MfaSetupFormProps = {
 };
 
 const MfaSetupForm: FC<MfaSetupFormProps> = ({ response }) => {
-  const navigate = useNavigate();
-  const { mutate: verifyMfa } = useVerifyMfa(() => navigate(DASHBOARD_PAGE));
+  const { mutate: verifyMfa } = useVerifyMfa();
   const mfaResponse = response?.data;
   const onSubmit = (inputMap: Map<string, string>) =>
     verifyMfa({ totpCode: inputMap.get("totp-code") });

@@ -1,5 +1,7 @@
 package com.spendingstracker.app.service.mfa;
 
+import static com.spendingstracker.app.constants.Constants.API_TOKEN_KEY;
+
 import static dev.samstevens.totp.util.Utils.getDataUriForImage;
 
 import com.spendingstracker.app.dto.requests.VerifyMfaRequest;
@@ -9,6 +11,7 @@ import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.entity.UserMfaString;
 import com.spendingstracker.app.entity.UserRecoveryCode;
 import com.spendingstracker.app.exception.MfaNotValidatedException;
+import com.spendingstracker.app.service.auth.AuthService;
 import com.spendingstracker.app.service.auth.CurrentUserService;
 import com.spendingstracker.app.service.user.UserService;
 
@@ -19,6 +22,8 @@ import dev.samstevens.totp.qr.QrDataFactory;
 import dev.samstevens.totp.qr.QrGenerator;
 import dev.samstevens.totp.recovery.RecoveryCodeGenerator;
 import dev.samstevens.totp.secret.SecretGenerator;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +46,7 @@ public class MfaServiceImpl implements MfaService {
     private final CurrentUserService currentUserService;
     private final UserService userService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final AuthService authService;
 
     @Override
     public SetupMfaResponse setupMfa() {
@@ -66,7 +72,7 @@ public class MfaServiceImpl implements MfaService {
     }
 
     @Override
-    public void verifyMfa(VerifyMfaRequest verifyMfaRequest) {
+    public void verifyMfa(HttpServletResponse response, VerifyMfaRequest verifyMfaRequest) {
         User user = currentUserService.getUserJpaEntity();
         if (verifyMfaRequest.totpCode() != null) {
             verifyTotpCode(user, verifyMfaRequest.totpCode());
@@ -77,6 +83,8 @@ public class MfaServiceImpl implements MfaService {
         }
 
         userService.setHasMfa(user);
+        authService.setAuthenticatedCookie(
+                response, API_TOKEN_KEY, currentUserService.getCurrentUserDetails(), "/v1/", 3600L);
     }
 
     /**
