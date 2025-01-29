@@ -23,9 +23,9 @@ export default function useVerifyMfa() {
   return useMutation({
     mutationFn: (verifyMfaRequest: VerifyMfaRequest) =>
       postVerifyMfa(verifyMfaRequest),
-    onSuccess: () => {
-      queryClient.refetchQueries(["user"]);
-      queryClient.refetchQueries(["currency"]);
+    onSuccess: async () => {
+      await queryClient.refetchQueries(["user"]);
+      await queryClient.refetchQueries(["currency"]);
       navigate(DASHBOARD_PAGE);
     },
     onError: (error) => {

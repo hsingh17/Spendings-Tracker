@@ -1,7 +1,5 @@
 package com.spendingstracker.app.filter;
 
-import static com.spendingstracker.app.constants.Constants.API_TOKEN_KEY;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spendingstracker.app.dto.response.ApiResponse;
 import com.spendingstracker.app.util.JwtUtil;
@@ -12,38 +10,31 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import lombok.AllArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
 
-/** Custom Spring Security filter that sets the authentication status of the user */
-@Component
-public class JwtFilter extends OncePerRequestFilter {
+/**
+ * Custom Spring Security filter that sets the authentication status of the user
+ *
+ * @see ApiTokenJwtFilter
+ * @see MfaTokenJwtFilter
+ */
+@AllArgsConstructor
+public abstract class JwtFilter extends OncePerRequestFilter {
     private final ObjectMapper objectMapper;
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
-
-    /**
-     * Initialize the JwtFilter object with dependency injections
-     *
-     * @see UserDetailsService
-     * @see JwtUtil
-     * @see com.spendingstracker.app.config.ObjectMapperConfig
-     */
-    public JwtFilter(
-            ObjectMapper objectMapper, JwtUtil jwtUtil, UserDetailsService userDetailsService) {
-        this.objectMapper = objectMapper;
-        this.jwtUtil = jwtUtil;
-        this.userDetailsService = userDetailsService;
-    }
+    private final String tokenKey;
 
     /**
      * Function attempts to extract the JWT from the request cookie and set the authentication to
@@ -60,10 +51,9 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        // TODO: Upgrade filter/security to look at different tokens (mfa requires mfa-token anything else requires api-token)
         String token =
                 Arrays.stream(cookies)
-                        .filter(cookie -> API_TOKEN_KEY.equals(cookie.getName()))
+                        .filter(cookie -> tokenKey.equals(cookie.getName()))
                         .map(Cookie::getValue)
                         .findFirst()
                         .orElse(null);

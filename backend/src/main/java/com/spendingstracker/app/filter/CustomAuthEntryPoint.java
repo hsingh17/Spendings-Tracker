@@ -51,6 +51,7 @@ public class CustomAuthEntryPoint implements AuthenticationEntryPoint {
             AuthenticationException authException)
             throws IOException {
         log.error("Could not authenticate user!");
+        log.debug("Request URI: {}", request.getRequestURI());
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.getWriter().write(objectMapper.writeValueAsString(authErrorResponse));
         response.getWriter().flush();
