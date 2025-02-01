@@ -1,8 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 import queryClient from "../config/QueryClientConfig";
-import { DASHBOARD_PAGE, POST, VERIFY_MFA_ROUTE } from "../utils/constants";
+import { POST, VERIFY_MFA_ROUTE } from "../utils/constants";
 import fetchRequestWrapper from "../utils/fetch-utils";
 
 type VerifyMfaRequest = {
@@ -18,15 +17,14 @@ async function postVerifyMfa(verifyMfaRequest: VerifyMfaRequest) {
   );
 }
 
-export default function useVerifyMfa() {
-  const navigate = useNavigate();
+export default function useVerifyMfa(onSuccess: VoidFunction) {
   return useMutation({
     mutationFn: (verifyMfaRequest: VerifyMfaRequest) =>
       postVerifyMfa(verifyMfaRequest),
     onSuccess: async () => {
       await queryClient.refetchQueries(["user"]);
       await queryClient.refetchQueries(["currency"]);
-      navigate(DASHBOARD_PAGE);
+      onSuccess();
     },
     onError: (error) => {
       if (error instanceof Error) {

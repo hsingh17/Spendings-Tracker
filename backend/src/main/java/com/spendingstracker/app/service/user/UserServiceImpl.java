@@ -159,8 +159,7 @@ public class UserServiceImpl implements UserService {
         List<UserRecoveryCode> userRecoveryCodes = new ArrayList<>();
 
         for (String recoveryCode : recoveryCodes) {
-            userRecoveryCodes.add(
-                    new UserRecoveryCode(user, bCryptPasswordEncoder.encode(recoveryCode)));
+            userRecoveryCodes.add(new UserRecoveryCode(user, recoveryCode));
         }
 
         user.addMfa(mfaString, userRecoveryCodes);

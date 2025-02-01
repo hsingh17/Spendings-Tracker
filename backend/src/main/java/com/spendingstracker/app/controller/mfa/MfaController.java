@@ -47,9 +47,7 @@ public class MfaController {
      * @see ApiResponse
      */
     @GetMapping("/recovery-codes")
-    public ResponseEntity<ApiResponse<RecoveryCodesResponse>> getRecoveryCodes(
-            @RequestParam("username") String username) {
-        log.info("GET /recovery-codes?username={}", username);
+    public ResponseEntity<ApiResponse<RecoveryCodesResponse>> getRecoveryCodes() {
         RecoveryCodesResponse recoveryCodesResponse = mfaService.getRecoveryCodes();
         ApiResponse<RecoveryCodesResponse> apiResponse =
                 okResponse(recoveryCodesResponse, null, null);

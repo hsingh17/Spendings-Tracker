@@ -125,7 +125,7 @@ public class MfaServiceImpl implements MfaService {
 
         for (UserRecoveryCode userRecoveryCode : userRecoveryCodes) {
             // Found recovery code, can exit function
-            if (bCryptPasswordEncoder.matches(recoveryCode, userRecoveryCode.getRecoveryCode())) {
+            if (recoveryCode.equals(userRecoveryCode.getRecoveryCode())) {
                 return;
             }
         }

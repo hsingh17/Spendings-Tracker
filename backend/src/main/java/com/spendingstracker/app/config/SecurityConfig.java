@@ -98,7 +98,7 @@ public class SecurityConfig {
             throws Exception {
         sharedSecurityConfig(httpSecurity, authProvider, authEntryPoint);
         return httpSecurity
-                .securityMatcher("/v1/api/**", "/v1/mfa/**", "/v1/auth/**", "/v1/currency/**")
+                .securityMatcher("/v1/api/**", "/v1/auth/**", "/v1/currency/**")
                 .authorizeHttpRequests(
                         authorizationManagerRequestMatcherRegistry ->
                                 authorizationManagerRequestMatcherRegistry
