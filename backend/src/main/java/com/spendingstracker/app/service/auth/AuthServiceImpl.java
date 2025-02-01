@@ -79,8 +79,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void logoutUser(HttpServletResponse response) {
-        setCookie(MFA_TOKEN_KEY, response, null, 0, null);
-        setCookie(API_TOKEN_KEY, response, null, 0, null);
+        setCookie(MFA_TOKEN_KEY, response, null, 0, "/v1/");
+        setCookie(API_TOKEN_KEY, response, null, 0, "/v1/");
     }
 
     @Override
