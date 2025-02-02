@@ -9,7 +9,7 @@ type GenericFormButtonProps = {
 function getClassName(className: string, disabled: boolean) {
   return (
     className +
-    (disabled ? " brightness-75" : " hover:brightness-75 hover:cursor-pointer")
+    (disabled ? " hover:cursor-default brightness-75" : " hover:cursor-pointer")
   );
 }
 
@@ -22,7 +22,7 @@ const GenericFormButton: FC<GenericFormButtonProps> = ({
     <button
       className={getClassName(className, disabled)}
       type="submit"
-      disabled={false}
+      disabled={disabled}
     >
       {value}
     </button>
