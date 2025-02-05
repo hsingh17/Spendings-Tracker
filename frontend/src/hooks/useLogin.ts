@@ -2,8 +2,8 @@ import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import {
   AUTH_LOGIN_ROUTE,
-  DASHBOARD_PAGE,
   MFA_SETUP_PAGE,
+  MFA_VERIFY_PAGE,
   POST,
 } from "../utils/constants";
 import fetchRequestWrapper from "../utils/fetch-utils";
@@ -41,8 +41,7 @@ export default function useLogin(
       if (!hasMfa) {
         navigate(MFA_SETUP_PAGE);
       } else {
-        // TODO: go to mfa verify page
-        navigate(DASHBOARD_PAGE);
+        navigate(MFA_VERIFY_PAGE);
       }
     },
     onError: onError,
