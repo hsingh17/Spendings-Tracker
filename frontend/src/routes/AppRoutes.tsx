@@ -7,6 +7,7 @@ import Login from "../pages/login/Login";
 import Metrics from "../pages/metrics-page/Metrics";
 import MfaRecoveryCodes from "../pages/mfa/recovery-codes/MfaRecoveryCodes";
 import MfaSetup from "../pages/mfa/setup/MfaSetup";
+import MfaVerify from "../pages/mfa/verify/MfaVerify";
 import PasswordReset from "../pages/password-reset/PasswordReset";
 import SaveSpendings from "../pages/save/SaveSpendings";
 import SendPasswordReset from "../pages/send-password-reset/SendPasswordReset";
@@ -21,6 +22,7 @@ import {
   METRICS_PAGE,
   MFA_RECOVERY_CODES_PAGE,
   MFA_SETUP_PAGE,
+  MFA_VERIFY_PAGE,
   PASSWORD_RESET_PAGE,
   SAVE_SPENDINGS_PAGE,
   SEND_PASSWORD_RESET_EMAIL_PAGE,
@@ -51,6 +53,7 @@ const AppRoutes = () => {
       <Route path={SETTINGS_PAGE} element={<Settings />} />
       <Route path={MFA_SETUP_PAGE} element={<MfaSetup />} />
       <Route path={MFA_RECOVERY_CODES_PAGE} element={<MfaRecoveryCodes />} />
+      <Route path={MFA_VERIFY_PAGE} element={<MfaVerify />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

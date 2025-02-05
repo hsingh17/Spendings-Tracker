@@ -17,6 +17,7 @@ export const SETTINGS_PAGE = "/settings";
 export const VERIFY_ACCT_PAGE = "/verify-acct";
 export const MFA_SETUP_PAGE = "/mfa-setup";
 export const MFA_RECOVERY_CODES_PAGE = "/recovery-codes";
+export const MFA_VERIFY_PAGE = "/mfa-verify";
 export const UNAUTHENTICATED_PAGES = [
   HOME_PAGE,
   LOGIN_PAGE,
@@ -30,6 +31,7 @@ export const UNAUTHENTICATED_PAGES = [
 export const NO_SHOW_NAVBAR_PAGES = UNAUTHENTICATED_PAGES.concat([
   MFA_SETUP_PAGE,
   MFA_RECOVERY_CODES_PAGE,
+  MFA_VERIFY_PAGE,
 ]);
 
 // #######################################################################################
