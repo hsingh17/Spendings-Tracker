@@ -1,7 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import GenericForm from "../../../common/form/GenericForm";
+import useVerifyMfa from "../../../hooks/useVerifyMfa";
+import { DASHBOARD_PAGE } from "../../../utils/constants";
 import MfaVerifyFormChildren from "./MfaVerifyFormChildren";
 import MfaVerifyInstructions from "./MfaVerifyInstructions";
+
+export const RECOVERY_CODE_KEY = "recovery-code";
+export const TOTP_KEY = "totp-code";
 
 export enum VerificationMethod {
   TOTP,
@@ -11,8 +17,17 @@ export enum VerificationMethod {
 const MfaVerify = () => {
   const [verificationMethod, setVerificationMethod] =
     useState<VerificationMethod>(VerificationMethod.TOTP);
+  const navigate = useNavigate();
+  const { mutate: verifyMfa } = useVerifyMfa(() => navigate(DASHBOARD_PAGE));
 
-  console.log(verificationMethod, setVerificationMethod);
+  const onSubmit = (inputMap: Map<string, string>) => {
+    if (inputMap.has(RECOVERY_CODE_KEY) || inputMap.has(TOTP_KEY)) {
+      verifyMfa({
+        recoveryCode: inputMap.get(RECOVERY_CODE_KEY),
+        totpCode: inputMap.get(TOTP_KEY),
+      });
+    }
+  };
 
   return (
     <>
@@ -31,10 +46,7 @@ const MfaVerify = () => {
             />
           </>
         }
-        onSubmit={function (inputMap: Map<string, string>): void {
-          console.log(inputMap);
-          throw new Error("Function not implemented.");
-        }}
+        onSubmit={onSubmit}
       />
     </>
   );

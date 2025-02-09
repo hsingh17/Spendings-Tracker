@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { TOTP_KEY } from "./MfaVerify";
 
 const MfaVerifyTotpInput = () => {
   const [totpCode, setTotpCode] = useState<string[]>(["", "", "", "", "", ""]);
@@ -45,7 +46,7 @@ const MfaVerifyTotpInput = () => {
           />
         ))}
 
-        <input name="totp-code" value={totpCode.join("")} hidden readOnly />
+        <input name={TOTP_KEY} value={totpCode.join("")} hidden readOnly />
       </div>
     </>
   );
