@@ -29,7 +29,7 @@ const GenericForm: FC<GenericFormProps> = ({
   onSubmit,
 }) => {
   const [validators, setValidators] = useState<Map<string, () => boolean>>(
-    new Map()
+    new Map(),
   );
 
   const preOnSubmit = (e: React.FormEvent) => {
@@ -69,7 +69,7 @@ const GenericForm: FC<GenericFormProps> = ({
 
   const addFormValidators = (
     formFieldName: string,
-    validate: () => boolean
+    validate: () => boolean,
   ) => {
     setValidators((prev) => prev.set(formFieldName, validate));
   };
@@ -79,20 +79,24 @@ const GenericForm: FC<GenericFormProps> = ({
       return formChildren;
     }
 
-    const formInputs: React.FunctionComponentElement<FormInputFunctionalComponentProps>[] =
+    let formInputs: React.FunctionComponentElement<FormInputFunctionalComponentProps>[] =
       formChildren.props?.children;
+
+    if (!Array.isArray(formInputs)) {
+      formInputs = [formInputs];
+    }
 
     // Inject addValidator function as props to all formChildren
     return formInputs.map(
       (
         formInput: React.FunctionComponentElement<FormInputFunctionalComponentProps>,
-        idx
+        idx,
       ) => {
         return React.cloneElement(formInput, {
           key: idx,
           addformvalidators: addFormValidators,
         });
-      }
+      },
     );
   };
 

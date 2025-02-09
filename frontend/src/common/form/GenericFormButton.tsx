@@ -6,18 +6,26 @@ type GenericFormButtonProps = {
   className?: string;
 };
 
+function getClassName(className: string, disabled: boolean) {
+  return (
+    className +
+    (disabled ? " hover:cursor-default brightness-75" : " hover:cursor-pointer")
+  );
+}
+
 const GenericFormButton: FC<GenericFormButtonProps> = ({
   value,
   disabled = false,
-  className = "mt-5 w-full bg-theme-cta rounded-lg text-white font-bold px-3 py-2 hover:brightness-75 hover:cursor-pointer",
+  className = "mt-5 w-full bg-theme-cta rounded-lg text-white font-bold px-3 py-2",
 }) => {
   return (
-    <input
-      className={className}
+    <button
+      className={getClassName(className, disabled)}
       type="submit"
-      value={value}
       disabled={disabled}
-    />
+    >
+      {value}
+    </button>
   );
 };
 

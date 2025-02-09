@@ -6,8 +6,8 @@ import {
   DASHBOARD_PAGE,
   HOME_PAGE,
   METRICS_PAGE,
+  NO_SHOW_NAVBAR_PAGES,
   SETTINGS_PAGE,
-  UNAUTHENTICATED_PAGES,
   VIEW_SPENDINGS_PAGE,
 } from "../../utils/constants";
 import { NavbarAction, NavbarListItem, NavbarState } from "../../utils/types";
@@ -102,7 +102,7 @@ const Navbar = () => {
   };
 
   const doNotRender = (): boolean => {
-    return UNAUTHENTICATED_PAGES.indexOf(location.pathname) !== -1;
+    return NO_SHOW_NAVBAR_PAGES.indexOf(location.pathname) !== -1;
   };
 
   useEffect(

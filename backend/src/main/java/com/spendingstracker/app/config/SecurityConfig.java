@@ -1,11 +1,15 @@
 package com.spendingstracker.app.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spendingstracker.app.controller.auth.AuthController;
-import com.spendingstracker.app.filter.JwtFilter;
+import com.spendingstracker.app.filter.ApiTokenJwtFilter;
+import com.spendingstracker.app.filter.MfaTokenJwtFilter;
+import com.spendingstracker.app.util.JwtUtil;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,27 +37,13 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    /**
-     * Build <code>SecurityFilterChain</code> for application specific Spring security needs.
-     *
-     * @param httpSecurity <code>HttpSecurity</code> bean to configure Spring security requirements.
-     * @param authProvider <code>AuthenticationProvider</code> bean which is injected from the
-     *     function <code>authenticationProvider()</code>
-     * @param authEntryPoint <code>AuthenticationEntryPoint</code> bean that is defined in <code>
-     *     CustomAuthEntryPoint</code> for returning a custom error response if user is not
-     *     authenticated.
-     * @return <code>SecurityFilterChain</code> the filter chain that is built
-     * @see com.spendingstracker.app.filter.CustomAuthEntryPoint
-     */
-    @Bean
-    public SecurityFilterChain filterChain(
-            JwtFilter jwtFilter,
+    /** Set shared security configurations for security filter chains */
+    private void sharedSecurityConfig(
             HttpSecurity httpSecurity,
             AuthenticationProvider authProvider,
             AuthenticationEntryPoint authEntryPoint)
             throws Exception {
-
-        return httpSecurity
+        httpSecurity
                 .cors(Customizer.withDefaults())
                 .csrf(
                         AbstractHttpConfigurer
@@ -63,6 +53,52 @@ public class SecurityConfig {
                         httpSecuritySessionManagementConfigurer ->
                                 httpSecuritySessionManagementConfigurer.sessionCreationPolicy(
                                         SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authProvider) // Set the DaoAuthenticationProvider
+                .exceptionHandling(
+                        httpSecurityExceptionHandlingConfigurer ->
+                                httpSecurityExceptionHandlingConfigurer.authenticationEntryPoint(
+                                        authEntryPoint));
+    }
+
+    /** Security chain for routes using "mfa-token" JWT token. */
+    @Bean
+    @Order(1)
+    public SecurityFilterChain securityFilterChainMfaToken(
+            HttpSecurity httpSecurity,
+            AuthenticationProvider authProvider,
+            AuthenticationEntryPoint authEntryPoint,
+            ObjectMapper objectMapper,
+            JwtUtil jwtUtil,
+            UserDetailsService userDetailsService)
+            throws Exception {
+        sharedSecurityConfig(httpSecurity, authProvider, authEntryPoint);
+        return httpSecurity
+                .securityMatcher("/v1/mfa/**")
+                .authorizeHttpRequests(
+                        authorizationManagerRequestMatcherRegistry ->
+                                authorizationManagerRequestMatcherRegistry
+                                        .anyRequest()
+                                        .authenticated())
+                .addFilterBefore(
+                        new MfaTokenJwtFilter(objectMapper, jwtUtil, userDetailsService),
+                        UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
+
+    /** Security chain for routes using "api-token" JWT token. */
+    @Bean
+    @Order(2)
+    public SecurityFilterChain securityFilterChainApiToken(
+            HttpSecurity httpSecurity,
+            AuthenticationProvider authProvider,
+            AuthenticationEntryPoint authEntryPoint,
+            ObjectMapper objectMapper,
+            JwtUtil jwtUtil,
+            UserDetailsService userDetailsService)
+            throws Exception {
+        sharedSecurityConfig(httpSecurity, authProvider, authEntryPoint);
+        return httpSecurity
+                .securityMatcher("/v1/api/**", "/v1/auth/**", "/v1/currency/**")
                 .authorizeHttpRequests(
                         authorizationManagerRequestMatcherRegistry ->
                                 authorizationManagerRequestMatcherRegistry
@@ -72,19 +108,34 @@ public class SecurityConfig {
                                                 "/v1/auth/verify-acct/**",
                                                 "/v1/auth/resend-registration-email/**",
                                                 "/v1/auth/reset-password/**",
-                                                "/v1/auth/send-password-reset-email/**",
-                                                // -- Swagger UI v3 (OpenAPI)
-                                                "/v3/api-docs/**",
-                                                "/swagger-ui/**")
+                                                "/v1/auth/send-password-reset-email/**")
                                         .permitAll()
                                         .anyRequest()
                                         .authenticated())
-                .authenticationProvider(authProvider) // Set the DaoAuthenticationProvider
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(
-                        httpSecurityExceptionHandlingConfigurer ->
-                                httpSecurityExceptionHandlingConfigurer.authenticationEntryPoint(
-                                        authEntryPoint))
+                .addFilterBefore(
+                        new ApiTokenJwtFilter(objectMapper, jwtUtil, userDetailsService),
+                        UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
+
+    /** Security filter chain for routes that have no authentication required */
+    @Bean
+    @Order(3)
+    public SecurityFilterChain securityFilterChainRemaining(
+            HttpSecurity httpSecurity,
+            AuthenticationProvider authProvider,
+            AuthenticationEntryPoint authEntryPoint)
+            throws Exception {
+        sharedSecurityConfig(httpSecurity, authProvider, authEntryPoint);
+        return httpSecurity
+                .securityMatcher("/**")
+                .authorizeHttpRequests(
+                        authorizationManagerRequestMatcherRegistry ->
+                                authorizationManagerRequestMatcherRegistry
+                                        .requestMatchers(
+                                                // -- Swagger UI v3 (OpenAPI)
+                                                "/v3/api-docs/**", "/swagger-ui/**")
+                                        .permitAll())
                 .build();
     }
 

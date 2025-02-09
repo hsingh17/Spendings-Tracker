@@ -3,8 +3,6 @@
 This repository holds the code for my spendings tracker app built with Java and React.js
 
 ## TODO
-
-- mfa ?
 - dashboard -> graphs
 - zoom in/out in line charts
 - home page -> cool parallax effect

@@ -23,10 +23,10 @@ export default function useLogout() {
             return "We were unable to log you out.\nTry again later!";
           },
           success: () => {
-            navigate(LOGIN_PAGE);
             // Remove the user key from cache so we don't keep any cached user data
             queryClient.removeQueries(["user"]);
             localStorage.clear();
+            navigate(LOGIN_PAGE);
             return "Succesfully logged out";
           },
         },

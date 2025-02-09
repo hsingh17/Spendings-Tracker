@@ -4,10 +4,8 @@ import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.requests.ChangePasswordRequest;
 import com.spendingstracker.app.dto.requests.ResetPasswordRequest;
 import com.spendingstracker.app.dto.requests.VerifyAcctRequest;
+import com.spendingstracker.app.entity.*;
 import com.spendingstracker.app.entity.Currency;
-import com.spendingstracker.app.entity.User;
-import com.spendingstracker.app.entity.UserPasswordReset;
-import com.spendingstracker.app.entity.UserRegistration;
 import com.spendingstracker.app.exception.*;
 import com.spendingstracker.app.repository.UserRepository;
 
@@ -21,9 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Custom implementation of the <code>UserDetailsService</code> and <code>UserService</code>
@@ -157,6 +153,24 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public void addMfa(User user, String secretString, List<String> recoveryCodes) {
+        UserMfaString mfaString = new UserMfaString(user, secretString);
+        List<UserRecoveryCode> userRecoveryCodes = new ArrayList<>();
+
+        for (String recoveryCode : recoveryCodes) {
+            userRecoveryCodes.add(new UserRecoveryCode(user, recoveryCode));
+        }
+
+        user.addMfa(mfaString, userRecoveryCodes);
+    }
+
+    @Override
+    public void setHasMfa(User user) {
+        user.setHasMfa(true);
+        userRepository.save(user);
+    }
+
     /**
      * Finds user's <code>UserDetails</code> object by their <code>username</code>.
      *
@@ -179,12 +193,7 @@ public class UserServiceImpl implements UserService {
         }
 
         // A CustomUserDetails object since userId must be saved
-        return new CustomUserDetails(
-                username,
-                user.getPassword(),
-                user.isActive(),
-                Collections.emptyList(),
-                user.getUserId());
+        return new CustomUserDetails(user, Collections.emptyList());
     }
 
     private Optional<User> maybeFindUserByUsername(String username) {

@@ -1,6 +1,8 @@
 package com.spendingstracker.app.service.auth;
 
-import com.spendingstracker.app.constants.Constants;
+import static com.spendingstracker.app.constants.Constants.API_TOKEN_KEY;
+import static com.spendingstracker.app.constants.Constants.MFA_TOKEN_KEY;
+
 import com.spendingstracker.app.constants.ExternalUserType;
 import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.oauth.OAuthPayload;
@@ -37,7 +39,6 @@ import java.math.BigInteger;
 @Slf4j
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-    private static final long MAX_AGE_SECONDS_DEFAULT = 3600L;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authManager;
     private final UserService userService;
@@ -71,14 +72,15 @@ public class AuthServiceImpl implements AuthService {
 
         // User has valid credentials in at this point, need to create and return a JWT for the user
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
-        setAuthenticatedCookie(response, userDetails);
+        setAuthenticatedCookie(response, MFA_TOKEN_KEY, userDetails, "/v1/mfa/", 300L);
 
         return userDetails;
     }
 
     @Override
     public void logoutUser(HttpServletResponse response) {
-        setCookie(response, null, 0);
+        setCookie(MFA_TOKEN_KEY, response, null, 0, "/v1/");
+        setCookie(API_TOKEN_KEY, response, null, 0, "/v1/");
     }
 
     @Override
@@ -107,7 +109,7 @@ public class AuthServiceImpl implements AuthService {
                 (CustomUserDetails) userService.loadUserByUsername(username);
 
         log.info("Setting cookie for newly verified user {}", username);
-        setAuthenticatedCookie(response, userDetails);
+        setAuthenticatedCookie(response, MFA_TOKEN_KEY, userDetails, "/v1/mfa/", 300L);
 
         return new VerifyAcctResponse(username, message);
     }
@@ -147,7 +149,8 @@ public class AuthServiceImpl implements AuthService {
     public void deleteUser(HttpServletResponse response) {
         BigInteger userId = curUserService.getCurrentUserId();
         userService.deleteUser(userId);
-        setCookie(response, null, 0);
+        setCookie(MFA_TOKEN_KEY, response, null, 0, null);
+        setCookie(API_TOKEN_KEY, response, null, 0, null);
     }
 
     @Override
@@ -159,7 +162,7 @@ public class AuthServiceImpl implements AuthService {
 
         String message = "Successfully changed password for " + curUserDetails.getUsername();
         log.info(message);
-        setCookie(httpResponse, null, 0);
+        setCookie(MFA_TOKEN_KEY, httpResponse, null, 0, null);
         return new ChangePasswordResponse(message);
     }
 
@@ -174,38 +177,40 @@ public class AuthServiceImpl implements AuthService {
         return oAuthPayload;
     }
 
-    private void setAuthenticatedCookie(
-            HttpServletResponse response, CustomUserDetails userDetails) {
+    public void setAuthenticatedCookie(
+            HttpServletResponse response,
+            String name,
+            CustomUserDetails userDetails,
+            String path,
+            long maxAge) {
         String token = jwtUtil.generateToken(userDetails);
-        setCookie(response, token, MAX_AGE_SECONDS_DEFAULT);
+        setCookie(name, response, token, maxAge, path);
     }
 
-    /**
-     * Helper function for setting cookie in response
-     *
-     * @param response
-     * @param token
-     * @param maxAge
-     */
-    private void setCookie(HttpServletResponse response, String token, long maxAge) {
+    /** Helper function for setting cookie in response */
+    private void setCookie(
+            String name, HttpServletResponse response, String token, long maxAge, String path) {
         // Add JWT token in an HTTP only cookie
-        ResponseCookie cookie = buildResponseCookie(token, maxAge);
+        ResponseCookie cookie = buildResponseCookie(name, token, maxAge, path);
         response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 
     /**
      * Build a <code>ResponseCookie</code> from <code>token</code> and <code>maxAge</code>
      *
+     * @param name cookie name
      * @param token JWT token of the user
      * @param maxAge how long the cookie should remain valid before expiring in seconds
+     * @param path path that this token is valid for
      * @return <code>ResponseCookie</code> object
      * @see ResponseCookie
      */
-    private ResponseCookie buildResponseCookie(String token, long maxAge) {
-        return ResponseCookie.from(Constants.TOKEN_KEY, token)
+    private ResponseCookie buildResponseCookie(
+            String name, String token, long maxAge, String path) {
+        return ResponseCookie.from(name, token)
                 .httpOnly(true)
                 .maxAge(maxAge)
-                .path("/v1/")
+                .path(path)
                 .secure(true) // If SameSite is "None", then secure must be true (it's fine
                 // if localhost uses http though as it is an exception)
                 .sameSite("None") // None because eventually backend and frontend will be on

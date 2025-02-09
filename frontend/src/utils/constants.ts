@@ -15,6 +15,9 @@ export const SAVE_SPENDINGS_PAGE = "/save";
 export const METRICS_PAGE = "/metrics";
 export const SETTINGS_PAGE = "/settings";
 export const VERIFY_ACCT_PAGE = "/verify-acct";
+export const MFA_SETUP_PAGE = "/mfa-setup";
+export const MFA_RECOVERY_CODES_PAGE = "/recovery-codes";
+export const MFA_VERIFY_PAGE = "/mfa-verify";
 export const UNAUTHENTICATED_PAGES = [
   HOME_PAGE,
   LOGIN_PAGE,
@@ -22,7 +25,14 @@ export const UNAUTHENTICATED_PAGES = [
   PASSWORD_RESET_PAGE,
   SEND_PASSWORD_RESET_EMAIL_PAGE,
   VERIFY_ACCT_PAGE,
+  MFA_SETUP_PAGE,
 ];
+
+export const NO_SHOW_NAVBAR_PAGES = UNAUTHENTICATED_PAGES.concat([
+  MFA_SETUP_PAGE,
+  MFA_RECOVERY_CODES_PAGE,
+  MFA_VERIFY_PAGE,
+]);
 
 // #######################################################################################
 // #######################################################################################
@@ -59,6 +69,9 @@ export const CHANGE_PASSWORD_ROUTE = `${BASE_API_URL}${API_VERSION}/auth/change-
 export const LIST_CURRENCIES_ROUTE = `${BASE_API_URL}${API_VERSION}/currency/currencies`;
 export const UPDATE_CURRENCY_ROUTE = `${BASE_API_URL}${API_VERSION}/currency/update-currency`;
 export const GET_CURRENCY_ROUTE = `${BASE_API_URL}${API_VERSION}/currency/current-currency`;
+export const SETUP_MFA_ROUTE = `${BASE_API_URL}${API_VERSION}/mfa/setup`;
+export const GET_RECOVERY_CODES_ROUTE = `${BASE_API_URL}${API_VERSION}/mfa/recovery-codes`;
+export const VERIFY_MFA_ROUTE = `${BASE_API_URL}${API_VERSION}/mfa/verify`;
 
 // #######################################################################################
 // #######################################################################################
