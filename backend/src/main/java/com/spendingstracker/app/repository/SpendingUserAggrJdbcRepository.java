@@ -30,12 +30,12 @@ import java.util.Optional;
  * @see com.spendingstracker.app.config.ClassPathResourceLoaderConfig
  * @see SpendingListProjectionMapper
  */
-public class SpendingUserJdbcRepository {
+public class SpendingUserAggrJdbcRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final Map<String, String> sqlResourcesMap;
     private final SpendingListProjectionMapper rowMapper;
 
-    public SpendingUserJdbcRepository(
+    public SpendingUserAggrJdbcRepository(
             NamedParameterJdbcTemplate jdbcTemplate,
             @Qualifier("sqlResourcesMap") Map<String, String> sqlResourcesMap,
             SpendingListProjectionMapper rowMapper) {
@@ -44,7 +44,7 @@ public class SpendingUserJdbcRepository {
         this.rowMapper = rowMapper;
     }
 
-    public Page<SpendingListProjection> findSpendingsNumericalGroupBy(
+    public Page<SpendingListProjection> findSpendingsForLineChart(
             BigInteger userId,
             LocalDate startDate,
             LocalDate endDate,
@@ -55,18 +55,18 @@ public class SpendingUserJdbcRepository {
         return queryForSpendingListProjs(
                 queryForSpendingsListProjsCount(
                         sqlResourcesMap.get("countSpendingsNumericalGroupBy"), params),
-                sqlResourcesMap.get("findSpendingsNumericalGroupBy"),
+                sqlResourcesMap.get("findSpendingsForLineChart"),
                 pageable,
                 params);
     }
 
-    public Page<SpendingListProjection> findSpendingsCategorical(
+    public Page<SpendingListProjection> findSpendingsForBarChart(
             BigInteger userId, LocalDate startDate, LocalDate endDate, Pageable pageable) {
         SqlParameterSource params = buildParams(userId, startDate, endDate, null, pageable);
         return queryForSpendingListProjs(
                 queryForSpendingsListProjsCount(
-                        sqlResourcesMap.get("countSpendingsCategorical"), params),
-                sqlResourcesMap.get("findSpendingsCategorical"),
+                        sqlResourcesMap.get("countSpendingsForBarChart"), params),
+                sqlResourcesMap.get("findSpendingsForBarChart"),
                 pageable,
                 params);
     }
