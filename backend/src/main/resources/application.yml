@@ -25,10 +25,10 @@ s3:
   presigned-url-expiration-minutes: 10
 classpath-resources:
   sql-resources:
-    - /sql/findSpendingsForBarChart.sql
+    - /sql/findSpendingsForPieChart.sql
     - /sql/findSpendingsForLineChart.sql
     - /sql/countSpendingsForLineChart.sql
-    - /sql/countSpendingsForBarChart.sql
+    - /sql/countSpendingsForPieChart.sql
 --- # Local Profile
 spring:
   config:

@@ -1,7 +1,7 @@
 package com.spendingstracker.app.dto.response;
 
 /**
- * Marker interface interface
+ * Marker interface
  *
  * @see com.spendingstracker.app.dto.response.SpendingPageItemLineChart
  * @see com.spendingstracker.app.dto.response.SpendingPageItemPieChart

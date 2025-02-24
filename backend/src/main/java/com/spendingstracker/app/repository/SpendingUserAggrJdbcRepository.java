@@ -1,7 +1,11 @@
 package com.spendingstracker.app.repository;
 
 import com.spendingstracker.app.constants.Granularity;
+import com.spendingstracker.app.mapper.SpendingListLineChartProjectionMapper;
+import com.spendingstracker.app.mapper.SpendingListPieChartProjectionMapper;
 import com.spendingstracker.app.mapper.SpendingListProjectionMapper;
+import com.spendingstracker.app.projection.SpendingListLineChartProjection;
+import com.spendingstracker.app.projection.SpendingListPieChartProjection;
 import com.spendingstracker.app.projection.SpendingListProjection;
 
 import lombok.extern.slf4j.Slf4j;
@@ -28,23 +32,26 @@ import java.util.Optional;
  *
  * @see SpendingUserAggrRepository
  * @see com.spendingstracker.app.config.ClassPathResourceLoaderConfig
- * @see SpendingListProjectionMapper
+ * @see SpendingListPieChartProjectionMapper
  */
 public class SpendingUserAggrJdbcRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final Map<String, String> sqlResourcesMap;
-    private final SpendingListProjectionMapper rowMapper;
+    private final SpendingListPieChartProjectionMapper pieChartProjMapper;
+    private final SpendingListLineChartProjectionMapper lineChartProjMapper;
 
     public SpendingUserAggrJdbcRepository(
             NamedParameterJdbcTemplate jdbcTemplate,
             @Qualifier("sqlResourcesMap") Map<String, String> sqlResourcesMap,
-            SpendingListProjectionMapper rowMapper) {
+            SpendingListPieChartProjectionMapper pieChartProjMapper,
+            SpendingListLineChartProjectionMapper lineChartProjMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.sqlResourcesMap = sqlResourcesMap;
-        this.rowMapper = rowMapper;
+        this.pieChartProjMapper = pieChartProjMapper;
+        this.lineChartProjMapper = lineChartProjMapper;
     }
 
-    public Page<SpendingListProjection> findSpendingsForLineChart(
+    public Page<SpendingListLineChartProjection> findSpendingsForLineChart(
             BigInteger userId,
             LocalDate startDate,
             LocalDate endDate,
@@ -54,27 +61,33 @@ public class SpendingUserAggrJdbcRepository {
 
         return queryForSpendingListProjs(
                 queryForSpendingsListProjsCount(
-                        sqlResourcesMap.get("countSpendingsNumericalGroupBy"), params),
+                        sqlResourcesMap.get("countSpendingsForLineChart"), params),
                 sqlResourcesMap.get("findSpendingsForLineChart"),
                 pageable,
-                params);
+                params,
+                lineChartProjMapper);
     }
 
-    public Page<SpendingListProjection> findSpendingsForBarChart(
+    public Page<SpendingListPieChartProjection> findSpendingsForPieChart(
             BigInteger userId, LocalDate startDate, LocalDate endDate, Pageable pageable) {
         SqlParameterSource params = buildParams(userId, startDate, endDate, null, pageable);
         return queryForSpendingListProjs(
                 queryForSpendingsListProjsCount(
-                        sqlResourcesMap.get("countSpendingsForBarChart"), params),
-                sqlResourcesMap.get("findSpendingsForBarChart"),
+                        sqlResourcesMap.get("countSpendingsForPieChart"), params),
+                sqlResourcesMap.get("findSpendingsForPieChart"),
                 pageable,
-                params);
+                params,
+                pieChartProjMapper);
     }
 
-    private Page<SpendingListProjection> queryForSpendingListProjs(
-            int total, String sql, Pageable pageable, SqlParameterSource params) {
+    private <T extends SpendingListProjection> Page<T> queryForSpendingListProjs(
+            int total,
+            String sql,
+            Pageable pageable,
+            SqlParameterSource params,
+            SpendingListProjectionMapper<T> mapper) {
         log.debug("Running SQL: {}", sql);
-        List<SpendingListProjection> projsList = jdbcTemplate.query(sql, params, rowMapper);
+        List<T> projsList = jdbcTemplate.query(sql, params, mapper);
         return new PageImpl<>(projsList, pageable, total);
     }
 

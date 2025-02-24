@@ -1,6 +1,6 @@
 package com.spendingstracker.app.dto.response;
 
-import com.spendingstracker.app.projection.SpendingListProjection;
+import com.spendingstracker.app.projection.SpendingListLineChartProjection;
 
 import lombok.Getter;
 
@@ -15,7 +15,7 @@ public class SpendingPageItemLineChart implements SpendingPageItem {
     private final LocalDate date;
     private final BigDecimal total;
 
-    public SpendingPageItemLineChart(SpendingListProjection spendingListProj) {
+    public SpendingPageItemLineChart(SpendingListLineChartProjection spendingListProj) {
         this.spendingUserAggrId = spendingListProj.spendingUserAggrId();
         this.date = spendingListProj.date();
         this.total = spendingListProj.total();

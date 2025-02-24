@@ -2,8 +2,14 @@ package com.spendingstracker.app.repository;
 
 import com.spendingstracker.app.constants.Granularity;
 import com.spendingstracker.app.dto.response.SpendingPageItem;
+import com.spendingstracker.app.dto.response.SpendingPageItemBarChart;
+import com.spendingstracker.app.dto.response.SpendingPageItemLineChart;
+import com.spendingstracker.app.dto.response.SpendingPageItemPieChart;
 import com.spendingstracker.app.entity.SpendingUserAggr;
 import com.spendingstracker.app.entity.User;
+import com.spendingstracker.app.projection.SpendingListLineChartProjection;
+import com.spendingstracker.app.projection.SpendingListPieChartProjection;
+import com.spendingstracker.app.projection.SpendingListProjection;
 import com.spendingstracker.app.projection.SpendingProjection;
 
 import org.springframework.data.domain.Page;
@@ -57,28 +63,32 @@ public class SpendingUserAggrRepositoryImpl implements SpendingUserAggrRepositor
     }
 
     @Override
-    public Page<SpendingPageItem> findSpendingsForLineChart(
+    public Page<SpendingPageItemLineChart> findSpendingsForLineChart(
             BigInteger userId,
             LocalDate startDate,
             LocalDate endDate,
             Granularity granularity,
             Pageable pageable) {
-        //        Page<SpendingListProjection> spendingsListProjs =
-        //                spendingUserJdbcRepository.findSpendingsNumericalGroupBy(
-        //                        userId, startDate, endDate, granularity, pageable);
-        return null;
+        Page<SpendingListLineChartProjection> spendingsListProjsPage =
+                spendingUserAggrJdbcRepository.findSpendingsForLineChart(
+                        userId, startDate, endDate, granularity, pageable);
+
+        return makeSpendingPageItem(
+                spendingsListProjsPage, pageable, SpendingPageItemLineChart::new);
     }
 
     @Override
-    public Page<SpendingPageItem> findSpendingsForPieChart(
+    public Page<SpendingPageItemPieChart> findSpendingsForPieChart(
             BigInteger userId, LocalDate startDate, LocalDate endDate, Pageable pageable) {
-        //        return spendingUserJdbcRepository.findSpendingsCategorical(
-        //                userId, startDate, endDate, pageable);
-        return null;
+        Page<SpendingListPieChartProjection> spendingsListProjs =
+                spendingUserAggrJdbcRepository.findSpendingsForPieChart(
+                        userId, startDate, endDate, pageable);
+
+        return makeSpendingPageItem(spendingsListProjs, pageable, SpendingPageItemPieChart::new);
     }
 
     @Override
-    public Page<SpendingPageItem> findSpendingsForBarChart(
+    public Page<SpendingPageItemBarChart> findSpendingsForBarChart(
             BigInteger userId,
             LocalDate startDate,
             LocalDate endDate,
@@ -87,16 +97,17 @@ public class SpendingUserAggrRepositoryImpl implements SpendingUserAggrRepositor
         return null;
     }
 
-    private <T> Page<SpendingPageItem> makeSpendingPageItem(
-            Page<T> page, Pageable pageable, SpendingPageItemInitFunc<T> initFunc) {
+    private <U extends SpendingListProjection, V extends SpendingPageItem>
+            Page<V> makeSpendingPageItem(
+                    Page<U> page, Pageable pageable, SpendingPageItemInitFunc<U, V> initFunc) {
         // No spendings
         if (!page.hasContent()) {
             return new PageImpl<>(Collections.emptyList(), pageable, 0);
         }
 
-        List<SpendingPageItem> spendingPageItemList = new ArrayList<>();
+        List<V> spendingPageItemList = new ArrayList<>();
 
-        for (T pageItem : page) {
+        for (U pageItem : page) {
             spendingPageItemList.add(initFunc.constructSpendingPageItem(pageItem));
         }
 
@@ -109,7 +120,8 @@ public class SpendingUserAggrRepositoryImpl implements SpendingUserAggrRepositor
      * @see SpendingPageItem
      */
     @FunctionalInterface
-    private interface SpendingPageItemInitFunc<T> {
-        SpendingPageItem constructSpendingPageItem(T pageItem);
+    private interface SpendingPageItemInitFunc<
+            U extends SpendingListProjection, V extends SpendingPageItem> {
+        V constructSpendingPageItem(U proj);
     }
 }

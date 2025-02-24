@@ -1,7 +1,9 @@
 package com.spendingstracker.app.repository;
 
 import com.spendingstracker.app.constants.Granularity;
-import com.spendingstracker.app.dto.response.SpendingPageItem;
+import com.spendingstracker.app.dto.response.SpendingPageItemBarChart;
+import com.spendingstracker.app.dto.response.SpendingPageItemLineChart;
+import com.spendingstracker.app.dto.response.SpendingPageItemPieChart;
 import com.spendingstracker.app.entity.SpendingUserAggr;
 import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.projection.SpendingProjection;
@@ -56,24 +58,35 @@ public interface SpendingUserAggrRepository {
      */
     List<SpendingProjection> findSpendingDetailsByUserIdAndDate(LocalDate date, BigInteger userId);
 
-    /** Find spendings for line chart */
-    Page<SpendingPageItem> findSpendingsForLineChart(
+    /**
+     * Find spendings for line chart
+     *
+     * @see SpendingPageItemLineChart
+     */
+    Page<SpendingPageItemLineChart> findSpendingsForLineChart(
             BigInteger userId,
             LocalDate startDate,
             LocalDate endDate,
             Granularity granularity,
             Pageable pageable);
 
-    /** Find spendings for a pie chart */
-    Page<SpendingPageItem> findSpendingsForPieChart(
+    /**
+     * Find spendings for a pie chart
+     *
+     * @see SpendingPageItemPieChart
+     */
+    Page<SpendingPageItemPieChart> findSpendingsForPieChart(
             BigInteger userId, LocalDate startDate, LocalDate endDate, Pageable pageable);
 
-    /** Find spendings for bar chart*/
-    Page<SpendingPageItem> findSpendingsForBarChart(
+    /**
+     * Find spendings for bar chart
+     *
+     * @see SpendingPageItemBarChart
+     */
+    Page<SpendingPageItemBarChart> findSpendingsForBarChart(
             BigInteger userId,
             LocalDate startDate,
             LocalDate endDate,
             Granularity granularity,
             Pageable pageable);
-
 }
