@@ -52,7 +52,7 @@ public class SpendingsController {
         log.info("GET /spendings{}", filters);
 
         SpendingPageResponse spendingPageResponse = spendingService.getSpendings(filters);
-        Page<SpendingPageItem> spendingsPage = spendingPageResponse.spendingPage();
+        Page<? extends SpendingPageItem> spendingsPage = spendingPageResponse.spendingPage();
 
         ApiLinks apiLinks =
                 buildApiLinks(

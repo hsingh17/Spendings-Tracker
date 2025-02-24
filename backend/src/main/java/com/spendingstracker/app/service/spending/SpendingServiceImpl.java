@@ -52,7 +52,8 @@ public class SpendingServiceImpl implements SpendingService {
     public SpendingPageResponse getSpendings(GetSpendingsRequestFilters filters) {
         PageRequest pageRequest = PageRequest.of(filters.getPage(), filters.getLimit());
         BigInteger userId = currentUserService.getCurrentUserId();
-        Page<SpendingPageItem> spendingItems = getSpendingListProj(userId, filters, pageRequest);
+        Page<? extends SpendingPageItem> spendingItems =
+                getSpendingListProj(userId, filters, pageRequest);
         return new SpendingPageResponse(spendingItems);
     }
 
@@ -148,7 +149,7 @@ public class SpendingServiceImpl implements SpendingService {
                                         "Can't find spendingUserAggr for date: " + spendingDate));
     }
 
-    private Page<SpendingPageItem> getSpendingListProj(
+    private Page<? extends SpendingPageItem> getSpendingListProj(
             BigInteger userId, GetSpendingsRequestFilters filters, PageRequest pageRequest) {
         GraphType type = filters.getGraphType();
 
