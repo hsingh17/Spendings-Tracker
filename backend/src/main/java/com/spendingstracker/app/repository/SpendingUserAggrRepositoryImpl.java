@@ -7,10 +7,7 @@ import com.spendingstracker.app.dto.response.SpendingPageItemLineChart;
 import com.spendingstracker.app.dto.response.SpendingPageItemPieChart;
 import com.spendingstracker.app.entity.SpendingUserAggr;
 import com.spendingstracker.app.entity.User;
-import com.spendingstracker.app.projection.SpendingListLineChartProjection;
-import com.spendingstracker.app.projection.SpendingListPieChartProjection;
-import com.spendingstracker.app.projection.SpendingListProjection;
-import com.spendingstracker.app.projection.SpendingProjection;
+import com.spendingstracker.app.projection.*;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -94,7 +91,12 @@ public class SpendingUserAggrRepositoryImpl implements SpendingUserAggrRepositor
             LocalDate endDate,
             Granularity granularity,
             Pageable pageable) {
-        return null;
+        Page<SpendingListBarChartProjection> spendingsBarProjsPage =
+                spendingUserAggrJdbcRepository.findSpendingsForBarChart(
+                        userId, startDate, endDate, granularity, pageable);
+
+        return makeSpendingPageItem(
+                spendingsBarProjsPage, pageable, SpendingPageItemBarChart::new);
     }
 
     private <U extends SpendingListProjection, V extends SpendingPageItem>

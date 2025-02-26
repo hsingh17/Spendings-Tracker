@@ -1,11 +1,12 @@
 package com.spendingstracker.app.projection;
 
-import com.spendingstracker.app.entity.SpendingCategory;
+import com.spendingstracker.app.constants.SpendingCategoryEnum;
 
 import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -14,6 +15,19 @@ import java.util.Map;
  * @see SpendingListProjection
  */
 @Getter
-public record SpendingListBarChartProjection(
-        Map<LocalDate, Map<SpendingCategory, BigDecimal>> dateToCategoryTotal)
-        implements SpendingListProjection {}
+public final class SpendingListBarChartProjection implements SpendingListProjection {
+    private final Map<LocalDate, Map<SpendingCategoryEnum, BigDecimal>> barMap;
+
+    public SpendingListBarChartProjection() {
+        this.barMap = new HashMap<>();
+    }
+
+    public void upsert(LocalDate date, SpendingCategoryEnum category, BigDecimal amount) {
+        if (!barMap.containsKey(date)) {
+            barMap.put(date, new HashMap<>());
+        }
+
+        Map<SpendingCategoryEnum, BigDecimal> categoryToAmountMap = barMap.get(date);
+        categoryToAmountMap.merge(category, amount, BigDecimal::add);
+    }
+}

@@ -1,9 +1,11 @@
 package com.spendingstracker.app.repository;
 
 import com.spendingstracker.app.constants.Granularity;
+import com.spendingstracker.app.mapper.SpendingListBarChartProjectionMapper;
 import com.spendingstracker.app.mapper.SpendingListLineChartProjectionMapper;
 import com.spendingstracker.app.mapper.SpendingListPieChartProjectionMapper;
 import com.spendingstracker.app.mapper.SpendingListProjectionMapper;
+import com.spendingstracker.app.projection.SpendingListBarChartProjection;
 import com.spendingstracker.app.projection.SpendingListLineChartProjection;
 import com.spendingstracker.app.projection.SpendingListPieChartProjection;
 import com.spendingstracker.app.projection.SpendingListProjection;
@@ -39,16 +41,19 @@ public class SpendingUserAggrJdbcRepository {
     private final Map<String, String> sqlResourcesMap;
     private final SpendingListPieChartProjectionMapper pieChartProjMapper;
     private final SpendingListLineChartProjectionMapper lineChartProjMapper;
+    private final SpendingListBarChartProjectionMapper barChartProjMapper;
 
     public SpendingUserAggrJdbcRepository(
             NamedParameterJdbcTemplate jdbcTemplate,
             @Qualifier("sqlResourcesMap") Map<String, String> sqlResourcesMap,
             SpendingListPieChartProjectionMapper pieChartProjMapper,
-            SpendingListLineChartProjectionMapper lineChartProjMapper) {
+            SpendingListLineChartProjectionMapper lineChartProjMapper,
+            SpendingListBarChartProjectionMapper barChartProjMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.sqlResourcesMap = sqlResourcesMap;
         this.pieChartProjMapper = pieChartProjMapper;
         this.lineChartProjMapper = lineChartProjMapper;
+        this.barChartProjMapper = barChartProjMapper;
     }
 
     public Page<SpendingListLineChartProjection> findSpendingsForLineChart(
@@ -78,6 +83,23 @@ public class SpendingUserAggrJdbcRepository {
                 pageable,
                 params,
                 pieChartProjMapper);
+    }
+
+    public Page<SpendingListBarChartProjection> findSpendingsForBarChart(
+            BigInteger userId,
+            LocalDate startDate,
+            LocalDate endDate,
+            Granularity granularity,
+            Pageable pageable) {
+        SqlParameterSource params = buildParams(userId, startDate, endDate, granularity, pageable);
+
+        return queryForSpendingListProjs(
+                queryForSpendingsListProjsCount(
+                        sqlResourcesMap.get("countSpendingsForBarChart"), params),
+                sqlResourcesMap.get("findSpendingsForBarChart"),
+                pageable,
+                params,
+                barChartProjMapper);
     }
 
     private <T extends SpendingListProjection> Page<T> queryForSpendingListProjs(

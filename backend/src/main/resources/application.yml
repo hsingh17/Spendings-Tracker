@@ -29,6 +29,8 @@ classpath-resources:
     - /sql/findSpendingsForLineChart.sql
     - /sql/countSpendingsForLineChart.sql
     - /sql/countSpendingsForPieChart.sql
+    - /sql/findSpendingsForBarChart.sql
+    - /sql/countSpendingsForBarChart.sql
 --- # Local Profile
 spring:
   config:
