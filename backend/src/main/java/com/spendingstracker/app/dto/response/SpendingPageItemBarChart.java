@@ -8,9 +8,10 @@ import java.time.LocalDate;
 import java.util.Map;
 
 /** Stores information about a particular spending day for bar charts */
-public record SpendingPageItemBarChart(Map<LocalDate, Map<SpendingCategoryEnum, BigDecimal>> barMap)
+public record SpendingPageItemBarChart(
+        LocalDate date, Map<SpendingCategoryEnum, BigDecimal> categoryTotalMap)
         implements SpendingPageItem {
     public SpendingPageItemBarChart(SpendingListBarChartProjection spendingListBarChartProj) {
-        this(spendingListBarChartProj.getBarMap());
+        this(spendingListBarChartProj.getDate(), spendingListBarChartProj.getCategoryTotalMap());
     }
 }

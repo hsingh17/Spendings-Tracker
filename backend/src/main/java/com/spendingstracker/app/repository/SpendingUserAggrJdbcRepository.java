@@ -63,7 +63,6 @@ public class SpendingUserAggrJdbcRepository {
             Granularity granularity,
             Pageable pageable) {
         SqlParameterSource params = buildParams(userId, startDate, endDate, granularity, pageable);
-
         return queryForSpendingListProjs(
                 queryForSpendingsListProjsCount(
                         sqlResourcesMap.get("countSpendingsForLineChart"), params),

@@ -26,9 +26,9 @@ public class SpendingListBarChartProjectionMapper
         extends SpendingListProjectionMapper<SpendingListBarChartProjection> {
     @Override
     public SpendingListBarChartProjection mapRow(ResultSet rs, int rowNum) throws SQLException {
-        SpendingListBarChartProjection barChartProj = new SpendingListBarChartProjection();
-
         LocalDate date = rs.getObject("date", LocalDate.class);
+        SpendingListBarChartProjection barChartProj = new SpendingListBarChartProjection(date);
+
         List<SpendingCategoryEnum> categories =
                 super.mapConcatStringToObjList(rs, "categories", SpendingCategoryEnum::fromCode);
         List<BigDecimal> amounts = super.mapConcatStringToObjList(rs, "amounts", BigDecimal::new);
@@ -43,7 +43,7 @@ public class SpendingListBarChartProjectionMapper
             SpendingCategoryEnum category = categories.get(i);
             BigDecimal amount = amounts.get(i);
 
-            barChartProj.upsert(date, category, amount);
+            barChartProj.upsert(category, amount);
         }
 
         return barChartProj;

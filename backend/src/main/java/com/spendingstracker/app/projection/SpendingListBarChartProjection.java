@@ -16,18 +16,15 @@ import java.util.Map;
  */
 @Getter
 public final class SpendingListBarChartProjection implements SpendingListProjection {
-    private final Map<LocalDate, Map<SpendingCategoryEnum, BigDecimal>> barMap;
+    private final LocalDate date;
+    private final Map<SpendingCategoryEnum, BigDecimal> categoryTotalMap;
 
-    public SpendingListBarChartProjection() {
-        this.barMap = new HashMap<>();
+    public SpendingListBarChartProjection(LocalDate date) {
+        this.date = date;
+        this.categoryTotalMap = new HashMap<>();
     }
 
-    public void upsert(LocalDate date, SpendingCategoryEnum category, BigDecimal amount) {
-        if (!barMap.containsKey(date)) {
-            barMap.put(date, new HashMap<>());
-        }
-
-        Map<SpendingCategoryEnum, BigDecimal> categoryToAmountMap = barMap.get(date);
-        categoryToAmountMap.merge(category, amount, BigDecimal::add);
+    public void upsert(SpendingCategoryEnum category, BigDecimal amount) {
+        categoryTotalMap.merge(category, amount, BigDecimal::add);
     }
 }

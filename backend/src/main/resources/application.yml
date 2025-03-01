@@ -26,9 +26,9 @@ s3:
 classpath-resources:
   sql-resources:
     - /sql/findSpendingsForPieChart.sql
+    - /sql/countSpendingsForPieChart.sql
     - /sql/findSpendingsForLineChart.sql
     - /sql/countSpendingsForLineChart.sql
-    - /sql/countSpendingsForPieChart.sql
     - /sql/findSpendingsForBarChart.sql
     - /sql/countSpendingsForBarChart.sql
 --- # Local Profile
