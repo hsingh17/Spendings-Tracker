@@ -11,7 +11,6 @@ import java.time.LocalDate;
  *
  * @see com.spendingstracker.app.projection.SpendingListProjection
  */
-@Getter
 public record SpendingListLineChartProjection(
         BigInteger spendingUserAggrId, LocalDate date, BigDecimal total)
         implements SpendingListProjection {}

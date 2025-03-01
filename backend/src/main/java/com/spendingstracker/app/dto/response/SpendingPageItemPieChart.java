@@ -1,22 +1,14 @@
 package com.spendingstracker.app.dto.response;
 
-import com.spendingstracker.app.projection.SpendingListProjection;
-
-import lombok.Getter;
+import com.spendingstracker.app.projection.SpendingListPieChartProjection;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 
 /** Stores information about a particular spending day for pie charts */
-@Getter
-public class SpendingPageItemPieChart implements SpendingPageItem {
-    private final BigInteger spendingUserAggrId;
-    private final String category;
-    private final BigDecimal total;
+public record SpendingPageItemPieChart(String category, BigDecimal total)
+        implements SpendingPageItem {
 
-    public SpendingPageItemPieChart(SpendingListProjection spendingListProj) {
-        this.spendingUserAggrId = spendingListProj.spendingUserAggrId();
-        this.category = spendingListProj.category();
-        this.total = spendingListProj.total();
+    public SpendingPageItemPieChart(SpendingListPieChartProjection spendingListProj) {
+        this(spendingListProj.category(), spendingListProj.total());
     }
 }

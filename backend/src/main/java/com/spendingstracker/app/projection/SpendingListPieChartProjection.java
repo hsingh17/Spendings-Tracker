@@ -1,6 +1,5 @@
 package com.spendingstracker.app.projection;
 
-import lombok.Getter;
 
 import java.math.BigDecimal;
 
@@ -9,6 +8,5 @@ import java.math.BigDecimal;
  *
  * @see SpendingListProjection
  */
-@Getter
 public record SpendingListPieChartProjection(String category, BigDecimal total)
         implements SpendingListProjection {}
