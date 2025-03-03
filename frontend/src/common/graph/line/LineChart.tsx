@@ -23,7 +23,7 @@ export const POINT_RADIUS = 7;
 type LineChartProps = {
   width: number;
   height: number;
-  response: ApiResponse<SpendingsPage>;
+  response: ApiResponse<SpendingsPage<SpendingListRowLineChart>>;
   setSearchParams: (urlSearchParams: URLSearchParams) => void;
 };
 

@@ -9,9 +9,12 @@ import java.util.Map;
 
 /** Stores information about a particular spending day for bar charts */
 public record SpendingPageItemBarChart(
-        LocalDate date, Map<SpendingCategoryEnum, BigDecimal> categoryTotalMap)
+        LocalDate date, BigDecimal total, Map<SpendingCategoryEnum, BigDecimal> categoryTotalMap)
         implements SpendingPageItem {
     public SpendingPageItemBarChart(SpendingListBarChartProjection spendingListBarChartProj) {
-        this(spendingListBarChartProj.getDate(), spendingListBarChartProj.getCategoryTotalMap());
+        this(
+                spendingListBarChartProj.getDate(),
+                spendingListBarChartProj.getTotal(),
+                spendingListBarChartProj.getCategoryTotalMap());
     }
 }

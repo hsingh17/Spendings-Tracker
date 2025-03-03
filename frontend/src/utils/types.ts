@@ -55,36 +55,32 @@ export type Spending = {
   delete: Nullable<boolean>;
 };
 
-export type CategoricalSpendings = {
-  category: string;
-  total: number;
-};
-
-export type SpendingsPage = {
+export type SpendingsPage<Type extends SpendingListItem> = {
   spendingPage: {
-    content:
-      | SpendingListRowLineChart[]
-      | SpendingListRowPieChart[]
-      | SpendingListRowBarChart[];
+    content: Type[];
   };
 };
 
-export type SpendingListRowLineChart = {
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface SpendingListItem {}
+
+export interface SpendingListRowLineChart extends SpendingListItem {
   spendingUserAggrId: number;
   date: Dayjs;
   category: string;
   total: number;
-};
+}
 
-export type SpendingListRowBarChart = {
+export interface SpendingListRowBarChart extends SpendingListItem {
   date: Dayjs;
+  total: number;
   categoryTotalMap: Map<string, number>;
-};
+}
 
-export type SpendingListRowPieChart = {
+export interface SpendingListRowPieChart extends SpendingListItem {
   category: string;
   total: number;
-};
+}
 
 export enum SortType {
   DATE,

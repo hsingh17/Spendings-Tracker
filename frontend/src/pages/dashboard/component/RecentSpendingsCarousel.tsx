@@ -10,7 +10,8 @@ const SEARCH_PARAMS = new URLSearchParams([["limit", "7"]]);
 
 const RecentSpendingsCarousel = () => {
   const navigate = useNavigate();
-  const { data: response } = useSpendings(SEARCH_PARAMS);
+  const { data: response } =
+    useSpendings<SpendingListRowLineChart>(SEARCH_PARAMS);
   const spendings = response?.data?.spendingPage.content;
 
   if (!response || !response.ok) {

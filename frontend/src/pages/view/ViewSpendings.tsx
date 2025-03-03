@@ -42,7 +42,7 @@ const ViewSpendings = () => {
     <ApiCallBoundary
       errorFallback={<Error />}
       loadingFallback={<SpendingsTableLoadingShimmer />}
-      useApiCall={() => useSpendings(searchParams)}
+      useApiCall={() => useSpendings<SpendingListRowLineChart>(searchParams)}
     >
       <div className="p-3">
         <TableBody

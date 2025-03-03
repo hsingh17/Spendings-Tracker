@@ -5,24 +5,19 @@ import fetchRequestWrapper from "../utils/fetch-utils";
 import {
   ApiResponse,
   Nullable,
-  SpendingListRowBarChart,
-  SpendingListRowLineChart,
-  SpendingListRowPieChart,
+  SpendingListItem,
   SpendingsPage,
 } from "../utils/types";
 
-function containsDate(
-  content:
-    | SpendingListRowLineChart
-    | SpendingListRowBarChart
-    | SpendingListRowPieChart,
-): boolean {
+function containsDate<Type extends SpendingListItem>(content: Type): boolean {
   return (
     "date" in content && content.date !== undefined && content.date !== null
   );
 }
 
-function mapStringDateToDateObj(response: ApiResponse<SpendingsPage>) {
+function mapStringDateToDateObj<Type extends SpendingListItem>(
+  response: ApiResponse<SpendingsPage<Type>>,
+) {
   const contents = response.data?.spendingPage.content;
   if (!contents) {
     return response;
@@ -38,16 +33,20 @@ function mapStringDateToDateObj(response: ApiResponse<SpendingsPage>) {
   return response;
 }
 
-async function getSpendings(searchParams: URLSearchParams) {
+async function getSpendings<Type extends SpendingListItem>(
+  searchParams: URLSearchParams,
+) {
   const apiUrl: Nullable<string> = `${SPENDINGS_API_ROUTE}?${searchParams.toString()}`;
-  return mapStringDateToDateObj(
-    await fetchRequestWrapper<SpendingsPage>(apiUrl, GET),
+  return mapStringDateToDateObj<Type>(
+    await fetchRequestWrapper<SpendingsPage<Type>>(apiUrl, GET),
   );
 }
 
-export default function useSpendings(searchParams: URLSearchParams) {
+export default function useSpendings<Type extends SpendingListItem>(
+  searchParams: URLSearchParams,
+) {
   return useQuery({
     queryKey: ["list-spendings", searchParams.toString()],
-    queryFn: () => getSpendings(searchParams),
+    queryFn: () => getSpendings<Type>(searchParams),
   });
 }

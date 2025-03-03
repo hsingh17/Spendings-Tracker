@@ -1,7 +1,13 @@
 import { FC, useEffect, useRef, useState } from "react";
 import { GraphTypes } from "../../enums/GraphTypes";
 import useDetectMobile from "../../hooks/useDetectMobile";
-import { ApiResponse, SpendingsPage } from "../../utils/types";
+import {
+  ApiResponse,
+  SpendingListRowBarChart,
+  SpendingListRowLineChart,
+  SpendingListRowPieChart,
+  SpendingsPage,
+} from "../../utils/types";
 import BarChart from "./bar/BarChart";
 import GraphEmptyState from "./GraphEmptyState";
 import LineChart from "./line/LineChart";
@@ -9,7 +15,13 @@ import PieChart from "./pie/PieChart";
 
 type MetricsGraphContainerProps = {
   graphType: GraphTypes;
-  response?: ApiResponse<SpendingsPage>;
+  response?: ApiResponse<
+    SpendingsPage<
+      | SpendingListRowLineChart
+      | SpendingListRowBarChart
+      | SpendingListRowPieChart
+    >
+  >;
   setSearchParams: (urlSearchParams: URLSearchParams) => void;
 };
 
@@ -43,6 +55,7 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({
       case GraphTypes.Line:
         return (
           <LineChart
+            // @ts-expect-error At the moment, I don't have a solution to remove this error, so for now just ignore it.
             response={responseNotNull}
             height={height}
             width={width}
@@ -52,6 +65,7 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({
       case GraphTypes.Pie:
         return (
           <PieChart
+            // @ts-expect-error At the moment, I don't have a solution to remove this error, so for now just ignore it.
             response={responseNotNull}
             height={height}
             width={width}
@@ -61,6 +75,7 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({
       case GraphTypes.Bar:
         return (
           <BarChart
+            // @ts-expect-error At the moment, I don't have a solution to remove this error, so for now just ignore it.
             response={responseNotNull}
             height={height}
             width={width}

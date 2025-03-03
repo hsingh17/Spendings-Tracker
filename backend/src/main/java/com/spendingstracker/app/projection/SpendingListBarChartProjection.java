@@ -18,13 +18,16 @@ import java.util.Map;
 public final class SpendingListBarChartProjection implements SpendingListProjection {
     private final LocalDate date;
     private final Map<SpendingCategoryEnum, BigDecimal> categoryTotalMap;
+    private BigDecimal total;
 
     public SpendingListBarChartProjection(LocalDate date) {
         this.date = date;
+        this.total = BigDecimal.ZERO;
         this.categoryTotalMap = new HashMap<>();
     }
 
     public void upsert(SpendingCategoryEnum category, BigDecimal amount) {
         categoryTotalMap.merge(category, amount, BigDecimal::add);
+        total = total.add(amount);
     }
 }
