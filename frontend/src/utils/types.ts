@@ -62,13 +62,26 @@ export type CategoricalSpendings = {
 
 export type SpendingsPage = {
   spendingPage: {
-    content: SpendingListRow[];
+    content:
+      | SpendingListRowLineChart[]
+      | SpendingListRowPieChart[]
+      | SpendingListRowBarChart[];
   };
 };
 
-export type SpendingListRow = {
+export type SpendingListRowLineChart = {
   spendingUserAggrId: number;
   date: Dayjs;
+  category: string;
+  total: number;
+};
+
+export type SpendingListRowBarChart = {
+  date: Dayjs;
+  categoryTotalMap: Map<string, number>;
+};
+
+export type SpendingListRowPieChart = {
   category: string;
   total: number;
 };

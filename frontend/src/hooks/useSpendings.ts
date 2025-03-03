@@ -2,7 +2,25 @@ import { useQuery } from "@tanstack/react-query";
 import CustomDayJs from "../config/DayJsConfig";
 import { GET, SPENDINGS_API_ROUTE } from "../utils/constants";
 import fetchRequestWrapper from "../utils/fetch-utils";
-import { ApiResponse, Nullable, SpendingsPage } from "../utils/types";
+import {
+  ApiResponse,
+  Nullable,
+  SpendingListRowBarChart,
+  SpendingListRowLineChart,
+  SpendingListRowPieChart,
+  SpendingsPage,
+} from "../utils/types";
+
+function containsDate(
+  content:
+    | SpendingListRowLineChart
+    | SpendingListRowBarChart
+    | SpendingListRowPieChart,
+): boolean {
+  return (
+    "date" in content && content.date !== undefined && content.date !== null
+  );
+}
 
 function mapStringDateToDateObj(response: ApiResponse<SpendingsPage>) {
   const contents = response.data?.spendingPage.content;
@@ -11,7 +29,10 @@ function mapStringDateToDateObj(response: ApiResponse<SpendingsPage>) {
   }
 
   for (const content of contents) {
-    content.date = CustomDayJs(content.date);
+    if (containsDate(content)) {
+      // @ts-expect-error method containsDate will check if "date" property exists for content
+      content.date = CustomDayJs(content.date);
+    }
   }
 
   return response;

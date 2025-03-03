@@ -3,7 +3,7 @@ import ApiCallBoundary from "../../common/ApiCallBoundary";
 import useDeleteSpending from "../../hooks/useDeleteSpending";
 import useSpendings from "../../hooks/useSpendings";
 import useWarningModal from "../../hooks/useWarningModal";
-import { SpendingListRow } from "../../utils/types";
+import { SpendingListRowLineChart } from "../../utils/types";
 import Error from "../error/Error";
 import SpendingsTableLoadingShimmer from "./component/SpendingsTableLoadingShimmer";
 import TableBody from "./component/TableBody";
@@ -29,7 +29,7 @@ const ViewSpendings = () => {
     setSearchParams(searchParams);
   };
 
-  const deleteSpendingWrapper = (spending: SpendingListRow) => {
+  const deleteSpendingWrapper = (spending: SpendingListRowLineChart) => {
     setModalState({
       show: true,
       callbackFn: () => {

@@ -5,7 +5,7 @@ import ArrayUtils from "../../../utils/array-utils";
 import {
   ApiResponse,
   Nullable,
-  SpendingListRow,
+  SpendingListRowLineChart,
   SpendingsPage,
   TooltipPosition,
 } from "../../../utils/types";
@@ -113,14 +113,16 @@ const LineChart: FC<LineChartProps> = ({
   };
 
   const xScale = scaleTime()
-    .domain(extent(data!, (d: SpendingListRow) => d.date) as [Dayjs, Dayjs])
+    .domain(
+      extent(data!, (d: SpendingListRowLineChart) => d.date) as [Dayjs, Dayjs],
+    )
     .range([margins.left, width - margins.right]);
 
   const yScale = scaleLinear()
     .domain(extent(data!, (d) => d.total) as [number, number])
     .range([height - margins.top, margins.bottom]);
 
-  const lineFn = line<SpendingListRow>()
+  const lineFn = line<SpendingListRowLineChart>()
     .x((d) => xScale(d.date))
     .y((d) => yScale(d.total));
 

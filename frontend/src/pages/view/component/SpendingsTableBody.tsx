@@ -1,10 +1,10 @@
 import { FC } from "react";
-import { SpendingListRow } from "../../../utils/types";
+import { SpendingListRowLineChart } from "../../../utils/types";
 import SpendingsTableRow from "./SpendingsTableRow";
 
 type SpendingsTableBodyProps = {
-  spendings: SpendingListRow[];
-  setSpendingToDelete: (spending: SpendingListRow) => void;
+  spendings: SpendingListRowLineChart[];
+  setSpendingToDelete: (spending: SpendingListRowLineChart) => void;
 };
 
 const SpendingsTableBody: FC<SpendingsTableBodyProps> = ({
@@ -13,7 +13,7 @@ const SpendingsTableBody: FC<SpendingsTableBodyProps> = ({
 }) => {
   return (
     <tbody>
-      {spendings.map((spending: SpendingListRow, idx: number) => {
+      {spendings.map((spending: SpendingListRowLineChart, idx: number) => {
         return (
           <SpendingsTableRow
             key={idx}

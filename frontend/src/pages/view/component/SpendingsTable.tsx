@@ -4,26 +4,29 @@ import {
   Sort,
   SortOrder,
   SortType,
-  SpendingListRow,
+  SpendingListRowLineChart,
 } from "../../../utils/types";
 import SpendingsTableBody from "./SpendingsTableBody";
 import SpendingsTableHeader from "./SpendingsTableHeader";
 import TableEmptyState from "./TableEmptyState";
 
 type SpendingsTableProps = {
-  spendings: Nullable<SpendingListRow[]>;
-  setSpendingToDelete: (spending: SpendingListRow) => void;
+  spendings: Nullable<SpendingListRowLineChart[]>;
+  setSpendingToDelete: (spending: SpendingListRowLineChart) => void;
 };
 
 // https://www.typescriptlang.org/docs/handbook/2/functions.html#call-signatures
 type SortFunc = {
-  (spendings: SpendingListRow[], sortOrder: SortOrder): SpendingListRow[];
+  (
+    spendings: SpendingListRowLineChart[],
+    sortOrder: SortOrder,
+  ): SpendingListRowLineChart[];
 };
 
 const SORTERS: Map<SortType, SortFunc> = new Map([
   [
     SortType.DATE,
-    (spendings: SpendingListRow[], sortOrder: SortOrder) => {
+    (spendings: SpendingListRowLineChart[], sortOrder: SortOrder) => {
       return spendings.sort(
         (a, b) => sortOrder * (a.date.isAfter(b.date) ? 1 : -1),
       );
@@ -31,7 +34,7 @@ const SORTERS: Map<SortType, SortFunc> = new Map([
   ],
   [
     SortType.TOTAL,
-    (spendings: SpendingListRow[], sortOrder: SortOrder) => {
+    (spendings: SpendingListRowLineChart[], sortOrder: SortOrder) => {
       return spendings.sort((a, b) => -sortOrder * (a.total - b.total));
     },
   ],
@@ -46,7 +49,7 @@ const SpendingsTable: FC<SpendingsTableProps> = ({
   }
 
   const [spendingsCopy, setSpendingCopy] =
-    useState<SpendingListRow[]>(spendings);
+    useState<SpendingListRowLineChart[]>(spendings);
 
   const [sort, setSort] = useState<Sort>({
     sortType: SortType.DATE,
