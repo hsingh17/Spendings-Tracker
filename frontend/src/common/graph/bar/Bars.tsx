@@ -1,6 +1,7 @@
-import { ScaleLinear, ScaleTime } from "d3";
+import { interpolateRgb, ScaleLinear, scaleSequential, ScaleTime } from "d3";
 import { FC } from "react";
 import { SpendingListRowBarChart } from "../../../utils/types";
+import Bar from "./Bar";
 
 type BarsProps = {
   spendings: SpendingListRowBarChart[];
@@ -10,46 +11,49 @@ type BarsProps = {
 };
 
 const Bars: FC<BarsProps> = ({ spendings, height, xScale, yScale }) => {
-  console.log(spendings, height, xScale, yScale);
-
-  return <></>;
   // const [tooltipIdx, setTooltipIdx] = useState<Nullable<number>>(null);
   // const [tooltipPosition, setTooltipPosition] =
   //   useState<Nullable<TooltipPosition>>(null);
-  // const onMouseOver = (idx: number, x: number, y: number) => {
+
+  //   const onMouseOver = (idx: number, x: number, y: number) => {
   //   setTooltipIdx(idx);
   //   setTooltipPosition({
   //     left: x,
   //     top: y - 75,
   //   });
   // };
-  // return (
-  //   <>
-  //     {spendings.map((spending, i) => {
-  //       const x = xScale(spending.date) || 0;
-  //       const barHeight = yScale(spending.total);
-  //       const y = height - barHeight;
-  //       // TODO: Make bars for each entry in spending.categoryTotalMap along the same x but diff y (stacked bar chart)
-  //       return (
-  //         <rect
-  //           key={spending.category}
-  //           className="hover:cursor-pointer hover:fill-theme-cta animate-[scale-bar-up_1.5s_cubic-bezier(0.25,1,0.5,1)_forwards]"
-  //           style={{
-  //             transformOrigin: "center bottom",
-  //             transform: "scale(1, 0)",
-  //           }}
-  //           onMouseOver={() => onMouseOver(i, x, y)}
-  //           onMouseLeave={() => setTooltipIdx(null)}
-  //           fill="#EEEEEE"
-  //           width={xScale.bandwidth()}
-  //           x={x}
-  //           y={y}
-  //           height={barHeight}
-  //         />
-  //       );
-  //     })}
-  //   </>
-  // );
+
+  // To create the stacked bar chart, map over the spendings then for each category
+  // in the day/week/month/year, map each category to a bar.
+  return (
+    <>
+      {spendings.map((spending) => {
+        const categoryTotalMap = spending.categoryTotalMap;
+        const x = xScale(spending.date) || 0;
+        const scale = scaleSequential()
+          .interpolator(interpolateRgb("#EEEEEE", "#00ADB5"))
+          .domain([0, categoryTotalMap.size]);
+        let lastY = 0;
+
+        spending.categoryTotalMap.entries().map((val, idx) => {
+          const barHeight = yScale(val[1]);
+          const y = height - barHeight + lastY;
+          lastY = y;
+
+          return (
+            <Bar
+              category={val[0]}
+              height={barHeight}
+              width={0}
+              x={x}
+              y={y}
+              fill={scale(idx)}
+            />
+          );
+        });
+      })}
+    </>
+  );
 };
 
 export default Bars;
