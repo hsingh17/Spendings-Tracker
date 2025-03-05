@@ -40,6 +40,7 @@ const Bars: FC<BarsProps> = ({ spendings, height, width }) => {
   // To create the stacked bar chart, map over the spendings then for each category
   // in the day/week/month/year, map each category to a bar.
 
+  // TODO: break this component out
   return (
     <g>
       {spendings.map((spending) => {
