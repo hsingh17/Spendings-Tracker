@@ -1,4 +1,10 @@
-import { interpolateRgb, ScaleLinear, scaleSequential, ScaleTime } from "d3";
+import {
+  extent,
+  interpolateRgb,
+  scaleBand,
+  scaleLinear,
+  scaleSequential,
+} from "d3";
 import { FC } from "react";
 import { SpendingListRowBarChart } from "../../../utils/types";
 import Bar from "./Bar";
@@ -6,11 +12,19 @@ import Bar from "./Bar";
 type BarsProps = {
   spendings: SpendingListRowBarChart[];
   height: number;
-  xScale: ScaleTime<number, number, never>;
-  yScale: ScaleLinear<number, number, never>;
+  width: number;
 };
 
-const Bars: FC<BarsProps> = ({ spendings, height, xScale, yScale }) => {
+const Bars: FC<BarsProps> = ({ spendings, height, width }) => {
+  const barWidth = width / spendings.length - 10;
+  const xScale = scaleBand()
+    .domain(spendings.map((d) => d.date.toString()))
+    .range([10, width]);
+
+  const yScale = scaleLinear()
+    .domain(extent(spendings, (d) => d.total) as [number, number])
+    .range([height - 100, height * 0.1]);
+
   // const [tooltipIdx, setTooltipIdx] = useState<Nullable<number>>(null);
   // const [tooltipPosition, setTooltipPosition] =
   //   useState<Nullable<TooltipPosition>>(null);
@@ -25,34 +39,41 @@ const Bars: FC<BarsProps> = ({ spendings, height, xScale, yScale }) => {
 
   // To create the stacked bar chart, map over the spendings then for each category
   // in the day/week/month/year, map each category to a bar.
+
   return (
-    <>
+    <g>
       {spendings.map((spending) => {
-        const categoryTotalMap = spending.categoryTotalMap;
-        const x = xScale(spending.date) || 0;
-        const scale = scaleSequential()
+        const zip = Object.entries(spending.categoryTotalMap);
+        const x = xScale(spending.date.toString()) || 0;
+        const y = yScale(spending.total);
+        const interpolator = scaleSequential()
           .interpolator(interpolateRgb("#EEEEEE", "#00ADB5"))
-          .domain([0, categoryTotalMap.size]);
-        let lastY = 0;
+          .domain([0, zip.length]);
+        let lastY = height;
 
-        spending.categoryTotalMap.entries().map((val, idx) => {
-          const barHeight = yScale(val[1]);
-          const y = height - barHeight + lastY;
-          lastY = y;
+        return (
+          <g>
+            {zip.map((val, idx) => {
+              const percentOfTotal = val[1] / spending.total;
+              const barHeight = (height - y) * percentOfTotal;
+              const barY = lastY - barHeight;
+              lastY = barY;
 
-          return (
-            <Bar
-              category={val[0]}
-              height={barHeight}
-              width={0}
-              x={x}
-              y={y}
-              fill={scale(idx)}
-            />
-          );
-        });
+              return (
+                <Bar
+                  category={val[0]}
+                  height={barHeight}
+                  width={barWidth}
+                  x={x}
+                  y={barY}
+                  fill={interpolator(idx)}
+                />
+              );
+            })}
+          </g>
+        );
       })}
-    </>
+    </g>
   );
 };
 

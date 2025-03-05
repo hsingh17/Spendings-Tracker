@@ -66,7 +66,7 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
     const domPoint = new DOMPointReadOnly(e.clientX, e.clientY);
     const svgNode = e.currentTarget as SVGGraphicsElement;
     const svgPoint = domPoint.matrixTransform(
-      svgNode.getScreenCTM()?.inverse(),
+      svgNode.getScreenCTM()?.inverse()
     );
     const [x, y] = calculateDisplacedCoords(curAngle);
 

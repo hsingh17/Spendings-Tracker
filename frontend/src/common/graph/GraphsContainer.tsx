@@ -35,8 +35,8 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({
   const spendings = response?.data?.spendingPage.content;
   const isMobile = useDetectMobile();
   const ref = useRef<HTMLDivElement>(null);
-  const [height, setHeight] = useState<number>(-1);
-  const [width, setWidth] = useState<number>(-1);
+  const [height, setHeight] = useState<number>(window.innerHeight);
+  const [width, setWidth] = useState<number>(window.innerWidth);
 
   const handleResize = () => {
     if (!ref || !ref.current) {

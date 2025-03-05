@@ -62,7 +62,7 @@ export type SpendingsPage<Type extends SpendingListItem> = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface SpendingListItem {}
+export interface SpendingListItem { }
 
 export interface SpendingListRowLineChart extends SpendingListItem {
   spendingUserAggrId: number;
@@ -71,10 +71,14 @@ export interface SpendingListRowLineChart extends SpendingListItem {
   total: number;
 }
 
+type CategoryTotalMap = {
+  [category: string]: number;
+};
+
 export interface SpendingListRowBarChart extends SpendingListItem {
   date: Dayjs;
   total: number;
-  categoryTotalMap: Map<string, number>;
+  categoryTotalMap: CategoryTotalMap;
 }
 
 export interface SpendingListRowPieChart extends SpendingListItem {

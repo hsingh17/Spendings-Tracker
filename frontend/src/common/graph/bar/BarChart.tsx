@@ -1,5 +1,3 @@
-import { extent, scaleLinear, scaleTime } from "d3";
-import { Dayjs } from "dayjs";
 import { FC } from "react";
 import {
   ApiResponse,
@@ -23,23 +21,10 @@ const BarChart: FC<BarChartProps> = ({ response, height, width }) => {
     return <></>;
   }
 
-  const xScale = scaleTime()
-    .domain(extent(data, (d) => d.date) as [Dayjs, Dayjs])
-    .range([0, width]);
-
-  const yScale = scaleLinear()
-    .domain(extent(data, (d) => d.total) as [number, number])
-    .range([height * 0.1, height - 100]);
-
   return (
     <div className="relative">
       <svg height={height} width={width}>
-        <Bars
-          spendings={data}
-          height={height}
-          xScale={xScale}
-          yScale={yScale}
-        />
+        <Bars spendings={data} height={height} width={width} />
       </svg>
     </div>
   );
