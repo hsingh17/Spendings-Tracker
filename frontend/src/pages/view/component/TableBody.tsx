@@ -2,7 +2,7 @@ import { FC } from "react";
 import Card from "../../../common/Card";
 import {
   ApiResponse,
-  SpendingListRow,
+  SpendingListRowLineChart,
   SpendingsPage,
 } from "../../../utils/types";
 import SpendingsTable from "./SpendingsTable";
@@ -13,7 +13,7 @@ type TableBodyProps = {
   response?: ApiResponse<SpendingsPage>;
   resetSearchParams: () => void;
   setSearchParams: (urlSearchParams: URLSearchParams) => void;
-  setSpendingToDelete: (spending: SpendingListRow) => void;
+  setSpendingToDelete: (spending: SpendingListRowLineChart) => void;
 };
 
 const TableBody: FC<TableBodyProps> = ({

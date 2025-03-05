@@ -7,4 +7,4 @@ import org.springframework.data.domain.Page;
  *
  * @see SpendingPageItem
  */
-public record SpendingPageResponse(Page<SpendingPageItem> spendingPage) {}
+public record SpendingPageResponse(Page<? extends SpendingPageItem> spendingPage) {}

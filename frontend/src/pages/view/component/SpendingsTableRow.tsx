@@ -2,12 +2,12 @@ import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { DATE_ISO_FORMAT, SAVE_SPENDINGS_PAGE } from "../../../utils/constants";
 import MoneyUtils from "../../../utils/money-utils";
-import { SpendingListRow } from "../../../utils/types";
+import { SpendingListRowLineChart } from "../../../utils/types";
 import SpendingsTableRowButtons from "./SpendingsTableRowButtons";
 
 type SpendingsTableRowProps = {
-  spending: SpendingListRow;
-  setSpendingToDelete: (spending: SpendingListRow) => void;
+  spending: SpendingListRowLineChart;
+  setSpendingToDelete: (spending: SpendingListRowLineChart) => void;
 };
 
 const SpendingsTableRow: FC<SpendingsTableRowProps> = ({

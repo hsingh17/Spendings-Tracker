@@ -1,13 +1,21 @@
 package com.spendingstracker.app.constants;
 
+import lombok.Getter;
+
 import java.util.Arrays;
 
 /** <code>enum</code> that represents the 3 available graph types */
+@Getter
 public enum GraphType {
     LINE("Line"),
     PIE("Pie"),
     BAR("Bar");
 
+    /**
+     * -- GETTER --
+     *
+     * @return <code>code</code>, the coded value of the enum
+     */
     private final String code;
 
     /**
@@ -17,13 +25,6 @@ public enum GraphType {
      */
     GraphType(String code) {
         this.code = code;
-    }
-
-    /**
-     * @return <code>code</code>, the coded value of the enum
-     */
-    public String getCode() {
-        return code;
     }
 
     /**

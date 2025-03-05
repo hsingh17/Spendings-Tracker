@@ -1,9 +1,9 @@
 import { PieArcDatum } from "d3";
 import React, { Dispatch, FC, SetStateAction } from "react";
-import { CategoricalSpendings, Nullable } from "../../../utils/types";
+import { Nullable, SpendingListRowPieChart } from "../../../utils/types";
 
 type PieChartSectorProps = {
-  datum: PieArcDatum<CategoricalSpendings>;
+  datum: PieArcDatum<SpendingListRowPieChart>;
   idx: number;
   fill: string;
   arcStyle?: string;

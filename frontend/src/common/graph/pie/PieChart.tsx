@@ -3,8 +3,8 @@ import React, { FC, useState } from "react";
 import useDetectMobile from "../../../hooks/useDetectMobile";
 import {
   ApiResponse,
-  CategoricalSpendings,
   Nullable,
+  SpendingListRowPieChart,
   SpendingsPage,
   TooltipPosition,
 } from "../../../utils/types";
@@ -18,7 +18,7 @@ const ANIMATION_DISTANCE = 50;
 type PieChartProps = {
   width: number;
   height: number;
-  response: ApiResponse<SpendingsPage>;
+  response: ApiResponse<SpendingsPage<SpendingListRowPieChart>>;
   setSearchParams: (urlSearchParams: URLSearchParams) => void;
 };
 
@@ -56,9 +56,9 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
     .interpolator(interpolateRgb("#EEEEEE", "#00ADB5"))
     .domain([0, data.length]);
 
-  const pieGenerator = pie<CategoricalSpendings>().value((d) => d.total);
+  const pieGenerator = pie<SpendingListRowPieChart>().value((d) => d.total);
 
-  const arcGenerator = arc<PieArcDatum<CategoricalSpendings>>()
+  const arcGenerator = arc<PieArcDatum<SpendingListRowPieChart>>()
     .innerRadius(innerRadius)
     .outerRadius(outerRadius);
 
@@ -66,7 +66,7 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
     const domPoint = new DOMPointReadOnly(e.clientX, e.clientY);
     const svgNode = e.currentTarget as SVGGraphicsElement;
     const svgPoint = domPoint.matrixTransform(
-      svgNode.getScreenCTM()?.inverse(),
+      svgNode.getScreenCTM()?.inverse()
     );
     const [x, y] = calculateDisplacedCoords(curAngle);
 

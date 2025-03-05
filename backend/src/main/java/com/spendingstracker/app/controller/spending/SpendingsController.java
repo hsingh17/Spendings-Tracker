@@ -2,7 +2,6 @@ package com.spendingstracker.app.controller.spending;
 
 import static com.spendingstracker.app.dto.response.ApiResponse.okResponse;
 
-import com.spendingstracker.app.dto.CustomUserDetails;
 import com.spendingstracker.app.dto.requests.GetSpendingsRequestFilters;
 import com.spendingstracker.app.dto.requests.SpendingsSaveRequest;
 import com.spendingstracker.app.dto.response.*;
@@ -18,8 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
@@ -54,9 +51,8 @@ public class SpendingsController {
             throws IllegalArgumentException {
         log.info("GET /spendings{}", filters);
 
-        SpendingPageResponse spendingPageResponse =
-                spendingService.getSpendings(getUserId(), filters);
-        Page<SpendingPageItem> spendingsPage = spendingPageResponse.spendingPage();
+        SpendingPageResponse spendingPageResponse = spendingService.getSpendings(filters);
+        Page<? extends SpendingPageItem> spendingsPage = spendingPageResponse.spendingPage();
 
         ApiLinks apiLinks =
                 buildApiLinks(
@@ -93,7 +89,7 @@ public class SpendingsController {
         log.info("GET /spendings/" + spendingDate);
 
         SpendingDetailsResponse spendingsResponse =
-                spendingService.getSpendingDetails(spendingDate, getUserId());
+                spendingService.getSpendingDetails(spendingDate);
 
         ApiResponse<SpendingDetailsResponse> response = okResponse(spendingsResponse, null, null);
 
@@ -116,7 +112,7 @@ public class SpendingsController {
             @PathVariable("spending-date") LocalDate spendingDate) {
         log.info("POST /spendings/" + spendingDate);
 
-        spendingService.createSpending(spendingsSaveRequest, spendingDate, getUserId());
+        spendingService.createSpending(spendingsSaveRequest, spendingDate);
 
         int N = spendingsSaveRequest.spendingRequests().size();
         ApiResponse<Void> response =
@@ -141,7 +137,7 @@ public class SpendingsController {
             @PathVariable("spending-date") LocalDate spendingDate) {
         log.info("PUT /spendings/" + spendingDate);
 
-        spendingService.updateSpending(spendingsSaveRequest, spendingDate, getUserId());
+        spendingService.updateSpending(spendingsSaveRequest, spendingDate);
         ApiResponse<Void> response =
                 okResponse(null, null, "Updated spending for spending date: " + spendingDate);
 
@@ -190,15 +186,6 @@ public class SpendingsController {
                                 + " categories");
 
         return ResponseEntity.ok(response);
-    }
-
-    /**
-     * @return the user ID of the authenticated user
-     */
-    private BigInteger getUserId() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
-        return userDetails.getUserId();
     }
 
     private ApiMetadata buildApiMetadata(

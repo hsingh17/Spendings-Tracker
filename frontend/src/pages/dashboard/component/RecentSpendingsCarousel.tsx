@@ -3,14 +3,15 @@ import { ReactComponent as RightArrow } from "../../../assets/raw/right-arrow.sv
 import Carousel from "../../../common/Carousel";
 import useSpendings from "../../../hooks/useSpendings";
 import { VIEW_SPENDINGS_PAGE } from "../../../utils/constants";
-import { SpendingListRow } from "../../../utils/types";
+import { SpendingListRowLineChart } from "../../../utils/types";
 import NoSpendingActivity from "./NoSpendingActivity";
 import RecentSpendingsCard from "./RecentSpendingsCard";
 const SEARCH_PARAMS = new URLSearchParams([["limit", "7"]]);
 
 const RecentSpendingsCarousel = () => {
   const navigate = useNavigate();
-  const { data: response } = useSpendings(SEARCH_PARAMS);
+  const { data: response } =
+    useSpendings<SpendingListRowLineChart>(SEARCH_PARAMS);
   const spendings = response?.data?.spendingPage.content;
 
   if (!response || !response.ok) {
@@ -28,7 +29,7 @@ const RecentSpendingsCarousel = () => {
 
   return (
     <Carousel>
-      {spendings.map((spendingListRow: SpendingListRow) => {
+      {spendings.map((spendingListRow: SpendingListRowLineChart) => {
         return (
           <RecentSpendingsCard
             key={spendingListRow.date.format()}

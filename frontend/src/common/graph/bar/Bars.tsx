@@ -1,49 +1,80 @@
-import { ScaleBand, ScaleLinear } from "d3";
-import { Dispatch, FC, SetStateAction } from "react";
-import { CategoricalSpendings, Nullable } from "../../../utils/types";
+import {
+  extent,
+  interpolateRgb,
+  scaleBand,
+  scaleLinear,
+  scaleSequential,
+} from "d3";
+import { FC } from "react";
+import { SpendingListRowBarChart } from "../../../utils/types";
+import Bar from "./Bar";
 
 type BarsProps = {
-  categoricalSpendings: CategoricalSpendings[];
+  spendings: SpendingListRowBarChart[];
   height: number;
-  xScale: ScaleBand<string>;
-  yScale: ScaleLinear<number, number, never>;
-  setTooltipIdx: Dispatch<SetStateAction<Nullable<number>>>;
-  onMouseOver: (idx: number, x: number, y: number) => void;
+  width: number;
 };
 
-const Bars: FC<BarsProps> = ({
-  categoricalSpendings,
-  height,
-  xScale,
-  yScale,
-  setTooltipIdx,
-  onMouseOver,
-}) => {
+const Bars: FC<BarsProps> = ({ spendings, height, width }) => {
+  const barWidth = width / spendings.length - 10;
+  const xScale = scaleBand()
+    .domain(spendings.map((d) => d.date.toString()))
+    .range([10, width]);
+
+  const yScale = scaleLinear()
+    .domain(extent(spendings, (d) => d.total) as [number, number])
+    .range([height - 100, height * 0.1]);
+
+  // const [tooltipIdx, setTooltipIdx] = useState<Nullable<number>>(null);
+  // const [tooltipPosition, setTooltipPosition] =
+  //   useState<Nullable<TooltipPosition>>(null);
+
+  //   const onMouseOver = (idx: number, x: number, y: number) => {
+  //   setTooltipIdx(idx);
+  //   setTooltipPosition({
+  //     left: x,
+  //     top: y - 75,
+  //   });
+  // };
+
+  // To create the stacked bar chart, map over the spendings then for each category
+  // in the day/week/month/year, map each category to a bar.
+
+  // spendings = [spendings[0]];
   return (
-    <>
-      {categoricalSpendings.map((categoricalSpending, i) => {
-        const x = xScale(categoricalSpending.category) || 0;
-        const barHeight = yScale(categoricalSpending.total);
-        const y = height - barHeight;
+    <g>
+      {spendings.map((spending) => {
+        const zip = Object.entries(spending.categoryTotalMap);
+        const x = xScale(spending.date.toString()) || 0;
+        const y = yScale(spending.total);
+        const interpolator = scaleSequential()
+          .interpolator(interpolateRgb("#EEEEEE", "#00ADB5"))
+          .domain([0, zip.length]);
+        let lastY = height;
+
         return (
-          <rect
-            key={categoricalSpending.category}
-            className="hover:cursor-pointer hover:fill-theme-cta animate-[scale-bar-up_1.5s_cubic-bezier(0.25,1,0.5,1)_forwards]"
-            style={{
-              transformOrigin: "center bottom",
-              transform: "scale(1, 0)",
-            }}
-            onMouseOver={() => onMouseOver(i, x, y)}
-            onMouseLeave={() => setTooltipIdx(null)}
-            fill="#EEEEEE"
-            width={xScale.bandwidth()}
-            x={x}
-            y={y}
-            height={barHeight}
-          />
+          <g>
+            {zip.map((val, idx) => {
+              const percentOfTotal = val[1] / spending.total;
+              const barHeight = (height - y) * percentOfTotal;
+              const barY = lastY - barHeight;
+              lastY = barY;
+
+              return (
+                <Bar
+                  category={val[0]}
+                  height={barHeight}
+                  width={barWidth}
+                  x={x}
+                  y={barY}
+                  fill={interpolator(idx)}
+                />
+              );
+            })}
+          </g>
         );
       })}
-    </>
+    </g>
   );
 };
 

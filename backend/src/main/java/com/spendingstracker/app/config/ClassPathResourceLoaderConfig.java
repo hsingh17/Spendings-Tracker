@@ -1,5 +1,7 @@
 package com.spendingstracker.app.config;
 
+import com.spendingstracker.app.repository.SpendingUserAggrJdbcRepository;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,6 +16,7 @@ import java.nio.charset.Charset;
 import java.util.*;
 
 /** Config class for loading <code>ClassPathResource</code>s */
+@Getter
 @Configuration
 @ConfigurationProperties("classpath-resources")
 @Slf4j
@@ -24,16 +27,12 @@ public class ClassPathResourceLoaderConfig {
         this.sqlResources = sqlResources;
     }
 
-    public List<String> getSqlResources() {
-        return sqlResources;
-    }
-
     /**
      * Loads SQL files located in the classpath under <code>resources/sql</code>
      *
      * @return a <code>Map</code> containing the SQL file name as a key and the corresponding SQL as
      *     value
-     * @see com.spendingstracker.app.repository.SpendingUserJdbcRepository
+     * @see SpendingUserAggrJdbcRepository
      */
     @Bean
     @Qualifier("sqlResourcesMap")

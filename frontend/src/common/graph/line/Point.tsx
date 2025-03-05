@@ -1,12 +1,12 @@
 import { ScaleLinear, ScaleTime } from "d3";
 import { FC } from "react";
 import useDetectMobile from "../../../hooks/useDetectMobile";
-import { Nullable, SpendingListRow } from "../../../utils/types";
+import { Nullable, SpendingListRowLineChart } from "../../../utils/types";
 import { POINT_RADIUS } from "./LineChart";
 
 type PointProps = {
   idx: number;
-  spendingListRow: SpendingListRow;
+  spendingListRow: SpendingListRowLineChart;
   setTooltipIdx: (date: Nullable<number>) => void;
   xScale: ScaleTime<number, number, never>;
   yScale: ScaleLinear<number, number, never>;
