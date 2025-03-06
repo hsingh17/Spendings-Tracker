@@ -10,7 +10,7 @@ type BarsProps = {
 };
 
 const Bars: FC<BarsProps> = ({ spendings, height, width }) => {
-  const barWidth = width / spendings.length;
+  const barWidth = width / spendings.length - 10;
   const xScale = scaleBand()
     .domain(spendings.map((d) => d.date.toString()))
     .range([10, width]);
