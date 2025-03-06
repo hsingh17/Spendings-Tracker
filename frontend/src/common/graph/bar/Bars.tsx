@@ -19,18 +19,6 @@ const Bars: FC<BarsProps> = ({ spendings, height, width }) => {
     .domain(extent(spendings, (d) => d.total) as [number, number])
     .range([height - 100, height * 0.1]);
 
-  // const [tooltipIdx, setTooltipIdx] = useState<Nullable<number>>(null);
-  // const [tooltipPosition, setTooltipPosition] =
-  //   useState<Nullable<TooltipPosition>>(null);
-
-  //   const onMouseOver = (idx: number, x: number, y: number) => {
-  //   setTooltipIdx(idx);
-  //   setTooltipPosition({
-  //     left: x,
-  //     top: y - 75,
-  //   });
-  // };
-
   return (
     <g>
       {spendings.map((spending) => {
