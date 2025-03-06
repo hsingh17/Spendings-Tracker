@@ -1,10 +1,4 @@
-import {
-  extent,
-  interpolateRgb,
-  scaleBand,
-  scaleLinear,
-  scaleSequential,
-} from "d3";
+import { extent, scaleBand, scaleLinear } from "d3";
 import { FC } from "react";
 import { SpendingListRowBarChart } from "../../../utils/types";
 import Bar from "./Bar";
@@ -16,7 +10,7 @@ type BarsProps = {
 };
 
 const Bars: FC<BarsProps> = ({ spendings, height, width }) => {
-  const barWidth = width / spendings.length - 10;
+  const barWidth = width / spendings.length;
   const xScale = scaleBand()
     .domain(spendings.map((d) => d.date.toString()))
     .range([10, width]);
@@ -37,41 +31,17 @@ const Bars: FC<BarsProps> = ({ spendings, height, width }) => {
   //   });
   // };
 
-  // To create the stacked bar chart, map over the spendings then for each category
-  // in the day/week/month/year, map each category to a bar.
-
-  // TODO: break this component out
   return (
     <g>
       {spendings.map((spending) => {
-        const zip = Object.entries(spending.categoryTotalMap);
-        const x = xScale(spending.date.toString()) || 0;
-        const y = yScale(spending.total);
-        const interpolator = scaleSequential()
-          .interpolator(interpolateRgb("#EEEEEE", "#00ADB5"))
-          .domain([0, zip.length]);
-        let lastY = height;
-
         return (
-          <g>
-            {zip.map((val, idx) => {
-              const percentOfTotal = val[1] / spending.total;
-              const barHeight = (height - y) * percentOfTotal;
-              const barY = lastY - barHeight;
-              lastY = barY;
-
-              return (
-                <Bar
-                  category={val[0]}
-                  height={barHeight}
-                  width={barWidth}
-                  x={x}
-                  y={barY}
-                  fill={interpolator(idx)}
-                />
-              );
-            })}
-          </g>
+          <Bar
+            spending={spending}
+            barWidth={barWidth}
+            height={height}
+            xScale={xScale}
+            yScale={yScale}
+          />
         );
       })}
     </g>

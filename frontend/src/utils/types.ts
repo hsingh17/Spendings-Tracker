@@ -71,7 +71,7 @@ export interface SpendingListRowLineChart extends SpendingListItem {
   total: number;
 }
 
-type CategoryTotalMap = {
+export type CategoryTotalMap = {
   [category: string]: number;
 };
 
