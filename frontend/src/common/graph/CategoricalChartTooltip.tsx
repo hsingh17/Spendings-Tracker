@@ -3,7 +3,7 @@ import MoneyUtils from "../../utils/money-utils";
 import { Nullable, TooltipPosition } from "../../utils/types";
 import Tooltip from "../Tooltip";
 
-type CategoricalChartTooltipProps = {
+export type CategoricalChartTooltipProps = {
   category: string;
   total: number;
   tooltipPosition: Nullable<TooltipPosition>;

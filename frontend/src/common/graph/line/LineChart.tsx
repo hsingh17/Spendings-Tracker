@@ -63,12 +63,12 @@ const LineChart: FC<LineChartProps> = ({
   const moveTracer = (
     clientX: number,
     clientY: number,
-    currentTarget: EventTarget,
+    currentTarget: EventTarget
   ) => {
     const domPoint = new DOMPointReadOnly(clientX, clientY);
     const svgNode = currentTarget as SVGGraphicsElement;
     const svgPoint = domPoint.matrixTransform(
-      svgNode.getScreenCTM()?.inverse(),
+      svgNode.getScreenCTM()?.inverse()
     );
     setTracerX(svgPoint.x);
 
@@ -106,7 +106,7 @@ const LineChart: FC<LineChartProps> = ({
     }
 
     const queryParams = new URLSearchParams(
-      link.substring(link.indexOf("?") + 1),
+      link.substring(link.indexOf("?") + 1)
     );
 
     setSearchParams(queryParams);
@@ -114,7 +114,7 @@ const LineChart: FC<LineChartProps> = ({
 
   const xScale = scaleTime()
     .domain(
-      extent(data!, (d: SpendingListRowLineChart) => d.date) as [Dayjs, Dayjs],
+      extent(data!, (d: SpendingListRowLineChart) => d.date) as [Dayjs, Dayjs]
     )
     .range([margins.left, width - margins.right]);
 
@@ -132,7 +132,7 @@ const LineChart: FC<LineChartProps> = ({
   // Display at least 2
   const xTicksToShow = Math.max(
     2,
-    Math.floor(xScale.ticks().length * Math.min(width / 2000, 1)),
+    Math.floor(xScale.ticks().length * Math.min(width / 2000, 1))
   );
 
   const xTicks = ArrayUtils.spreadEvenly<Date>(xScale.ticks(), xTicksToShow);

@@ -10,29 +10,30 @@ type BarsProps = {
 };
 
 const Bars: FC<BarsProps> = ({ spendings, height, width }) => {
-  const barWidth = width / spendings.length - 10;
+  // TODO: Make the 50 some function of the current width + number of bars to display (spendings.length)
+  const barWidth = width / spendings.length - 50;
   const xScale = scaleBand()
     .domain(spendings.map((d) => d.date.toString()))
     .range([10, width]);
 
+  // same with this -100
   const yScale = scaleLinear()
     .domain(extent(spendings, (d) => d.total) as [number, number])
     .range([height - 100, height * 0.1]);
 
   return (
-    <g>
-      {spendings.map((spending) => {
-        return (
-          <Bar
-            spending={spending}
-            barWidth={barWidth}
-            height={height}
-            xScale={xScale}
-            yScale={yScale}
-          />
-        );
-      })}
-    </g>
+    <svg>
+      {spendings.map((spending) => (
+        <Bar
+          key={spending.date.toString()}
+          spending={spending}
+          barWidth={barWidth}
+          height={height}
+          xScale={xScale}
+          yScale={yScale}
+        />
+      ))}
+    </svg>
   );
 };
 
