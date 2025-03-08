@@ -1,15 +1,17 @@
 import { extent, scaleBand, scaleLinear } from "d3";
-import { FC } from "react";
-import { SpendingListRowBarChart } from "../../../utils/types";
+import { Dispatch, FC, SetStateAction } from "react";
+import { Nullable, SpendingListRowBarChart } from "../../../utils/types";
 import Bar from "./Bar";
+import { TooltipInfo } from "./BarChart";
 
 type BarsProps = {
   spendings: SpendingListRowBarChart[];
   height: number;
   width: number;
+  setTooltipInfo: Dispatch<SetStateAction<Nullable<TooltipInfo>>>;
 };
 
-const Bars: FC<BarsProps> = ({ spendings, height, width }) => {
+const Bars: FC<BarsProps> = ({ spendings, height, width, setTooltipInfo }) => {
   // TODO: Make the 50 some function of the current width + number of bars to display (spendings.length)
   const barWidth = width / spendings.length - 50;
   const xScale = scaleBand()
@@ -31,6 +33,7 @@ const Bars: FC<BarsProps> = ({ spendings, height, width }) => {
           height={height}
           xScale={xScale}
           yScale={yScale}
+          setTooltipInfo={setTooltipInfo}
         />
       ))}
     </svg>

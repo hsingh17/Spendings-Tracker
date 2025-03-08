@@ -1,6 +1,7 @@
 import { interpolateRgb, ScaleBand, ScaleLinear, scaleSequential } from "d3";
-import { FC } from "react";
-import { SpendingListRowBarChart } from "../../../utils/types";
+import React, { Dispatch, FC, SetStateAction } from "react";
+import { Nullable, SpendingListRowBarChart } from "../../../utils/types";
+import { ToolTipContent, TooltipInfo } from "./BarChart";
 
 type BarProps = {
   spending: SpendingListRowBarChart;
@@ -8,9 +9,17 @@ type BarProps = {
   height: number;
   xScale: ScaleBand<string>;
   yScale: ScaleLinear<number, number, never>;
+  setTooltipInfo: Dispatch<SetStateAction<Nullable<TooltipInfo>>>;
 };
 
-const Bar: FC<BarProps> = ({ spending, barWidth, height, xScale, yScale }) => {
+const Bar: FC<BarProps> = ({
+  spending,
+  barWidth,
+  height,
+  xScale,
+  yScale,
+  setTooltipInfo,
+}) => {
   const zip = Object.entries(spending.categoryTotalMap);
   const x = xScale(spending.date.toString()) || 0;
   const y = yScale(spending.total);
@@ -20,9 +29,22 @@ const Bar: FC<BarProps> = ({ spending, barWidth, height, xScale, yScale }) => {
   // -20 should be some function
   let lastY = height - 20;
 
-  const onMouseOver = (idx: number, x: number, barY: number) => {
-    console.log(barY);
-    // TODO: show big tooltip with legend inside of category to total mapping and date
+  const onMouseMove = (e: React.MouseEvent<SVGRectElement>) => {
+    const contents: ToolTipContent[] = zip.map((val, idx) => {
+      return {
+        category: val[0],
+        total: val[1],
+        colorHex: interpolator(idx),
+      };
+    });
+
+    setTooltipInfo({
+      mousePos: {
+        mouseX: e.clientX,
+        mouseY: e.clientY,
+      },
+      contents: contents,
+    });
   };
 
   return (
@@ -42,7 +64,9 @@ const Bar: FC<BarProps> = ({ spending, barWidth, height, xScale, yScale }) => {
                 transformOrigin: "center bottom",
                 transform: "scale(1, 0)",
               }}
-              onMouseOver={() => onMouseOver(idx, x, barY)}
+              onMouseMove={(e: React.MouseEvent<SVGRectElement>) =>
+                onMouseMove(e)
+              }
               onMouseLeave={() => {}}
               fill={interpolator(idx)}
               width={barWidth}
