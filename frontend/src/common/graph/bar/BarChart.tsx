@@ -67,8 +67,20 @@ const BarChart: FC<BarChartProps> = ({ response, height, width }) => {
       {tooltipInfo && divRef && (
         <div
           style={calculatePosStyle()}
-          className="w-10 h-10 bg-red-600 absolute pointer-events-none"
-        ></div>
+          className="flex flex-col w-fit h-fit p-2 bg-theme-brand-secondary bg-opacity-85 absolute pointer-events-none"
+        >
+          {tooltipInfo.contents.map((val, idx) => {
+            const bg = `bg-[${val.colorHex}]`;
+            return (
+              <div className="flex flex-row">
+                <div
+                  className="w-10 h-10 p-2"
+                  style={{ backgroundColor: val.colorHex }}
+                ></div>
+              </div>
+            );
+          })}
+        </div>
       )}
     </div>
   );

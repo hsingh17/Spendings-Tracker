@@ -1,4 +1,10 @@
-import { interpolateRgb, ScaleBand, ScaleLinear, scaleSequential } from "d3";
+import {
+  interpolateRgb,
+  rgb,
+  ScaleBand,
+  ScaleLinear,
+  scaleSequential,
+} from "d3";
 import { Dayjs } from "dayjs";
 import React, { Dispatch, FC, SetStateAction } from "react";
 import { Nullable, SpendingListRowBarChart } from "../../../utils/types";
@@ -37,7 +43,7 @@ const Bar: FC<BarProps> = ({
       return {
         category: val[0],
         total: val[1],
-        colorHex: interpolator(idx),
+        colorHex: rgb(interpolator(idx)).formatHex(),
       };
     });
 

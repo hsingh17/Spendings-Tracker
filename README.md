@@ -17,3 +17,4 @@ This repository holds the code for my spendings tracker app built with Java and 
 - create aws architecture and deploy
 
 ## Known issues
+- Granularity not working on line chart
