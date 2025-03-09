@@ -1,4 +1,5 @@
 import { extent, scaleBand, scaleLinear } from "d3";
+import { Dayjs } from "dayjs";
 import { Dispatch, FC, SetStateAction } from "react";
 import { Nullable, SpendingListRowBarChart } from "../../../utils/types";
 import Bar from "./Bar";
@@ -8,10 +9,17 @@ type BarsProps = {
   spendings: SpendingListRowBarChart[];
   height: number;
   width: number;
+  currentTooltipDate: Nullable<Dayjs>;
   setTooltipInfo: Dispatch<SetStateAction<Nullable<TooltipInfo>>>;
 };
 
-const Bars: FC<BarsProps> = ({ spendings, height, width, setTooltipInfo }) => {
+const Bars: FC<BarsProps> = ({
+  spendings,
+  height,
+  width,
+  currentTooltipDate,
+  setTooltipInfo,
+}) => {
   // TODO: Make the 50 some function of the current width + number of bars to display (spendings.length)
   const barWidth = width / spendings.length - 50;
   const xScale = scaleBand()
@@ -34,6 +42,7 @@ const Bars: FC<BarsProps> = ({ spendings, height, width, setTooltipInfo }) => {
           xScale={xScale}
           yScale={yScale}
           setTooltipInfo={setTooltipInfo}
+          currentTooltipDate={currentTooltipDate}
         />
       ))}
     </svg>

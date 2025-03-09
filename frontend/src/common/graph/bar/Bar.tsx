@@ -1,4 +1,5 @@
 import { interpolateRgb, ScaleBand, ScaleLinear, scaleSequential } from "d3";
+import { Dayjs } from "dayjs";
 import React, { Dispatch, FC, SetStateAction } from "react";
 import { Nullable, SpendingListRowBarChart } from "../../../utils/types";
 import { ToolTipContent, TooltipInfo } from "./BarChart";
@@ -9,6 +10,7 @@ type BarProps = {
   height: number;
   xScale: ScaleBand<string>;
   yScale: ScaleLinear<number, number, never>;
+  currentTooltipDate: Nullable<Dayjs>;
   setTooltipInfo: Dispatch<SetStateAction<Nullable<TooltipInfo>>>;
 };
 
@@ -18,6 +20,7 @@ const Bar: FC<BarProps> = ({
   height,
   xScale,
   yScale,
+  currentTooltipDate,
   setTooltipInfo,
 }) => {
   const zip = Object.entries(spending.categoryTotalMap);
@@ -39,12 +42,19 @@ const Bar: FC<BarProps> = ({
     });
 
     setTooltipInfo({
+      date: spending.date,
       mousePos: {
         mouseX: e.clientX,
         mouseY: e.clientY,
       },
       contents: contents,
     });
+  };
+
+  const onMouseLeave = () => {
+    if (spending.date === currentTooltipDate) {
+      setTooltipInfo(null);
+    }
   };
 
   return (
@@ -67,7 +77,7 @@ const Bar: FC<BarProps> = ({
               onMouseMove={(e: React.MouseEvent<SVGRectElement>) =>
                 onMouseMove(e)
               }
-              onMouseLeave={() => {}}
+              onMouseLeave={() => onMouseLeave()}
               fill={interpolator(idx)}
               width={barWidth}
               x={x}

@@ -1,3 +1,4 @@
+import { Dayjs } from "dayjs";
 import { FC, useRef, useState } from "react";
 import {
   ApiResponse,
@@ -20,6 +21,7 @@ export type ToolTipContent = {
   colorHex: string;
 };
 export type TooltipInfo = {
+  date: Dayjs;
   mousePos: {
     mouseX: number;
     mouseY: number;
@@ -50,8 +52,6 @@ const BarChart: FC<BarChartProps> = ({ response, height, width }) => {
     };
   };
 
-  console.log(tooltipInfo?.mousePos);
-
   return (
     <div className="relative" ref={divRef}>
       <svg height={height} width={width}>
@@ -59,6 +59,7 @@ const BarChart: FC<BarChartProps> = ({ response, height, width }) => {
           spendings={data}
           height={height}
           width={width}
+          currentTooltipDate={tooltipInfo?.date}
           setTooltipInfo={setTooltipInfo}
         />
       </svg>
@@ -66,7 +67,7 @@ const BarChart: FC<BarChartProps> = ({ response, height, width }) => {
       {tooltipInfo && divRef && (
         <div
           style={calculatePosStyle()}
-          className="w-10 h-10 bg-red-600 absolute"
+          className="w-10 h-10 bg-red-600 absolute pointer-events-none"
         ></div>
       )}
     </div>
