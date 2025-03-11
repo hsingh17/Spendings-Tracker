@@ -6,6 +6,7 @@ import {
   SpendingListRowBarChart,
   SpendingsPage,
 } from "../../../utils/types";
+import BarChartTooltip from "./BarChartTooltip";
 import Bars from "./Bars";
 
 type BarChartProps = {
@@ -65,22 +66,10 @@ const BarChart: FC<BarChartProps> = ({ response, height, width }) => {
       </svg>
 
       {tooltipInfo && divRef && (
-        <div
-          style={calculatePosStyle()}
-          className="flex flex-col w-fit h-fit p-2 bg-theme-brand-secondary bg-opacity-85 absolute pointer-events-none"
-        >
-          {tooltipInfo.contents.map((val, idx) => {
-            const bg = `bg-[${val.colorHex}]`;
-            return (
-              <div className="flex flex-row">
-                <div
-                  className="w-10 h-10 p-2"
-                  style={{ backgroundColor: val.colorHex }}
-                ></div>
-              </div>
-            );
-          })}
-        </div>
+        <BarChartTooltip
+          tooltipInfo={tooltipInfo}
+          divStyle={calculatePosStyle()}
+        />
       )}
     </div>
   );
