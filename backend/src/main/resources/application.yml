@@ -59,6 +59,7 @@ logging:
   level:
     org:
       springframework:
+        jdbc: TRACE
         security: TRACE
     com.spendingstracker: DEBUG
 redirects:

@@ -16,12 +16,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.jdbc.core.SqlParameterValue;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -107,7 +109,6 @@ public class SpendingUserAggrJdbcRepository {
             Pageable pageable,
             SqlParameterSource params,
             SpendingListProjectionMapper<T> mapper) {
-        log.debug("Running SQL: {}", sql);
         List<T> projsList = jdbcTemplate.query(sql, params, mapper);
         return new PageImpl<>(projsList, pageable, total);
     }
@@ -119,12 +120,15 @@ public class SpendingUserAggrJdbcRepository {
             Granularity granularity,
             Pageable pageable) {
         return new MapSqlParameterSource()
-                .addValue("userId", userId)
-                .addValue("startDate", startDate)
-                .addValue("endDate", endDate)
-                .addValue("granularity", granularity)
-                .addValue("limit", pageable.getPageSize())
-                .addValue("offset", pageable.getPageNumber() * pageable.getPageSize());
+                .addValue("userId", new SqlParameterValue(Types.BIGINT, userId))
+                .addValue("startDate", new SqlParameterValue(Types.DATE, startDate))
+                .addValue("endDate", new SqlParameterValue(Types.DATE, endDate))
+                .addValue("granularity", new SqlParameterValue(Types.VARCHAR, granularity))
+                .addValue("limit", new SqlParameterValue(Types.INTEGER, pageable.getPageSize()))
+                .addValue(
+                        "offset",
+                        new SqlParameterValue(
+                                Types.INTEGER, pageable.getPageNumber() * pageable.getPageSize()));
     }
 
     private int queryForSpendingsListProjsCount(String sql, SqlParameterSource params) {

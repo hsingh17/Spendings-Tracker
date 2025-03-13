@@ -1,5 +1,7 @@
 package com.spendingstracker.app.constants;
 
+import lombok.Getter;
+
 import java.util.Arrays;
 
 /**
@@ -7,6 +9,7 @@ import java.util.Arrays;
  * example, a value of <code>WEEK</code> means that the spendings should be returned by a weekly
  * basis.
  */
+@Getter
 public enum Granularity {
     DAY("Day"),
     WEEK("Week"),
@@ -25,12 +28,6 @@ public enum Granularity {
         this.code = code;
     }
 
-    /**
-     * @return <code>code</code> value of the enum (e.g: Day, Week, Month, Year)
-     */
-    public String getCode() {
-        return code;
-    }
 
     /**
      * <code>static</code> method to get a <code>Granularity</code> from its coded value (e.g: Day,
