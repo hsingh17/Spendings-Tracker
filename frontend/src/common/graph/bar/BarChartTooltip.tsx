@@ -1,4 +1,4 @@
-import { CSSProperties, FC } from "react";
+import { CSSProperties, FC, useEffect, useRef, useState } from "react";
 import MoneyUtils from "../../../utils/money-utils";
 import { TooltipInfo } from "./BarChart";
 
@@ -11,11 +11,33 @@ const BarChartTooltip: FC<BarChartTooltipProps> = ({
   tooltipInfo,
   divStyle,
 }) => {
-  // TODO: Need it to flip if near bottom of screen
+  const [style, setStyle] = useState<CSSProperties>(divStyle);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const styleToApply = { ...divStyle };
+    // Determines if tooltip should "flip" in the case that rendering it makes it overflow
+    if (ref && ref.current) {
+      const divHeight = ref.current.clientHeight;
+      const styleTop = divStyle.top?.toString() || "";
+      const top = parseInt(styleTop, 10);
+      const overflowAmnt = top + divHeight - window.innerHeight;
+
+      if (overflowAmnt > 0) {
+        styleToApply.transform = `translate(0, -${divHeight}px)`;
+      } else {
+        styleToApply.transform = "";
+      }
+    }
+
+    setStyle(styleToApply);
+  }, [divStyle]);
+
   return (
     <div
-      style={divStyle}
+      style={style}
       className="flex flex-col w-fit h-fit p-2 bg-theme-brand-secondary bg-opacity-85 absolute pointer-events-none rounded-md"
+      ref={ref}
     >
       {tooltipInfo.contents.toReversed().map((val, idx) => {
         return (

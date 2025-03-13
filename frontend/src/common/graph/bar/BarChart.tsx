@@ -54,7 +54,7 @@ const BarChart: FC<BarChartProps> = ({ response, height, width }) => {
   };
 
   return (
-    <div className="relative" ref={divRef}>
+    <div className="relative overflow-y-hidden" ref={divRef}>
       <svg height={height} width={width}>
         <Bars
           spendings={data}

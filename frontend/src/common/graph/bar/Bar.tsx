@@ -72,25 +72,23 @@ const Bar: FC<BarProps> = ({
         lastY = barY;
 
         return (
-          <>
-            <rect
-              key={val[0]}
-              className="hover:cursor-pointer animate-[scale-bar-up_1.5s_cubic-bezier(0.25,1,0.5,1)_forwards]"
-              style={{
-                transformOrigin: "center bottom",
-                transform: "scale(1, 0)",
-              }}
-              onMouseMove={(e: React.MouseEvent<SVGRectElement>) =>
-                onMouseMove(e)
-              }
-              onMouseLeave={() => onMouseLeave()}
-              fill={interpolator(idx)}
-              width={barWidth}
-              x={x}
-              y={barY}
-              height={barHeight}
-            />
-          </>
+          <rect
+            key={val[0]}
+            className="hover:cursor-pointer animate-[scale-bar-up_1.5s_cubic-bezier(0.25,1,0.5,1)_forwards]"
+            style={{
+              transformOrigin: "center bottom",
+              transform: "scale(1, 0)",
+            }}
+            onMouseMove={(e: React.MouseEvent<SVGRectElement>) =>
+              onMouseMove(e)
+            }
+            onMouseLeave={() => onMouseLeave()}
+            fill={interpolator(idx)}
+            width={barWidth}
+            x={x}
+            y={barY}
+            height={barHeight}
+          />
         );
       })}
     </g>
