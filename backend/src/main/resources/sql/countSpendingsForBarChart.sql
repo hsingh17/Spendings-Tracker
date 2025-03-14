@@ -76,8 +76,4 @@ FROM (
                 ELSE SUA.DATE
             END
         ) DESC
-    LIMIT
-        :limit
-    OFFSET
-        :offset
 ) AS A;

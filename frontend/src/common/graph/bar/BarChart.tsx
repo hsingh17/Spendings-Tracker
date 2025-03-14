@@ -6,6 +6,7 @@ import {
   SpendingListRowBarChart,
   SpendingsPage,
 } from "../../../utils/types";
+import PaginationBar from "../line/PaginationBar";
 import BarChartTooltip from "./BarChartTooltip";
 import Bars from "./Bars";
 
@@ -30,16 +31,17 @@ export type TooltipInfo = {
   contents: ToolTipContent[];
 };
 
-const BarChart: FC<BarChartProps> = ({ response, height, width }) => {
+const BarChart: FC<BarChartProps> = ({
+  response,
+  height,
+  width,
+  setSearchParams,
+}) => {
   const divRef = useRef<HTMLDivElement>(null);
   const [tooltipInfo, setTooltipInfo] = useState<Nullable<TooltipInfo>>(null);
-
+  const prev = response.metadata?.links.prev;
+  const next = response.metadata?.links.next;
   const data = response.data?.spendingPage.content;
-  if (!data || !data.length) {
-    // This component won't get rendered if there's no data.
-    // So just doing this to satisfy Typescript.
-    return <></>;
-  }
 
   const calculatePosStyle = () => {
     if (!divRef || !divRef.current || !tooltipInfo) {
@@ -52,6 +54,28 @@ const BarChart: FC<BarChartProps> = ({ response, height, width }) => {
       top: `${tooltipInfo.mousePos.mouseY}px`,
     };
   };
+
+  const onClickPaginationBar = (isLeft: boolean) => {
+    const link = isLeft
+      ? response.metadata?.links.prev
+      : response.metadata?.links.next;
+
+    if (!link) {
+      return;
+    }
+
+    const queryParams = new URLSearchParams(
+      link.substring(link.indexOf("?") + 1)
+    );
+
+    setSearchParams(queryParams);
+  };
+
+  if (!data || !data.length) {
+    // This component won't get rendered if there's no data.
+    // So just doing this to satisfy Typescript.
+    return <></>;
+  }
 
   return (
     <div className="relative overflow-y-hidden" ref={divRef}>
@@ -71,6 +95,10 @@ const BarChart: FC<BarChartProps> = ({ response, height, width }) => {
           divStyle={calculatePosStyle()}
         />
       )}
+
+      {prev && <PaginationBar isLeft={true} onClick={onClickPaginationBar} />}
+
+      {next && <PaginationBar isLeft={false} onClick={onClickPaginationBar} />}
     </div>
   );
 };

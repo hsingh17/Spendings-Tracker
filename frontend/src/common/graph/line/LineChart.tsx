@@ -96,7 +96,7 @@ const LineChart: FC<LineChartProps> = ({
     setTooltipPosition(pos);
   };
 
-  const onClickPaginationBar = (e: React.MouseEvent, isLeft: boolean) => {
+  const onClickPaginationBar = (isLeft: boolean) => {
     const link = isLeft
       ? response.metadata?.links.prev
       : response.metadata?.links.next;
