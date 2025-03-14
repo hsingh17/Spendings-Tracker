@@ -24,12 +24,12 @@ const Bars: FC<BarsProps> = ({
   const barWidth = width / spendings.length - 50;
   const xScale = scaleBand()
     .domain(spendings.map((d) => d.date.toString()))
-    .range([10, width]);
+    .range([100, width - 100]);
 
   // same with this -100
   const yScale = scaleLinear()
     .domain(extent(spendings, (d) => d.total) as [number, number])
-    .range([height - 100, height * 0.1]);
+    .range([height - 200, height * 0.1]);
 
   return (
     <svg>

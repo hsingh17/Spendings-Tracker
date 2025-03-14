@@ -6,7 +6,7 @@ import {
   scaleSequential,
 } from "d3";
 import { Dayjs } from "dayjs";
-import React, { Dispatch, FC, SetStateAction } from "react";
+import React, { Dispatch, FC, SetStateAction, useRef } from "react";
 import { Nullable, SpendingListRowBarChart } from "../../../utils/types";
 import { ToolTipContent, TooltipInfo } from "./BarChart";
 
@@ -29,6 +29,7 @@ const Bar: FC<BarProps> = ({
   currentTooltipDate,
   setTooltipInfo,
 }) => {
+  const textRef = useRef<SVGTextElement>(null);
   const zip = Object.entries(spending.categoryTotalMap);
   const x = xScale(spending.date.toString()) || 0;
   const y = yScale(spending.total);
@@ -36,7 +37,7 @@ const Bar: FC<BarProps> = ({
     .interpolator(interpolateRgb("#EEEEEE", "#00ADB5"))
     .domain([0, zip.length]);
   // -20 should be some function
-  let lastY = height - 20;
+  let lastY = height - 40;
 
   const onMouseMove = (e: React.MouseEvent<SVGRectElement>) => {
     const contents: ToolTipContent[] = zip.map((val, idx) => {
@@ -63,6 +64,16 @@ const Bar: FC<BarProps> = ({
     }
   };
 
+  const calculateTextXPos = () => {
+    if (!textRef || !textRef.current) {
+      return x;
+    }
+
+    const width = textRef.current.getBBox().width;
+
+    return x + (barWidth - width) / 2;
+  };
+
   return (
     <g>
       {zip.map((val, idx) => {
@@ -73,7 +84,6 @@ const Bar: FC<BarProps> = ({
 
         return (
           <rect
-            key={val[0]}
             className="hover:cursor-pointer animate-[scale-bar-up_1.5s_cubic-bezier(0.25,1,0.5,1)_forwards]"
             style={{
               transformOrigin: "center bottom",
@@ -91,6 +101,17 @@ const Bar: FC<BarProps> = ({
           />
         );
       })}
+
+      <text
+        x={calculateTextXPos()}
+        y={height - 10}
+        ref={textRef}
+        width={"fit"}
+        fill="#EEEEEE"
+        style={{ fontWeight: "600" }}
+      >
+        {spending.date.format("L")}
+      </text>
     </g>
   );
 };
