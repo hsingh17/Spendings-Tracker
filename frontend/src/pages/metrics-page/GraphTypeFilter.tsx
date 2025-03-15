@@ -21,13 +21,23 @@ const GraphTypeFilter: FC<GraphTypeFilterProps> = ({
       value: string;
     };
 
+    console.log(searchParams);
+
+    // Since we're changing the graph type, clear all other params
+    const keys = searchParams.keys();
+    for (const key of keys) {
+      console.log(key);
+
+      searchParams.delete(key);
+    }
+
     searchParams.set("graph-type", target.value);
     setSearchParams(searchParams);
   };
 
   return (
     <>
-      <label className="text-sm font-semibold mb-1">Graph type</label>
+      <label className="text-sm font-semibold mb-1">Graph Type</label>
       <select
         className="p-2 mb-2 rounded-lg"
         name="graph-type"

@@ -26,16 +26,26 @@ const GraphDataPointFilter: FC<GraphDataPointFilterProps> = ({
     setSearchParams(searchParams);
   };
 
+  const getListOfPageLimits = (): number[] => {
+    const ret = PAGE_LIMITS;
+    const graphType = searchParams.get("graph-type");
+    if (graphType && graphType === "Bar") {
+      return ret.slice(0, 3);
+    }
+
+    return ret;
+  };
+
   return (
     <>
-      <label className="text-sm font-semibold mb-1">Data points</label>
+      <label className="text-sm font-semibold mb-1">Data Points</label>
       <select
         className="p-2 mb-2 rounded-lg"
         name="data-points"
         value={getCurrentLimit()}
         onChange={(e: React.ChangeEvent) => onChange(e)}
       >
-        {PAGE_LIMITS.map((limit) => {
+        {getListOfPageLimits().map((limit) => {
           return <option key={limit}>{limit}</option>;
         })}
       </select>

@@ -31,8 +31,8 @@ const GraphGranularityFilter: FC<GraphGranularityFilter> = ({
     setSearchParams(searchParams);
   };
 
-  // Don't render for anything but line charts
-  if (graphType !== GraphTypes.Line) {
+  // Don't render for pie charts
+  if (graphType === GraphTypes.Pie) {
     return <></>;
   }
 

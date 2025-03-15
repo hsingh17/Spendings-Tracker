@@ -20,16 +20,14 @@ const Bars: FC<BarsProps> = ({
   currentTooltipDate,
   setTooltipInfo,
 }) => {
-  // TODO: Make the 50 some function of the current width + number of bars to display (spendings.length)
   const barWidth = width / spendings.length - 50;
   const xScale = scaleBand()
     .domain(spendings.map((d) => d.date.toString()))
     .range([100, width - 100]);
 
-  // same with this -100
   const yScale = scaleLinear()
     .domain(extent(spendings, (d) => d.total) as [number, number])
-    .range([height - 200, height * 0.1]);
+    .range([height * 0.5, height * 0.1]);
 
   return (
     <svg>
