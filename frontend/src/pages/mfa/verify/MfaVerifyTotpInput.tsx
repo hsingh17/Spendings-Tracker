@@ -22,7 +22,10 @@ const MfaVerifyTotpInput = () => {
     if (e.key === "Backspace" && idx !== 0) {
       // Tab back
       (e.currentTarget?.previousSibling as HTMLElement)?.focus();
-    } else if (Number.isInteger(Number.parseInt(e.key)) && idx !== 5) {
+    } else if (
+      Number.isInteger(Number.parseInt(e.key)) &&
+      idx !== totpCode.length - 1
+    ) {
       // Tab forward
       (e.currentTarget?.nextSibling as HTMLElement)?.focus();
     }

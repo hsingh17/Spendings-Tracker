@@ -7,6 +7,25 @@ type BarChartTooltipProps = {
   tooltipInfo: TooltipInfo;
 };
 
+function isOverflowing(
+  styleVal: string,
+  divVal: number,
+  windowVal: number,
+  threshHoldVal: number = 0
+): boolean {
+  const valNum = parseInt(styleVal, 10);
+  return valNum + divVal - windowVal > threshHoldVal;
+}
+
+function getTransformStyleVal(
+  isOverFlowingX: boolean,
+  valX: number,
+  isOverFlowingY: boolean,
+  valY: number
+): string {
+  return `translate(${isOverFlowingX ? `-${valX}px` : "0"}, ${isOverFlowingY ? `-${valY}px` : "0"}`;
+}
+
 const BarChartTooltip: FC<BarChartTooltipProps> = ({
   tooltipInfo,
   divStyle,
@@ -19,12 +38,27 @@ const BarChartTooltip: FC<BarChartTooltipProps> = ({
     // Determines if tooltip should "flip" in the case that rendering it makes it overflow
     if (ref && ref.current) {
       const divHeight = ref.current.clientHeight;
-      const styleTop = divStyle.top?.toString() || "";
-      const top = parseInt(styleTop, 10);
-      const overflowAmnt = top + divHeight - window.innerHeight;
+      const divWidth = ref.current.clientWidth;
+      const isOverFlowingY = isOverflowing(
+        divStyle.top?.toString() || "",
+        divHeight,
+        window.innerHeight
+      );
 
-      if (overflowAmnt > 0) {
-        styleToApply.transform = `translate(0, -${divHeight}px)`;
+      const isOverFlowingX = isOverflowing(
+        divStyle.left?.toString() || "",
+        divWidth,
+        window.innerWidth,
+        -250
+      );
+
+      if (isOverFlowingY || isOverFlowingX) {
+        styleToApply.transform = getTransformStyleVal(
+          isOverFlowingX,
+          divWidth,
+          isOverFlowingY,
+          divHeight
+        );
       } else {
         styleToApply.transform = "";
       }
