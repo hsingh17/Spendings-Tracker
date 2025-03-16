@@ -7,6 +7,7 @@ import {
 } from "d3";
 import { Dayjs } from "dayjs";
 import React, { Dispatch, FC, SetStateAction, useRef } from "react";
+import useDetectMobile from "../../../hooks/useDetectMobile";
 import { Nullable, SpendingListRowBarChart } from "../../../utils/types";
 import { ToolTipContent, TooltipInfo } from "./BarChart";
 
@@ -29,6 +30,7 @@ const Bar: FC<BarProps> = ({
   currentTooltipDate,
   setTooltipInfo,
 }) => {
+  const isMobile = useDetectMobile();
   const textRef = useRef<SVGTextElement>(null);
   const zip = Object.entries(spending.categoryTotalMap);
   const x = xScale(spending.date.toString()) || 0;
@@ -36,8 +38,7 @@ const Bar: FC<BarProps> = ({
   const interpolator = scaleSequential()
     .interpolator(interpolateRgb("#EEEEEE", "#00ADB5"))
     .domain([0, zip.length]);
-  // -20 should be some function
-  let lastY = height - 40;
+  let lastY = height - (isMobile ? 20 : 40);
 
   const onMouseMove = (e: React.MouseEvent<SVGRectElement>) => {
     const contents: ToolTipContent[] = zip.map((val, idx) => {

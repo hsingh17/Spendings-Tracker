@@ -13,6 +13,10 @@ type BarsProps = {
   setTooltipInfo: Dispatch<SetStateAction<Nullable<TooltipInfo>>>;
 };
 
+function calculateBarWidth(width: number, length: number): number {
+  return Math.min(115, width / length - 20);
+}
+
 const Bars: FC<BarsProps> = ({
   spendings,
   height,
@@ -20,10 +24,11 @@ const Bars: FC<BarsProps> = ({
   currentTooltipDate,
   setTooltipInfo,
 }) => {
-  const barWidth = width / spendings.length - 50;
+  const barWidth = calculateBarWidth(width, spendings.length);
+
   const xScale = scaleBand()
     .domain(spendings.map((d) => d.date.toString()))
-    .range([100, width - 100]);
+    .range([10, width]);
 
   const yScale = scaleLinear()
     .domain(extent(spendings, (d) => d.total) as [number, number])

@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import useDetectMobile from "../../hooks/useDetectMobile";
 import { PAGE_LIMITS } from "../../utils/constants";
 import { Nullable } from "../../utils/types";
 
@@ -11,6 +12,7 @@ const GraphDataPointFilter: FC<GraphDataPointFilterProps> = ({
   searchParams,
   setSearchParams,
 }) => {
+  const isMobile = useDetectMobile();
   const getCurrentLimit = (): number => {
     const params = new URLSearchParams(document.location.search);
     const limitStr: Nullable<string> = params.get("limit");
@@ -30,10 +32,10 @@ const GraphDataPointFilter: FC<GraphDataPointFilterProps> = ({
     const ret = PAGE_LIMITS;
     const graphType = searchParams.get("graph-type");
     if (graphType && graphType === "Bar") {
-      return ret.slice(0, 3);
+      return ret.slice(0, isMobile ? 2 : 3);
+    } else {
+      return ret;
     }
-
-    return ret;
   };
 
   return (

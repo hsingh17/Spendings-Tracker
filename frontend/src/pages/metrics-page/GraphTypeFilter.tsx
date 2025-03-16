@@ -21,13 +21,9 @@ const GraphTypeFilter: FC<GraphTypeFilterProps> = ({
       value: string;
     };
 
-    console.log(searchParams);
-
     // Since we're changing the graph type, clear all other params
-    const keys = searchParams.keys();
+    const keys = [...searchParams.keys()];
     for (const key of keys) {
-      console.log(key);
-
       searchParams.delete(key);
     }
 
