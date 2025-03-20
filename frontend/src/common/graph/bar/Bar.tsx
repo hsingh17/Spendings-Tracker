@@ -6,8 +6,7 @@ import {
   scaleSequential,
 } from "d3";
 import { Dayjs } from "dayjs";
-import React, { Dispatch, FC, SetStateAction, useRef } from "react";
-import useDetectMobile from "../../../hooks/useDetectMobile";
+import React, { Dispatch, FC, SetStateAction } from "react";
 import { Nullable, SpendingListRowBarChart } from "../../../utils/types";
 import { ToolTipContent, TooltipInfo } from "./BarChart";
 
@@ -30,15 +29,13 @@ const Bar: FC<BarProps> = ({
   currentTooltipDate,
   setTooltipInfo,
 }) => {
-  const isMobile = useDetectMobile();
-  const textRef = useRef<SVGTextElement>(null);
   const zip = Object.entries(spending.categoryTotalMap);
   const x = xScale(spending.date.toString()) || 0;
   const y = yScale(spending.total);
   const interpolator = scaleSequential()
     .interpolator(interpolateRgb("#EEEEEE", "#00ADB5"))
     .domain([0, zip.length]);
-  let lastY = height - (isMobile ? 30 : 40);
+  let lastY = height - 10;
 
   const onMouseMove = (e: React.MouseEvent<SVGRectElement>) => {
     const contents: ToolTipContent[] = zip.map((val, idx) => {
@@ -63,16 +60,6 @@ const Bar: FC<BarProps> = ({
     if (spending.date === currentTooltipDate) {
       setTooltipInfo(null);
     }
-  };
-
-  const calculateTextXPos = () => {
-    if (!textRef || !textRef.current) {
-      return x;
-    }
-
-    const width = textRef.current.getBBox().width;
-
-    return x + (barWidth - width) / 2;
   };
 
   return (
@@ -102,17 +89,6 @@ const Bar: FC<BarProps> = ({
           />
         );
       })}
-
-      <text
-        x={calculateTextXPos()}
-        y={height - 10}
-        ref={textRef}
-        width={"fit"}
-        fill="#EEEEEE"
-        style={{ fontWeight: "600" }}
-      >
-        {spending.date.format("L")}
-      </text>
     </g>
   );
 };
