@@ -25,7 +25,7 @@ type MetricsGraphContainerProps = {
   setSearchParams: (urlSearchParams: URLSearchParams) => void;
 };
 
-const MOBILE_HEIGHT = 315;
+const MOBILE_HEIGHT = 450;
 
 const GraphsContainer: FC<MetricsGraphContainerProps> = ({
   graphType,

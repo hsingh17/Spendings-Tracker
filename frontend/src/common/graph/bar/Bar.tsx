@@ -38,7 +38,7 @@ const Bar: FC<BarProps> = ({
   const interpolator = scaleSequential()
     .interpolator(interpolateRgb("#EEEEEE", "#00ADB5"))
     .domain([0, zip.length]);
-  let lastY = height - (isMobile ? 20 : 40);
+  let lastY = height - (isMobile ? 30 : 40);
 
   const onMouseMove = (e: React.MouseEvent<SVGRectElement>) => {
     const contents: ToolTipContent[] = zip.map((val, idx) => {
