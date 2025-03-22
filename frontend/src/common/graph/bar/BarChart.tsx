@@ -1,5 +1,6 @@
 import { Dayjs } from "dayjs";
-import { FC, useRef, useState } from "react";
+import { FC, useRef } from "react";
+import useTooltip from "../../../hooks/useTooltip";
 import {
   ApiResponse,
   Nullable,
@@ -38,19 +39,18 @@ const BarChart: FC<BarChartProps> = ({
   setSearchParams,
 }) => {
   const divRef = useRef<HTMLDivElement>(null);
-  const [tooltipInfo, setTooltipInfo] = useState<Nullable<TooltipInfo>>(null);
+  const tooltip = useTooltip();
   const prev = response.metadata?.links.prev;
   const next = response.metadata?.links.next;
   const data = response.data?.spendingPage.content;
 
-  const calculatePosStyle = () => {
+  const calculatePosStyle = (tooltipInfo: TooltipInfo) => {
     if (!divRef || !divRef.current || !tooltipInfo) {
       return {};
     }
 
-    const bBox = divRef.current.getBoundingClientRect();
     return {
-      left: `${tooltipInfo.mousePos.mouseX - bBox.left}px`,
+      left: `${tooltipInfo.mousePos.mouseX}px`,
       top: `${tooltipInfo.mousePos.mouseY}px`,
     };
   };
@@ -71,6 +71,19 @@ const BarChart: FC<BarChartProps> = ({
     setSearchParams(queryParams);
   };
 
+  const setTooltipInfo = (tooltipInfo: Nullable<TooltipInfo>) => {
+    tooltip.showTooltip(
+      tooltipInfo ? (
+        <BarChartTooltip
+          tooltipInfo={tooltipInfo}
+          divStyle={calculatePosStyle(tooltipInfo)}
+        />
+      ) : (
+        <></>
+      )
+    );
+  };
+
   if (!data || !data.length) {
     // This component won't get rendered if there's no data.
     // So just doing this to satisfy Typescript.
@@ -84,17 +97,9 @@ const BarChart: FC<BarChartProps> = ({
           spendings={data}
           height={height}
           width={width}
-          currentTooltipDate={tooltipInfo?.date}
           setTooltipInfo={setTooltipInfo}
         />
       </svg>
-
-      {tooltipInfo && divRef && (
-        <BarChartTooltip
-          tooltipInfo={tooltipInfo}
-          divStyle={calculatePosStyle()}
-        />
-      )}
 
       {prev && <PaginationBar isLeft={true} onClick={onClickPaginationBar} />}
 
