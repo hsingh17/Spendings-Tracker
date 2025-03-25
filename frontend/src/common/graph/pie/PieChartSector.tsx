@@ -1,6 +1,6 @@
 import { PieArcDatum } from "d3";
-import React, { Dispatch, FC, SetStateAction } from "react";
-import { Nullable, SpendingListRowPieChart } from "../../../utils/types";
+import React, { FC } from "react";
+import { SpendingListRowPieChart } from "../../../utils/types";
 
 type PieChartSectorProps = {
   datum: PieArcDatum<SpendingListRowPieChart>;
@@ -9,7 +9,7 @@ type PieChartSectorProps = {
   arcStyle?: string;
   path?: string;
   onMouseMove: (e: React.MouseEvent, i: number, angle: number) => void;
-  setTooltipIdx: Dispatch<SetStateAction<Nullable<number>>>;
+  hideTooltip: () => void;
 };
 
 const PieChartSector: FC<PieChartSectorProps> = ({
@@ -19,7 +19,7 @@ const PieChartSector: FC<PieChartSectorProps> = ({
   arcStyle,
   path,
   onMouseMove,
-  setTooltipIdx,
+  hideTooltip,
 }) => {
   return (
     <g
@@ -28,7 +28,7 @@ const PieChartSector: FC<PieChartSectorProps> = ({
       onMouseMove={(e) => {
         onMouseMove(e, idx, (datum.startAngle + datum.endAngle) / 2);
       }}
-      onMouseLeave={() => setTooltipIdx(null)}
+      onMouseLeave={() => hideTooltip()}
     >
       <path
         d={path}

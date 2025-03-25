@@ -72,16 +72,16 @@ const BarChart: FC<BarChartProps> = ({
   };
 
   const setTooltipInfo = (tooltipInfo: Nullable<TooltipInfo>) => {
-    tooltip.showTooltip(
-      tooltipInfo ? (
+    if (tooltipInfo) {
+      tooltip.showTooltip(
         <BarChartTooltip
           tooltipInfo={tooltipInfo}
           divStyle={calculatePosStyle(tooltipInfo)}
         />
-      ) : (
-        <></>
-      )
-    );
+      );
+    } else {
+      tooltip.hideTooltip();
+    }
   };
 
   if (!data || !data.length) {

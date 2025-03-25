@@ -1,6 +1,7 @@
 import { PieArcDatum, arc, interpolateRgb, pie, scaleSequential } from "d3";
 import React, { FC, useState } from "react";
 import useDetectMobile from "../../../hooks/useDetectMobile";
+import useTooltip from "../../../hooks/useTooltip";
 import {
   ApiResponse,
   Nullable,
@@ -37,9 +38,8 @@ function calculateDisplacedCoords(angle: number): number[] {
 }
 
 const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
+  const tooltip = useTooltip();
   const [tooltipIdx, setTooltipIdx] = useState<Nullable<number>>(null);
-  const [tooltipPosition, setTooltipPosition] =
-    useState<Nullable<TooltipPosition>>(null);
   const [arcStyle, setArcStyle] = useState<string>();
   const data = response.data?.spendingPage.content;
 
@@ -70,14 +70,31 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
     );
     const [x, y] = calculateDisplacedCoords(curAngle);
 
-    setArcStyle(`translate(${x}px, ${y}px)`);
-    setTooltipIdx(idx);
-    setTooltipPosition({
-      // Need the width / 2 and height / 2 since we transform the svg group by that amount
-      // The - 75 is a magic number to make tooltip appear above the mouse pointer not below
-      left: svgPoint.x + width / 2,
+    // Need the height / 2 since we transform the svg group by that amount
+    // The - 75 is a magic number to make tooltip appear above the mouse pointer not below
+    const pos: TooltipPosition = {
+      left: e.clientX,
       top: svgPoint.y + height / 2 - 75,
-    });
+    };
+
+    if (data) {
+      tooltip.showTooltip(
+        <CategoricalChartTooltip
+          category={data[idx].category}
+          total={data[idx].total}
+          tooltipPosition={pos}
+        />
+      );
+    }
+
+    setTooltipIdx(idx);
+    setArcStyle(`translate(${x}px, ${y}px)`);
+  };
+
+  const hideTooltip = () => {
+    tooltip.hideTooltip();
+    setArcStyle(undefined);
+    setTooltipIdx(null);
   };
 
   return (
@@ -101,7 +118,7 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
                 fill={interpolatorScale(i)}
                 arcStyle={i == tooltipIdx ? arcStyle : undefined}
                 path={arcGenerator(d) || ""}
-                setTooltipIdx={setTooltipIdx}
+                hideTooltip={hideTooltip}
                 onMouseMove={showTooltip}
               />
             );
@@ -110,14 +127,6 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
           <PieChartClip outerRadius={outerRadius} innerRadius={innerRadius} />
         </g>
       </svg>
-
-      <CategoricalChartTooltip
-        category={
-          tooltipIdx || tooltipIdx === 0 ? data[tooltipIdx].category : ""
-        }
-        total={tooltipIdx || tooltipIdx === 0 ? data[tooltipIdx].total : NaN}
-        tooltipPosition={tooltipPosition}
-      />
     </div>
   );
 };

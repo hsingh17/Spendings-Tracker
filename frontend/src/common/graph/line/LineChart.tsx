@@ -1,6 +1,7 @@
 import { extent, line, scaleLinear, scaleTime } from "d3";
 import { Dayjs } from "dayjs";
 import React, { FC, useState } from "react";
+import useTooltip from "../../../hooks/useTooltip";
 import ArrayUtils from "../../../utils/array-utils";
 import {
   ApiResponse,
@@ -47,9 +48,7 @@ const LineChart: FC<LineChartProps> = ({
   const next = response.metadata?.links.next;
   const margins = calculateMargins(height, width);
   const [tracerX, setTracerX] = useState<number>(TRACER_X_INITIAL);
-  const [tooltipIdx, setTooltipIdx] = useState<Nullable<number>>(null);
-  const [tooltipPosition, setTooltipPosition] =
-    useState<Nullable<TooltipPosition>>(null);
+  const tooltip = useTooltip();
 
   const moveTracerMouse = (e: React.MouseEvent) => {
     moveTracer(e.clientX, e.clientY, e.currentTarget);
@@ -86,14 +85,23 @@ const LineChart: FC<LineChartProps> = ({
         minDist = d;
         idx = i;
         pos = {
-          left: svgPoint.x,
+          left: clientX,
           top: yScale(spendingListRow.total),
         };
       }
     }
 
-    setTooltipIdx(idx === -1 ? null : idx);
-    setTooltipPosition(pos);
+    if (idx !== -1 && data) {
+      tooltip.showTooltip(
+        <LineChartTooltip
+          date={data[idx].date}
+          total={data[idx].total}
+          tooltipPosition={pos}
+        />
+      );
+    } else {
+      tooltip.hideTooltip();
+    }
   };
 
   const onClickPaginationBar = (isLeft: boolean) => {
@@ -169,7 +177,6 @@ const LineChart: FC<LineChartProps> = ({
               idx={idx}
               key={spendingListRow.date.toISOString()}
               spendingListRow={spendingListRow}
-              setTooltipIdx={setTooltipIdx}
               xScale={xScale}
               yScale={yScale}
             />
@@ -178,12 +185,6 @@ const LineChart: FC<LineChartProps> = ({
           <XTicks xScale={xScale} xTicks={xTicks} y={height - margins.bottom} />
         </g>
       </svg>
-
-      <LineChartTooltip
-        date={tooltipIdx || tooltipIdx === 0 ? data[tooltipIdx].date : null}
-        total={tooltipIdx || tooltipIdx === 0 ? data[tooltipIdx].total : NaN}
-        tooltipPosition={tooltipPosition}
-      />
 
       {prev && <PaginationBar isLeft={true} onClick={onClickPaginationBar} />}
       {next && <PaginationBar isLeft={false} onClick={onClickPaginationBar} />}

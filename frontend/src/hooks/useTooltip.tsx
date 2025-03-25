@@ -9,5 +9,11 @@ export default function useTooltip() {
     }
   };
 
-  return { showTooltip: showTooltip };
+  const hideTooltip = () => {
+    if (tooltipRefContext && tooltipRefContext.setTooltip) {
+      tooltipRefContext.setTooltip(<></>);
+    }
+  };
+
+  return { showTooltip: showTooltip, hideTooltip: hideTooltip };
 }
