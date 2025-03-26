@@ -153,7 +153,7 @@ const LineChart: FC<LineChartProps> = ({
   }
 
   return (
-    <div className="relative">
+    <div className="relative w-fit">
       <svg
         height={height}
         width={width}

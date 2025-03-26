@@ -1,4 +1,5 @@
 import useUser from "../../hooks/useUser";
+import DashboardChartsContainer from "./component/DashboardChartsContainer";
 import RecentSpendings from "./component/RecentSpendings";
 
 const Dashboard = () => {
@@ -12,7 +13,7 @@ const Dashboard = () => {
         Welcome back <span className="text-theme-cta">{user?.username}</span>
       </h1>
       <RecentSpendings />
-      {/* <DashboardChartsContainer /> */}
+      <DashboardChartsContainer />
     </div>
   );
 };
