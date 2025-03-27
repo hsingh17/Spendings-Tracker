@@ -25,7 +25,8 @@ type LineChartProps = {
   width: number;
   height: number;
   response: ApiResponse<SpendingsPage<SpendingListRowLineChart>>;
-  setSearchParams: (urlSearchParams: URLSearchParams) => void;
+  allowPagination?: boolean;
+  setSearchParams?: (urlSearchParams: URLSearchParams) => void;
 };
 
 function calculateMargins(height: number, width: number) {
@@ -41,6 +42,7 @@ const LineChart: FC<LineChartProps> = ({
   response,
   height,
   width,
+  allowPagination = true,
   setSearchParams,
 }) => {
   const data = response.data?.spendingPage.content;
@@ -117,7 +119,7 @@ const LineChart: FC<LineChartProps> = ({
       link.substring(link.indexOf("?") + 1)
     );
 
-    setSearchParams(queryParams);
+    setSearchParams?.(queryParams);
   };
 
   const xScale = scaleTime()
@@ -186,8 +188,13 @@ const LineChart: FC<LineChartProps> = ({
         </g>
       </svg>
 
-      {prev && <PaginationBar isLeft={true} onClick={onClickPaginationBar} />}
-      {next && <PaginationBar isLeft={false} onClick={onClickPaginationBar} />}
+      {allowPagination && prev && (
+        <PaginationBar isLeft={true} onClick={onClickPaginationBar} />
+      )}
+
+      {allowPagination && next && (
+        <PaginationBar isLeft={false} onClick={onClickPaginationBar} />
+      )}
     </div>
   );
 };
