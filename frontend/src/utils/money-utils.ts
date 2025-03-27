@@ -31,9 +31,12 @@ const MoneyUtils = {
     if (!json) {
       return "USD";
     }
-
-    const obj: Currency = JSON.parse(json);
-    return obj ? obj.shortName : "USD";
+    try {
+      const obj: Currency = JSON.parse(json);
+      return obj ? obj.shortName : "USD";
+    } catch {
+      return "USD";
+    }
   },
 
   getUserCurrencySymbol(): string {

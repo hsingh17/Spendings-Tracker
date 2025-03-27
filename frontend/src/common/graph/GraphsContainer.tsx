@@ -95,7 +95,6 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({
     // Mount a ResizeObserver to watch for any changes to the div element being resized
     const resizeObserver = new ResizeObserver(handleResize);
     resizeObserver.observe(ref.current);
-
     return () => resizeObserver.disconnect();
   }, [isMobile]);
 
