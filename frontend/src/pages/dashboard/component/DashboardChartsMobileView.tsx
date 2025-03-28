@@ -13,8 +13,6 @@ const DashboardChartsMobileView: FC<DashboardChartsSubContainerProps> = ({
   pieChartResponse,
   width = screen.availWidth,
 }) => {
-  console.log(barChartResponse, pieChartResponse);
-
   return (
     <div className="flex flex-col w-full h-full">
       <DashboardChartContainer>
