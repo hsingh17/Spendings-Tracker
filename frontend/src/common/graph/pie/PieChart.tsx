@@ -20,7 +20,6 @@ type PieChartProps = {
   width: number;
   height: number;
   response: ApiResponse<SpendingsPage<SpendingListRowPieChart>>;
-  setSearchParams: (urlSearchParams: URLSearchParams) => void;
 };
 
 function calculateDisplacedCoords(angle: number): number[] {

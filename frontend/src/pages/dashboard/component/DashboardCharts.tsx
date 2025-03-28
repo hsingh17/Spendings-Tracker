@@ -29,6 +29,7 @@ const LINE_CHART_URL_SEARCH_PARAMS = new URLSearchParams([
 const BAR_CHART_URL_SEARCH_PARAMS = new URLSearchParams([
   ["graph-type", "Bar"],
   ["granularity", "Day"],
+  ["limit", "10"],
   ["page", "0"],
 ]);
 const PIE_CHART_URL_SEARCH_PARAMS = new URLSearchParams([

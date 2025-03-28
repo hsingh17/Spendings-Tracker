@@ -69,7 +69,6 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({
             response={responseNotNull}
             height={height}
             width={width}
-            setSearchParams={setSearchParams}
           />
         );
       case GraphTypes.Bar:

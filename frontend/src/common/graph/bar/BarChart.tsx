@@ -15,7 +15,8 @@ type BarChartProps = {
   width: number;
   height: number;
   response: ApiResponse<SpendingsPage<SpendingListRowBarChart>>;
-  setSearchParams: (urlSearchParams: URLSearchParams) => void;
+  allowPagination?: boolean;
+  setSearchParams?: (urlSearchParams: URLSearchParams) => void;
 };
 
 export type ToolTipContent = {
@@ -36,6 +37,7 @@ const BarChart: FC<BarChartProps> = ({
   response,
   height,
   width,
+  allowPagination = true,
   setSearchParams,
 }) => {
   const divRef = useRef<HTMLDivElement>(null);
@@ -68,7 +70,7 @@ const BarChart: FC<BarChartProps> = ({
       link.substring(link.indexOf("?") + 1)
     );
 
-    setSearchParams(queryParams);
+    setSearchParams?.(queryParams);
   };
 
   const setTooltipInfo = (tooltipInfo: Nullable<TooltipInfo>) => {
@@ -101,9 +103,12 @@ const BarChart: FC<BarChartProps> = ({
         />
       </svg>
 
-      {prev && <PaginationBar isLeft={true} onClick={onClickPaginationBar} />}
-
-      {next && <PaginationBar isLeft={false} onClick={onClickPaginationBar} />}
+      {allowPagination && prev && (
+        <PaginationBar isLeft={true} onClick={onClickPaginationBar} />
+      )}
+      {allowPagination && next && (
+        <PaginationBar isLeft={false} onClick={onClickPaginationBar} />
+      )}
     </div>
   );
 };
