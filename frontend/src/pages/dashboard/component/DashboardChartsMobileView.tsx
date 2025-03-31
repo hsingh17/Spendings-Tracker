@@ -15,16 +15,16 @@ const DashboardChartsMobileView: FC<DashboardChartsSubContainerProps> = ({
 }) => {
   return (
     <div className="flex flex-col w-full h-full">
-      <DashboardChartContainer>
+      <DashboardChartContainer additionalStyles="mb-2">
         <LineChart
           width={width}
-          response={lineChartResponse!}
+          response={lineChartResponse}
           height={CHART_HEIGHT}
           allowPagination={false}
         />
       </DashboardChartContainer>
 
-      <DashboardChartContainer>
+      <DashboardChartContainer additionalStyles="mb-2">
         <BarChart
           width={width}
           height={CHART_HEIGHT}
@@ -33,7 +33,7 @@ const DashboardChartsMobileView: FC<DashboardChartsSubContainerProps> = ({
         />
       </DashboardChartContainer>
 
-      <DashboardChartContainer>
+      <DashboardChartContainer additionalStyles="mb-2">
         <PieChart
           width={width}
           height={CHART_HEIGHT}

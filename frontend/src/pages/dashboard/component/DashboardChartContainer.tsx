@@ -10,9 +10,7 @@ const DashboardChartContainer: FC<DashboardChartContainerProps> = ({
   additionalStyles = "",
 }) => {
   return (
-    <div
-      className={`bg-gray-700 mb-2 rounded-xl shadow-2xl ${additionalStyles}`}
-    >
+    <div className={`bg-gray-700 rounded-xl shadow-2xl ${additionalStyles}`}>
       {children}
     </div>
   );

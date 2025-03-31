@@ -18,6 +18,7 @@ export type DashboardChartsSubContainerProps = {
   barChartResponse: ApiResponse<SpendingsPage<SpendingListRowBarChart>>;
   pieChartResponse: ApiResponse<SpendingsPage<SpendingListRowPieChart>>;
   width?: number;
+  height?: number;
 };
 
 const DASHBORD_DESKTOP_VIEW_MIN_WIDTH = 1000;
@@ -40,6 +41,7 @@ const PIE_CHART_URL_SEARCH_PARAMS = new URLSearchParams([
 const DashboardCharts = () => {
   const tooltip = useTooltip();
   const [width, setWidth] = useState<number>(0);
+  const [height, setHeight] = useState<number>(0);
   const ref = useRef<HTMLDivElement>(null);
   const {
     data: lineChartResponse,
@@ -63,6 +65,7 @@ const DashboardCharts = () => {
     entries: ResizeObserverEntry[]
   ) => {
     setWidth(entries[0].contentRect.width);
+    setHeight(entries[0].contentRect.height);
     tooltip.hideTooltip();
   };
 
@@ -87,7 +90,15 @@ const DashboardCharts = () => {
     } else if (isError()) {
       return <Error />;
     } else if (width >= DASHBORD_DESKTOP_VIEW_MIN_WIDTH) {
-      return <DashboardChartsDesktopView />;
+      return (
+        <DashboardChartsDesktopView
+          lineChartResponse={lineChartResponse!}
+          barChartResponse={barChartResponse!}
+          pieChartResponse={pieChartResponse!}
+          width={width}
+          height={height}
+        />
+      );
     } else {
       return (
         <DashboardChartsMobileView

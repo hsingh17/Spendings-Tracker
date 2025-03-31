@@ -62,18 +62,12 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
     .outerRadius(outerRadius);
 
   const showTooltip = (e: React.MouseEvent, idx: number, curAngle: number) => {
-    const domPoint = new DOMPointReadOnly(e.clientX, e.clientY);
-    const svgNode = e.currentTarget as SVGGraphicsElement;
-    const svgPoint = domPoint.matrixTransform(
-      svgNode.getScreenCTM()?.inverse()
-    );
     const [x, y] = calculateDisplacedCoords(curAngle);
 
-    // Need the height / 2 since we transform the svg group by that amount
     // The - 75 is a magic number to make tooltip appear above the mouse pointer not below
     const pos: TooltipPosition = {
       left: e.clientX,
-      top: svgPoint.y + height / 2 - 75,
+      top: e.clientY - 75,
     };
 
     if (data) {
