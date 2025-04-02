@@ -69,8 +69,7 @@ const BarChartTooltip: FC<BarChartTooltipProps> = ({
       const isOverFlowingX = isOverflowing(
         divStyle.left?.toString() || "",
         divWidth,
-        window.innerWidth,
-        -250
+        window.innerWidth
       );
 
       if (isOverFlowingY || isOverFlowingX) {
