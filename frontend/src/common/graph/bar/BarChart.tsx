@@ -1,71 +1,114 @@
-import { extent, scaleBand, scaleLinear } from "d3";
-import { FC, useState } from "react";
+import { Dayjs } from "dayjs";
+import { FC, useRef } from "react";
+import useTooltip from "../../../hooks/useTooltip";
 import {
   ApiResponse,
   Nullable,
+  SpendingListRowBarChart,
   SpendingsPage,
-  TooltipPosition,
 } from "../../../utils/types";
-import CategoricalChartTooltip from "../CategoricalChartTooltip";
+import PaginationBar from "../line/PaginationBar";
+import BarChartTooltip from "./BarChartTooltip";
 import Bars from "./Bars";
 
 type BarChartProps = {
   width: number;
   height: number;
-  response: ApiResponse<SpendingsPage>;
-  setSearchParams: (urlSearchParams: URLSearchParams) => void;
+  response: ApiResponse<SpendingsPage<SpendingListRowBarChart>>;
+  allowPagination?: boolean;
+  setSearchParams?: (urlSearchParams: URLSearchParams) => void;
 };
 
-const BarChart: FC<BarChartProps> = ({ response, height, width }) => {
-  const [tooltipIdx, setTooltipIdx] = useState<Nullable<number>>(null);
-  const [tooltipPosition, setTooltipPosition] =
-    useState<Nullable<TooltipPosition>>(null);
+export type ToolTipContent = {
+  category: string;
+  total: number;
+  colorHex: string;
+};
+export type TooltipInfo = {
+  date: Dayjs;
+  mousePos: {
+    mouseX: number;
+    mouseY: number;
+  };
+  contents: ToolTipContent[];
+};
 
+const BarChart: FC<BarChartProps> = ({
+  response,
+  height,
+  width,
+  allowPagination = true,
+  setSearchParams,
+}) => {
+  const divRef = useRef<HTMLDivElement>(null);
+  const tooltip = useTooltip();
+  const prev = response.metadata?.links.prev;
+  const next = response.metadata?.links.next;
   const data = response.data?.spendingPage.content;
+
+  const calculatePosStyle = (tooltipInfo: TooltipInfo) => {
+    if (!divRef || !divRef.current || !tooltipInfo) {
+      return {};
+    }
+
+    return {
+      left: `${tooltipInfo.mousePos.mouseX}px`,
+      top: `${tooltipInfo.mousePos.mouseY}px`,
+    };
+  };
+
+  const onClickPaginationBar = (isLeft: boolean) => {
+    const link = isLeft
+      ? response.metadata?.links.prev
+      : response.metadata?.links.next;
+
+    if (!link) {
+      return;
+    }
+
+    const queryParams = new URLSearchParams(
+      link.substring(link.indexOf("?") + 1)
+    );
+
+    setSearchParams?.(queryParams);
+  };
+
+  const setTooltipInfo = (tooltipInfo: Nullable<TooltipInfo>) => {
+    if (tooltipInfo) {
+      tooltip.showTooltip(
+        <BarChartTooltip
+          tooltipInfo={tooltipInfo}
+          divStyle={calculatePosStyle(tooltipInfo)}
+        />
+      );
+    } else {
+      tooltip.hideTooltip();
+    }
+  };
+
   if (!data || !data.length) {
     // This component won't get rendered if there's no data.
     // So just doing this to satisfy Typescript.
     return <></>;
   }
 
-  const xScale = scaleBand()
-    .domain(data.map((d) => d.category))
-    .range([0, width])
-    .padding(0.4);
-
-  const yScale = scaleLinear()
-    .domain(extent(data, (d) => d.total) as [number, number])
-    .range([height * 0.1, height - 100]);
-
-  const onMouseOver = (idx: number, x: number, y: number) => {
-    setTooltipIdx(idx);
-    setTooltipPosition({
-      left: x,
-      top: y - 75,
-    });
-  };
-
   return (
-    <div className="relative">
+    <div className="relative overflow-y-hidden" ref={divRef}>
       <svg height={height} width={width}>
         <Bars
-          setTooltipIdx={setTooltipIdx}
-          onMouseOver={onMouseOver}
-          categoricalSpendings={data}
+          spendings={data}
           height={height}
-          xScale={xScale}
-          yScale={yScale}
+          width={width}
+          setTooltipInfo={setTooltipInfo}
         />
       </svg>
 
-      <CategoricalChartTooltip
-        enableDynamicTooltip={false}
-        category={
-          tooltipIdx || tooltipIdx === 0 ? data[tooltipIdx].category : ""
-        }
-        total={tooltipIdx || tooltipIdx === 0 ? data[tooltipIdx].total : NaN}
-        tooltipPosition={tooltipPosition}
-      />
+      {allowPagination && prev && (
+        <PaginationBar isLeft={true} onClick={onClickPaginationBar} />
+      )}
+      {allowPagination && next && (
+        <PaginationBar isLeft={false} onClick={onClickPaginationBar} />
+      )}
     </div>
   );
 };

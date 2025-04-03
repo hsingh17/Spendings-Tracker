@@ -58,7 +58,6 @@ const SaveSpendingsModalMemo: FC<SaveSpendingsModalMemoProps> = ({
           onChange={onChange}
           onFocus={onFocus}
           onBlur={onBlur}
-          onSubmitCapture={() => console.log("hello, submitting")}
         />
       </div>
     </>

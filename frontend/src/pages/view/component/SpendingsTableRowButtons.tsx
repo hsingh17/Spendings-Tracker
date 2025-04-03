@@ -1,11 +1,11 @@
 import { FC } from "react";
 import DeleteIcon from "../../../assets/components/DeleteIcon";
 import EditIcon from "../../../assets/components/EditIcon";
-import { SpendingListRow } from "../../../utils/types";
+import { SpendingListRowLineChart } from "../../../utils/types";
 
 type SpendingsTableRowButtonsProps = {
-  spending: SpendingListRow;
-  setSpendingToDelete: (spending: SpendingListRow) => void;
+  spending: SpendingListRowLineChart;
+  setSpendingToDelete: (spending: SpendingListRowLineChart) => void;
   handleEdit: () => void;
 };
 

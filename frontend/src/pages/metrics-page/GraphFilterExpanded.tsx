@@ -26,7 +26,7 @@ const GraphFilterExpanded: FC<GraphFilterExpandedProps> = ({
   setGraphFilterState,
 }) => {
   return (
-    <>
+    <div className="flex flex-col md:mt-0">
       <GraphFilterHeader setGraphFilterState={setGraphFilterState} />
 
       <GraphTypeFilter
@@ -60,7 +60,7 @@ const GraphFilterExpanded: FC<GraphFilterExpandedProps> = ({
       >
         Reset
       </div>
-    </>
+    </div>
   );
 };
 

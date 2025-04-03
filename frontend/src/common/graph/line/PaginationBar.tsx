@@ -1,10 +1,10 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { ReactComponent as LeftArrow } from "../../../assets/raw/left-arrow.svg";
 import { ReactComponent as RightArrow } from "../../../assets/raw/right-arrow.svg";
 
 type PaginationBarProps = {
   isLeft: boolean;
-  onClick: (e: React.MouseEvent, isLeft: boolean) => void;
+  onClick: (isLeft: boolean) => void;
 };
 
 const PaginationBar: FC<PaginationBarProps> = ({ isLeft, onClick }) => {
@@ -14,7 +14,7 @@ const PaginationBar: FC<PaginationBarProps> = ({ isLeft, onClick }) => {
         flex flex-row items-center hover:cursor-pointer ${
           isLeft ? "left-0" : "right-0"
         }`}
-      onClick={(e: React.MouseEvent) => onClick(e, isLeft)}
+      onClick={() => onClick(isLeft)}
     >
       {isLeft ? (
         <LeftArrow className="w-10 h-10 ml-auto" stroke="gray" />

@@ -1,49 +1,45 @@
-import { ScaleBand, ScaleLinear } from "d3";
-import { Dispatch, FC, SetStateAction } from "react";
-import { CategoricalSpendings, Nullable } from "../../../utils/types";
+import { extent, scaleBand, scaleLinear } from "d3";
+import { FC } from "react";
+import { Nullable, SpendingListRowBarChart } from "../../../utils/types";
+import Bar from "./Bar";
+import { TooltipInfo } from "./BarChart";
 
 type BarsProps = {
-  categoricalSpendings: CategoricalSpendings[];
+  spendings: SpendingListRowBarChart[];
   height: number;
-  xScale: ScaleBand<string>;
-  yScale: ScaleLinear<number, number, never>;
-  setTooltipIdx: Dispatch<SetStateAction<Nullable<number>>>;
-  onMouseOver: (idx: number, x: number, y: number) => void;
+  width: number;
+  setTooltipInfo: (tooltipInfo: Nullable<TooltipInfo>) => void;
 };
 
-const Bars: FC<BarsProps> = ({
-  categoricalSpendings,
-  height,
-  xScale,
-  yScale,
-  setTooltipIdx,
-  onMouseOver,
-}) => {
+function calculateBarWidth(width: number, length: number): number {
+  return Math.min(115, width / length - 20);
+}
+
+const Bars: FC<BarsProps> = ({ spendings, height, width, setTooltipInfo }) => {
+  const barWidth = calculateBarWidth(width, spendings.length);
+
+  const xScale = scaleBand()
+    .domain(spendings.map((d) => d.date.toString()))
+    .range([10, width]);
+
+  const yScale = scaleLinear()
+    .domain(extent(spendings, (d) => d.total) as [number, number])
+    .range([height * 0.5, height * 0.1]);
+
   return (
-    <>
-      {categoricalSpendings.map((categoricalSpending, i) => {
-        const x = xScale(categoricalSpending.category) || 0;
-        const barHeight = yScale(categoricalSpending.total);
-        const y = height - barHeight;
-        return (
-          <rect
-            key={categoricalSpending.category}
-            className="hover:cursor-pointer hover:fill-theme-cta animate-[scale-bar-up_1.5s_cubic-bezier(0.25,1,0.5,1)_forwards]"
-            style={{
-              transformOrigin: "center bottom",
-              transform: "scale(1, 0)",
-            }}
-            onMouseOver={() => onMouseOver(i, x, y)}
-            onMouseLeave={() => setTooltipIdx(null)}
-            fill="#EEEEEE"
-            width={xScale.bandwidth()}
-            x={x}
-            y={y}
-            height={barHeight}
-          />
-        );
-      })}
-    </>
+    <svg>
+      {spendings.map((spending) => (
+        <Bar
+          key={spending.date.toString()}
+          spending={spending}
+          barWidth={barWidth}
+          height={height}
+          xScale={xScale}
+          yScale={yScale}
+          setTooltipInfo={setTooltipInfo}
+        />
+      ))}
+    </svg>
   );
 };
 

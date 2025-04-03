@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import Card from "../../../common/Card";
 import { DATE_ISO_FORMAT, SAVE_SPENDINGS_PAGE } from "../../../utils/constants";
 import MoneyUtils from "../../../utils/money-utils";
-import { SpendingListRow } from "../../../utils/types";
+import { SpendingListRowLineChart } from "../../../utils/types";
 
 type RecentSpendingsCardProps = {
-  spendingListRow: SpendingListRow;
+  spendingListRow: SpendingListRowLineChart;
 };
 
 const RecentSpendingsCard: FC<RecentSpendingsCardProps> = ({

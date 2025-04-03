@@ -1,11 +1,12 @@
 import { extent, line, scaleLinear, scaleTime } from "d3";
 import { Dayjs } from "dayjs";
-import React, { FC, useState } from "react";
+import React, { FC, useRef, useState } from "react";
+import useTooltip from "../../../hooks/useTooltip";
 import ArrayUtils from "../../../utils/array-utils";
 import {
   ApiResponse,
   Nullable,
-  SpendingListRow,
+  SpendingListRowLineChart,
   SpendingsPage,
   TooltipPosition,
 } from "../../../utils/types";
@@ -23,8 +24,9 @@ export const POINT_RADIUS = 7;
 type LineChartProps = {
   width: number;
   height: number;
-  response: ApiResponse<SpendingsPage>;
-  setSearchParams: (urlSearchParams: URLSearchParams) => void;
+  response: ApiResponse<SpendingsPage<SpendingListRowLineChart>>;
+  allowPagination?: boolean;
+  setSearchParams?: (urlSearchParams: URLSearchParams) => void;
 };
 
 function calculateMargins(height: number, width: number) {
@@ -40,16 +42,16 @@ const LineChart: FC<LineChartProps> = ({
   response,
   height,
   width,
+  allowPagination = true,
   setSearchParams,
 }) => {
+  const ref = useRef<HTMLDivElement>(null);
   const data = response.data?.spendingPage.content;
   const prev = response.metadata?.links.prev;
   const next = response.metadata?.links.next;
   const margins = calculateMargins(height, width);
   const [tracerX, setTracerX] = useState<number>(TRACER_X_INITIAL);
-  const [tooltipIdx, setTooltipIdx] = useState<Nullable<number>>(null);
-  const [tooltipPosition, setTooltipPosition] =
-    useState<Nullable<TooltipPosition>>(null);
+  const tooltip = useTooltip();
 
   const moveTracerMouse = (e: React.MouseEvent) => {
     moveTracer(e.clientX, e.clientY, e.currentTarget);
@@ -63,12 +65,12 @@ const LineChart: FC<LineChartProps> = ({
   const moveTracer = (
     clientX: number,
     clientY: number,
-    currentTarget: EventTarget,
+    currentTarget: EventTarget
   ) => {
     const domPoint = new DOMPointReadOnly(clientX, clientY);
     const svgNode = currentTarget as SVGGraphicsElement;
     const svgPoint = domPoint.matrixTransform(
-      svgNode.getScreenCTM()?.inverse(),
+      svgNode.getScreenCTM()?.inverse()
     );
     setTracerX(svgPoint.x);
 
@@ -77,6 +79,7 @@ const LineChart: FC<LineChartProps> = ({
 
     let idx = -1;
     let minDist = POINT_RADIUS * 3;
+    const offset = ref.current?.getBoundingClientRect().top || 0;
 
     for (let i = 0; i < data!.length; i++) {
       const spendingListRow = data![i];
@@ -86,17 +89,26 @@ const LineChart: FC<LineChartProps> = ({
         minDist = d;
         idx = i;
         pos = {
-          left: svgPoint.x,
-          top: yScale(spendingListRow.total),
+          left: clientX,
+          top: yScale(spendingListRow.total) + offset,
         };
       }
     }
 
-    setTooltipIdx(idx === -1 ? null : idx);
-    setTooltipPosition(pos);
+    if (idx !== -1 && data) {
+      tooltip.showTooltip(
+        <LineChartTooltip
+          date={data[idx].date}
+          total={data[idx].total}
+          tooltipPosition={pos}
+        />
+      );
+    } else {
+      tooltip.hideTooltip();
+    }
   };
 
-  const onClickPaginationBar = (e: React.MouseEvent, isLeft: boolean) => {
+  const onClickPaginationBar = (isLeft: boolean) => {
     const link = isLeft
       ? response.metadata?.links.prev
       : response.metadata?.links.next;
@@ -106,21 +118,28 @@ const LineChart: FC<LineChartProps> = ({
     }
 
     const queryParams = new URLSearchParams(
-      link.substring(link.indexOf("?") + 1),
+      link.substring(link.indexOf("?") + 1)
     );
 
-    setSearchParams(queryParams);
+    setSearchParams?.(queryParams);
+  };
+
+  const onMouseLeave = () => {
+    setTracerX(TRACER_X_INITIAL);
+    tooltip.hideTooltip();
   };
 
   const xScale = scaleTime()
-    .domain(extent(data!, (d: SpendingListRow) => d.date) as [Dayjs, Dayjs])
+    .domain(
+      extent(data!, (d: SpendingListRowLineChart) => d.date) as [Dayjs, Dayjs]
+    )
     .range([margins.left, width - margins.right]);
 
   const yScale = scaleLinear()
     .domain(extent(data!, (d) => d.total) as [number, number])
     .range([height - margins.top, margins.bottom]);
 
-  const lineFn = line<SpendingListRow>()
+  const lineFn = line<SpendingListRowLineChart>()
     .x((d) => xScale(d.date))
     .y((d) => yScale(d.total));
 
@@ -130,7 +149,7 @@ const LineChart: FC<LineChartProps> = ({
   // Display at least 2
   const xTicksToShow = Math.max(
     2,
-    Math.floor(xScale.ticks().length * Math.min(width / 2000, 1)),
+    Math.floor(xScale.ticks().length * Math.min(width / 2000, 1))
   );
 
   const xTicks = ArrayUtils.spreadEvenly<Date>(xScale.ticks(), xTicksToShow);
@@ -143,13 +162,13 @@ const LineChart: FC<LineChartProps> = ({
   }
 
   return (
-    <div className="relative">
+    <div className="relative w-fit" ref={ref}>
       <svg
         height={height}
         width={width}
         onTouchMove={(e: React.TouchEvent) => moveTracerTouch(e)}
         onMouseMove={(e: React.MouseEvent) => moveTracerMouse(e)}
-        onMouseLeave={() => setTracerX(TRACER_X_INITIAL)}
+        onMouseLeave={() => onMouseLeave()}
       >
         <g>
           <YTicks
@@ -167,7 +186,6 @@ const LineChart: FC<LineChartProps> = ({
               idx={idx}
               key={spendingListRow.date.toISOString()}
               spendingListRow={spendingListRow}
-              setTooltipIdx={setTooltipIdx}
               xScale={xScale}
               yScale={yScale}
             />
@@ -177,14 +195,13 @@ const LineChart: FC<LineChartProps> = ({
         </g>
       </svg>
 
-      <LineChartTooltip
-        date={tooltipIdx || tooltipIdx === 0 ? data[tooltipIdx].date : null}
-        total={tooltipIdx || tooltipIdx === 0 ? data[tooltipIdx].total : NaN}
-        tooltipPosition={tooltipPosition}
-      />
+      {allowPagination && prev && (
+        <PaginationBar isLeft={true} onClick={onClickPaginationBar} />
+      )}
 
-      {prev && <PaginationBar isLeft={true} onClick={onClickPaginationBar} />}
-      {next && <PaginationBar isLeft={false} onClick={onClickPaginationBar} />}
+      {allowPagination && next && (
+        <PaginationBar isLeft={false} onClick={onClickPaginationBar} />
+      )}
     </div>
   );
 };

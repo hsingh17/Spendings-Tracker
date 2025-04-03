@@ -44,7 +44,7 @@ const Tooltip: FC<TooltipProps> = ({
 
   const calculateFinalPosition = (
     direction: Direction,
-    positionValue?: number,
+    positionValue?: number
   ): number | undefined => {
     if (!enableDynamicTooltip || !positionValue) {
       return positionValue;

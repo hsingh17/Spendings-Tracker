@@ -16,17 +16,16 @@ import com.spendingstracker.app.entity.SpendingUserAggr;
 import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.exception.NoSuchGraphTypeException;
 import com.spendingstracker.app.exception.SpendingNotFoundException;
-import com.spendingstracker.app.projection.SpendingListProjection;
 import com.spendingstracker.app.projection.SpendingProjection;
 import com.spendingstracker.app.repository.SpendingRepository;
 import com.spendingstracker.app.repository.SpendingUserAggrRepository;
+import com.spendingstracker.app.service.auth.CurrentUserService;
 import com.spendingstracker.app.service.user.UserService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -48,33 +47,18 @@ public class SpendingServiceImpl implements SpendingService {
     private final SpendingUserAggrRepository spendingUserAggrRepository;
     private final UserService userService;
     private final SpendingCategoryJpaCache spendingCategoryJpaCache;
+    private final CurrentUserService currentUserService;
 
-    public SpendingPageResponse getSpendings(
-            BigInteger userId, GetSpendingsRequestFilters filters) {
+    public SpendingPageResponse getSpendings(GetSpendingsRequestFilters filters) {
         PageRequest pageRequest = PageRequest.of(filters.getPage(), filters.getLimit());
-        Page<SpendingListProjection> spendingsListProjs =
+        BigInteger userId = currentUserService.getCurrentUserId();
+        Page<? extends SpendingPageItem> spendingItems =
                 getSpendingListProj(userId, filters, pageRequest);
-
-        // No spendings
-        if (!spendingsListProjs.hasContent()) {
-            return new SpendingPageResponse(
-                    new PageImpl<>(Collections.emptyList(), pageRequest, 0));
-        }
-
-        List<SpendingPageItem> spendingPageItemList = new ArrayList<>();
-
-        for (SpendingListProjection spendingListProj : spendingsListProjs.getContent()) {
-            spendingPageItemList.add(new SpendingPageItem(spendingListProj));
-        }
-
-        Page<SpendingPageItem> spendingPageItemPage =
-                new PageImpl<>(
-                        spendingPageItemList, pageRequest, spendingsListProjs.getTotalElements());
-
-        return new SpendingPageResponse(spendingPageItemPage);
+        return new SpendingPageResponse(spendingItems);
     }
 
-    public SpendingDetailsResponse getSpendingDetails(LocalDate spendingDate, BigInteger userId) {
+    public SpendingDetailsResponse getSpendingDetails(LocalDate spendingDate) {
+        BigInteger userId = currentUserService.getCurrentUserId();
         List<SpendingProjection> spendings =
                 spendingUserAggrRepository.findSpendingDetailsByUserIdAndDate(spendingDate, userId);
         List<SpendingResponse> spendingResponse = new ArrayList<>();
@@ -86,16 +70,16 @@ public class SpendingServiceImpl implements SpendingService {
         return new SpendingDetailsResponse(spendingResponse);
     }
 
-    public void updateSpending(
-            SpendingsSaveRequest spendingsSaveRequest, LocalDate spendingDate, BigInteger userId) {
+    public void updateSpending(SpendingsSaveRequest spendingsSaveRequest, LocalDate spendingDate) {
+        BigInteger userId = currentUserService.getCurrentUserId();
         User user = userService.getUserById(userId);
         SpendingUserAggr spendingUserAggr = findSpendingUserAggrByUserAndDate(user, spendingDate);
         mergeWithExistingSpending(spendingUserAggr, spendingsSaveRequest.spendingRequests());
         spendingUserAggrRepository.save(spendingUserAggr);
     }
 
-    public void createSpending(
-            SpendingsSaveRequest spendingsSaveRequest, LocalDate spendingDate, BigInteger userId) {
+    public void createSpending(SpendingsSaveRequest spendingsSaveRequest, LocalDate spendingDate) {
+        BigInteger userId = currentUserService.getCurrentUserId();
         User user = userService.getUserById(userId);
 
         List<Spending> spendings = new ArrayList<>();
@@ -165,17 +149,25 @@ public class SpendingServiceImpl implements SpendingService {
                                         "Can't find spendingUserAggr for date: " + spendingDate));
     }
 
-    private Page<SpendingListProjection> getSpendingListProj(
+    private Page<? extends SpendingPageItem> getSpendingListProj(
             BigInteger userId, GetSpendingsRequestFilters filters, PageRequest pageRequest) {
         GraphType type = filters.getGraphType();
 
         switch (type) {
-            case BAR, PIE -> {
-                return spendingUserAggrRepository.findSpendingsCategorical(
+            case PIE -> {
+                return spendingUserAggrRepository.findSpendingsForPieChart(
                         userId, filters.getStartDate(), filters.getEndDate(), pageRequest);
             }
+            case BAR -> {
+                return spendingUserAggrRepository.findSpendingsForBarChart(
+                        userId,
+                        filters.getStartDate(),
+                        filters.getEndDate(),
+                        filters.getGranularity(),
+                        pageRequest);
+            }
             case LINE -> {
-                return spendingUserAggrRepository.findSpendingsNumericalGroupBy(
+                return spendingUserAggrRepository.findSpendingsForLineChart(
                         userId,
                         filters.getStartDate(),
                         filters.getEndDate(),
