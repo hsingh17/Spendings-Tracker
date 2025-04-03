@@ -1,6 +1,6 @@
 import { extent, line, scaleLinear, scaleTime } from "d3";
 import { Dayjs } from "dayjs";
-import React, { FC, useState } from "react";
+import React, { FC, useRef, useState } from "react";
 import useTooltip from "../../../hooks/useTooltip";
 import ArrayUtils from "../../../utils/array-utils";
 import {
@@ -45,6 +45,7 @@ const LineChart: FC<LineChartProps> = ({
   allowPagination = true,
   setSearchParams,
 }) => {
+  const ref = useRef<HTMLDivElement>(null);
   const data = response.data?.spendingPage.content;
   const prev = response.metadata?.links.prev;
   const next = response.metadata?.links.next;
@@ -78,6 +79,7 @@ const LineChart: FC<LineChartProps> = ({
 
     let idx = -1;
     let minDist = POINT_RADIUS * 3;
+    const offset = ref.current?.getBoundingClientRect().top || 0;
 
     for (let i = 0; i < data!.length; i++) {
       const spendingListRow = data![i];
@@ -88,7 +90,7 @@ const LineChart: FC<LineChartProps> = ({
         idx = i;
         pos = {
           left: clientX,
-          top: yScale(spendingListRow.total),
+          top: yScale(spendingListRow.total) + offset,
         };
       }
     }
@@ -120,6 +122,11 @@ const LineChart: FC<LineChartProps> = ({
     );
 
     setSearchParams?.(queryParams);
+  };
+
+  const onMouseLeave = () => {
+    setTracerX(TRACER_X_INITIAL);
+    tooltip.hideTooltip();
   };
 
   const xScale = scaleTime()
@@ -155,13 +162,13 @@ const LineChart: FC<LineChartProps> = ({
   }
 
   return (
-    <div className="relative w-fit">
+    <div className="relative w-fit" ref={ref}>
       <svg
         height={height}
         width={width}
         onTouchMove={(e: React.TouchEvent) => moveTracerTouch(e)}
         onMouseMove={(e: React.MouseEvent) => moveTracerMouse(e)}
-        onMouseLeave={() => setTracerX(TRACER_X_INITIAL)}
+        onMouseLeave={() => onMouseLeave()}
       >
         <g>
           <YTicks

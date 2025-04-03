@@ -60,6 +60,7 @@ const BarChartTooltip: FC<BarChartTooltipProps> = ({
     if (ref && ref.current) {
       const divHeight = ref.current.clientHeight;
       const divWidth = ref.current.clientWidth;
+
       const isOverFlowingY = isOverflowing(
         divStyle.top?.toString() || "",
         divHeight,
@@ -90,20 +91,20 @@ const BarChartTooltip: FC<BarChartTooltipProps> = ({
   return (
     <div
       style={style}
-      className="flex flex-col w-fit h-fit p-2 bg-theme-brand-secondary bg-opacity-85 absolute pointer-events-none rounded-md"
+      className="flex flex-col w-[225px] md:w-fit h-fit p-2 bg-theme-brand-secondary bg-opacity-85 absolute pointer-events-none rounded-md"
       ref={ref}
     >
-      <div className="font-bold text-theme-neutral text-lg">
+      <div className="font-bold text-theme-neutral md:text-lg">
         {formatDate(tooltipInfo)}
       </div>
       {tooltipInfo.contents.toReversed().map((val, idx) => {
         return (
           <div className="flex flex-row items-center" key={val.category + idx}>
             <div
-              className="w-4 h-4 m-2"
+              className="w-1 md:w-4 h-1 md:h-4 m-2"
               style={{ backgroundColor: val.colorHex }}
             ></div>
-            <div className="text-theme-neutral mb-[0.5px] mr-10">
+            <div className="text-theme-neutral mb-[0.5px] mr-auto md:mr-4">
               {`${val.category}:`}
             </div>
             <div className="text-theme-neutral mb-[0.5px] ml-auto font-semibold">
