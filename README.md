@@ -5,7 +5,7 @@ This repository holds the code for my spendings tracker app built with Java and 
 ## TODO
 - home page
 - make custom logo
-- update ERD -> export from dbeaver
+- remove ERD from github
 - add junit tests for controller, service, repo
   - user and spendings
 - regenerate javadocs
