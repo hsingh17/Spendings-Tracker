@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import useDetectMobile from "../../hooks/useDetectMobile";
+import useDetectScreenWidth from "../../hooks/useDetectScreenWidth";
 import { PAGE_LIMITS } from "../../utils/constants";
 import { Nullable } from "../../utils/types";
 
@@ -12,7 +12,7 @@ const GraphDataPointFilter: FC<GraphDataPointFilterProps> = ({
   searchParams,
   setSearchParams,
 }) => {
-  const isMobile = useDetectMobile();
+  const isMobile = useDetectScreenWidth();
   const getCurrentLimit = (): number => {
     const params = new URLSearchParams(document.location.search);
     const limitStr: Nullable<string> = params.get("limit");

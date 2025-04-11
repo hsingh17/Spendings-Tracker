@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef, useState } from "react";
 import { GraphTypes } from "../../enums/GraphTypes";
-import useDetectMobile from "../../hooks/useDetectMobile";
+import useDetectScreenWidth from "../../hooks/useDetectScreenWidth";
 import {
   ApiResponse,
   SpendingListRowBarChart,
@@ -33,7 +33,7 @@ const GraphsContainer: FC<MetricsGraphContainerProps> = ({
   setSearchParams,
 }) => {
   const spendings = response?.data?.spendingPage.content;
-  const isMobile = useDetectMobile();
+  const isMobile = useDetectScreenWidth();
   const ref = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState<number>(0);
   const [width, setWidth] = useState<number>(0);

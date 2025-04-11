@@ -1,6 +1,6 @@
 import { ScaleLinear, ScaleTime } from "d3";
 import { FC } from "react";
-import useDetectMobile from "../../../hooks/useDetectMobile";
+import useDetectScreenWidth from "../../../hooks/useDetectScreenWidth";
 import { SpendingListRowLineChart } from "../../../utils/types";
 import { POINT_RADIUS } from "./LineChart";
 
@@ -12,7 +12,7 @@ type PointProps = {
 };
 
 const Point: FC<PointProps> = ({ spendingListRow, xScale, yScale }) => {
-  const isMobile = useDetectMobile();
+  const isMobile = useDetectScreenWidth();
   if (isMobile) {
     return <></>;
   }

@@ -1,7 +1,11 @@
 import { useNavigate } from "react-router-dom";
+import useDetectScreenWidth from "../../hooks/useDetectScreenWidth";
 
 const Home = () => {
   const navigate = useNavigate();
+  const stackedView = useDetectScreenWidth(1500);
+  console.log(stackedView);
+
   return (
     <div className="w-full h-full bg-gradient-to-r from-sky-200 via-slate-200 to-sky-200">
       <p>logo here</p>
