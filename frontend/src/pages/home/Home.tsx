@@ -1,6 +1,6 @@
+import PanelCarousel from "../../common/PanelCarousel";
 import useDetectScreenWidth from "../../hooks/useDetectScreenWidth";
 import GetStartedButton from "./component/GetStartedButton";
-import ScreenshotCarousel from "./component/ScreenshotCarousel";
 import SubTitle from "./component/Subtitle";
 import Title from "./component/Title";
 
@@ -8,6 +8,7 @@ const THRESHOLD_FOR_STACKED_VIEW = 1500;
 const Home = () => {
   const stackedView = useDetectScreenWidth(THRESHOLD_FOR_STACKED_VIEW);
 
+  // TODO: figure out how to remove overflow-y-hidden since on mobile it crops out the button
   return (
     <div className="w-full h-full bg-gradient-to-r from-sky-200 via-slate-200 to-sky-200 overflow-y-hidden">
       {stackedView ? (
@@ -15,7 +16,10 @@ const Home = () => {
           <span>logo here</span>
           <Title className="p-5" />
           <SubTitle className="py-10" />
-          <ScreenshotCarousel className="w-full h-[400px]" />
+          <PanelCarousel
+            className="w-full lg:w-[700px] bg-red-500 h-[400px]"
+            children={[1, 2, 3, 4, 5]}
+          />
           <GetStartedButton />
         </div>
       ) : (
@@ -27,7 +31,10 @@ const Home = () => {
               <SubTitle className="mb-10 text-lg" />
               <GetStartedButton />
             </div>
-            <ScreenshotCarousel className="h-[400px]" />
+            <PanelCarousel
+              className="h-[400px] w-[700px] bg-red-500 rounded-2xl"
+              children={[1, 2, 3, 4, 5]}
+            />
           </div>
         </div>
       )}

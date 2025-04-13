@@ -1,20 +1,52 @@
-import { FC, ReactNode, useState } from "react";
+import { Dispatch, FC, ReactNode, SetStateAction, useState } from "react";
+
+type CarouselIndicatorProps = {
+  idx: number;
+  isSelected: boolean;
+  setSelectedIdx: Dispatch<SetStateAction<number>>;
+};
+
+const CarouselIndicator: FC<CarouselIndicatorProps> = ({
+  idx,
+  isSelected,
+  setSelectedIdx,
+}) => {
+  return (
+    <span
+      className={`rounded-full w-5 h-5 drop-shadow-md inline-block hover:cursor-pointer ${isSelected ? "bg-slate-400" : "bg-[#FFFFF0]"}`}
+      onClick={() => setSelectedIdx(idx)}
+    />
+  );
+};
 
 type PanelCarouselProps = {
   children: ReactNode[];
   className: string;
 };
 const PanelCarousel: FC<PanelCarouselProps> = ({ children, className }) => {
-  const [idx, setIdx] = useState<number>(0);
-  console.log(setIdx);
+  const [selectedIdx, setSelectedIdx] = useState<number>(0);
+  console.log(setSelectedIdx);
+
+  if (!children || children.length === 0) {
+    return <></>;
+  }
 
   return (
-    <>
-      <div className={className}>{children[idx]}</div>
-      {children.map((_, childIdx) => {
-        return <div key={childIdx}>.</div>;
-      })}
-    </>
+    <div className="w-full flex flex-col items-center">
+      <div className={className}>{children[selectedIdx]}</div>
+
+      <div className="mt-5 w-36 h-fit flex flex-row justify-evenly">
+        {children.map((_, childIdx) => {
+          return (
+            <CarouselIndicator
+              idx={childIdx}
+              isSelected={childIdx === selectedIdx}
+              setSelectedIdx={setSelectedIdx}
+            />
+          );
+        })}
+      </div>
+    </div>
   );
 };
 
