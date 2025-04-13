@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { RenderChildrenProps } from "../utils/types";
 
-const Carousel: FC<RenderChildrenProps> = ({ children }) => {
+const ScrollingCarousel: FC<RenderChildrenProps> = ({ children }) => {
   return (
     <div className="overflow-x-scroll w-full">
       <div className="flex flex-row w-full h-fit p-5 items-center">
@@ -11,4 +11,4 @@ const Carousel: FC<RenderChildrenProps> = ({ children }) => {
   );
 };
 
-export default Carousel;
+export default ScrollingCarousel;
