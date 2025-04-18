@@ -8,11 +8,10 @@ const THRESHOLD_FOR_STACKED_VIEW = 1500;
 const Home = () => {
   const stackedView = useDetectScreenWidth(THRESHOLD_FOR_STACKED_VIEW);
 
-  // TODO: figure out how to remove overflow-y-hidden since on mobile it crops out the button
   return (
-    <div className="w-full h-full bg-gradient-to-r from-sky-200 via-slate-200 to-sky-200 overflow-y-hidden">
+    <div className="w-full bg-gradient-to-r from-sky-200 via-slate-200 to-sky-200">
       {stackedView ? (
-        <div className="flex flex-col items-center p-2 h-full">
+        <div className="flex flex-col items-center p-2 h-fit">
           <span>logo here</span>
           <Title className="p-5" />
           <SubTitle className="py-10" />
@@ -24,7 +23,7 @@ const Home = () => {
         </div>
       ) : (
         <div className="w-full h-full">
-          <span className="w-full">logo here</span>
+          <span>logo here</span>
           <div className="flex flex-row justify-center items-center p-60 h-full">
             <div className="flex flex-col justify-center w-96 h-full mr-auto">
               <Title className="mb-10 text-2xl" />
