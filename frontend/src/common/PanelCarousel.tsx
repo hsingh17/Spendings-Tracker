@@ -25,7 +25,6 @@ type PanelCarouselProps = {
 };
 const PanelCarousel: FC<PanelCarouselProps> = ({ children, className }) => {
   const [selectedIdx, setSelectedIdx] = useState<number>(0);
-  console.log(setSelectedIdx);
 
   if (!children || children.length === 0) {
     return <></>;
@@ -33,7 +32,9 @@ const PanelCarousel: FC<PanelCarouselProps> = ({ children, className }) => {
 
   return (
     <div className="w-full flex flex-col items-center">
-      <div className={className}>{children[selectedIdx]}</div>
+      <div className={`${className} flex flex-row items-center justify-center`}>
+        {children[selectedIdx]}
+      </div>
 
       <div className="mt-5 w-36 h-fit flex flex-row justify-evenly">
         {children.map((_, childIdx) => {
