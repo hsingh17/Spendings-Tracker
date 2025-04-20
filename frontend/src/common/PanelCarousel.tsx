@@ -32,7 +32,9 @@ const PanelCarousel: FC<PanelCarouselProps> = ({ children, className }) => {
 
   return (
     <div className="w-full flex flex-col items-center">
-      <div className={`${className} flex flex-row items-center justify-center`}>
+      <div
+        className={`${className} rounded-2xl drop-shadow-md flex flex-row items-center justify-center`}
+      >
         {children[selectedIdx]}
       </div>
 

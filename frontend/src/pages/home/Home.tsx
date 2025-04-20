@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import AddScreenshot from "../../assets/raw/add_screenshot.png";
 import CurrencyScreenshot from "../../assets/raw/currency_screenshot.png";
 import DashboardScreenshot from "../../assets/raw/dashboard_screenshot.png";
@@ -17,25 +18,32 @@ const Home = () => {
   const isHeightFit = useDetectScreenWidth(THRESHOLD_FOR_H_FIT);
   const useHeightFit = stackedView === isHeightFit;
 
+  const renderPanelCarousel = (): ReactNode => {
+    const imgClassName = `max-h-full ${!stackedView && "scale-90"}`;
+    return (
+      <PanelCarousel
+        className={`bg-theme-neutral ${stackedView ? "h-[200px] w-full md:w-[700px]" : "h-[400px] w-[700px]"}`}
+        children={[
+          <img className={imgClassName} src={DashboardScreenshot} />,
+          <img className={imgClassName} src={ListScreenshot} />,
+          <img className={imgClassName} src={AddScreenshot} />,
+          <img className={imgClassName} src={GraphScreenshot} />,
+          <img className={imgClassName} src={CurrencyScreenshot} />,
+        ]}
+      />
+    );
+  };
+
   return (
     <div
-      className={`w-full h-fit bg-gradient-to-r from-sky-200 via-slate-200 to-sky-200 ${useHeightFit ? "h-fit" : "h-full"}`}
+      className={`w-full h-fit bg-gradient-to-r from-sky-200 via-slate-200 to-sky-200 ${stackedView ? "h-full" : "h-fit"}`}
     >
       {stackedView ? (
         <div className="flex flex-col items-center p-2 h-fit">
           <span>logo here</span>
           <Title className="p-5 text-center" />
           <SubTitle className="py-10" />
-          <PanelCarousel
-            className="w-full md:w-[700px] h-[400px] bg-theme-neutral rounded-2xl drop-shadow-md"
-            children={[
-              <img className="h-[250px]" src={DashboardScreenshot} />,
-              <img className="h-[250px]" src={ListScreenshot} />,
-              <img className="h-[350px]" src={AddScreenshot} />,
-              <img className="h-[350px]" src={GraphScreenshot} />,
-              <img className="h-[350px]" src={CurrencyScreenshot} />,
-            ]}
-          />
+          {renderPanelCarousel()}
           <GetStartedButton />
         </div>
       ) : (
@@ -47,16 +55,7 @@ const Home = () => {
               <SubTitle className="mb-10 text-lg" />
               <GetStartedButton />
             </div>
-            <PanelCarousel
-              className="h-[400px] w-[700px] bg-theme-neutral rounded-2xl drop-shadow-md"
-              children={[
-                <img className="h-[250px]" src={DashboardScreenshot} />,
-                <img className="h-[350px]" src={ListScreenshot} />,
-                <img className="h-[350px]" src={AddScreenshot} />,
-                <img className="h-[350px]" src={GraphScreenshot} />,
-                <img className="h-[350px]" src={CurrencyScreenshot} />,
-              ]}
-            />
+            {renderPanelCarousel()}
           </div>
         </div>
       )}
