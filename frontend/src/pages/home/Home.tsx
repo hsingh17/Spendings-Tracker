@@ -11,12 +11,9 @@ import SubTitle from "./component/Subtitle";
 import Title from "./component/Title";
 
 const THRESHOLD_FOR_STACKED_VIEW = 1700;
-const THRESHOLD_FOR_H_FIT = 905;
 
 const Home = () => {
   const stackedView = useDetectScreenWidth(THRESHOLD_FOR_STACKED_VIEW);
-  const isHeightFit = useDetectScreenWidth(THRESHOLD_FOR_H_FIT);
-  const useHeightFit = stackedView === isHeightFit;
 
   const renderPanelCarousel = (): ReactNode => {
     const imgClassName = `max-h-full ${!stackedView && "scale-90"}`;
