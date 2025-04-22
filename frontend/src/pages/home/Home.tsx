@@ -21,11 +21,31 @@ const Home = () => {
       <PanelCarousel
         className={` ${stackedView ? "h-[250px] w-full md:w-[700px]" : "h-[400px] w-[700px]"}`}
         children={[
-          <img className={imgClassName} src={DashboardScreenshot} />,
-          <img className={imgClassName} src={ListScreenshot} />,
-          <img className={imgClassName} src={AddScreenshot} />,
-          <img className={imgClassName} src={GraphScreenshot} />,
-          <img className={imgClassName} src={CurrencyScreenshot} />,
+          <img
+            key="DashboardScreenshot"
+            className={imgClassName}
+            src={DashboardScreenshot}
+          />,
+          <img
+            key="ListScreenshot"
+            className={imgClassName}
+            src={ListScreenshot}
+          />,
+          <img
+            key="AddScreenshot"
+            className={imgClassName}
+            src={AddScreenshot}
+          />,
+          <img
+            key="GraphScreenshot"
+            className={imgClassName}
+            src={GraphScreenshot}
+          />,
+          <img
+            key="CurrencyScreenshot"
+            className={imgClassName}
+            src={CurrencyScreenshot}
+          />,
         ]}
       />
     );

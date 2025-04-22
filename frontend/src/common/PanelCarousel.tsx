@@ -1,20 +1,23 @@
-import { Dispatch, FC, ReactNode, SetStateAction, useState } from "react";
+import { FC, ReactNode, useState } from "react";
+
+const ANIMATE_IN = "animate-[carousel-slide-in_0.25s_ease-out]";
+const ANIMATE_OUT = "animate-[carousel-slide-out_0.25s_ease-in]";
 
 type CarouselIndicatorProps = {
   idx: number;
   isSelected: boolean;
-  setSelectedIdx: Dispatch<SetStateAction<number>>;
+  onClick: (idx: number) => void;
 };
 
 const CarouselIndicator: FC<CarouselIndicatorProps> = ({
   idx,
   isSelected,
-  setSelectedIdx,
+  onClick,
 }) => {
   return (
     <span
       className={`rounded-full w-5 h-5 drop-shadow-md inline-block hover:cursor-pointer ${isSelected ? "bg-slate-400" : "bg-[#FFFFF0]"}`}
-      onClick={() => setSelectedIdx(idx)}
+      onClick={() => onClick(idx)}
     />
   );
 };
@@ -23,8 +26,18 @@ type PanelCarouselProps = {
   children: ReactNode[];
   className: string;
 };
+
 const PanelCarousel: FC<PanelCarouselProps> = ({ children, className }) => {
+  const [animation, setAnimation] = useState<string>("");
   const [selectedIdx, setSelectedIdx] = useState<number>(0);
+
+  const changeCarouselPanel = (idx: number) => {
+    setAnimation(ANIMATE_OUT);
+    setTimeout(() => {
+      setAnimation(ANIMATE_IN);
+      setSelectedIdx(idx);
+    }, 100);
+  };
 
   if (!children || children.length === 0) {
     return <></>;
@@ -33,7 +46,7 @@ const PanelCarousel: FC<PanelCarouselProps> = ({ children, className }) => {
   return (
     <div className="w-full flex flex-col items-center">
       <div
-        className={`${className} relative bg-theme-neutral rounded-2xl drop-shadow-md flex flex-row items-center justify-center`}
+        className={`${className} ${animation} relative bg-theme-neutral rounded-2xl drop-shadow-md flex flex-row items-center justify-center`}
       >
         {children[selectedIdx]}
       </div>
@@ -42,9 +55,10 @@ const PanelCarousel: FC<PanelCarouselProps> = ({ children, className }) => {
         {children.map((_, childIdx) => {
           return (
             <CarouselIndicator
+              key={childIdx}
               idx={childIdx}
               isSelected={childIdx === selectedIdx}
-              setSelectedIdx={setSelectedIdx}
+              onClick={changeCarouselPanel}
             />
           );
         })}
