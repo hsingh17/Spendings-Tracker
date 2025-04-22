@@ -19,7 +19,7 @@ const Home = () => {
     const imgClassName = `max-h-full ${!stackedView && "scale-90"}`;
     return (
       <PanelCarousel
-        className={`bg-theme-neutral ${stackedView ? "h-[200px] w-full md:w-[700px]" : "h-[400px] w-[700px]"}`}
+        className={` ${stackedView ? "h-[250px] w-full md:w-[700px]" : "h-[400px] w-[700px]"}`}
         children={[
           <img className={imgClassName} src={DashboardScreenshot} />,
           <img className={imgClassName} src={ListScreenshot} />,
