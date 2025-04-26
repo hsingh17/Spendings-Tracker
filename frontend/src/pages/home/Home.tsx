@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import Logo from "../../assets/components/Logo";
 import AddScreenshot from "../../assets/raw/add_screenshot.png";
 import CurrencyScreenshot from "../../assets/raw/currency_screenshot.png";
 import DashboardScreenshot from "../../assets/raw/dashboard_screenshot.png";
@@ -53,19 +54,19 @@ const Home = () => {
 
   return (
     <div
-      className={`w-full h-fit bg-gradient-to-r from-sky-200 via-slate-200 to-sky-200 ${stackedView ? "h-full" : "h-fit"}`}
+      className={`w-full bg-gradient-to-r from-sky-200 via-slate-200 to-sky-200 ${stackedView ? "h-full" : "h-fit"}`}
     >
       {stackedView ? (
         <div className="flex flex-col items-center p-2 h-fit">
-          <span>logo here</span>
+          <Logo className="h-32 -mb-10" />
           <Title className="p-5 text-center" />
           <SubTitle className="py-10" />
           {renderPanelCarousel()}
           <GetStartedButton />
         </div>
       ) : (
-        <div className="w-full h-full">
-          <span>logo here</span>
+        <div className="relative w-full h-full">
+          <Logo className="absolute -top-5 left-5 origin-top-left scale-[35%]" />
           <div className="flex flex-row justify-center items-center p-60 h-full">
             <div className="flex flex-col justify-center w-96 h-full mr-auto">
               <Title className="mb-10 text-2xl" />

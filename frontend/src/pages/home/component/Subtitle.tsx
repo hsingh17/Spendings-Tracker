@@ -5,10 +5,10 @@ type SubTitleProps = {
 };
 const SubTitle: FC<SubTitleProps> = ({ className = "" }) => {
   return (
-    <h1 className={`${className}`}>
+    <h2 className={`${className}`}>
       Never lose track of your spendings again. Spendings Tracker will help you
       organize your spendings all in one place, all for free.
-    </h1>
+    </h2>
   );
 };
 

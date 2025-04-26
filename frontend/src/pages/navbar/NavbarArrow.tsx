@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { NavbarAction, NavbarArrowProps, NavbarState } from "../../utils/types";
 import { ReactComponent as LeftArrow } from "../../assets/raw/left-arrow.svg";
 import { ReactComponent as RightArrow } from "../../assets/raw/right-arrow.svg";
+import { NavbarAction, NavbarArrowProps, NavbarState } from "../../utils/types";
 
 const NavbarArrow: FC<NavbarArrowProps> = ({ state, transitionState }) => {
   if (
