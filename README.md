@@ -3,8 +3,6 @@
 This repository holds the code for my spendings tracker app built with Java and React.js
 
 ## TODO
-- home page
-- make custom logo
 - add junit tests for controller, service, repo
   - user and spendings
 - regenerate javadocs
