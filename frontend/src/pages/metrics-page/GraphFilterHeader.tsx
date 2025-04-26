@@ -1,7 +1,7 @@
 import { Dispatch, FC, SetStateAction } from "react";
 import DragDropIcon from "../../assets/components/DragDropIcon";
 import UpChevron from "../../assets/components/UpChevron";
-import useDetectMobile from "../../hooks/useDetectMobile";
+import useDetectScreenWidth from "../../hooks/useDetectScreenWidth";
 import { GraphFilterState } from "./GraphFilter";
 
 type GraphFilterHeaderProps = {
@@ -11,7 +11,7 @@ type GraphFilterHeaderProps = {
 const GraphFilterHeader: FC<GraphFilterHeaderProps> = ({
   setGraphFilterState,
 }) => {
-  const isMobile = useDetectMobile();
+  const isMobile = useDetectScreenWidth();
   if (isMobile) {
     return <></>;
   }

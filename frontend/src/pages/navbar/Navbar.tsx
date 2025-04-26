@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import useDetectMobile from "../../hooks/useDetectMobile";
+import useDetectScreenWidth from "../../hooks/useDetectScreenWidth";
 import useLogout from "../../hooks/useLogout";
 import {
   DASHBOARD_PAGE,
@@ -40,9 +40,9 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { mutate: logout } = useLogout();
 
-  const isMobile = useDetectMobile();
+  const isMobile = useDetectScreenWidth();
   const [state, setState] = useState<NavbarState>(
-    isMobile ? NavbarState.MOBILE_MENU_HIDDEN : NavbarState.NON_MOBILE_EXPANDED,
+    isMobile ? NavbarState.MOBILE_MENU_HIDDEN : NavbarState.NON_MOBILE_EXPANDED
   );
 
   const transitionStateWrapper = (action: NavbarAction) => {
@@ -110,9 +110,9 @@ const Navbar = () => {
       transitionStateWrapper(
         isMobile
           ? NavbarAction.RESIZE_TO_MOBILE
-          : NavbarAction.RESIZE_TO_NON_MOBILE,
+          : NavbarAction.RESIZE_TO_NON_MOBILE
       ),
-    [isMobile],
+    [isMobile]
   );
 
   if (doNotRender()) {

@@ -1,6 +1,6 @@
 import { PieArcDatum, arc, interpolateRgb, pie, scaleSequential } from "d3";
 import React, { FC, useState } from "react";
-import useDetectMobile from "../../../hooks/useDetectMobile";
+import useDetectScreenWidth from "../../../hooks/useDetectScreenWidth";
 import useTooltip from "../../../hooks/useTooltip";
 import {
   ApiResponse,
@@ -48,7 +48,7 @@ const PieChart: FC<PieChartProps> = ({ width, height, response }) => {
     return <></>;
   }
 
-  const isMobile = useDetectMobile();
+  const isMobile = useDetectScreenWidth();
   const innerRadius = height / 4 + (isMobile ? 10 : 25);
   const outerRadius = height / 2 - (isMobile ? 10 : 100);
   const interpolatorScale = scaleSequential()

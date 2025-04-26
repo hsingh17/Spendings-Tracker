@@ -3,9 +3,6 @@
 This repository holds the code for my spendings tracker app built with Java and React.js
 
 ## TODO
-- home page
-- make custom logo
-- update ERD -> export from dbeaver
 - add junit tests for controller, service, repo
   - user and spendings
 - regenerate javadocs

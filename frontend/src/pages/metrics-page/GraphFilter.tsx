@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from "react";
 import Card from "../../common/Card";
 import { Granularity } from "../../enums/Granularity";
 import { GraphTypes } from "../../enums/GraphTypes";
-import useDetectMobile from "../../hooks/useDetectMobile";
+import useDetectScreenWidth from "../../hooks/useDetectScreenWidth";
 import GraphFilterCollapsed from "./GraphFilterCollapsed";
 import GraphFilterExpanded from "./GraphFilterExpanded";
 
@@ -55,7 +55,7 @@ const GraphFilter: FC<GraphFilterProps> = ({
       : DEFAULT_FILTER_POSITION
   );
 
-  const isMobile = useDetectMobile();
+  const isMobile = useDetectScreenWidth();
 
   const [graphFilterState, setGraphFilterState] = useState<GraphFilterState>(
     isMobile ? GraphFilterState.EXPANDED : GraphFilterState.COLLAPSED

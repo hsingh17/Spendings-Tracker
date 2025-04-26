@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { MOBILE_SCREEN_WIDTH } from "../utils/constants";
 
-export default function useDetectMobile() {
+export default function useDetectScreenWidth(threshold: number = MOBILE_SCREEN_WIDTH) {
   const [isMobile, setIsMobile] = useState<boolean>(
-    window.innerWidth <= MOBILE_SCREEN_WIDTH,
+    window.innerWidth <= threshold,
   );
 
   const handleResize = () => {
-    setIsMobile(window.innerWidth <= MOBILE_SCREEN_WIDTH);
+    setIsMobile(window.innerWidth <= threshold);
   };
 
   useEffect(() => {

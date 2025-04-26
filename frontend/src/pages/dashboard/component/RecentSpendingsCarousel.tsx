@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { ReactComponent as RightArrow } from "../../../assets/raw/right-arrow.svg";
-import Carousel from "../../../common/Carousel";
+import ScrollingCarousel from "../../../common/ScrollingCarousel";
 import useSpendings from "../../../hooks/useSpendings";
 import { VIEW_SPENDINGS_PAGE } from "../../../utils/constants";
 import { SpendingListRowLineChart } from "../../../utils/types";
@@ -28,7 +28,7 @@ const RecentSpendingsCarousel = () => {
   }
 
   return (
-    <Carousel>
+    <ScrollingCarousel>
       {spendings.map((spendingListRow: SpendingListRowLineChart) => {
         return (
           <RecentSpendingsCard
@@ -45,7 +45,7 @@ const RecentSpendingsCarousel = () => {
         <p className="font-semibold text-theme-cta text-2xl">View all</p>
         <RightArrow className="w-10 h-10" stroke="#00ADB5" />
       </div>
-    </Carousel>
+    </ScrollingCarousel>
   );
 };
 

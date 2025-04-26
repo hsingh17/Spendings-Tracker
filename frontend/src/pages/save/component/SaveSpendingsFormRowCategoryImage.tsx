@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
 import Tooltip from "../../../common/Tooltip";
-import useDetectMobile from "../../../hooks/useDetectMobile";
+import useDetectScreenWidth from "../../../hooks/useDetectScreenWidth";
 import { Nullable, TooltipPosition } from "../../../utils/types";
 
 type SaveSpendingsFormRowCategoryImageProps = {
@@ -13,7 +13,7 @@ const SaveSpendingsFormRowCategoryImage: FC<
 > = ({ category, imgSrc }) => {
   const [tooltipPosition, setTooltipPosition] =
     useState<Nullable<TooltipPosition>>(null);
-  const isMobile = useDetectMobile();
+  const isMobile = useDetectScreenWidth();
 
   const showTooltip = (e: React.MouseEvent<HTMLImageElement>) => {
     const img = e.currentTarget;
