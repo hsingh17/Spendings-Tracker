@@ -10,5 +10,6 @@ This repository holds the code for my spendings tracker app built with Java and 
 - create aws architecture and deploy
 	- create custom vpc
 	- basic cdk stack to deploy infra
+	- use github actions (use cognito and sts to get temp creds) to deploy changes to infra
 
 ## Known issues
