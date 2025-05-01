@@ -7,8 +7,3 @@ This repository holds the code for my spendings tracker app built with Java and 
   - user and spendings
 - regenerate javadocs
 - test from scratch
-- create aws architecture and deploy
-	- create custom vpc
-	- basic cdk stack to deploy infra
-
-## Known issues
