@@ -1,13 +1,16 @@
 package com.spendingstracker.app.controller;
 
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.spendingstracker.app.controller.spending.SpendingsController;
 import com.spendingstracker.app.dto.requests.GetSpendingsRequestFilters;
+import com.spendingstracker.app.dto.response.SpendingDetailsResponse;
 import com.spendingstracker.app.dto.response.SpendingPageResponse;
+import com.spendingstracker.app.dto.response.SpendingResponse;
 import com.spendingstracker.app.service.spending.SpendingCategoryService;
 import com.spendingstracker.app.service.spending.SpendingService;
 
@@ -20,7 +23,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.List;
 
 @WebMvcTest(SpendingsController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -109,5 +117,42 @@ public class SpendingsControllerTest {
         mockMvc.perform(get("/v1/api/spendings?page=1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.metadata.currentPage", Matchers.is(1)));
+    }
+
+    @Test
+    public void shouldReturnSpendingDetails() throws Exception {
+        LocalDate date = LocalDate.now();
+        List<SpendingResponse> spendings =
+                List.of(
+                        new SpendingResponse(BigInteger.ONE, "foo", BigDecimal.ZERO, "bar"),
+                        new SpendingResponse(BigInteger.ONE, "foo", BigDecimal.ZERO, "bar"),
+                        new SpendingResponse(BigInteger.ONE, "foo", BigDecimal.ZERO, "bar"));
+        SpendingDetailsResponse response = new SpendingDetailsResponse(spendings);
+
+        when(spendingService.getSpendingDetails(date)).thenReturn(response);
+
+        mockMvc.perform(get("/v1/api/spendings/" + date)).andExpect(status().isOk());
+    }
+
+    @Test
+    public void shouldReturnBadRequestForInvalidDateFormatSpendingDetails() throws Exception {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        String dateStr = LocalDate.now().format(dtf);
+        List<SpendingResponse> spendings =
+                List.of(
+                        new SpendingResponse(BigInteger.ONE, "foo", BigDecimal.ZERO, "bar"),
+                        new SpendingResponse(BigInteger.ONE, "foo", BigDecimal.ZERO, "bar"),
+                        new SpendingResponse(BigInteger.ONE, "foo", BigDecimal.ZERO, "bar"));
+        SpendingDetailsResponse response = new SpendingDetailsResponse(spendings);
+
+        when(spendingService.getSpendingDetails(any())).thenReturn(response);
+
+        mockMvc.perform(get("/v1/api/spendings/" + dateStr))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void shouldDeleteOk() throws Exception {
+        mockMvc.perform(delete("/v1/api/spendings/" + BigDecimal.ONE)).andExpect(status().isOk());
     }
 }
