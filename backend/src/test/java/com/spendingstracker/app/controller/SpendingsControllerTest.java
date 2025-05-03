@@ -1,13 +1,19 @@
 package com.spendingstracker.app.controller;
 
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spendingstracker.app.constants.SpendingCategoryEnum;
 import com.spendingstracker.app.controller.spending.SpendingsController;
 import com.spendingstracker.app.dto.requests.GetSpendingsRequestFilters;
+import com.spendingstracker.app.dto.requests.SpendingRequest;
+import com.spendingstracker.app.dto.requests.SpendingsSaveRequest;
+import com.spendingstracker.app.dto.response.SpendingCategoriesResponse;
 import com.spendingstracker.app.dto.response.SpendingDetailsResponse;
 import com.spendingstracker.app.dto.response.SpendingPageResponse;
 import com.spendingstracker.app.dto.response.SpendingResponse;
@@ -21,12 +27,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -36,6 +45,7 @@ public class SpendingsControllerTest {
     @MockBean SpendingService spendingService;
     @MockBean SpendingCategoryService spendingCategoryService;
     @Autowired MockMvc mockMvc;
+    @Autowired ObjectMapper objectMapper;
 
     @Test
     public void shouldRetrieveSpendingsWithNoFilters() throws Exception {
@@ -151,8 +161,70 @@ public class SpendingsControllerTest {
                 .andExpect(status().isInternalServerError());
     }
 
+    public void shouldCreateSpending() throws Exception {
+        int N = 20;
+        List<SpendingRequest> l = new ArrayList<>();
+        for (int i = 0; i < N; i++) {
+            l.add(
+                    new SpendingRequest(
+                            BigInteger.ONE,
+                            SpendingCategoryEnum.OTHER,
+                            BigDecimal.TEN,
+                            null,
+                            false));
+        }
+
+        SpendingsSaveRequest request = new SpendingsSaveRequest(l);
+
+        LocalDate date = LocalDate.now();
+        doNothing()
+                .when(spendingService)
+                .createSpending(any(SpendingsSaveRequest.class), any(LocalDate.class));
+
+        mockMvc.perform(
+                        post("/v1/api/spendings/" + date)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .characterEncoding(StandardCharsets.UTF_8)
+                                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void shouldThrowBadRequestEnumWhenCreatingSpending() throws Exception {
+        String content =
+                "{\"spendingRequests\": [{\"spendingId\": 1, \"category\": \"foo\", \"amount\": 1, \"delete\": false}]}";
+        LocalDate date = LocalDate.now();
+
+        doNothing()
+                .when(spendingService)
+                .createSpending(any(SpendingsSaveRequest.class), any(LocalDate.class));
+
+        mockMvc.perform(
+                        post("/v1/api/spendings/" + date)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .characterEncoding(StandardCharsets.UTF_8)
+                                .content(content))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void shouldThrowBadRequestNullBodyWhenCreatingSpending() throws Exception {
+        LocalDate date = LocalDate.now();
+        mockMvc.perform(post("/v1/api/spendings/" + date)).andExpect(status().isBadRequest());
+    }
+
     @Test
     public void shouldDeleteOk() throws Exception {
         mockMvc.perform(delete("/v1/api/spendings/" + BigDecimal.ONE)).andExpect(status().isOk());
+    }
+
+    @Test
+    public void shouldGetSpendingCategories() throws Exception {
+        SpendingCategoriesResponse response =
+                new SpendingCategoriesResponse(Collections.emptyMap());
+
+        when(spendingCategoryService.getSpendingCategories()).thenReturn(response);
+
+        mockMvc.perform(get("/v1/api/spending-categories")).andExpect(status().isOk());
     }
 }
