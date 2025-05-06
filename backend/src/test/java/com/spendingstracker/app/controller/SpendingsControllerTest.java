@@ -161,6 +161,7 @@ public class SpendingsControllerTest {
                 .andExpect(status().isInternalServerError());
     }
 
+    @Test
     public void shouldCreateSpending() throws Exception {
         int N = 20;
         List<SpendingRequest> l = new ArrayList<>();
