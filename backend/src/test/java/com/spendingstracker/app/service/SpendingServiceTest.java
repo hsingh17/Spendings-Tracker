@@ -1,19 +1,19 @@
 package com.spendingstracker.app.service;
 
-import static org.mockito.Mockito.*;
-
 import com.spendingstracker.app.cache.SpendingCategoryJpaCache;
 import com.spendingstracker.app.constants.Granularity;
 import com.spendingstracker.app.constants.GraphType;
+import com.spendingstracker.app.constants.SpendingCategoryEnum;
 import com.spendingstracker.app.dto.requests.GetSpendingsRequestFilters;
+import com.spendingstracker.app.dto.response.SpendingPageItemBarChart;
 import com.spendingstracker.app.dto.response.SpendingPageItemLineChart;
+import com.spendingstracker.app.dto.response.SpendingPageItemPieChart;
 import com.spendingstracker.app.dto.response.SpendingPageResponse;
 import com.spendingstracker.app.repository.SpendingRepository;
 import com.spendingstracker.app.repository.SpendingUserAggrRepositoryImpl;
 import com.spendingstracker.app.service.auth.CurrentUserService;
 import com.spendingstracker.app.service.spending.SpendingServiceImpl;
 import com.spendingstracker.app.service.user.UserServiceImpl;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,14 +31,23 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 public class SpendingServiceTest {
-    @Mock SpendingRepository spendingRepository;
-    @Mock SpendingUserAggrRepositoryImpl spendingUserAggrRepository;
-    @Mock UserServiceImpl userService;
-    @Mock SpendingCategoryJpaCache spendingCategoryJpaCache;
-    @Mock CurrentUserService currentUserService;
-    @InjectMocks SpendingServiceImpl spendingService;
+    @Mock
+    SpendingRepository spendingRepository;
+    @Mock
+    SpendingUserAggrRepositoryImpl spendingUserAggrRepository;
+    @Mock
+    UserServiceImpl userService;
+    @Mock
+    SpendingCategoryJpaCache spendingCategoryJpaCache;
+    @Mock
+    CurrentUserService currentUserService;
+    @InjectMocks
+    SpendingServiceImpl spendingService;
 
     @BeforeEach
     public void init() {
@@ -73,16 +82,16 @@ public class SpendingServiceTest {
                 new PageImpl<>(list, PageRequest.of(pageNum, pageLimit), list.size());
 
         when(spendingUserAggrRepository.findSpendingsForLineChart(
-                        any(BigInteger.class),
-                        any(LocalDate.class),
-                        any(LocalDate.class),
-                        any(Granularity.class),
-                        any(Pageable.class)))
+                any(BigInteger.class),
+                any(LocalDate.class),
+                any(LocalDate.class),
+                any(Granularity.class),
+                any(Pageable.class)))
                 .thenReturn(page);
 
         SpendingPageResponse response = spendingService.getSpendings(filters);
 
-        //        assertEquals(response.spendingPage().getTotalElements(), N);
+        assertEquals(response.spendingPage().getTotalElements(), N);
 
         verify(spendingUserAggrRepository, times(1))
                 .findSpendingsForLineChart(
@@ -101,6 +110,131 @@ public class SpendingServiceTest {
                         any(Pageable.class));
 
         verify(spendingUserAggrRepository, never())
+                .findSpendingsForPieChart(
+                        any(BigInteger.class),
+                        any(LocalDate.class),
+                        any(LocalDate.class),
+                        any(Pageable.class));
+    }
+
+    @Test
+    public void shouldGetBarSpendings() {
+        int N = 10;
+        int pageNum = 0;
+        int pageLimit = 10;
+
+        GetSpendingsRequestFilters filters =
+                new GetSpendingsRequestFilters(
+                        LocalDate.now(),
+                        LocalDate.now(),
+                        Granularity.DAY,
+                        GraphType.BAR,
+                        pageNum,
+                        pageLimit);
+
+        List<SpendingPageItemBarChart> list = new ArrayList<>();
+        for (int i = 0; i < N; i++) {
+            list.add(
+                    new SpendingPageItemBarChart(
+                            LocalDate.now(),
+                            BigDecimal.TEN.multiply(BigDecimal.valueOf(i)),
+                            null));
+        }
+
+        Page<SpendingPageItemBarChart> page =
+                new PageImpl<>(list, PageRequest.of(pageNum, pageLimit), list.size());
+
+        when(spendingUserAggrRepository.findSpendingsForBarChart(
+                any(BigInteger.class),
+                any(LocalDate.class),
+                any(LocalDate.class),
+                any(Granularity.class),
+                any(Pageable.class)))
+                .thenReturn(page);
+
+        SpendingPageResponse response = spendingService.getSpendings(filters);
+
+        assertEquals(response.spendingPage().getTotalElements(), N);
+
+        verify(spendingUserAggrRepository, never())
+                .findSpendingsForLineChart(
+                        any(BigInteger.class),
+                        any(LocalDate.class),
+                        any(LocalDate.class),
+                        any(Granularity.class),
+                        any(Pageable.class));
+
+        verify(spendingUserAggrRepository, times(1))
+                .findSpendingsForBarChart(
+                        any(BigInteger.class),
+                        any(LocalDate.class),
+                        any(LocalDate.class),
+                        any(Granularity.class),
+                        any(Pageable.class));
+
+        verify(spendingUserAggrRepository, never())
+                .findSpendingsForPieChart(
+                        any(BigInteger.class),
+                        any(LocalDate.class),
+                        any(LocalDate.class),
+                        any(Pageable.class));
+    }
+
+
+    @Test
+    public void shouldGetPieSpendings() {
+        int N = 10;
+        int pageNum = 0;
+        int pageLimit = 10;
+
+        GetSpendingsRequestFilters filters =
+                new GetSpendingsRequestFilters(
+                        LocalDate.now(),
+                        LocalDate.now(),
+                        Granularity.DAY,
+                        GraphType.PIE,
+                        pageNum,
+                        pageLimit);
+
+        List<SpendingPageItemPieChart> list = new ArrayList<>();
+        for (int i = 0; i < N; i++) {
+            list.add(
+                    new SpendingPageItemPieChart(
+                            SpendingCategoryEnum.OTHER.getStringDecode(),
+                            BigDecimal.TEN.multiply(BigDecimal.valueOf(i))));
+        }
+
+        Page<SpendingPageItemPieChart> page =
+                new PageImpl<>(list, PageRequest.of(pageNum, pageLimit), list.size());
+
+        when(spendingUserAggrRepository.findSpendingsForPieChart(
+                any(BigInteger.class),
+                any(LocalDate.class),
+                any(LocalDate.class),
+                any(Pageable.class)))
+                .thenReturn(page);
+
+        SpendingPageResponse response = spendingService.getSpendings(filters);
+
+        assertEquals(response.spendingPage().getTotalElements(), N);
+
+        verify(spendingUserAggrRepository, never())
+                .findSpendingsForLineChart(
+                        any(BigInteger.class),
+                        any(LocalDate.class),
+                        any(LocalDate.class),
+                        any(Granularity.class),
+                        any(Pageable.class));
+
+        verify(spendingUserAggrRepository, never())
+                .findSpendingsForBarChart(
+                        any(BigInteger.class),
+                        any(LocalDate.class),
+                        any(LocalDate.class),
+                        any(Granularity.class),
+                        any(Pageable.class));
+
+        verify(spendingUserAggrRepository, times(1))
                 .findSpendingsForPieChart(
                         any(BigInteger.class),
                         any(LocalDate.class),
