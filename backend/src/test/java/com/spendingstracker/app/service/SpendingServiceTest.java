@@ -9,6 +9,7 @@ import com.spendingstracker.app.constants.GraphType;
 import com.spendingstracker.app.constants.SpendingCategoryEnum;
 import com.spendingstracker.app.dto.requests.GetSpendingsRequestFilters;
 import com.spendingstracker.app.dto.response.*;
+import com.spendingstracker.app.projection.SpendingProjection;
 import com.spendingstracker.app.repository.SpendingRepository;
 import com.spendingstracker.app.repository.SpendingUserAggrRepositoryImpl;
 import com.spendingstracker.app.service.auth.CurrentUserService;
@@ -241,6 +242,48 @@ public class SpendingServiceTest {
         SpendingDetailsResponse response = spendingService.getSpendingDetails(LocalDate.now());
 
         assertEquals(0, response.spendings().size());
+        verify(spendingUserAggrRepository, times(1))
+                .findSpendingDetailsByUserIdAndDate(any(LocalDate.class), any(BigInteger.class));
+    }
+
+    @Test
+    public void shouldFindDetails() {
+        SpendingCategoryEnum[] enums = SpendingCategoryEnum.values();
+        List<SpendingProjection> list = new ArrayList<>();
+        int N = 20;
+        for (int i = 0; i < N; i++) {
+            final int iCopy = i;
+            list.add(
+                    new SpendingProjection() {
+                        @Override
+                        public BigInteger getSpendingId() {
+                            return BigInteger.ONE;
+                        }
+
+                        @Override
+                        public String getCategory() {
+                            return enums[iCopy % enums.length].getStringDecode();
+                        }
+
+                        @Override
+                        public BigDecimal getAmount() {
+                            return BigDecimal.TEN.multiply(BigDecimal.valueOf(iCopy));
+                        }
+
+                        @Override
+                        public String getMemo() {
+                            return "";
+                        }
+                    });
+        }
+
+        when(spendingUserAggrRepository.findSpendingDetailsByUserIdAndDate(
+                        any(LocalDate.class), any(BigInteger.class)))
+                .thenReturn(list);
+
+        SpendingDetailsResponse response = spendingService.getSpendingDetails(LocalDate.now());
+
+        assertEquals(N, response.spendings().size());
         verify(spendingUserAggrRepository, times(1))
                 .findSpendingDetailsByUserIdAndDate(any(LocalDate.class), any(BigInteger.class));
     }
