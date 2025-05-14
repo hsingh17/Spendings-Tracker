@@ -1,5 +1,8 @@
 package com.spendingstracker.app.service;
 
+import static com.spendingstracker.app.constants.SpendingCategoryEnum.*;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -8,7 +11,12 @@ import com.spendingstracker.app.constants.Granularity;
 import com.spendingstracker.app.constants.GraphType;
 import com.spendingstracker.app.constants.SpendingCategoryEnum;
 import com.spendingstracker.app.dto.requests.GetSpendingsRequestFilters;
+import com.spendingstracker.app.dto.requests.SpendingRequest;
+import com.spendingstracker.app.dto.requests.SpendingsSaveRequest;
 import com.spendingstracker.app.dto.response.*;
+import com.spendingstracker.app.entity.SpendingCategory;
+import com.spendingstracker.app.entity.SpendingUserAggr;
+import com.spendingstracker.app.entity.User;
 import com.spendingstracker.app.projection.SpendingProjection;
 import com.spendingstracker.app.repository.SpendingRepository;
 import com.spendingstracker.app.repository.SpendingUserAggrRepositoryImpl;
@@ -44,8 +52,34 @@ public class SpendingServiceTest {
     @InjectMocks SpendingServiceImpl spendingService;
 
     @BeforeEach
-    public void init() {
+    public void initMockEach() {
         when(currentUserService.getCurrentUserId()).thenReturn(BigInteger.ONE);
+    }
+
+    private void initUpdateMocks() {
+        User user = new User("foo-bar", "foo@bar.com", "foobar");
+        user.setUserId(BigInteger.ONE);
+
+        when(spendingCategoryJpaCache.getFromCache(TRANSPORATION))
+                .thenReturn(new SpendingCategory(TRANSPORATION));
+        when(spendingCategoryJpaCache.getFromCache(CLOTHING))
+                .thenReturn(new SpendingCategory(CLOTHING));
+        when(spendingCategoryJpaCache.getFromCache(VEHICLE))
+                .thenReturn(new SpendingCategory(VEHICLE));
+        when(spendingCategoryJpaCache.getFromCache(TRAVEL))
+                .thenReturn(new SpendingCategory(TRAVEL));
+        when(spendingCategoryJpaCache.getFromCache(HEALTH))
+                .thenReturn(new SpendingCategory(HEALTH));
+        when(spendingCategoryJpaCache.getFromCache(FOOD)).thenReturn(new SpendingCategory(FOOD));
+        when(spendingCategoryJpaCache.getFromCache(PET)).thenReturn(new SpendingCategory(PET));
+        when(spendingCategoryJpaCache.getFromCache(ENTERTAINMENT))
+                .thenReturn(new SpendingCategory(ENTERTAINMENT));
+        when(spendingCategoryJpaCache.getFromCache(UTILITY))
+                .thenReturn(new SpendingCategory(UTILITY));
+        when(spendingCategoryJpaCache.getFromCache(SUBSCRIPTION))
+                .thenReturn(new SpendingCategory(SUBSCRIPTION));
+
+        when(userService.getUserById(any(BigInteger.class))).thenReturn(user);
     }
 
     @Test
@@ -286,5 +320,32 @@ public class SpendingServiceTest {
         assertEquals(N, response.spendings().size());
         verify(spendingUserAggrRepository, times(1))
                 .findSpendingDetailsByUserIdAndDate(any(LocalDate.class), any(BigInteger.class));
+    }
+
+    @Test
+    public void shouldCreateSpending() {
+        initUpdateMocks();
+
+        SpendingCategoryEnum[] enums = SpendingCategoryEnum.values();
+        List<SpendingRequest> requests = new ArrayList<>();
+        int N = 10;
+
+        for (int i = 0; i < N; i++) {
+            requests.add(
+                    new SpendingRequest(
+                            null,
+                            enums[i % N],
+                            BigDecimal.TEN.multiply(BigDecimal.valueOf(i)),
+                            "memo",
+                            false));
+        }
+
+        assertDoesNotThrow(
+                () ->
+                        spendingService.createSpending(
+                                new SpendingsSaveRequest(requests), LocalDate.now()));
+
+        verify(spendingUserAggrRepository, times(1)).save(any(SpendingUserAggr.class));
+        verify(spendingCategoryJpaCache, times(N)).getFromCache(any(SpendingCategoryEnum.class));
     }
 }
