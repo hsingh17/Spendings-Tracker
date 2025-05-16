@@ -2,8 +2,7 @@ package com.spendingstracker.app.service;
 
 import static com.spendingstracker.app.constants.SpendingCategoryEnum.*;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.spendingstracker.app.cache.SpendingCategoryJpaCache;
@@ -14,6 +13,7 @@ import com.spendingstracker.app.dto.requests.GetSpendingsRequestFilters;
 import com.spendingstracker.app.dto.requests.SpendingRequest;
 import com.spendingstracker.app.dto.requests.SpendingsSaveRequest;
 import com.spendingstracker.app.dto.response.*;
+import com.spendingstracker.app.entity.Spending;
 import com.spendingstracker.app.entity.SpendingCategory;
 import com.spendingstracker.app.entity.SpendingUserAggr;
 import com.spendingstracker.app.entity.User;
@@ -41,6 +41,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 public class SpendingServiceTest {
@@ -56,10 +57,14 @@ public class SpendingServiceTest {
         when(currentUserService.getCurrentUserId()).thenReturn(BigInteger.ONE);
     }
 
-    private void initUpdateMocks() {
+    private User initUserMocks() {
         User user = new User("foo-bar", "foo@bar.com", "foobar");
         user.setUserId(BigInteger.ONE);
+        when(userService.getUserById(any(BigInteger.class))).thenReturn(user);
+        return user;
+    }
 
+    private User initUpdateMocks() {
         when(spendingCategoryJpaCache.getFromCache(TRANSPORATION))
                 .thenReturn(new SpendingCategory(TRANSPORATION));
         when(spendingCategoryJpaCache.getFromCache(CLOTHING))
@@ -79,7 +84,7 @@ public class SpendingServiceTest {
         when(spendingCategoryJpaCache.getFromCache(SUBSCRIPTION))
                 .thenReturn(new SpendingCategory(SUBSCRIPTION));
 
-        when(userService.getUserById(any(BigInteger.class))).thenReturn(user);
+        return initUserMocks();
     }
 
     @Test
@@ -346,6 +351,62 @@ public class SpendingServiceTest {
                                 new SpendingsSaveRequest(requests), LocalDate.now()));
 
         verify(spendingUserAggrRepository, times(1)).save(any(SpendingUserAggr.class));
+        verify(spendingCategoryJpaCache, times(N)).getFromCache(any(SpendingCategoryEnum.class));
+    }
+
+    @Test
+    public void shouldThrowIllegalArgumentExceptionWhileUpdating() {
+        initUserMocks();
+        when(spendingUserAggrRepository.findSpendingUserAggrByUserAndDate(
+                        any(User.class), any(LocalDate.class)))
+                .thenReturn(Optional.empty());
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () ->
+                        spendingService.updateSpending(
+                                new SpendingsSaveRequest(Collections.emptyList()),
+                                LocalDate.now()));
+    }
+
+    @Test
+    public void shouldUpdateSpending() {
+        User user = initUpdateMocks();
+        List<Spending> spendings = new ArrayList<>();
+        List<SpendingRequest> requests = new ArrayList<>();
+        SpendingCategoryEnum[] enums = SpendingCategoryEnum.values();
+        int N = 10;
+
+        for (int i = 0; i < N; i++) {
+            spendings.add(
+                    new Spending(
+                            new SpendingCategory(enums[i % N]),
+                            BigDecimal.TEN.multiply(BigDecimal.valueOf(i)),
+                            "foo"));
+
+            requests.add(
+                    new SpendingRequest(
+                            null,
+                            enums[i % N],
+                            BigDecimal.TEN.multiply(BigDecimal.valueOf(i)),
+                            "memo",
+                            false));
+        }
+
+        Optional<SpendingUserAggr> opt =
+                Optional.of(new SpendingUserAggr(user, LocalDate.now(), spendings));
+
+        when(spendingUserAggrRepository.findSpendingUserAggrByUserAndDate(
+                        any(User.class), any(LocalDate.class)))
+                .thenReturn(opt);
+
+        spendingService.updateSpending(new SpendingsSaveRequest(requests), LocalDate.now());
+
+        verify(spendingUserAggrRepository, times(1))
+                .findSpendingUserAggrByUserAndDate(any(User.class), any(LocalDate.class));
+
+        verify(spendingUserAggrRepository, times(1)).save(any(SpendingUserAggr.class));
+
         verify(spendingCategoryJpaCache, times(N)).getFromCache(any(SpendingCategoryEnum.class));
     }
 }
