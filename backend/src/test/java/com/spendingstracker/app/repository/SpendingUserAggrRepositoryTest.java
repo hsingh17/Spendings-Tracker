@@ -1,7 +1,6 @@
 package com.spendingstracker.app.repository;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.spendingstracker.app.constants.SpendingCategoryEnum;
 import com.spendingstracker.app.entity.Spending;
@@ -19,6 +18,7 @@ import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -28,6 +28,7 @@ public class SpendingUserAggrRepositoryTest {
     @Test
     public void shouldSaveFindDelete() {
         // Setup
+        LocalDate date = LocalDate.now();
         SpendingCategoryEnum[] categoriesEnum = SpendingCategoryEnum.values();
         List<SpendingCategory> categories = new ArrayList<>();
         for (SpendingCategoryEnum spendingCategoryEnum : categoriesEnum) {
@@ -42,11 +43,20 @@ public class SpendingUserAggrRepositoryTest {
         }
 
         User user = new User("foo", "foo@bar.com", "bar");
-        SpendingUserAggr spendingUserAggr = new SpendingUserAggr(user, LocalDate.now(), spendings);
+        SpendingUserAggr spendingUserAggr = new SpendingUserAggr(user, date, spendings);
         // Save
         spendingUserAggr = spendingUserAggrRepository.save(spendingUserAggr);
         BigInteger id = spendingUserAggr.getSpendingUserAggrId();
         assertNotNull(id);
+
+        // Find
+        Optional<SpendingUserAggr> spendingUserAggrOpt =
+                spendingUserAggrRepository.findSpendingUserAggrByUserAndDate(user, date);
+
+        assertFalse(spendingUserAggrOpt.isEmpty());
+        assertEquals(
+                spendingUserAggr.getSpendingUserAggrId(),
+                spendingUserAggrOpt.get().getSpendingUserAggrId());
 
         // Delete
         assertDoesNotThrow(() -> spendingUserAggrRepository.deleteById(id));
