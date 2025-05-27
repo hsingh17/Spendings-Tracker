@@ -20,7 +20,7 @@ ses:
     name:
       registration-email: RegistrationEmail
       password-reset-email: PasswordResetEmail
-  from-email: spendingstracker.no.reply@gmail.com
+  from-email: ${FROM_EMAIL}
 s3:
   presigned-url-expiration-minutes: 10
 classpath-resources:
