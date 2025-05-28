@@ -29,20 +29,49 @@ In your AWS account, create a bucket (in any region) named `spending-categories-
 
 #### SES Templates
 
-To deploy the SES template for the automated password reset email, do the following:
+To help you deploy the email templates to SES, I have created a Python3 script to help. Ensure you have Python3 installed then do the following:
 https://docs.aws.amazon.com/cli/latest/reference/ses/create-template.html
 
-1.
+1. Navigate to the `ses_templates/password_reset_email` directory
+2. Run the command `python3 generate_email_template_input.py`
+3. This will output a JSON file called `password_reset_email_template_input.json`
+4. Finally, run the command `aws ses create-template --cli-input-json file://password_reset_email_template_input.json`
 
-Repeat the same for the registration email, located at `ses_templates/registration_email`.
+Repeat similar steps for the registration email, located at `ses_templates/registration_email`.
 
 ### JWT Secret Key
 
-### Google OAuth 2.0 Client ID
+The `JwtUtil.java` class in the `backend` directory needs a signing key. This key can be any random string of characters, but I recommend running `openssl rand -base64 64` in a terminal to create a secret key.
+
+### Google OAuth 2.0 Client
+
+You will need to create a Google OAuth 2.0 Client and obtain the client ID. Please use [Google's official documentation](https://support.google.com/cloud/answer/15549257?hl=en) to do this.
 
 ### Docker ENV File
 
-## Running the app
+In the `.docker` directory, create a file named `.env.local`. In this file, you must specify the following key-value pairs:
+
+```
+MODE                    ->  Only accepts "local"
+MYSQL_ROOT_PASSWORD     ->  Password you want to set for your MySQL DB
+AWS_ACCESS_KEY_ID       ->  Your AWS Access Key
+AWS_SECRET_ACCESS_KEY   ->  Your AWS Secret Key
+GOOGLE_CLIENT_ID        ->  Google Client ID obtained from above
+FROM_EMAIL              ->  Email that SES should send app emails from
+```
+
+Example:
+
+```
+MODE=local
+MYSQL_ROOT_PASSWORD=root
+AWS_ACCESS_KEY_ID=abc123
+AWS_SECRET_ACCESS_KEY=abc123
+GOOGLE_CLIENT_ID=google-abc123.com
+FROM_EMAIL=foo@bar.com
+```
+
+## Running the App
 
 If you've followed all the previous configuration steps, you can now run the app:
 
