@@ -2,11 +2,15 @@ package com.spendingstracker.app.exception;
 
 import com.spendingstracker.app.dto.response.ApiResponse;
 
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -42,6 +46,9 @@ public class GlobalExceptionHandler {
         IllegalArgumentException.class,
         ConversionFailedException.class,
         AppBadRequestException.class,
+        MethodArgumentNotValidException.class,
+        ConstraintViolationException.class,
+        HttpMessageNotReadableException.class
     })
     public ResponseEntity<ApiResponse<Object>> handleBadRequestException(Exception e) {
         return new ResponseEntity<>(

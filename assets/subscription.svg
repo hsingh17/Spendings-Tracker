@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="48"
+   height="48"
+   viewBox="0 0 12.7 12.7"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   sodipodi:docname="subscription.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#ffffff"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="false"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="px"
+     showguides="true"
+     inkscape:zoom="8.1941057"
+     inkscape:cx="-14.94977"
+     inkscape:cy="12.264914"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1">
+    <sodipodi:guide
+       position="6.3500001,6.3500001"
+       orientation="0,1"
+       id="guide1"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+    <sodipodi:guide
+       position="6.3500001,6.3500001"
+       orientation="-1,0"
+       id="guide2"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,134,229)" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:#a6a6a6;fill-opacity:0;stroke:#000000;stroke-width:0.317"
+       d="m 2.4539998,5.2954734 c 0,0 3.422684,-5.77981546 8.0239332,0"
+       id="path2" />
+    <path
+       style="fill:#a6a6a6;fill-opacity:0;stroke:#000000;stroke-width:0.317"
+       d="M 10.43998,3.7273409 V 5.3940845"
+       id="path3" />
+    <path
+       style="fill:#a6a6a6;fill-opacity:0;stroke:#000000;stroke-width:0.317"
+       d="m 10.502767,5.2342596 -1.666743,2e-7"
+       id="path4" />
+    <path
+       style="fill:#a6a6a6;fill-opacity:0;stroke:#000000;stroke-width:0.317"
+       d="m 10.496511,7.5111391 c 0,0 -3.4226836,5.7798149 -8.0239343,-6e-7"
+       id="path5" />
+    <path
+       style="fill:#a6a6a6;fill-opacity:0;stroke:#000000;stroke-width:0.317"
+       d="m 2.5105315,9.0792711 2e-7,-1.6667426"
+       id="path6" />
+    <path
+       style="fill:#a6a6a6;fill-opacity:0;stroke:#000000;stroke-width:0.317"
+       d="m 2.4477443,7.5723533 1.6667421,-8e-7"
+       id="path7" />
+  </g>
+</svg>
